@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\LetsDoIt.Moody.Application\LetsDoIt.Moody.Application.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\LetsDoIt.Moody.Infrastructure\LetsDoIt.Moody.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
