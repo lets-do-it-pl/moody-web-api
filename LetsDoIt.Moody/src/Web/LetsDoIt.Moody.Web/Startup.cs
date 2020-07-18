@@ -11,16 +11,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using LetsDoIt.Moody.Persistance;
+
 
 namespace LetsDoIt.Moody.Web
 {
+    using Persistance;
+
     public class Startup
     {
-        private IConfiguration _config;
         public Startup(IConfiguration configuration)
         {
-            _config = configuration;
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -28,9 +29,7 @@ namespace LetsDoIt.Moody.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
-            services.AddDbContext<ApplicationContext>(opt =>
-              opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection")));
+            services.AddDbContext<ApplicationContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("MoodyDBConnection")));
             services.AddControllers();
         }
 
