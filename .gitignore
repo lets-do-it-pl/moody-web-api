@@ -12,3 +12,8 @@
 /LetsDoIt.Moody/tests/Application.IntegrationTests/LetsDoIt.Moody.Application.IntegrationTests/obj
 /LetsDoIt.Moody/tests/Application.UnitTests/LetsDoIt.Moody.Application.UnitTests/obj
 /LetsDoIt.Moody/tests/Domain.UnitTests/LetsDoIt.Moody.Domain.UnitTests/obj
+/LetsDoIt.Moody/.vs/LetsDoIt.Moody/config
+/LetsDoIt.Moody/src/Application/LetsDoIt.Moody.Application/bin/Debug/netcoreapp3.1
+/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/bin/Debug/netcoreapp3.1
+/LetsDoIt.Moody/tests/Web.UnitTests/LetsDoIt.Moody.Web.UnitTests/obj
+/LetsDoIt.Moody/tests/Web.UnitTests/LetsDoIt.Moody.Web.UnitTests/bin/Debug/netcoreapp3.1
