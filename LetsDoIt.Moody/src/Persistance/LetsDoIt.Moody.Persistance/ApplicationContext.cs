@@ -14,5 +14,6 @@ namespace LetsDoIt.Moody.Persistance
         }
 
         public DbSet<Category> categories { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
