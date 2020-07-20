@@ -1,15 +1,16 @@
-using LetsDoIt.Moody.Application;
-using LetsDoIt.Moody.Web.Controllers;
 using Moq;
 using System;
 using Xunit;
 
 namespace LetsDoIt.Moody.Web.UnitTests
 {
+    using Application;
+    using Controllers;
+
     public class CategoryControllerTests
     {
         private readonly CategoryController _testing;
-        private Mock<ICategoryService> _mockCategoryService;
+        private readonly Mock<ICategoryService> _mockCategoryService;
 
         public CategoryControllerTests()
         {
@@ -17,19 +18,45 @@ namespace LetsDoIt.Moody.Web.UnitTests
             _testing = new CategoryController(_mockCategoryService.Object);
         }
 
-        [Fact]
-        public void Update_WhenNameIsMissing_ShouldThrownAnArgumentExcception()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void Update_WhenNameIsMissing_ShouldThrownAnArgumentException(string name)
         {
-            // arrange
-            var id = 1;
-            string name = null;
-            var order = 1;
-
             // act 
-            Action action = () => _testing.Update(id, name, order, null);
+            Action action = () => _testing.Update(1, name, 1, null);
 
             //assert
             Assert.Throws<ArgumentException>(action);
+        }
+
+        [Fact]
+        public void Update_WhenImageIsMissing_ShouldThrownAnArgumentException()
+        {
+            // act 
+            Action action = () => _testing.Update(1, "name", 1, null);
+
+            //assert
+            Assert.Throws<ArgumentException>(action);
+        }
+
+        [Fact]
+        public void Update_ShouldUpdateCategoryInformation()
+        {
+            // arrange
+            var id = 1;
+            var name = "name";
+            var order = 1;
+            var image = new byte[10];
+
+            _mockCategoryService.Setup(cs => cs.Update(id, name, order, image));
+
+            // act
+            _testing.Update(id, name, order, image);
+
+            // assert
+            _mockCategoryService.Verify(cs => cs.Update(id, name, order, image));
         }
     }
 }

@@ -4,11 +4,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using LetsDoIt.Moody.Persistance;
-using LetsDoIt.Moody.Application;
+using Microsoft.OpenApi.Models;
 
 namespace LetsDoIt.Moody.Web
 {
+    using Persistance;
+    using Application;
+
     public class Startup
     {
         private IConfiguration _config;
@@ -22,19 +24,21 @@ namespace LetsDoIt.Moody.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCompression();
 
             services.AddDbContext<ApplicationContext>(opt =>
               opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection")));
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
-                //c.SwaggerDoc("v1", new OpenApiInfo
-                //{
-                //    Title = "Moody API",
-                //    Version = "v1",
-                //    Description = "Moody API details are here."                   
-                //});
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Moody API",
+                    Version = "v1",
+                    Description = "Moody API details are here."
+                });
             });
 
             services.AddTransient<ICategoryService, CategoryService>();
@@ -48,29 +52,19 @@ namespace LetsDoIt.Moody.Web
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseResponseCompression();
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            
+            app.UseRouting();
+
             app.UseSwagger();
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Moody API V1");
-
-                // To serve SwaggerUI at application's root page, set the RoutePrefix property to an empty string.
-                c.RoutePrefix = string.Empty;
             });
-
-            app.UseHttpsRedirection();
-
-            app.UseDefaultFiles();
-
-            app.UseStaticFiles();
-
-            //app.UseMvc();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

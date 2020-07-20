@@ -1,11 +1,12 @@
-﻿using LetsDoIt.Moody.Application;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
+    using Application;
+
     [ApiController]
-    [Route("categories")]
+    [Route("api/categories")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
