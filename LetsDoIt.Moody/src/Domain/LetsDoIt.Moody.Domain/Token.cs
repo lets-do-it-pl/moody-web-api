@@ -1,0 +1,6 @@
+﻿
+namespace LetsDoIt.Moody.Domain
+{
+
+    
+}
