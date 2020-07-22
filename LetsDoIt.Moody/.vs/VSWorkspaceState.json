@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\Application",
+    "\\src\\Application\\LetsDoIt.Moody.Application",
+    "\\src\\Application\\LetsDoIt.Moody.Application\\bin\\Debug",
+    "\\src\\Application\\LetsDoIt.Moody.Application\\obj\\Release",
+    "\\src\\Application\\LetsDoIt.Moody.Application\\Services",
+    "\\src\\Domain\\LetsDoIt.Moody.Domain",
+    "\\src\\Web\\LetsDoIt.Moody.Web",
+    "\\src\\Web\\LetsDoIt.Moody.Web\\Controllers"
+  ],
+  "SelectedNode": "\\src\\Web",
+  "PreviewInSolutionExplorer": false
+}
