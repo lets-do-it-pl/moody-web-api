@@ -19,9 +19,10 @@ namespace LetsDoIt.Moody.Application.UnitTests
        [Fact]
        public void UserSevice_WhetherEncryptedProperly_ReturnEncryptedText ()
         {
-            var user = new UserService();
-            var actual = user.Encrypt("Meryem", "mzbasel");
-            Assert.Equal(actual, user.Encrypt("Meryem", "mzbasel"));
+            var user = new UserService("Meryem", "12345");
+            var actual = user.EncryptUserNameAndPassword();
+            Assert.Equal(actual, new UserService("Meryem", "12345").EncryptUserNameAndPassword());
+            Assert.NotEqual(actual, new UserService("Zeynep", "12345").EncryptUserNameAndPassword());
             
         }
     }

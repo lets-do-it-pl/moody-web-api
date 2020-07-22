@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Text;
@@ -11,23 +10,26 @@ namespace LetsDoIt.Moody.Application.Services
 
     public class UserService : IUserService
     {
-        public UserService()
+        private readonly string key;
+        private string username;
+        private string password;
+
+        public UserService(string key)
         {
-             
+            this.key = key;
         }
 
-        public string Encrypt(string name , string password)
+        public UserService(string username, string password)
         {
-            string user = name + password;
-            byte[] salt = new byte[128/8];
-            // generate a 128-bit salt using a secure PRNG
-            /*byte[] salt = new byte[128 / 8];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }*/
+            this.username = username;
+            this.password = password;
+        }
 
-            // derive a 256-bit subkey (use HMACSHA1 with 10,000 iterations)
+        public string EncryptUserNameAndPassword()
+        {
+            string user = username + password;
+            byte[] salt = new byte[128/8];
+      
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: user,
                 salt: salt,
@@ -35,13 +37,6 @@ namespace LetsDoIt.Moody.Application.Services
                 iterationCount: 10000,
                 numBytesRequested: 256 / 8));
             return hashed;
-        }
-
-        private readonly string key;
-
-        public UserService(string key)
-        {
-            this.key = key;
         }
 
         public string Authenticate(string username, string password)
