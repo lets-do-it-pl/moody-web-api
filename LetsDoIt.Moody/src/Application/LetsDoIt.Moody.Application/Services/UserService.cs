@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Linq;
 
 namespace LetsDoIt.Moody.Application.Services
 {
@@ -41,10 +42,13 @@ namespace LetsDoIt.Moody.Application.Services
 
         public string Authenticate(string username, string password)
         {
-           /* if (!users.Any(user => user.name == Encrypt(username, password)))
-            {
+            var context = new DataService();
+            var User = new UserService(username, password);
+
+            if (!context.Users.Any(user => user.UsernameAndPassword == User.EncryptUserNameAndPassword()))
+             {
                 return null;
-            }*/
+             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenKey = Encoding.ASCII.GetBytes(key);
