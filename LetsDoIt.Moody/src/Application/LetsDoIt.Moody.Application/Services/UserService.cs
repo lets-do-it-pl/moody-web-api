@@ -5,15 +5,33 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace LetsDoIt.Moody.Application.Services
 {
 
     public class UserService : IUserService
     {
+        private readonly IDictionary<string, string> users = new Dictionary<string, string>
+        {
+            {
+                "test1", "password1"
+            },
+            {
+                "test2", "password2"
+            }
+        };
+
         private readonly string key;
         private string username;
         private string password;
+        private readonly IConfiguration _config;
+
+        public UserService(IConfiguration config)
+        {
+            _config = config;
+        }
 
         public UserService(string key)
         {
@@ -40,15 +58,30 @@ namespace LetsDoIt.Moody.Application.Services
             return hashed;
         }
 
+        public void CheckUserExists()
+        {
+            if (!users.Any(u => u.Key == username && u.Value == password))
+            {
+                throw new Exception("User does not exists");
+            }
+
+            Authenticate("", "");
+        }
+
         public string Authenticate(string username, string password)
         {
-            var context = new DataService();
+            /*var context = new DataService();
             var User = new UserService(username, password);
 
             if (!context.Users.Any(user => user.UsernameAndPassword == User.EncryptUserNameAndPassword()))
              {
                 return null;
-             }
+             }*/
+
+            if (!users.Any(u => u.Key == username && u.Value == password))
+            {
+                throw new Exception("User does not exists");
+            }
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenKey = Encoding.ASCII.GetBytes(key);
@@ -58,7 +91,9 @@ namespace LetsDoIt.Moody.Application.Services
                 {
                     new Claim(ClaimTypes.Name,username)
                 }),
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.UtcNow.AddMinutes(10),
+                //(_config.GetValue<int>(
+                //"ExprationDateOfJWT_InMinutes")),
                 SigningCredentials =
                     new SigningCredentials(
                         new SymmetricSecurityKey(tokenKey),

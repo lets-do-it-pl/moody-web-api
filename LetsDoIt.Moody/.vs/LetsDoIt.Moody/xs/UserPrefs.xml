@@ -1,7 +1,8 @@
 ﻿<Properties StartupConfiguration="{1C59363F-BB54-4066-A4FD-8FAAF357880E}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="src/Application/LetsDoIt.Moody.Application/Services/UserService.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="src/Application/LetsDoIt.Moody.Application/Services/DataService.cs">
     <Files>
-      <File FileName="src/Application/LetsDoIt.Moody.Application/Services/UserService.cs" Line="1" Column="1" />
+      <File FileName="src/Application/LetsDoIt.Moody.Application/Services/UserService.cs" Line="92" Column="39" />
+      <File FileName="src/Application/LetsDoIt.Moody.Application/Services/DataService.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -11,11 +12,13 @@
               <Node name="Application" expanded="True">
                 <Node name="LetsDoIt.Moody.Application" expanded="True">
                   <Node name="Services" expanded="True">
-                    <Node name="UserService.cs" selected="True" />
+                    <Node name="DataService.cs" selected="True" />
                   </Node>
                 </Node>
               </Node>
-              <Node name="Domain" expanded="True" />
+              <Node name="Domain" expanded="True">
+                <Node name="LetsDoIt.Moody.Domain" expanded="True" />
+              </Node>
               <Node name="Infrastructure" expanded="True">
                 <Node name="LetsDoIt.Moody.Infrastructure" expanded="True" />
               </Node>
@@ -25,7 +28,20 @@
                 </Node>
               </Node>
             </Node>
+            <Node name="tests" expanded="True">
+              <Node name="Application.UnitTests" expanded="True">
+                <Node name="LetsDoIt.Moody.Application.UnitTests" expanded="True" />
+              </Node>
+            </Node>
           </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="LetsDoIt.Moody" expanded="True" selected="True" />
         </State>
       </Pad>
     </Pads>

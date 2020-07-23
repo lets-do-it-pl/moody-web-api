@@ -5,22 +5,26 @@ using Microsoft.AspNetCore.Authorization;
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using LetsDoIt.Moody.Application.Services;
+    using LetsDoIt.Moody.Domain;
 
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
+
+
         public UserController(IUserService userService)
         {
             this.userService = userService;
         }
+
         // GET: api/User
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "Welcome" };
+            return new string[] { "Welcome", "Welcome" };
         }
 
         // GET: api/User/5
@@ -32,7 +36,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
       [AllowAnonymous]     
       [HttpPost("authenticate")]
-      public IActionResult Authenticate([FromBody] UserCred userCred)
+      public IActionResult Authenticate([FromBody] User userCred)
         {
             var token = userService.Authenticate(userCred.Username, userCred.Password);
             if(token == null)
