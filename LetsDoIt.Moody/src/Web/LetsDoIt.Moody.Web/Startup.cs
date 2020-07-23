@@ -1,14 +1,16 @@
+using LetsDoIt.Moody.Application.Services;
+using LetsDoIt.Moody.Application.Services.Abstract;
+using LetsDoIt.Moody.Infrastructure.DataAccess;
+using LetsDoIt.Moody.Infrastructure.DataAccess.Abstract;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 namespace LetsDoIt.Moody.Web
 {
-    using Persistance;
     using Application;
 
     public class Startup
@@ -26,9 +28,6 @@ namespace LetsDoIt.Moody.Web
         {
             services.AddResponseCompression();
 
-            services.AddDbContext<ApplicationContext>(opt =>
-              opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection")));
-
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -42,6 +41,8 @@ namespace LetsDoIt.Moody.Web
             });
 
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserDal, EfUserDal>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

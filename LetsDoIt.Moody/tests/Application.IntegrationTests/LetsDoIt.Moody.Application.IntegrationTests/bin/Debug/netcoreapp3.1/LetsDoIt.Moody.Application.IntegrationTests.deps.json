@@ -1281,6 +1281,8 @@
       "LetsDoIt.Moody.Application/1.0.0": {
         "dependencies": {
           "LetsDoIt.Moody.Domain": "1.0.0",
+          "LetsDoIt.Moody.Infrastructure": "1.0.0",
+          "LetsDoIt.Moody.Persistance": "1.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6"
         },
         "runtime": {
@@ -1293,6 +1295,25 @@
         },
         "runtime": {
           "LetsDoIt.Moody.Domain.dll": {}
+        }
+      },
+      "LetsDoIt.Moody.Infrastructure/1.0.0": {
+        "dependencies": {
+          "LetsDoIt.Moody.Domain": "1.0.0",
+          "LetsDoIt.Moody.Persistance": "1.0.0",
+          "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6"
+        },
+        "runtime": {
+          "LetsDoIt.Moody.Infrastructure.dll": {}
+        }
+      },
+      "LetsDoIt.Moody.Persistance/1.0.0": {
+        "dependencies": {
+          "LetsDoIt.Moody.Domain": "1.0.0",
+          "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6"
+        },
+        "runtime": {
+          "LetsDoIt.Moody.Persistance.dll": {}
         }
       }
     }
@@ -2051,6 +2072,16 @@
       "sha512": ""
     },
     "LetsDoIt.Moody.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "LetsDoIt.Moody.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "LetsDoIt.Moody.Persistance/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

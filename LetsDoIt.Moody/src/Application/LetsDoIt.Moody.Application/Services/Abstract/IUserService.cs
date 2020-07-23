@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LetsDoIt.Moody.Application
+﻿namespace LetsDoIt.Moody.Application.Services.Abstract
 {
     public  interface IUserService
     {

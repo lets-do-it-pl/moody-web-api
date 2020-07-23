@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using LetsDoIt.Moody.Domain.Entities.Abstract;
 
-namespace LetsDoIt.Moody.Domain
+namespace LetsDoIt.Moody.Domain.Entities
 {
-   public class Category
+   public class Category:IEntity
     { 
         public Category() { }
 

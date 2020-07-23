@@ -1,4 +1,4 @@
-﻿namespace LetsDoIt.Moody.Application
+﻿namespace LetsDoIt.Moody.Application.Services.Abstract
 {
     public interface ICategoryService
     {

@@ -1,5 +1,7 @@
 using Moq;
 using System;
+using LetsDoIt.Moody.Application.Services;
+using LetsDoIt.Moody.Application.Services.Abstract;
 using Xunit;
 
 namespace LetsDoIt.Moody.Web.UnitTests

@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using LetsDoIt.Moody.Domain.Entities.Abstract;
 
-namespace LetsDoIt.Moody.Domain
+namespace LetsDoIt.Moody.Domain.Entities
 {
-    public class User
+    public class User:IEntity
     {
         public long Id { get; set; }
         public string UserName { get; set; }
