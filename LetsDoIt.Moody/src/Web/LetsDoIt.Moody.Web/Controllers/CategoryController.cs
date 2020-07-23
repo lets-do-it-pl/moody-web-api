@@ -17,8 +17,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpPost]
-        [Route("{id}")]
-        public void Update(int id, string name, int order, byte[] image)
+        public void Insert( string name, int order, byte[] image)
         {
             if(string.IsNullOrWhiteSpace(name))
             {
@@ -30,7 +29,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 throw new ArgumentException("Image cannot be null!");
             }
 
-            _categoryService.Update(id, name, order, image);
+            _categoryService.Insert( name, order, image);
         }
     }
 }
