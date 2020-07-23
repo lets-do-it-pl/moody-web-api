@@ -8,16 +8,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LetsDoIt.Moody.Domain.DataAccess.EntityFramework
 {
-    public class EfEntityRepositoryBase<TEntity,TContext> : IEntityRepository<TEntity>
+    public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         where TEntity : class, IEntity, new()
-        where TContext : DbContext, new()
 
 
     {
+        private ApplicationContext _context;
+
+        public EfEntityRepositoryBase(ApplicationContext context)
+        {
+            _context = context;
+        }
 
         public List<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null)
         {
-            using (var context = new TContext())
+            using (var context = _context)
 
             {
                 return filter == null
@@ -28,7 +33,7 @@ namespace LetsDoIt.Moody.Domain.DataAccess.EntityFramework
 
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
         {
-            using (var context = new TContext())
+            using (var context = _context)
             {
                 return context.Set<TEntity>().SingleOrDefault(filter);
             }
@@ -36,7 +41,7 @@ namespace LetsDoIt.Moody.Domain.DataAccess.EntityFramework
 
         public TEntity Add(TEntity entity)
         {
-            using (var context = new TContext())
+            using (var context = _context)
             {
                 var addedEntity = context.Entry(entity);
                 addedEntity.State = EntityState.Added;
@@ -46,7 +51,7 @@ namespace LetsDoIt.Moody.Domain.DataAccess.EntityFramework
         }
         public TEntity Update(TEntity entity)
         {
-            using (var context = new TContext())
+            using (var context = _context)
             {
                 var updatedEntity = context.Entry(entity);
                 updatedEntity.State = EntityState.Modified;
@@ -57,7 +62,7 @@ namespace LetsDoIt.Moody.Domain.DataAccess.EntityFramework
 
         public void Delete(TEntity entity)
         {
-            using (var context = new TContext())
+            using (var context = _context)
             {
                 var deletedEntity = context.Entry(entity);
                 deletedEntity.State = EntityState.Deleted;

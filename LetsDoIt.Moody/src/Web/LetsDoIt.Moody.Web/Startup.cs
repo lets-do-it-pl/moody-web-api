@@ -1,9 +1,12 @@
 using LetsDoIt.Moody.Application.Services;
 using LetsDoIt.Moody.Application.Services.Abstract;
+using LetsDoIt.Moody.Domain.DataAccess;
+using LetsDoIt.Moody.Domain.DataAccess.EntityFramework;
 using LetsDoIt.Moody.Infrastructure.DataAccess;
 using LetsDoIt.Moody.Infrastructure.DataAccess.Abstract;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,6 +31,10 @@ namespace LetsDoIt.Moody.Web
         {
             services.AddResponseCompression();
 
+            services.AddDbContext<ApplicationContext>(opt =>
+                opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection"),
+                    x => x.MigrationsAssembly("LetsDoIt.Moody.Web")));
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -39,6 +46,7 @@ namespace LetsDoIt.Moody.Web
                     Description = "Moody API details are here."
                 });
             });
+
 
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IUserService, UserService>();

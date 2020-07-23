@@ -8,7 +8,10 @@ using LetsDoIt.Moody.Infrastructure.DataAccess.Abstract;
 
 namespace LetsDoIt.Moody.Infrastructure.DataAccess
 {
-    public class EfUserDal: EfEntityRepositoryBase<User,ApplicationContext>, IUserDal
+    public class EfUserDal: EfEntityRepositoryBase<User>, IUserDal
     {
+        public EfUserDal(ApplicationContext context) : base(context)
+        {
+        }
     }
 }
