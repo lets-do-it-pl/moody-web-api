@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using LetsDoIt.Moody.Domain.Entities.Abstract;
 
-namespace LetsDoIt.Moody.Domain.DataAccess
+namespace LetsDoIt.Moody.Persistance.DataAccess
 {
     public interface IEntityRepository<T> where T : class, IEntity
     {

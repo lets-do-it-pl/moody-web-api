@@ -1,7 +1,7 @@
 ﻿using LetsDoIt.Moody.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace LetsDoIt.Moody.Domain.DataAccess.EntityFramework
+namespace LetsDoIt.Moody.Persistance.DataAccess.EfTechnology
 {
     public class ApplicationContext : DbContext
     {

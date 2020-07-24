@@ -12,4 +12,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\LetsDoIt.Moody.Domain\LetsDoIt.Moody.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

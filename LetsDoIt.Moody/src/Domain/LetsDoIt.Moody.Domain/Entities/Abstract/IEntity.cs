@@ -2,5 +2,6 @@
 {
     public interface IEntity
     {
+        public bool isDeleted { get; set; }
     }
 }

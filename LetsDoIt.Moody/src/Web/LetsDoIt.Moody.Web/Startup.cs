@@ -1,9 +1,9 @@
 using LetsDoIt.Moody.Application.Services;
-using LetsDoIt.Moody.Application.Services.Abstract;
-using LetsDoIt.Moody.Domain.DataAccess;
-using LetsDoIt.Moody.Domain.DataAccess.EntityFramework;
-using LetsDoIt.Moody.Infrastructure.DataAccess;
-using LetsDoIt.Moody.Infrastructure.DataAccess.Abstract;
+using LetsDoIt.Moody.Application.Services.CategoryFolder;
+using LetsDoIt.Moody.Application.Services.UserFolder;
+using LetsDoIt.Moody.Persistance.DataAccess;
+using LetsDoIt.Moody.Persistance.DataAccess.EfTechnology;
+using LetsDoIt.Moody.Persistance.DataAccess.EntityFramework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +50,8 @@ namespace LetsDoIt.Moody.Web
 
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IUserDal, EfUserDal>();
+            services.AddTransient<IUserRepository, EfUserRepository>();
+            services.AddTransient<ICategoryRepository, EfCategoryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v3.1": {
       "LetsDoIt.Moody.Persistance/1.0.0": {
         "dependencies": {
+          "LetsDoIt.Moody.Domain": "1.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6",
           "Microsoft.EntityFrameworkCore.Tools": "3.1.6"
         },
@@ -865,6 +866,14 @@
           "System.Xml.ReaderWriter": "4.3.0",
           "System.Xml.XmlDocument": "4.3.0"
         }
+      },
+      "LetsDoIt.Moody.Domain/1.0.0": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6"
+        },
+        "runtime": {
+          "LetsDoIt.Moody.Domain.dll": {}
+        }
       }
     }
   },
@@ -1489,6 +1498,11 @@
       "sha512": "sha512-MYoTCP7EZ98RrANESW05J5ZwskKDoN0AuZ06ZflnowE50LTpbR5yRg3tHckTVm5j/m47stuGgCrCHWePyHS70Q==",
       "path": "system.xml.xmlserializer/4.3.0",
       "hashPath": "system.xml.xmlserializer.4.3.0.nupkg.sha512"
+    },
+    "LetsDoIt.Moody.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

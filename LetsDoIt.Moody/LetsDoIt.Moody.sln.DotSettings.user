@@ -4,5 +4,11 @@
     &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.CategoryControllerTests.Update_WhenNameIsMissing_ShouldThrownAnArgumentException&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.CategoryControllerTests.Update_WhenImageIsMissing_ShouldThrownAnArgumentException&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.CategoryControllerTests.Update_ShouldUpdateCategoryInformation&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.UserControllerTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fe90954c_002Dc110_002D4de2_002Dab2d_002Dea8d43cd86c4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CategoryControllerTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.CategoryControllerTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

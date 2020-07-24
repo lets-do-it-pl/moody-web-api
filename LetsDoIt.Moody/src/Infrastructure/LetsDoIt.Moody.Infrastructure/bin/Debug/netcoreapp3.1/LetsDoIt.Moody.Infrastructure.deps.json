@@ -878,6 +878,7 @@
       },
       "LetsDoIt.Moody.Persistance/1.0.0": {
         "dependencies": {
+          "LetsDoIt.Moody.Domain": "1.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6"
         },
         "runtime": {

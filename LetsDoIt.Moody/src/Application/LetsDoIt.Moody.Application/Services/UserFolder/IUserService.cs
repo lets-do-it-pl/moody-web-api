@@ -1,4 +1,4 @@
-﻿namespace LetsDoIt.Moody.Application.Services.Abstract
+﻿namespace LetsDoIt.Moody.Application.Services.UserFolder
 {
     public  interface IUserService
     {
