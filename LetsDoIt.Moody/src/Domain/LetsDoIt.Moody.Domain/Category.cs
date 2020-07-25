@@ -4,16 +4,26 @@ using System.Text;
 
 namespace LetsDoIt.Moody.Domain
 {
-   public class Category
+   public class Category : IEntity
     { 
-        public Category() { }
-
-
-        public long Id { get; set; }
+        [Key]        
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int Id { get; set; }
+      
+        [Required]
         public string Name { get; set; }
+      
+        [Required]
         public int Order { get; set; }
+      
+        [Required]
         public byte[] Image { get; set; }
-        public DateTime CreateDate { get; } //Date will be created automatically
+      
+        [Required]
+        public DateTime CreateDate { get; set; }
+    
+        public DateTime? ModifiedDate { get; set; }
+      
         public bool isDeleted { get; set; }
 
     }

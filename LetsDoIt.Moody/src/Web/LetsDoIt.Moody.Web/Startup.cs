@@ -9,7 +9,9 @@ using Microsoft.OpenApi.Models;
 namespace LetsDoIt.Moody.Web
 {
     using Persistance;
-    using Application;
+    using Persistance.Repositories.Base;
+    using Application.Category;
+    using Application.VersionHistory;
 
     public class Startup
     {
@@ -40,8 +42,11 @@ namespace LetsDoIt.Moody.Web
                     Description = "Moody API details are here."
                 });
             });
-
+            
+            services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
+            services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IVersionHistoryService, VersionHistoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
