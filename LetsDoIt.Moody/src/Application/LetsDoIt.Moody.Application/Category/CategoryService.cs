@@ -1,7 +1,9 @@
 ﻿namespace LetsDoIt.Moody.Application.Category
 {
-    using Persistance;
-    using Persistance.Base;
+    using Domain;
+    using Persistance.Repositories.Base;
+    using System;
+    using System.Threading.Tasks;
     using VersionHistory;
 
     public class CategoryService : ICategoryService
@@ -19,7 +21,7 @@
 
         public async Task UpdateAsync(int id, string name, int order, byte[] image)
         {
-            var entity = _categoryRepository.Get(c => c.Id == id);
+            var entity = await _categoryRepository.GetAsync(c => c.Id == id);
             if(entity == null)
             {
                 throw new Exception($"Category couldn't be found with id({id})");

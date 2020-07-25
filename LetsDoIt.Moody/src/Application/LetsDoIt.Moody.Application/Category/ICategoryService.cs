@@ -1,4 +1,6 @@
-﻿namespace LetsDoIt.Moody.Application.Category
+﻿using System.Threading.Tasks;
+
+namespace LetsDoIt.Moody.Application.Category
 {
     public interface ICategoryService
     {

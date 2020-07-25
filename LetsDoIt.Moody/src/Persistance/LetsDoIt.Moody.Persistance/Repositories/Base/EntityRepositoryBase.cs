@@ -2,16 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+using LetsDoIt.Moody.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace LetsDoIt.Moody.Persistance.Repositories.Base
 {
     public abstract class EntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
-        where TEntity : IEntity
+        where TEntity : class, IEntity
     {
         private readonly ApplicationContext _context;
 
-        public EfEntityRepositoryBase(ApplicationContext context)
+        public EntityRepositoryBase(ApplicationContext context)
         {
             _context = context;
         }
@@ -28,7 +30,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             return await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
         }
 
-        public IQuerable<TEntity> GetAsync(){
+        public IQueryable<TEntity> Get(){
             return _context.Set<TEntity>();
         }
 

@@ -12,6 +12,8 @@ namespace LetsDoIt.Moody.Web
     using Persistance.Repositories.Base;
     using Application.Category;
     using Application.VersionHistory;
+    using LetsDoIt.Moody.Persistance.Repositories;
+    using LetsDoIt.Moody.Domain;
 
     public class Startup
     {

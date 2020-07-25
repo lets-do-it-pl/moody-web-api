@@ -5,7 +5,9 @@ using System.Linq.Expressions;
 
 namespace LetsDoIt.Moody.Persistance.Repositories.Base
 {
-    using Domain; 
+    using Domain;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public interface IEntityRepository<T> where T : class
     {
@@ -13,7 +15,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 
         Task<T> GetAsync(Expression<Func<T, bool>> filter);
 
-        IQuerable<T> Get();
+        IQueryable<T> Get();
         
         Task<T> AddAsync(T entity);
         

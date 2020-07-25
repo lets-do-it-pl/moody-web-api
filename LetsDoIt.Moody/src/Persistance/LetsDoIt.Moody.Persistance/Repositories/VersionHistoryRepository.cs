@@ -4,10 +4,21 @@ using System.Linq.Expressions;
 
 namespace LetsDoIt.Moody.Persistance.Repositories
 {
-    using Domain; 
+    using Domain;
+    using Base;
+    using System.Threading.Tasks;
+    using System.Linq;
+    using Microsoft.EntityFrameworkCore;
 
     public class VersionHistoryRepository : IEntityRepository<VersionHistory>
     {
+        private readonly ApplicationContext _context;
+
+        public VersionHistoryRepository(ApplicationContext context)
+        {
+            _context = context;
+        }
+
         public async Task<List<VersionHistory>> GetListAsync(Expression<Func<VersionHistory, bool>> filter = null)
         {
             throw new NotImplementedException();
@@ -18,7 +29,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories
             throw new NotImplementedException();
         }
 
-        public IQuerable<VersionHistory> GetAsync(){
+        public IQueryable<VersionHistory> Get(){
             return _context.Set<VersionHistory>();
         }
         
@@ -40,5 +51,9 @@ namespace LetsDoIt.Moody.Persistance.Repositories
             throw new NotImplementedException();
         }
 
+        public Task DeleteAsync(VersionHistory entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
