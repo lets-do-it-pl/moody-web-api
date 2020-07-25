@@ -1,15 +1,19 @@
-﻿using System;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace LetsDoIt.Moody.Domain
 {
-	public class VersionHistory
-	{
-		public VersionHistory()
-		{
-		}
-		public long id { get; set; }
-		public int VersionNumber { get; set; }
-		public DateTime CreateDate { get; } //It should be generated automatically
+    public class VersionHistory
+    {
+        [Key]        
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+		public long Id { get; set; }
 
-
+        [Required]
+		public string VersionNumber { get; set; }
+		
+        [Required]
+        public DateTime CreateDate { get; set; }
 	}
 }
