@@ -6,7 +6,7 @@ namespace LetsDoIt.Moody.Domain
 		public VersionHistory()
 		{
 		}
-		public long Id { get; set; }
+		public long id { get; set; }
 		public int VersionNumber { get; set; }
 		public DateTime CreateDate { get; } //It should be generated automatically
 

@@ -1,8 +1,8 @@
 ﻿namespace LetsDoIt.Moody.Application
 {
-    public class CategoryService 
+    public class CategoryService : ICategoryService
     {
-        public void Delete(int Id, string Name, int Order, byte[] Image)
+        public void Update(int id, string name, int order, byte[] image)
         {
             throw new System.NotImplementedException();
         }

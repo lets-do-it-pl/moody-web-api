@@ -1,14 +1,9 @@
-﻿using System;
-namespace LetsDoIt.Moody.Application
+﻿namespace LetsDoIt.Moody.Application
 {
+    public interface ICategoryService
+    {
+        void Update(int id, string name, int order, byte[] image);
 
-
-	public interface ICategoryService
-	{
-		public ICategoryService()
-		{ }
-
-		void Update(int Id, string Name, int Order, byte[] Image);
-
-	}
+        void Delete(int id, string name, int order, byte[] image);
+    }
 }
