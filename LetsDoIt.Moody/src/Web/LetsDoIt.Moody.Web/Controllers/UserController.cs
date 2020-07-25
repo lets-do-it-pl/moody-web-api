@@ -34,11 +34,11 @@ namespace LetsDoIt.Moody.Web.Controllers
             return "value";
         }
 
-      [AllowAnonymous]     
-      [HttpPost("authenticate")]
-      public IActionResult Authenticate([FromBody] User userCred)
+        [AllowAnonymous]     
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate(string username, string password)
         {
-            var token = userService.Authenticate(userCred.Username, userCred.Password);
+            var token = userService.Authenticate(username, password);
             if(token == null)
                 return Unauthorized();
             return Ok(token);

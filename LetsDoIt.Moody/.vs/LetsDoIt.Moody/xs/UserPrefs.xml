@@ -1,8 +1,14 @@
 ﻿<Properties StartupConfiguration="{1C59363F-BB54-4066-A4FD-8FAAF357880E}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="src/Application/LetsDoIt.Moody.Application/Services/DataService.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="tests/Application.UnitTests/LetsDoIt.Moody.Application.UnitTests/UserControllerTest.cs">
     <Files>
-      <File FileName="src/Application/LetsDoIt.Moody.Application/Services/UserService.cs" Line="92" Column="39" />
-      <File FileName="src/Application/LetsDoIt.Moody.Application/Services/DataService.cs" Line="1" Column="1" />
+      <File FileName="src/Domain/LetsDoIt.Moody.Domain/Token.cs" Line="1" Column="1" />
+      <File FileName="src/Domain/LetsDoIt.Moody.Domain/User.cs" Line="1" Column="1" />
+      <File FileName="src/Application/LetsDoIt.Moody.Application/Services/UserService.cs" Line="10" Column="1" />
+      <File FileName="tests/Application.UnitTests/LetsDoIt.Moody.Application.UnitTests/UserServiceTest.cs" Line="14" Column="43" />
+      <File FileName="src/Web/LetsDoIt.Moody.Web/Startup.cs" Line="59" Column="14" />
+      <File FileName="src/Web/LetsDoIt.Moody.Web/Controllers/UserController.cs" Line="41" Column="88" />
+      <File FileName="src/Web/LetsDoIt.Moody.Web/Program.cs" Line="13" Column="9" />
+      <File FileName="tests/Application.UnitTests/LetsDoIt.Moody.Application.UnitTests/UserControllerTest.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -11,9 +17,7 @@
             <Node name="src" expanded="True">
               <Node name="Application" expanded="True">
                 <Node name="LetsDoIt.Moody.Application" expanded="True">
-                  <Node name="Services" expanded="True">
-                    <Node name="DataService.cs" selected="True" />
-                  </Node>
+                  <Node name="Services" expanded="True" />
                 </Node>
               </Node>
               <Node name="Domain" expanded="True">
@@ -25,12 +29,16 @@
               <Node name="Web" expanded="True">
                 <Node name="LetsDoIt.Moody.Web" expanded="True">
                   <Node name="Controllers" expanded="True" />
+                  <Node name="Properties" expanded="True" />
                 </Node>
               </Node>
             </Node>
             <Node name="tests" expanded="True">
               <Node name="Application.UnitTests" expanded="True">
-                <Node name="LetsDoIt.Moody.Application.UnitTests" expanded="True" />
+                <Node name="LetsDoIt.Moody.Application.UnitTests" expanded="True">
+                  <Node name="Dependencies" expanded="True" />
+                  <Node name="UserControllerTest.cs" selected="True" />
+                </Node>
               </Node>
             </Node>
           </Node>
@@ -41,7 +49,13 @@
       </Pad>
       <Pad Id="MonoDevelop.UnitTesting.TestPad">
         <State name="__root__">
-          <Node name="LetsDoIt.Moody" expanded="True" selected="True" />
+          <Node name="LetsDoIt.Moody" expanded="True">
+            <Node name="tests" expanded="True">
+              <Node name="Application.UnitTests" expanded="True">
+                <Node name="LetsDoIt.Moody.Application.UnitTests" selected="True" />
+              </Node>
+            </Node>
+          </Node>
         </State>
       </Pad>
     </Pads>

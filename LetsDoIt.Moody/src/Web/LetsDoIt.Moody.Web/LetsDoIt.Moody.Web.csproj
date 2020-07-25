@@ -4,6 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Custom' ">
+    <StartAction>Project</StartAction>
+    <ApplicationURL>http://localhost:57547</ApplicationURL>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Application\LetsDoIt.Moody.Application\LetsDoIt.Moody.Application.csproj" />
     <ProjectReference Include="..\..\Domain\LetsDoIt.Moody.Domain\LetsDoIt.Moody.Domain.csproj">

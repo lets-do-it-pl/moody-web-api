@@ -7,7 +7,7 @@ namespace LetsDoIt.Moody.Domain
         public string Id { get; set; }
         public string UserId { get; set; }
         public string Jwt { get; set; }
-        public string ExprationDate { get; set; }
+        public int ExpirationDate { get; set; }
         public DateTime CreateDate { get; }
     }
     

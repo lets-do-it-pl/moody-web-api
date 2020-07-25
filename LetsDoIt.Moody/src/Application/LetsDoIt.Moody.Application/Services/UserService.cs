@@ -5,14 +5,27 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
+
 using System.Collections.Generic;
 
 namespace LetsDoIt.Moody.Application.Services
 {
+    using LetsDoIt.Moody.Domain;
 
     public class UserService : IUserService
     {
+        private readonly string key;
+
+        public UserService(string key)
+        {
+            this.key = key;
+        }
+
+        public UserService()
+        {
+        }
+
+        //For testing : unnecessary
         private readonly IDictionary<string, string> users = new Dictionary<string, string>
         {
             {
@@ -23,28 +36,7 @@ namespace LetsDoIt.Moody.Application.Services
             }
         };
 
-        private readonly string key;
-        private string username;
-        private string password;
-        private readonly IConfiguration _config;
-
-        public UserService(IConfiguration config)
-        {
-            _config = config;
-        }
-
-        public UserService(string key)
-        {
-            this.key = key;
-        }
-
-        public UserService(string username, string password)
-        {
-            this.username = username;
-            this.password = password;
-        }
-
-        public string EncryptUserNameAndPassword()
+        public string EncryptUserNameAndPassword(string username, string password)
         {
             string user = username + password;
             byte[] salt = new byte[128/8];
@@ -58,22 +50,12 @@ namespace LetsDoIt.Moody.Application.Services
             return hashed;
         }
 
-        public void CheckUserExists()
-        {
-            if (!users.Any(u => u.Key == username && u.Value == password))
-            {
-                throw new Exception("User does not exists");
-            }
-
-            Authenticate("", "");
-        }
-
         public string Authenticate(string username, string password)
         {
             /*var context = new DataService();
-            var User = new UserService(username, password);
+             * var user = new UserService
 
-            if (!context.Users.Any(user => user.UsernameAndPassword == User.EncryptUserNameAndPassword()))
+            if (!context.Users.Any(user => user.UsernameAndPassword == user.Encrypt(username, password)))
              {
                 return null;
              }*/
@@ -91,9 +73,7 @@ namespace LetsDoIt.Moody.Application.Services
                 {
                     new Claim(ClaimTypes.Name,username)
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(10),
-                //(_config.GetValue<int>(
-                //"ExprationDateOfJWT_InMinutes")),
+                Expires = DateTime.UtcNow.AddMinutes(1440),
                 SigningCredentials =
                     new SigningCredentials(
                         new SymmetricSecurityKey(tokenKey),

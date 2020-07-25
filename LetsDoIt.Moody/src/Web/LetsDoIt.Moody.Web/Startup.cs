@@ -6,34 +6,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using Microsoft.OpenApi.Models;
 
 namespace LetsDoIt.Moody.Web
 {
     using LetsDoIt.Moody.Application.Services;
-    using Microsoft.OpenApi.Models;
 
     public class Startup
     {
         private readonly IConfiguration _config;
-
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
         {
             _config = configuration;
-        }
-
-        [System.Obsolete]
-        public Startup(IHostingEnvironment env)
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-
-            this.Configuration = builder.Build();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -42,10 +28,11 @@ namespace LetsDoIt.Moody.Web
             services.AddResponseCompression();
 
             //Database
-            /*services.AddDbContext<ApplicationwashContext>(opt =>
-              opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection")));*/
+            //services.AddDbContext<DataService>(opt =>
+             // opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection")));
 
             services.AddControllers();
+            services.AddMvc();
 
             //Swagger
             services.AddSwaggerGen(c =>
@@ -57,6 +44,8 @@ namespace LetsDoIt.Moody.Web
                     Description = "Moody API details are here."
                 });
             });
+
+            //ExpirationDate
 
             //Authentication
             var key = "2hN70OoacUi5SDU0rNuIXg==";
@@ -90,10 +79,8 @@ namespace LetsDoIt.Moody.Web
             }
 
             app.UseResponseCompression();
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -103,7 +90,6 @@ namespace LetsDoIt.Moody.Web
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Moody API V1");
             });
-
 
             app.UseEndpoints(endpoints =>
             {

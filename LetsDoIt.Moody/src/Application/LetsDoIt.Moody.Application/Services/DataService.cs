@@ -11,7 +11,7 @@ namespace LetsDoIt.Moody.Application.Services
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=UserDb;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"server=(localdb)\\MSSQLLocalDB;database=MoodyDB;Trusted_Connection=True");
         }
     }
 }
