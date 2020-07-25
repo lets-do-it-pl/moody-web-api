@@ -5,9 +5,10 @@ using System.Text;
 
 namespace LetsDoIt.Moody.Application
 {
+    using Domain;
     public interface ICategoryService
     {
         void Update(int id, string name, int order, byte[] image);
-        void getCategory(string versionNumber);
+        public CategoryEntity getCategory(string versionNumber);
     }
 }
