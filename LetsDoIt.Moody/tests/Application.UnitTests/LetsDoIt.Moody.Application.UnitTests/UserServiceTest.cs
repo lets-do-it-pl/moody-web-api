@@ -11,9 +11,8 @@ namespace LetsDoIt.Moody.Application.UnitTests
         public void UserSevice_WhetherEncryptedProperly_ReturnEncryptedText()
         { 
             var encryptUserMock = new Mock<UserService>();
-            var expectedUserMock = new Mock<UserService>();
-            encryptUserMock.Setup(x => x.EncryptUserNameAndPassword("John", "12345"));
-            encryptUserMock.Verify(cs => cs.EncryptUserNameAndPassword("John", "12345"));
+            encryptUserMock.Setup(x => x.EncryptUserNameAndPassword("test1", "password1")).Returns("4w3A6H263XZQGo1hFaAciFdiQg/nTxSeWhANED2PA5Q=");
+            encryptUserMock.Verify(cs => cs.EncryptUserNameAndPassword("test1", "password1"));
         }
 
     }

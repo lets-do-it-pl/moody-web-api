@@ -1,4 +1,5 @@
 using System.Text;
+using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,23 +30,12 @@ namespace LetsDoIt.Moody.Web
 
             //Database
             //services.AddDbContext<DataService>(opt =>
-             // opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection")));
+            //opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection")));
 
             services.AddControllers();
-            services.AddMvc();
 
-            //Swagger
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "Moody API",
-                    Version = "v1",
-                    Description = "Moody API details are here."
-                });
-            });
-
-            //ExpirationDate
+            //AppSettings
+            var tokenExpirationMin = _config.GetValue<int>("TokenExpirationMin");
 
             //Authentication
             var key = "2hN70OoacUi5SDU0rNuIXg==";
@@ -68,7 +58,43 @@ namespace LetsDoIt.Moody.Web
                 };
             });
 
-            services.AddSingleton<IUserService>(new UserService(key));
+            services.AddSingleton<IUserService>(new UserService(key, tokenExpirationMin));
+
+            //Swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Moody API",
+                    Version = "v1",
+                    Description = "Moody API details are here."
+                });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

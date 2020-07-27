@@ -4,11 +4,8 @@ namespace LetsDoIt.Moody.Domain
 {
     public class Token
     {
-        public string Id { get; set; }
-        public string UserId { get; set; }
-        public string Jwt { get; set; }
-        public int ExpirationDate { get; set; }
-        public DateTime CreateDate { get; }
+        public int TokenExpirationMin { get; set; }
+        public string Key { get; set; }
     }
     
 }

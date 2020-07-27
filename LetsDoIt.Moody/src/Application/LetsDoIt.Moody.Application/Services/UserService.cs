@@ -1,39 +1,33 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Linq;
-
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
+using LetsDoIt.Moody.Domain;
+using Microsoft.Extensions.Configuration;
 
 namespace LetsDoIt.Moody.Application.Services
-{
-    using LetsDoIt.Moody.Domain;
+{ 
 
     public class UserService : IUserService
     {
         private readonly string key;
+        private readonly int tokenExpirationMin;
 
-        public UserService(string key)
+        public UserService(string key, int tokenExpirationMin)
         {
             this.key = key;
-        }
-
-        public UserService()
-        {
+            this.tokenExpirationMin = tokenExpirationMin;
         }
 
         //For testing : unnecessary
-        private readonly IDictionary<string, string> users = new Dictionary<string, string>
+        private readonly List<string> users = new List<string>
         {
-            {
-                "test1", "password1"
-            },
-            {
-                "test2", "password2"
-            }
+            {"4w3A6H263XZQGo1hFaAciFdiQg/nTxSeWhANED2PA5Q="},
+            {"jsadgsajhfggfsakgsakk" }
         };
 
         public string EncryptUserNameAndPassword(string username, string password)
@@ -50,17 +44,11 @@ namespace LetsDoIt.Moody.Application.Services
             return hashed;
         }
 
-        public string Authenticate(string username, string password)
+        public string Authenticate(string login)
         {
-            /*var context = new DataService();
-             * var user = new UserService
+            var context = new DataService();
 
-            if (!context.Users.Any(user => user.UsernameAndPassword == user.Encrypt(username, password)))
-             {
-                return null;
-             }*/
-
-            if (!users.Any(u => u.Key == username && u.Value == password))
+            if (!users.Any(u => u.Equals(login)))
             {
                 throw new Exception("User does not exists");
             }
@@ -71,9 +59,9 @@ namespace LetsDoIt.Moody.Application.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name,username)
+                    new Claim(ClaimTypes.Name,login)
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(1440),
+                Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMin),
                 SigningCredentials =
                     new SigningCredentials(
                         new SymmetricSecurityKey(tokenKey),
