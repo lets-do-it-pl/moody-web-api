@@ -1,11 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dawn.Guard" Version="1.12.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
       <PrivateAssets>all</PrivateAssets>
@@ -15,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\LetsDoIt.Moody.Domain\LetsDoIt.Moody.Domain.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\LetsDoIt.Moody.Infrastructure\LetsDoIt.Moody.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

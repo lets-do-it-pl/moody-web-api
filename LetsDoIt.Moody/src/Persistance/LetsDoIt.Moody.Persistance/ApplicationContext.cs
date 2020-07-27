@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-
+using System.Collections.Generic;
+using System.Text;
 
 namespace LetsDoIt.Moody.Persistance
-{
+{    
     using Domain;
 
     public class ApplicationContext : DbContext
@@ -13,8 +14,8 @@ namespace LetsDoIt.Moody.Persistance
         {
         }
 
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<VersionHistory> VersionHistories { get; set; }
-        public DbSet<CategoryEntity> CategoryEntities { get; set; }
+        public DbSet<Category> Categories { get; set; }   
+
+        public DbSet<VersionHistory> VersionHistories { get; set; }        
     }
 }
