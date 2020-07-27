@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.Category;
 using LetsDoIt.Moody.Application.User;
 using LetsDoIt.Moody.Web.Controllers;
@@ -12,40 +13,56 @@ namespace LetsDoIt.Moody.Web.UnitTests
     public class UserControllerTests
     {
         private readonly UserController _testing;
-
+        private readonly Mock<IUserService> _mockUserService;
         public UserControllerTests()
         {
-            var mockUserService = new Mock<IUserService>();
-            _testing = new UserController(mockUserService.Object);
+            _mockUserService = new Mock<IUserService>();
+            _testing = new UserController(_mockUserService.Object);
         }
 
         [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void SaveUserAsync_WhenUserNameIsMissing_ShouldThrownAnArgumentException(string userName)
+        public async Task SaveUserAsync_WhenUserNameIsMissing_ShouldThrownAnArgumentException(string userName)
         {
             // act 
-            Action action = async () => await _testing.SaveUserAsync(userName,"asdfgh");
+            async Task Action() => await _testing.SaveUserAsync(userName, "asdfgh");
 
             //assert
-            Assert.Throws<ArgumentException>(action);
+            await Assert.ThrowsAsync<ArgumentException>(Action);
         }
 
         [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void SaveUserAsync_WhenPasswordIsMissing_ShouldThrownAnArgumentException(string password)
+        public async Task SaveUserAsync_WhenPasswordIsMissing_ShouldThrownAnArgumentException(string password)
         {
-            // act 
-            Action action = async () => await _testing.SaveUserAsync("ben", password);
+            async Task Action() => await _testing.SaveUserAsync("ben", password);
 
             //assert
-            Assert.Throws<ArgumentException>(action);
+            await Assert.ThrowsAsync<ArgumentException>(Action);
+
+        }
+
+        [Fact]
+        public async Task SaveUserAsync_ShouldSaveUserInformation()
+        {
+            // arrange
+            var userName = "Deneme";
+            var password = "asdfgh";
+
+            _mockUserService.Setup(us => us.SaveUserAsync(userName,password));
+
+            // act
+            await _testing.SaveUserAsync(userName, password);
+
+            // assert
+            _mockUserService.Verify(us => us.SaveUserAsync(userName,password));
         }
 
 
-       
+
     }
 }
