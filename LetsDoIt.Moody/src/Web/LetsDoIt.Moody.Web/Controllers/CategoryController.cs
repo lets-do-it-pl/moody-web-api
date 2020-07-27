@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using LetsDoIt.Moody.Application.Services;
-using LetsDoIt.Moody.Application.Services.CategoryFolder;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {

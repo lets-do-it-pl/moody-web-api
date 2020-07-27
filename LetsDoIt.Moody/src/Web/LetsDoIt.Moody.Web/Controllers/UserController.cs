@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LetsDoIt.Moody.Application;
-using LetsDoIt.Moody.Application.Services;
-using LetsDoIt.Moody.Application.Services.UserFolder;
+using LetsDoIt.Moody.Application.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.Controllers
@@ -21,9 +20,8 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
 
-        //Don't know where to put await 
         [HttpPost]
-        public  void SaveUser(string userName, string password)
+        public async  Task  SaveUserAsync(string userName, string password)
         {
             if (string.IsNullOrWhiteSpace(userName))
             {
@@ -34,7 +32,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 throw new ArgumentException("Password cannot be null!");
             }
             
-            _userService.SaveUser(userName,password);
+            await _userService.SaveUserAsync(userName,password);
 
         }
     }

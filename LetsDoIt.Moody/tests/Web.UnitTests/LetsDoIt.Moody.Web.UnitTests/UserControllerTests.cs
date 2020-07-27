@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using LetsDoIt.Moody.Application.Services.UserFolder;
+using LetsDoIt.Moody.Application.Category;
+using LetsDoIt.Moody.Application.User;
 using LetsDoIt.Moody.Web.Controllers;
 using Moq;
 using Xunit;
@@ -11,23 +12,21 @@ namespace LetsDoIt.Moody.Web.UnitTests
     public class UserControllerTests
     {
         private readonly UserController _testing;
-        private readonly Mock<IUserService> _mockUserService;
 
         public UserControllerTests()
         {
-            _mockUserService = new Mock<IUserService>();
-            _testing = new UserController(_mockUserService.Object);
+            var mockUserService = new Mock<IUserService>();
+            _testing = new UserController(mockUserService.Object);
         }
-
 
         [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void SaveUser_WhenUserNameIsMissing_ShouldThrownAnArgumentException(string userName)
+        public void SaveUserAsync_WhenUserNameIsMissing_ShouldThrownAnArgumentException(string userName)
         {
             // act 
-            Action action = () => _testing.SaveUser(userName,"asd123");
+            Action action = async () => await _testing.SaveUserAsync(userName,"asdfgh");
 
             //assert
             Assert.Throws<ArgumentException>(action);
@@ -37,30 +36,16 @@ namespace LetsDoIt.Moody.Web.UnitTests
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void SaveUser_WhenPasswordIsMissing_ShouldThrownAnArgumentException(string password)
+        public void SaveUserAsync_WhenPasswordIsMissing_ShouldThrownAnArgumentException(string password)
         {
             // act 
-            Action action = () => _testing.SaveUser("Kukilamasoliksanae",password);
+            Action action = async () => await _testing.SaveUserAsync("ben", password);
 
             //assert
             Assert.Throws<ArgumentException>(action);
         }
 
 
-        [Fact]
-        public void SaveUser_ShouldSaveUserInformation()
-        {
-            // arrange
-            var userName = "Deneme";
-            var password = "asdasd12321";
-
-            _mockUserService.Setup(cs => cs.SaveUser(userName,password));
-
-            // act
-            _testing.SaveUser(userName,password);
-
-            // assert
-            _mockUserService.Verify(cs => cs.SaveUser(userName,password));
-        }
+       
     }
 }

@@ -1,7 +1,5 @@
 using Moq;
 using System;
-using LetsDoIt.Moody.Application.Services;
-using LetsDoIt.Moody.Application.Services.CategoryFolder;
 using Xunit;
 
 namespace LetsDoIt.Moody.Web.UnitTests

@@ -1,3 +1,4 @@
+using LetsDoIt.Moody.Application.User;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -31,7 +32,8 @@ namespace LetsDoIt.Moody.Web
             services.AddResponseCompression();
 
             services.AddDbContext<ApplicationContext>(opt =>
-              opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection")));
+              opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection"),
+                  x => x.MigrationsAssembly("LetsDoIt.Moody.Web")));
 
             services.AddControllers();
 
@@ -47,8 +49,11 @@ namespace LetsDoIt.Moody.Web
             
             services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
             services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
+            services.AddTransient<IEntityRepository<User>, UserRepository>();
+
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
+            services.AddTransient<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
