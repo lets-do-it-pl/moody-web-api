@@ -1,20 +1,19 @@
-using LetsDoIt.Moody.Application.Services;
-using LetsDoIt.Moody.Application.Services.CategoryFolder;
-using LetsDoIt.Moody.Application.Services.UserFolder;
-using LetsDoIt.Moody.Persistance.DataAccess;
-using LetsDoIt.Moody.Persistance.DataAccess.EfTechnology;
-using LetsDoIt.Moody.Persistance.DataAccess.EntityFramework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 namespace LetsDoIt.Moody.Web
 {
-    using Application;
+    using Persistance;
+    using Persistance.Repositories.Base;
+    using Application.Category;
+    using Application.VersionHistory;
+    using LetsDoIt.Moody.Persistance.Repositories;
+    using LetsDoIt.Moody.Domain;
 
     public class Startup
     {
@@ -32,8 +31,7 @@ namespace LetsDoIt.Moody.Web
             services.AddResponseCompression();
 
             services.AddDbContext<ApplicationContext>(opt =>
-                opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection"),
-                    x => x.MigrationsAssembly("LetsDoIt.Moody.Web")));
+              opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection")));
 
             services.AddControllers();
 
@@ -46,12 +44,11 @@ namespace LetsDoIt.Moody.Web
                     Description = "Moody API details are here."
                 });
             });
-
-
+            
+            services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
+            services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
             services.AddTransient<ICategoryService, CategoryService>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IUserRepository, EfUserRepository>();
-            services.AddTransient<ICategoryRepository, EfCategoryRepository>();
+            services.AddTransient<IVersionHistoryService, VersionHistoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

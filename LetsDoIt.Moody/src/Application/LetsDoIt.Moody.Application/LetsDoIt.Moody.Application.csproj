@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\LetsDoIt.Moody.Domain\LetsDoIt.Moody.Domain.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\LetsDoIt.Moody.Infrastructure\LetsDoIt.Moody.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Persistance\LetsDoIt.Moody.Persistance\LetsDoIt.Moody.Persistance.csproj" />
   </ItemGroup>
 
