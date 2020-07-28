@@ -19,8 +19,6 @@
             _versionHistoryService = versionHistoryService;
         }
 
-      
-
         public async Task DeleteAsync(int id)
         {
             var entity = await _categoryRepository.GetAsync(c => c.Id == id);
@@ -28,12 +26,8 @@
             {
                 throw new Exception($"Category couldn't be found with id({id})");
             }
-
-
-            await _categoryRepository.UpdateAsync(entity);
-
+            await _categoryRepository.DeleteAsync(entity);
             await _versionHistoryService.CreateNewVersionAsync();
         }
     }
 }
-

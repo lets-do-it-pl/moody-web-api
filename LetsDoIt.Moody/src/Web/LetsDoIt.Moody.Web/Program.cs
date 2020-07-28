@@ -22,7 +22,5 @@ namespace LetsDoIt.Moody.Web
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-
     }
 }
