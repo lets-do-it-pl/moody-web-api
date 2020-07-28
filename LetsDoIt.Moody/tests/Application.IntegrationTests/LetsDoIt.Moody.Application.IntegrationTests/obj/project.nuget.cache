@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "08Z1I6pQFy9JEKMRCPqLyy8jNktdtpiihWV+kEbxltveQz6VNvJM3x077b7us95N3MI5LrJfbwwszg1CYh3M8w==",
+  "dgSpecHash": "W3Ffg1Qtq/vnjgfGBrvgLh6IoLWHU2/ZUPJWKljJG+versojevZ6g8Tg6yHM7YBRdJbD9sj87j5hvcViTgHl3w==",
   "success": true,
   "projectFilePath": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\tests\\Application.IntegrationTests\\LetsDoIt.Moody.Application.IntegrationTests\\LetsDoIt.Moody.Application.IntegrationTests.csproj",
   "expectedPackageFiles": [

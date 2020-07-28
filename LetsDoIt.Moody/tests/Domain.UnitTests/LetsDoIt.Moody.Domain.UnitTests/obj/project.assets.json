@@ -8,6 +8,15 @@
           "build/netstandard1.0/coverlet.collector.targets": {}
         }
       },
+      "Dawn.Guard/1.12.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Dawn.Guard.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Dawn.Guard.dll": {}
+        }
+      },
       "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
         "type": "package",
         "compile": {
@@ -1746,6 +1755,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
+          "Dawn.Guard": "1.12.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6"
         },
         "compile": {
@@ -1787,6 +1797,21 @@
         "build/netstandard1.0/coverlet.core.pdb",
         "coverlet.collector.1.2.0.nupkg.sha512",
         "coverlet.collector.nuspec"
+      ]
+    },
+    "Dawn.Guard/1.12.0": {
+      "sha512": "niOoFTH4DO3/c0rBBHgCeWUCzSpgYZLI4+TxiwPyYP0bxZrxSokhyztx5QdsvHfB6Y3ovhK6vYwZr2qD8JdiuQ==",
+      "type": "package",
+      "path": "dawn.guard/1.12.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "dawn.guard.1.12.0.nupkg.sha512",
+        "dawn.guard.nuspec",
+        "lib/netstandard1.0/Dawn.Guard.dll",
+        "lib/netstandard1.0/Dawn.Guard.xml",
+        "lib/netstandard2.0/Dawn.Guard.dll",
+        "lib/netstandard2.0/Dawn.Guard.xml"
       ]
     },
     "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
@@ -6191,6 +6216,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "Dawn.Guard >= 1.12.0",
       "LetsDoIt.Moody.Domain >= 1.0.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 3.1.6",
       "Microsoft.EntityFrameworkCore.Tools >= 3.1.6",
@@ -6246,6 +6272,10 @@
     "frameworks": {
       "netcoreapp3.1": {
         "dependencies": {
+          "Dawn.Guard": {
+            "target": "Package",
+            "version": "[1.12.0, )"
+          },
           "Microsoft.EntityFrameworkCore.SqlServer": {
             "target": "Package",
             "version": "[3.1.6, )"

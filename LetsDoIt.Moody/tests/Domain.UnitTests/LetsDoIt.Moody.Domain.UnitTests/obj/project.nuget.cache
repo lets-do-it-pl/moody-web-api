@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "5Ybmzda+5foed4xiJPM/raAtu3SvBzHS29oyxGUZkZ1xnEbtUkuQxJk0+aUybOyjWfRab0ndtDxd+Skyt2MWRw==",
+  "dgSpecHash": "26PdFAqOsO/GvYkjzRRl67PHQgqXzjAY8BZGPAfCzPI4qLNKKAnHMySZvURRoDqvKHnF+mD9vbM2UZuK1Fcd7g==",
   "success": true,
   "projectFilePath": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\tests\\Domain.UnitTests\\LetsDoIt.Moody.Domain.UnitTests\\LetsDoIt.Moody.Domain.UnitTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ahmet\\.nuget\\packages\\coverlet.collector\\1.2.0\\coverlet.collector.1.2.0.nupkg.sha512",
+    "C:\\Users\\ahmet\\.nuget\\packages\\dawn.guard\\1.12.0\\dawn.guard.1.12.0.nupkg.sha512",
     "C:\\Users\\ahmet\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\ahmet\\.nuget\\packages\\microsoft.bcl.hashcode\\1.1.0\\microsoft.bcl.hashcode.1.1.0.nupkg.sha512",
     "C:\\Users\\ahmet\\.nuget\\packages\\microsoft.codecoverage\\16.5.0\\microsoft.codecoverage.16.5.0.nupkg.sha512",

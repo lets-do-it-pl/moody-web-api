@@ -1793,6 +1793,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
+          "Dawn.Guard": "1.12.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6"
         },
         "compile": {
@@ -6313,6 +6314,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "Dawn.Guard >= 1.12.0",
       "LetsDoIt.Moody.Application >= 1.0.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 3.1.6",
       "Microsoft.EntityFrameworkCore.Tools >= 3.1.6",
@@ -6368,6 +6370,10 @@
     "frameworks": {
       "netcoreapp3.1": {
         "dependencies": {
+          "Dawn.Guard": {
+            "target": "Package",
+            "version": "[1.12.0, )"
+          },
           "Microsoft.EntityFrameworkCore.SqlServer": {
             "target": "Package",
             "version": "[3.1.6, )"

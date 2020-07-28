@@ -38,6 +38,27 @@
           "lib/netstandard2.0/Dawn.Guard.dll": {}
         }
       },
+      "Microsoft.AspNetCore.Cryptography.Internal/3.1.6": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Cryptography.Internal.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Cryptography.Internal.dll": {}
+        }
+      },
+      "Microsoft.AspNetCore.Cryptography.KeyDerivation/3.1.6": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Cryptography.Internal": "3.1.6"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll": {}
+        }
+      },
       "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
         "type": "package",
         "compile": {
@@ -2492,6 +2513,7 @@
           "Dawn.Guard": "1.12.0",
           "LetsDoIt.Moody.Domain": "1.0.0",
           "LetsDoIt.Moody.Persistance": "1.0.0",
+          "Microsoft.AspNetCore.Cryptography.KeyDerivation": "3.1.6",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6"
         },
         "compile": {
@@ -2515,21 +2537,6 @@
           "bin/placeholder/LetsDoIt.Moody.Domain.dll": {}
         }
       },
-      "LetsDoIt.Moody.Infrastructure/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v3.1",
-        "dependencies": {
-          "Dawn.Guard": "1.12.0",
-          "LetsDoIt.Moody.Application": "1.0.0",
-          "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6"
-        },
-        "compile": {
-          "bin/placeholder/LetsDoIt.Moody.Infrastructure.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/LetsDoIt.Moody.Infrastructure.dll": {}
-        }
-      },
       "LetsDoIt.Moody.Persistance/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
@@ -2550,8 +2557,6 @@
         "dependencies": {
           "Dawn.Guard": "1.12.0",
           "LetsDoIt.Moody.Application": "1.0.0",
-          "LetsDoIt.Moody.Domain": "1.0.0",
-          "LetsDoIt.Moody.Infrastructure": "1.0.0",
           "LetsDoIt.Moody.Persistance": "1.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6",
           "Swashbuckle.AspNetCore": "5.5.1"
@@ -2638,6 +2643,42 @@
         "lib/netstandard1.0/Dawn.Guard.xml",
         "lib/netstandard2.0/Dawn.Guard.dll",
         "lib/netstandard2.0/Dawn.Guard.xml"
+      ]
+    },
+    "Microsoft.AspNetCore.Cryptography.Internal/3.1.6": {
+      "sha512": "+OyVi4mANQgFC9cIH/J+BKNFWBVgTIO16HZfBp+vtTv/FFzWCV1zhxRJ3u+ZVoEouA/LboOBbP3wg8jroKH8ug==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.cryptography.internal/3.1.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/netcoreapp3.1/Microsoft.AspNetCore.Cryptography.Internal.dll",
+        "lib/netcoreapp3.1/Microsoft.AspNetCore.Cryptography.Internal.xml",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Cryptography.Internal.dll",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Cryptography.Internal.xml",
+        "microsoft.aspnetcore.cryptography.internal.3.1.6.nupkg.sha512",
+        "microsoft.aspnetcore.cryptography.internal.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Cryptography.KeyDerivation/3.1.6": {
+      "sha512": "RSSe+0lqHCufRumPXPB0OpMyZ+fCOQwdamCSvroaZFrmwgu/53Pl/H/yIirVgT1ujg07ofKirjh9pAxO+qZjGw==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.cryptography.keyderivation/3.1.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/netcoreapp2.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll",
+        "lib/netcoreapp2.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.xml",
+        "lib/netcoreapp3.1/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll",
+        "lib/netcoreapp3.1/Microsoft.AspNetCore.Cryptography.KeyDerivation.xml",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.xml",
+        "microsoft.aspnetcore.cryptography.keyderivation.3.1.6.nupkg.sha512",
+        "microsoft.aspnetcore.cryptography.keyderivation.nuspec"
       ]
     },
     "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
@@ -8185,11 +8226,6 @@
       "type": "project",
       "path": "../../../src/Domain/LetsDoIt.Moody.Domain/LetsDoIt.Moody.Domain.csproj",
       "msbuildProject": "../../../src/Domain/LetsDoIt.Moody.Domain/LetsDoIt.Moody.Domain.csproj"
-    },
-    "LetsDoIt.Moody.Infrastructure/1.0.0": {
-      "type": "project",
-      "path": "../../../src/Infrastructure/LetsDoIt.Moody.Infrastructure/LetsDoIt.Moody.Infrastructure.csproj",
-      "msbuildProject": "../../../src/Infrastructure/LetsDoIt.Moody.Infrastructure/LetsDoIt.Moody.Infrastructure.csproj"
     },
     "LetsDoIt.Moody.Persistance/1.0.0": {
       "type": "project",
