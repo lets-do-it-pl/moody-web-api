@@ -21,7 +21,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "Welcome", "Welcome" };
+            return new string[] { "Welcome to home page" };
         }
 
         [AllowAnonymous]     
