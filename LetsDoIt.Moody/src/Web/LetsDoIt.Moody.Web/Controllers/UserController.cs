@@ -5,14 +5,13 @@ using Microsoft.AspNetCore.Authorization;
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using LetsDoIt.Moody.Application.Services;
-
    
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
-
 
         public UserController(IUserService userService)
         {
@@ -29,8 +28,8 @@ namespace LetsDoIt.Moody.Web.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate(string username, string password)
         {
-            var login = userService.EncryptUserNameAndPassword(username, password);
-            var token = userService.Authenticate(login);
+            var encryptedPassword = userService.EncryptUserNameAndPassword(username, password);
+            var token = userService.Authenticate(username, encryptedPassword);
             if(token == null)
                 return Unauthorized();
             return Ok(token);

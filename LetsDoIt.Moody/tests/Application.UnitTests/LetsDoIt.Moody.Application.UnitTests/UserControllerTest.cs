@@ -23,13 +23,13 @@ namespace LetsDoIt.Moody.Application.UnitTests
             var username = "John";
             var password = "12345";
 
-            _mockUserService.Setup(cs => cs.Authenticate(cs.EncryptUserNameAndPassword(username, password)));
+            _mockUserService.Setup(cs => cs.EncryptUserNameAndPassword(username, password));
 
             // act
             _testing.Authenticate(username, password);
 
             // assert
-            _mockUserService.Verify(cs => cs.Authenticate(cs.EncryptUserNameAndPassword(username, password)));
+            _mockUserService.Verify(cs => cs.Authenticate(username, cs.EncryptUserNameAndPassword(username, password)));
         }
         
     }

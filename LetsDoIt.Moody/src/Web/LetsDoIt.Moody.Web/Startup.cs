@@ -25,21 +25,18 @@ namespace LetsDoIt.Moody.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddControllers();
             services.AddResponseCompression();
 
             //Database
             //services.AddDbContext<DataService>(opt =>
             //opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection")));
 
-            services.AddControllers();
-
             //AppSettings
             var tokenExpirationMin = _config.GetValue<int>("TokenExpirationMin");
+            var key = _config.GetValue<string>("JwtEncryptionKey");
 
             //Authentication
-            var key = "2hN70OoacUi5SDU0rNuIXg==";
-
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -70,29 +67,24 @@ namespace LetsDoIt.Moody.Web
                     Description = "Moody API details are here."
                 });
 
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                var securitySchema = new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')",
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    Reference = new OpenApiReference
                     {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    Array.Empty<string>()
-                }
-            });
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                };
+                c.AddSecurityDefinition("Bearer", securitySchema);
+
+                var securityRequirement = new OpenApiSecurityRequirement();
+                securityRequirement.Add(securitySchema, new[] { "Bearer" });
+                c.AddSecurityRequirement(securityRequirement);
 
             });
         }

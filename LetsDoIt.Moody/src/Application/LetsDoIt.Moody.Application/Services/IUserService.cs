@@ -1,10 +1,9 @@
-﻿using System;
-namespace LetsDoIt.Moody.Application.Services
+﻿namespace LetsDoIt.Moody.Application.Services
 {
     public interface IUserService
     {
-        string EncryptUserNameAndPassword(string username, string password);
-        string Authenticate(string login);
+        public string EncryptUserNameAndPassword(string username, string password);
+        public string Authenticate(string username, string password);
        
     }
 }

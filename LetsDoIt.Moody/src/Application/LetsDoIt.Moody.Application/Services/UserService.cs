@@ -6,16 +6,26 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
-using LetsDoIt.Moody.Domain;
-using Microsoft.Extensions.Configuration;
 
 namespace LetsDoIt.Moody.Application.Services
-{ 
-
+{
     public class UserService : IUserService
     {
         private readonly string key;
         private readonly int tokenExpirationMin;
+
+        /*public string CheckUserExists(string username, string password)
+        {
+            var context = new ApplicationContext();
+            var user = context.Users
+                .Where(s => s.Username.Any == username && s.Password.Any == password)
+                .ToList();
+            if(user == null)
+            {
+                return "User does not exist";
+            }
+            return "User exists";
+        }*/
 
         public UserService(string key, int tokenExpirationMin)
         {
@@ -24,10 +34,9 @@ namespace LetsDoIt.Moody.Application.Services
         }
 
         //For testing : unnecessary
-        private readonly List<string> users = new List<string>
+        private readonly IDictionary<string, string> users = new Dictionary<string, string>
         {
-            {"4w3A6H263XZQGo1hFaAciFdiQg/nTxSeWhANED2PA5Q="},
-            {"jsadgsajhfggfsakgsakk" }
+            {"test1" , "4w3A6H263XZQGo1hFaAciFdiQg/nTxSeWhANED2PA5Q="}
         };
 
         public string EncryptUserNameAndPassword(string username, string password)
@@ -44,11 +53,9 @@ namespace LetsDoIt.Moody.Application.Services
             return hashed;
         }
 
-        public string Authenticate(string login)
-        {
-            var context = new DataService();
-
-            if (!users.Any(u => u.Equals(login)))
+        public string Authenticate(string username , string password)
+        { 
+            if (!users.Any(u => u.Key.Equals(username) && u.Value.Equals(password)))
             {
                 throw new Exception("User does not exists");
             }
@@ -59,7 +66,7 @@ namespace LetsDoIt.Moody.Application.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name,login)
+                    new Claim(ClaimTypes.Name, password)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMin),
                 SigningCredentials =
