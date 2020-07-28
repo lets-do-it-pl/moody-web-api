@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using LetsDoIt.Moody.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace LetsDoIt.Moody.Persistance.Repositories.Base
 {
+
+    using Domain;
+
     public abstract class EntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         where TEntity : class, IEntity
     {

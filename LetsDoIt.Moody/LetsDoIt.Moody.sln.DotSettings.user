@@ -1,8 +1,25 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3d297c3f_002Dfcf2_002D4715_002D8b97_002Df0cbc0cecb33/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="UserControllerTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.UserControllerTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8633a045_002D8231_002D43ce_002Da12c_002D0a090ea715f3/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Update_WhenNameIsMissing_ShouldThrownAnArgumentExcception" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.CategoryControllerTests.Update_WhenNameIsMissing_ShouldThrownAnArgumentException&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.CategoryControllerTests.Update_WhenImageIsMissing_ShouldThrownAnArgumentException&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.CategoryControllerTests.Update_ShouldUpdateCategoryInformation&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.UserControllerTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b6918872_002De35f_002D41f4_002Da74d_002D82d18b8de7ab/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="UserControllerTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.UserControllerTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.UserControllerTests.SaveUserAsync_WhenPasswordIsMissing_ShouldThrownAnArgumentException&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fe90954c_002Dc110_002D4de2_002Dab2d_002Dea8d43cd86c4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CategoryControllerTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.CategoryControllerTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
