@@ -2491,6 +2491,7 @@
         "dependencies": {
           "Dawn.Guard": "1.12.0",
           "LetsDoIt.Moody.Domain": "1.0.0",
+          "LetsDoIt.Moody.Persistance": "1.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6"
         },
         "compile": {
@@ -2533,9 +2534,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
-          "Dawn.Guard": "1.12.0",
           "LetsDoIt.Moody.Domain": "1.0.0",
-          "LetsDoIt.Moody.Infrastructure": "1.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.6"
         },
         "compile": {
@@ -8215,20 +8214,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\elifd\\.nuget\\packages\\": {}
+    "C:\\Users\\ahmet\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\elifd\\Source\\Repos\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
+      "projectUniqueName": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
       "projectName": "LetsDoIt.Moody.Web.UnitTests",
-      "projectPath": "C:\\Users\\elifd\\Source\\Repos\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
-      "packagesPath": "C:\\Users\\elifd\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\elifd\\Source\\Repos\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\obj\\",
+      "projectPath": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
+      "packagesPath": "C:\\Users\\ahmet\\.nuget\\packages\\",
+      "outputPath": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
+      ],
       "configFilePaths": [
-        "C:\\Users\\elifd\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\ahmet\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -8240,8 +8244,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\elifd\\Source\\Repos\\moody-web-api\\LetsDoIt.Moody\\src\\Web\\LetsDoIt.Moody.Web\\LetsDoIt.Moody.Web.csproj": {
-              "projectPath": "C:\\Users\\elifd\\Source\\Repos\\moody-web-api\\LetsDoIt.Moody\\src\\Web\\LetsDoIt.Moody.Web\\LetsDoIt.Moody.Web.csproj"
+            "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\src\\Web\\LetsDoIt.Moody.Web\\LetsDoIt.Moody.Web.csproj": {
+              "projectPath": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\src\\Web\\LetsDoIt.Moody.Web\\LetsDoIt.Moody.Web.csproj"
             }
           }
         }
