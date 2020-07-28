@@ -9,13 +9,18 @@ namespace LetsDoIt.Moody.Domain
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
+
         [Required]
         public string UserName { get; set; }
+
         [Required]
         public string Password { get; set; }
+
         [Required]
-        public DateTime CreateDate { get; set; } //Date will be created automatically
+        public DateTime CreateDate { get; set; }
+
         public DateTime? ModifiedDate { get; set; }
-        public bool isDeleted { get; set; } = false;
+
+        public bool isDeleted { get; set; } 
     }
 }

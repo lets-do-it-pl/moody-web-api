@@ -1,4 +1,5 @@
 using LetsDoIt.Moody.Application.User;
+using LetsDoIt.Moody.Application.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -46,6 +47,8 @@ namespace LetsDoIt.Moody.Web
                     Description = "Moody API details are here."
                 });
             });
+
+            services.AddTransient<ProtectionHelper>();
             
             services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
             services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
