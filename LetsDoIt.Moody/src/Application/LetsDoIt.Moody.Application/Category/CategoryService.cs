@@ -17,22 +17,16 @@
         {
             _categoryRepository = categoryRepository;
             _versionHistoryService = versionHistoryService;
-        } 
+        }
 
-        public async Task UpdateAsync(int id, string name, int order, byte[] image)
+        public async Task DeleteAsync(int id)
         {
             var entity = await _categoryRepository.GetAsync(c => c.Id == id);
-            if(entity == null)
+            if (entity == null)
             {
                 throw new Exception($"Category couldn't be found with id({id})");
             }
-
-            entity.Name = name;
-            entity.Order = order;
-            entity.Image = image;
-
-            await _categoryRepository.UpdateAsync(entity);
-
+            await _categoryRepository.DeleteAsync(entity);
             await _versionHistoryService.CreateNewVersionAsync();
         }
     }

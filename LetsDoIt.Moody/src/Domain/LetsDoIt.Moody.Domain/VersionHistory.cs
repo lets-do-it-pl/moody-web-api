@@ -11,8 +11,8 @@ namespace LetsDoIt.Moody.Domain
 		public long Id { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public string VersionNumber { get; set; }
+		[StringLength(100)]
+		public string VersionNumber { get; set; }
 		
         [Required]
         public DateTime CreateDate { get; set; }
