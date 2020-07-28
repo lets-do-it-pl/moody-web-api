@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace LetsDoIt.Moody.Application.Utils
 {
-    public class ProtectionHelper
+    public static class ProtectionHelper
     {
-        public string EncryptValue(string value)
+        public static string EncryptValue(string value)
         {
             byte[] salt = new byte[128 / 8];
 

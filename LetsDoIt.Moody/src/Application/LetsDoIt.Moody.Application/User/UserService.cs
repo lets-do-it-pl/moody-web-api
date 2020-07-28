@@ -1,28 +1,26 @@
-﻿using System;
-using System.Threading.Tasks;
-using LetsDoIt.Moody.Application.Utils;
-using LetsDoIt.Moody.Persistance.Repositories.Base;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.User
 {
+    using Utils;
+    using Persistance.Repositories.Base;
+    using Domain;
+
     public class UserService:IUserService
     {
-        private readonly IEntityRepository<Domain.User> _userRepository;
-        private readonly ProtectionHelper _protectionHelper;
+        private readonly IEntityRepository<User> _userRepository;
 
-        public UserService(IEntityRepository<Domain.User> userRepository, ProtectionHelper protectionHelper)
+        public UserService(IEntityRepository<User> userRepository)
         {
             _userRepository = userRepository;
-            _protectionHelper = protectionHelper;
         }
 
         public async Task SaveUserAsync(string userName, string password)
         {
-          await  _userRepository.AddAsync(new Domain.User
+          await  _userRepository.AddAsync(new User
             {
                 UserName = userName,
-                Password = _protectionHelper.EncryptValue(userName+password)
+                Password = ProtectionHelper.EncryptValue(userName+password)
 
             }); 
         }

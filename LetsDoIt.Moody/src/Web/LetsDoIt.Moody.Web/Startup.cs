@@ -1,5 +1,3 @@
-using LetsDoIt.Moody.Application.User;
-using LetsDoIt.Moody.Application.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,12 +8,13 @@ using Microsoft.OpenApi.Models;
 
 namespace LetsDoIt.Moody.Web
 {
+    using Application.User;
     using Persistance;
     using Persistance.Repositories.Base;
     using Application.Category;
     using Application.VersionHistory;
-    using LetsDoIt.Moody.Persistance.Repositories;
-    using LetsDoIt.Moody.Domain;
+    using Persistance.Repositories;
+    using Domain;
 
     public class Startup
     {
@@ -48,8 +47,6 @@ namespace LetsDoIt.Moody.Web
                 });
             });
 
-            services.AddTransient<ProtectionHelper>();
-            
             services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
             services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
             services.AddTransient<IEntityRepository<User>, UserRepository>();

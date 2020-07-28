@@ -3,7 +3,6 @@ using System;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
-    using Application;
     using Application.Category;
     using System.Threading.Tasks;
 

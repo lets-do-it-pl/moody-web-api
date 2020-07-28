@@ -27,7 +27,7 @@ namespace LetsDoIt.Moody.Web.UnitTests
         public async Task SaveUserAsync_WhenUserNameIsMissing_ShouldThrownAnArgumentException(string userName)
         {
             // act 
-            async Task Action() => await _testing.SaveUserAsync(userName, "asdfgh");
+            async Task Action() => await _testing.SaveUser(userName, "asdfgh");
 
             //assert
             await Assert.ThrowsAsync<ArgumentException>(Action);
@@ -39,7 +39,7 @@ namespace LetsDoIt.Moody.Web.UnitTests
         [InlineData(" ")]
         public async Task SaveUserAsync_WhenPasswordIsMissing_ShouldThrownAnArgumentException(string password)
         {
-            async Task Action() => await _testing.SaveUserAsync("ben", password);
+            async Task Action() => await _testing.SaveUser("ben", password);
 
             //assert
             await Assert.ThrowsAsync<ArgumentException>(Action);
@@ -56,10 +56,10 @@ namespace LetsDoIt.Moody.Web.UnitTests
             _mockUserService.Setup(us => us.SaveUserAsync(userName,password));
 
             // act
-            await _testing.SaveUserAsync(userName, password);
+            await _testing.SaveUser(userName, password);
 
             // assert
-            _mockUserService.Verify(us => us.SaveUserAsync(userName,password));
+            _mockUserService.Verify(us => us.SaveUserAsync(userName,password),Times.Once);
         }
 
 

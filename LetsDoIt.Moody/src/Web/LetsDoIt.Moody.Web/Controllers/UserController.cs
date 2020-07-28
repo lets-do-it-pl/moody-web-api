@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using LetsDoIt.Moody.Application;
-using LetsDoIt.Moody.Application.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
+    using Application.User;
+
     [ApiController]
     [Route("api/users")]
     public class UserController:ControllerBase
@@ -21,7 +19,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
 
         [HttpPost]
-        public async  Task  SaveUserAsync(string userName, string password)
+        public async  Task  SaveUser(string userName, string password)
         {
             if (string.IsNullOrWhiteSpace(userName))
             {
