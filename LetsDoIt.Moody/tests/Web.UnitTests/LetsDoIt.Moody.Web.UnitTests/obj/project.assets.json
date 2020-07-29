@@ -8250,25 +8250,20 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ahmet\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\emree\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
+      "projectUniqueName": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
       "projectName": "LetsDoIt.Moody.Web.UnitTests",
-      "projectPath": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
-      "packagesPath": "C:\\Users\\ahmet\\.nuget\\packages\\",
-      "outputPath": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\obj\\",
+      "projectPath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
+      "packagesPath": "C:\\Users\\emree\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\"
-      ],
       "configFilePaths": [
-        "C:\\Users\\ahmet\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\emree\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -8280,8 +8275,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\src\\Web\\LetsDoIt.Moody.Web\\LetsDoIt.Moody.Web.csproj": {
-              "projectPath": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\src\\Web\\LetsDoIt.Moody.Web\\LetsDoIt.Moody.Web.csproj"
+            "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\src\\Web\\LetsDoIt.Moody.Web\\LetsDoIt.Moody.Web.csproj": {
+              "projectPath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\src\\Web\\LetsDoIt.Moody.Web\\LetsDoIt.Moody.Web.csproj"
             }
           }
         }

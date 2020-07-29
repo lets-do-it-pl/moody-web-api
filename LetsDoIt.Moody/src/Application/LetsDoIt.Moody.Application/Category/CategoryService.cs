@@ -29,5 +29,18 @@
             await _categoryRepository.DeleteAsync(entity);
             await _versionHistoryService.CreateNewVersionAsync();
         }
+
+        public async Task InsertAsync(string name,int order,byte[] image)
+        {
+            await _categoryRepository.AddAsync(new Category
+            {
+                Name = name,
+                Order = order,
+                Image = image
+            });
+
+
+            await _versionHistoryService.CreateNewVersionAsync();
+        }
     }
 }
