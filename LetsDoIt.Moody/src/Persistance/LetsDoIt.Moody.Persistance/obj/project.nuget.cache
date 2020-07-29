@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "GBcQp8wU4drZHEeMH3oEPYy+LbEk0w6HllSUSjh7cl2Tqsuy6IUjILMcCTAFdpcOZbNJAokU4tpQHVb01qvPmw==",
+  "dgSpecHash": "0xNqrqphGSSUeSUWRVTlIOSCV8IPmkqSKoh6/8oW+rlylfSUI7Wu3IhjuX6k8+cpXkGrS8y8lUaJ0WrDRj0JpQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\src\\Persistance\\LetsDoIt.Moody.Persistance\\LetsDoIt.Moody.Persistance.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\emree\\.nuget\\packages\\dawn.guard\\1.12.0\\dawn.guard.1.12.0.nupkg.sha512",
     "C:\\Users\\emree\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\emree\\.nuget\\packages\\microsoft.bcl.hashcode\\1.1.0\\microsoft.bcl.hashcode.1.1.0.nupkg.sha512",
     "C:\\Users\\emree\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",

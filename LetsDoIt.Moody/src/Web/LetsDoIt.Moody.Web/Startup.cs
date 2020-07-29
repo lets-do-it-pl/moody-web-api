@@ -8,12 +8,20 @@ using Microsoft.OpenApi.Models;
 
 namespace LetsDoIt.Moody.Web
 {
+    using Application.User;
     using Persistance;
-    using Application;
+    using Persistance.Repositories.Base;
+    using Application.Category;
+    using Application.VersionHistory;
+    using Persistance.Repositories;
+    using Domain;
 
     public class Startup
     {
-        private IConfiguration _config;
+
+        private readonly IConfiguration _config;
+
+
         public Startup(IConfiguration configuration)
         {
             _config = configuration;
@@ -27,7 +35,8 @@ namespace LetsDoIt.Moody.Web
             services.AddResponseCompression();
 
             services.AddDbContext<ApplicationContext>(opt =>
-              opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection")));
+              opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection"),
+                  x => x.MigrationsAssembly("LetsDoIt.Moody.Web")));
 
             services.AddControllers();
 
@@ -41,7 +50,13 @@ namespace LetsDoIt.Moody.Web
                 });
             });
 
+            services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
+            services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
+            services.AddTransient<IEntityRepository<User>, UserRepository>();
+
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IVersionHistoryService, VersionHistoryService>();
+            services.AddTransient<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

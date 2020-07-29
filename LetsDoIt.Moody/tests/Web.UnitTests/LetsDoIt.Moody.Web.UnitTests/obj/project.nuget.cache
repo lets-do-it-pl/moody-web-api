@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "nWqdElSNOIR8egcuRU1s0viwGy0RH6nveOm7sp4F7oaYltycls1nqJX3l+zKi9C0AGIHyNL0AgRsiSfYQvbysg==",
+  "dgSpecHash": "rc/P3RC9tTwuqBw82c8ODWvvs3qQd2sBm0tH4HzU9CnAcki9LD+OQKVkuzyRsHs2bPEeZRy1BRrlMdtpaFV/4Q==",
   "success": true,
   "projectFilePath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\emree\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",
     "C:\\Users\\emree\\.nuget\\packages\\coverlet.collector\\1.2.0\\coverlet.collector.1.2.0.nupkg.sha512",
+    "C:\\Users\\emree\\.nuget\\packages\\dawn.guard\\1.12.0\\dawn.guard.1.12.0.nupkg.sha512",
+    "C:\\Users\\emree\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.6\\microsoft.aspnetcore.cryptography.internal.3.1.6.nupkg.sha512",
+    "C:\\Users\\emree\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\3.1.6\\microsoft.aspnetcore.cryptography.keyderivation.3.1.6.nupkg.sha512",
     "C:\\Users\\emree\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\emree\\.nuget\\packages\\microsoft.bcl.hashcode\\1.1.0\\microsoft.bcl.hashcode.1.1.0.nupkg.sha512",
     "C:\\Users\\emree\\.nuget\\packages\\microsoft.codecoverage\\16.5.0\\microsoft.codecoverage.16.5.0.nupkg.sha512",

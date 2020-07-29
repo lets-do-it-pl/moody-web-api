@@ -1,20 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LetsDoIt.Moody.Domain
 {
-   public class Category
-    { 
-        public Category() { }
+    public class Category : IEntity
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int Id { get; set; }
 
-
-        public long Id { get; set; }
+        [Required]
         public string Name { get; set; }
-        public int Order { get; set; }
-        public byte[] Image { get; set; }
-        public DateTime CreateDate { get; } //Date will be created automatically
-        public bool isDeleted { get; set; }
 
+        [Required]
+        public int Order { get; set; }
+
+        [Required]
+        public byte[] Image { get; set; }
+
+        [Required]
+        public DateTime CreateDate { get; set; }
+
+        public DateTime? ModifiedDate { get; set; }
+
+        public bool isDeleted { get; set; }        
     }
 }

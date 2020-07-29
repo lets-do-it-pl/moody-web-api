@@ -1,10 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "0MocGbwfBYNvrYU/HlGPROB3VC/2wD9JCtCvaKOVz1mfjgLf+dDxGyz9JoNcqdPEavyF+tcQsECDbQzfhiBSTQ==",
+  "dgSpecHash": "20iCaQGn2qjPc21l1xzpd7adFGF0JbLxUz2uViqlegkXQg9shY+7CIPZCn2XuQH11wzvtyRWfI7jj9xA55EQGg==",
   "success": true,
   "projectFilePath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\tests\\Application.IntegrationTests\\LetsDoIt.Moody.Application.IntegrationTests\\LetsDoIt.Moody.Application.IntegrationTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\emree\\.nuget\\packages\\coverlet.collector\\1.2.0\\coverlet.collector.1.2.0.nupkg.sha512",
+    "C:\\Users\\emree\\.nuget\\packages\\dawn.guard\\1.12.0\\dawn.guard.1.12.0.nupkg.sha512",
+    "C:\\Users\\emree\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.6\\microsoft.aspnetcore.cryptography.internal.3.1.6.nupkg.sha512",
+    "C:\\Users\\emree\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\3.1.6\\microsoft.aspnetcore.cryptography.keyderivation.3.1.6.nupkg.sha512",
     "C:\\Users\\emree\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\emree\\.nuget\\packages\\microsoft.bcl.hashcode\\1.1.0\\microsoft.bcl.hashcode.1.1.0.nupkg.sha512",
     "C:\\Users\\emree\\.nuget\\packages\\microsoft.codecoverage\\16.5.0\\microsoft.codecoverage.16.5.0.nupkg.sha512",
