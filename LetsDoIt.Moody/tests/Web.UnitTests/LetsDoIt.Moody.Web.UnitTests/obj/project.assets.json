@@ -8250,19 +8250,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\emree\\.nuget\\packages\\": {}
+    "C:\\Users\\Saban\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
+      "projectUniqueName": "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
       "projectName": "LetsDoIt.Moody.Web.UnitTests",
-      "projectPath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
-      "packagesPath": "C:\\Users\\emree\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\obj\\",
+      "projectPath": "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests.csproj",
+      "packagesPath": "C:\\Users\\Saban\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\tests\\Web.UnitTests\\LetsDoIt.Moody.Web.UnitTests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\emree\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Saban\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8275,8 +8275,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\src\\Web\\LetsDoIt.Moody.Web\\LetsDoIt.Moody.Web.csproj": {
-              "projectPath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\src\\Web\\LetsDoIt.Moody.Web\\LetsDoIt.Moody.Web.csproj"
+            "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Web\\LetsDoIt.Moody.Web\\LetsDoIt.Moody.Web.csproj": {
+              "projectPath": "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Web\\LetsDoIt.Moody.Web\\LetsDoIt.Moody.Web.csproj"
             }
           }
         }
@@ -8333,7 +8333,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.302\\RuntimeIdentifierGraph.json"
       }
     }
   }
