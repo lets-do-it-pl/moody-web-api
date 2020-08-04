@@ -5123,25 +5123,20 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ahmet\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\emree\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\LetsDoIt.Moody.Application.csproj",
+      "projectUniqueName": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\LetsDoIt.Moody.Application.csproj",
       "projectName": "LetsDoIt.Moody.Application",
-      "projectPath": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\LetsDoIt.Moody.Application.csproj",
-      "packagesPath": "C:\\Users\\ahmet\\.nuget\\packages\\",
-      "outputPath": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\obj\\",
+      "projectPath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\LetsDoIt.Moody.Application.csproj",
+      "packagesPath": "C:\\Users\\emree\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\"
-      ],
       "configFilePaths": [
-        "C:\\Users\\ahmet\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\emree\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -5153,11 +5148,11 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\src\\Domain\\LetsDoIt.Moody.Domain\\LetsDoIt.Moody.Domain.csproj": {
-              "projectPath": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\src\\Domain\\LetsDoIt.Moody.Domain\\LetsDoIt.Moody.Domain.csproj"
+            "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\src\\Domain\\LetsDoIt.Moody.Domain\\LetsDoIt.Moody.Domain.csproj": {
+              "projectPath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\src\\Domain\\LetsDoIt.Moody.Domain\\LetsDoIt.Moody.Domain.csproj"
             },
-            "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\src\\Persistance\\LetsDoIt.Moody.Persistance\\LetsDoIt.Moody.Persistance.csproj": {
-              "projectPath": "C:\\Moody\\moody-web-api\\LetsDoIt.Moody\\src\\Persistance\\LetsDoIt.Moody.Persistance\\LetsDoIt.Moody.Persistance.csproj"
+            "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\src\\Persistance\\LetsDoIt.Moody.Persistance\\LetsDoIt.Moody.Persistance.csproj": {
+              "projectPath": "C:\\Users\\emree\\OneDrive\\Dokumenty\\GitHub\\moody-web-api\\LetsDoIt.Moody\\src\\Persistance\\LetsDoIt.Moody.Persistance\\LetsDoIt.Moody.Persistance.csproj"
             }
           }
         }

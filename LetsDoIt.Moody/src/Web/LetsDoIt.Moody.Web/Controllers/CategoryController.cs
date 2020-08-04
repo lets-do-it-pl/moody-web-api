@@ -21,12 +21,24 @@ namespace LetsDoIt.Moody.Web.Controllers
         [Route("{id}")]
         public async Task Delete(int id)
         {
-        
-
             await _categoryService.DeleteAsync(id);
         }
-
-
         
+        [HttpPost]
+        public async Task Insert(string name, int order, byte[] image)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Name can not be null");
+            }
+
+            if (image == null)
+            {
+                throw new ArgumentException("Image cannot be null!");
+            }
+
+            await _categoryService.InsertAsync(name, order, image);
+
+        }
     }
 }
