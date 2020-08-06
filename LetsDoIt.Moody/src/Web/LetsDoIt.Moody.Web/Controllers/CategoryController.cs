@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Category;
     using Application.CustomExceptions;
-    using Entities.Requests;    
+    using Entities.Requests;
+    using Entities.Responses;
+    using System.Collections.Generic;
 
     [ApiController]
     [Route("api/categories")]
@@ -19,10 +22,25 @@ namespace LetsDoIt.Moody.Web.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Insert([FromBody]CategoryInsertRequest insertRequest)
+        [HttpGet, Route("{versionNumber?}")]
+        public async Task<ActionResult<CategoryResponse>> GetCategories(string versionNumber = null)
         {
-            if(insertRequest == null)
+            versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
+
+            var categoryResult = await _categoryService.GetCategories(versionNumber);
+            if (categoryResult == null ||
+                (!categoryResult.IsUpdated && categoryResult.Categories == null))
+            {
+                return NoContent();
+            }
+
+            return ToCategoryResponse(categoryResult);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Insert([FromBody] CategoryInsertRequest insertRequest)
+        {
+            if (insertRequest == null)
             {
                 return BadRequest();
             }
@@ -30,18 +48,17 @@ namespace LetsDoIt.Moody.Web.Controllers
             var byteImage = Convert.FromBase64String(insertRequest.Image);
 
             await _categoryService.InsertAsync(
-                insertRequest.Name, 
-                insertRequest.Order, 
+                insertRequest.Name,
+                insertRequest.Order,
                 byteImage);
 
             return Ok();
         }
 
-        [HttpPost]
-        [Route("update/{id}")]
+        [HttpPost, Route("update/{id}")]
         public async Task<IActionResult> Update(CategoryUpdateRequest updateRequest)
         {
-            if(updateRequest == null)
+            if (updateRequest == null)
             {
                 return BadRequest();
             }
@@ -66,9 +83,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
         }
 
-
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete, Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -85,6 +100,30 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 throw;
             }
+        }
+
+        private CategoryResponse ToCategoryResponse(CategoryGetResult categoryResult)
+        {
+            var result = new CategoryResponse
+                        {
+                            IsUpdated = categoryResult.IsUpdated,
+                            VersionNumber = categoryResult.VersionNumber                            
+                        };
+
+            if(categoryResult.Categories != null)
+            {
+                result.Categories = categoryResult
+                                        .Categories
+                                        .Select(c =>
+                                             new CategoryEntity
+                                             {
+                                                 Name = c.Name,
+                                                 Order = c.Order,
+                                                 Image = c.Image
+                                             });
+            }
+
+            return result;
         }
     }
 }
