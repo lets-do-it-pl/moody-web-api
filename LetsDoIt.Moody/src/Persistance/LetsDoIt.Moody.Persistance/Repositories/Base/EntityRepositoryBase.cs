@@ -65,7 +65,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
         public async Task DeleteAsync(TEntity entity)
         {
             entity.ModifiedDate = DateTime.Now;
-            entity.isDeleted = true;
+            entity.IsDeleted = true;
 
             var deletedEntity = _context.Entry(entity);
             

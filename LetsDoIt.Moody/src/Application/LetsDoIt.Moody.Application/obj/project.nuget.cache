@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "CyuTXTXxK8KrxlYDYtWAc80IdVcBZl6h4yU1WQzwy0alPEMIRFjSvBwMnH0iy4LC6XqaxEA0Q0B5NeTyp1MXeg==",
+  "dgSpecHash": "RotL03gyyvfuGB2iFtyF734lj0sy/wg7rob2DIq12YgxmebID6vHN2VMYz9TMQzUKdiJOIKnWtRl4gC7xb85AQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\LetsDoIt.Moody.Application.csproj",
+  "projectFilePath": "E:\\source\\repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\LetsDoIt.Moody.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Saban\\.nuget\\packages\\dawn.guard\\1.12.0\\dawn.guard.1.12.0.nupkg.sha512",
     "C:\\Users\\Saban\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.6\\microsoft.aspnetcore.cryptography.internal.3.1.6.nupkg.sha512",

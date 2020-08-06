@@ -5128,11 +5128,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\LetsDoIt.Moody.Application.csproj",
+      "projectUniqueName": "E:\\source\\repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\LetsDoIt.Moody.Application.csproj",
       "projectName": "LetsDoIt.Moody.Application",
-      "projectPath": "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\LetsDoIt.Moody.Application.csproj",
+      "projectPath": "E:\\source\\repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\LetsDoIt.Moody.Application.csproj",
       "packagesPath": "C:\\Users\\Saban\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\obj\\",
+      "outputPath": "E:\\source\\repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Application\\LetsDoIt.Moody.Application\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Saban\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -5148,11 +5148,11 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Domain\\LetsDoIt.Moody.Domain\\LetsDoIt.Moody.Domain.csproj": {
-              "projectPath": "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Domain\\LetsDoIt.Moody.Domain\\LetsDoIt.Moody.Domain.csproj"
+            "E:\\source\\repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Domain\\LetsDoIt.Moody.Domain\\LetsDoIt.Moody.Domain.csproj": {
+              "projectPath": "E:\\source\\repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Domain\\LetsDoIt.Moody.Domain\\LetsDoIt.Moody.Domain.csproj"
             },
-            "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Persistance\\LetsDoIt.Moody.Persistance\\LetsDoIt.Moody.Persistance.csproj": {
-              "projectPath": "C:\\Users\\Saban\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Persistance\\LetsDoIt.Moody.Persistance\\LetsDoIt.Moody.Persistance.csproj"
+            "E:\\source\\repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Persistance\\LetsDoIt.Moody.Persistance\\LetsDoIt.Moody.Persistance.csproj": {
+              "projectPath": "E:\\source\\repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Persistance\\LetsDoIt.Moody.Persistance\\LetsDoIt.Moody.Persistance.csproj"
             }
           }
         }

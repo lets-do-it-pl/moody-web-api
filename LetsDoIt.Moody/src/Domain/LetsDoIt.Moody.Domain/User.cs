@@ -7,7 +7,7 @@ namespace LetsDoIt.Moody.Domain
     public class User:IEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
@@ -21,6 +21,6 @@ namespace LetsDoIt.Moody.Domain
 
         public DateTime? ModifiedDate { get; set; }
 
-        public bool isDeleted { get; set; } 
+        public bool IsDeleted { get; set; } 
     }
 }

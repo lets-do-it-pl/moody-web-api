@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Category;
-    using System.Threading.Tasks;
+    using Application.CustomExceptions;
+    using Entities.Requests;    
 
     [ApiController]
     [Route("api/categories")]
@@ -18,27 +20,71 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpPost]
-        [Route("{id}")]
-        public async Task Delete(int id)
+        public async Task<IActionResult> Insert([FromBody]CategoryInsertRequest insertRequest)
         {
-            await _categoryService.DeleteAsync(id);
+            if(insertRequest == null)
+            {
+                return BadRequest();
+            }
+
+            var byteImage = Convert.FromBase64String(insertRequest.Image);
+
+            await _categoryService.InsertAsync(
+                insertRequest.Name, 
+                insertRequest.Order, 
+                byteImage);
+
+            return Ok();
         }
-        
+
         [HttpPost]
-        public async Task Insert(string name, int order, byte[] image)
+        [Route("update/{id}")]
+        public async Task<IActionResult> Update(CategoryUpdateRequest updateRequest)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if(updateRequest == null)
             {
-                throw new ArgumentException("Name can not be null");
+                return BadRequest();
             }
 
-            if (image == null)
+            try
             {
-                throw new ArgumentException("Image cannot be null!");
+                await _categoryService.UpdateAsync(
+                    updateRequest.Id,
+                    updateRequest.Name,
+                    updateRequest.Order,
+                    updateRequest.Image);
+
+                return Ok();
             }
+            catch (ObjectNotFoundException)
+            {
+                return NotFound(updateRequest.Id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-            await _categoryService.InsertAsync(name, order, image);
 
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _categoryService.DeleteAsync(id);
+
+                return Ok();
+            }
+            catch (ObjectNotFoundException)
+            {
+                return NotFound(id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

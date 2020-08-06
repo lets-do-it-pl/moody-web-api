@@ -34,9 +34,12 @@ namespace LetsDoIt.Moody.Web
         {
             services.AddResponseCompression();
 
+            var connectionString = _config.GetConnectionString("MoodyDBConnection");
+
             services.AddDbContext<ApplicationContext>(opt =>
-              opt.UseSqlServer(_config.GetConnectionString("MoodyDBConnection"),
-                  x => x.MigrationsAssembly("LetsDoIt.Moody.Web")));
+              opt.UseSqlServer(connectionString
+              //,x => x.MigrationsAssembly("LetsDoIt.Moody.Persistance")
+              ));
 
             services.AddControllers();
 

@@ -6,7 +6,7 @@ namespace LetsDoIt.Moody.Persistance
 
     public class ApplicationContext : DbContext
     {
-        public ApplicationContext(DbContextOptions options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options)
                   : base(options)
         {
         }
@@ -15,6 +15,6 @@ namespace LetsDoIt.Moody.Persistance
 
         public DbSet<User> Users { get; set; }   
 
-        public DbSet<VersionHistory> VersionHistories { get; set; }        
+        public DbSet<VersionHistory> VersionHistories { get; set; }
     }
 }
