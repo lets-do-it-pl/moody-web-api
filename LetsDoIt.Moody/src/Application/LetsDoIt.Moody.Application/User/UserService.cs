@@ -5,8 +5,11 @@ namespace LetsDoIt.Moody.Application.User
     using Utils;
     using Persistance.Repositories.Base;
     using Domain;
+    using NGuard;
+    using System.Linq;
+    using System.Data;
 
-    public class UserService:IUserService
+    public class UserService : IUserService
     {
         private readonly IEntityRepository<User> _userRepository;
 
@@ -15,17 +18,22 @@ namespace LetsDoIt.Moody.Application.User
             _userRepository = userRepository;
         }
 
-        public async Task SaveUserAsync(string userName, string password)
+        public async Task SaveUserAsync(string username, string password)
         {
-          await  _userRepository.AddAsync(new User
+            Guard.Requires(username, nameof(username));
+            Guard.Requires(password, nameof(password));
+
+            var isUserExisted = _userRepository.Get().Where(u => u.UserName == username).Any();
+            if (isUserExisted)
             {
-                UserName = userName,
-                Password = ProtectionHelper.EncryptValue(userName+password)
+                throw new DuplicateNameException($"The username is already in the database. Username = {username}");
+            }
 
-            }); 
+            await _userRepository.AddAsync(new User
+            {
+                UserName = username,
+                Password = ProtectionHelper.EncryptValue(username + password)
+            });
         }
-
-     
-
     }
 }
