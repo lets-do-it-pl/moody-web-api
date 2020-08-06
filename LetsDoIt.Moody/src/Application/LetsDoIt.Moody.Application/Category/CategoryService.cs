@@ -1,9 +1,11 @@
-﻿namespace LetsDoIt.Moody.Application.Category
+﻿using System;
+using System.Threading.Tasks;
+
+namespace LetsDoIt.Moody.Application.Category
 {
     using Domain;
+    using LetsDoIt.Moody.Application.CustomExceptions;
     using Persistance.Repositories.Base;
-    using System;
-    using System.Threading.Tasks;
     using VersionHistory;
 
     public class CategoryService : ICategoryService
@@ -24,13 +26,14 @@
             var entity = await _categoryRepository.GetAsync(c => c.Id == id);
             if (entity == null)
             {
-                throw new Exception($"Category couldn't be found with id({id})");
+                throw new ObjectNotFoundException("Category", id);
             }
             await _categoryRepository.DeleteAsync(entity);
+
             await _versionHistoryService.CreateNewVersionAsync();
         }
 
-        public async Task InsertAsync(string name,int order,byte[] image)
+        public async Task InsertAsync(string name, int order, byte[] image)
         {
             await _categoryRepository.AddAsync(new Category
             {
@@ -39,6 +42,22 @@
                 Image = image
             });
 
+            await _versionHistoryService.CreateNewVersionAsync();
+        }
+
+        public async Task UpdateAsync(int id, string name, int order, byte[] image)
+        {
+            var entity = await _categoryRepository.GetAsync(c => c.Id == id);
+            if (entity == null)
+            {
+                throw new ObjectNotFoundException("Category", id);
+            }
+
+            entity.Name = name;
+            entity.Order = order;
+            entity.Image = image;
+
+            await _categoryRepository.UpdateAsync(entity);
 
             await _versionHistoryService.CreateNewVersionAsync();
         }
