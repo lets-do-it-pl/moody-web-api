@@ -117,6 +117,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                                         .Select(c =>
                                              new CategoryEntity
                                              {
+                                                 Id = c.Id,
                                                  Name = c.Name,
                                                  Order = c.Order,
                                                  Image = c.Image
