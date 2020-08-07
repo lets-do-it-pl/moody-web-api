@@ -8,6 +8,7 @@ namespace LetsDoIt.Moody.Web.Controllers
     using LetsDoIt.Moody.Web.Entities.Requests;
     using Microsoft.Extensions.Logging;
     using System.Data;
+    using System.Security.Authentication;
 
     [ApiController]
     [Route("api/users")]
@@ -39,6 +40,25 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 throw;
             }
+        }
+
+        [HttpPost("authenticate")]
+        public async Task<ActionResult<UserTokenEntity>> Authenticate(string username, string password)
+        {
+            try
+            {
+                var token = await _userService.AuthenticateAsync(username, password);
+
+                return Ok(token);
+            }
+            catch (AuthenticationException)
+            {
+                return BadRequest("Username or Password is wrong!");
+            }
+            catch (Exception)
+            {
+                throw;
+            }                       
         }
     }
 }

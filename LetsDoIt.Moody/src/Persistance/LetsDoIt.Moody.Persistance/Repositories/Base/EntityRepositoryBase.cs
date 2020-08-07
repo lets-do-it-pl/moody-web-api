@@ -13,21 +13,21 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
     public abstract class EntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         where TEntity : class, IEntity
     {
-        private readonly ApplicationContext _context;
+        protected readonly ApplicationContext _context;
 
         public EntityRepositoryBase(ApplicationContext context)
         {
             _context = context;
         }
 
-        public async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter = null)
+        public virtual async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter = null)
         {
             return filter == null
                 ? await _context.Set<TEntity>().ToListAsync()
                 : await _context.Set<TEntity>().Where(filter).ToListAsync();
         }
 
-        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter)
+        public virtual async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter)
         {
             return await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
         }
@@ -36,7 +36,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             return _context.Set<TEntity>();
         }
 
-        public async Task<TEntity> AddAsync(TEntity entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
             entity.CreateDate = DateTime.Now;
 
@@ -49,7 +49,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             return entity;
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
             entity.ModifiedDate = DateTime.Now;
 
@@ -62,7 +62,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             return entity;
         }
 
-        public async Task DeleteAsync(TEntity entity)
+        public virtual async Task DeleteAsync(TEntity entity)
         {
             entity.ModifiedDate = DateTime.Now;
             entity.IsDeleted = true;

@@ -1,12 +1,29 @@
-﻿using LetsDoIt.Moody.Domain;
-using LetsDoIt.Moody.Persistance.Repositories.Base;
+﻿using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Persistance.Repositories
 {
-    public class UserRepository:EntityRepositoryBase<User>
+    using Base;
+    using Domain;
+
+    public class UserRepository : EntityRepositoryBase<User>
     {
         public UserRepository(ApplicationContext context) : base(context)
         {
+        }
+
+        public override Task<User> AddAsync(User entity)
+        {
+            var userToken = new UserToken
+            {
+                UserId = entity.Id,
+                User = entity
+            };
+
+            entity.UserToken = userToken;
+
+            _context.UserTokens.Add(userToken);
+
+            return base.AddAsync(entity);
         }
     }
 }

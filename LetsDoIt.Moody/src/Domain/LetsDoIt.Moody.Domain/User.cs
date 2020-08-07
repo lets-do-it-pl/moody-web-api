@@ -11,9 +11,11 @@ namespace LetsDoIt.Moody.Domain
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string UserName { get; set; }
 
         [Required]
+        [MaxLength(1000)]
         public string Password { get; set; }
 
         [Required]
@@ -22,5 +24,7 @@ namespace LetsDoIt.Moody.Domain
         public DateTime? ModifiedDate { get; set; }
 
         public bool IsDeleted { get; set; } 
+
+        public UserToken UserToken { get; set; }
     }
 }

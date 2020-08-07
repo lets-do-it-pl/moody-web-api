@@ -18,9 +18,8 @@ namespace LetsDoIt.Moody.Web
 
     public class Startup
     {
-
+        private const string JwtEncryptionKey = "2hN70OoacUi5SDU0rNuIXg==";
         private readonly IConfiguration _config;
-
 
         public Startup(IConfiguration configuration)
         {
@@ -35,11 +34,7 @@ namespace LetsDoIt.Moody.Web
             services.AddResponseCompression();
 
             var connectionString = _config.GetConnectionString("MoodyDBConnection");
-
-            services.AddDbContext<ApplicationContext>(opt =>
-              opt.UseSqlServer(connectionString
-              //,x => x.MigrationsAssembly("LetsDoIt.Moody.Persistance")
-              ));
+            services.AddDbContext<ApplicationContext>(opt =>opt.UseSqlServer(connectionString));
 
             services.AddControllers();
 
@@ -53,13 +48,21 @@ namespace LetsDoIt.Moody.Web
                 });
             });
 
+            var tokenExpirationMinutes = _config.GetValue<int>("TokenExpirationMinutes");
+
             services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
             services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
             services.AddTransient<IEntityRepository<User>, UserRepository>();
+            services.AddTransient<IEntityRepository<UserToken>, UserTokenRepository>();
 
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserService>(us => new UserService(
+                    us.GetService<IEntityRepository<User>>(),
+                    us.GetService<IEntityRepository<UserToken>>(),
+                    JwtEncryptionKey,
+                    tokenExpirationMinutes
+                ));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

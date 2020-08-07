@@ -43,6 +43,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web.UnitTests", "Web.UnitTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Web.UnitTests", "tests\Web.UnitTests\LetsDoIt.Moody.Web.UnitTests\LetsDoIt.Moody.Web.UnitTests.csproj", "{C69FF807-A0AC-41DE-AF4D-7C83C64A1402}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB3ABC11-13C0-4506-91FC-910FBBA9C2F1}"
+	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
