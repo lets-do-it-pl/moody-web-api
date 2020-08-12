@@ -4,6 +4,11 @@
     &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.UserControllerTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=47893bb4_002D5cdd_002D46ec_002Da481_002D26416525d795/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="SaveUserRequestUserName_ShouldHaveRequiredAttribute" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.UserControllerTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8633a045_002D8231_002D43ce_002Da12c_002D0a090ea715f3/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Update_WhenNameIsMissing_ShouldThrownAnArgumentExcception" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.CategoryControllerTests.Update_WhenNameIsMissing_ShouldThrownAnArgumentException&lt;/TestId&gt;&#xD;
@@ -20,6 +25,6 @@
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fe90954c_002Dc110_002D4de2_002Dab2d_002Dea8d43cd86c4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CategoryControllerTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.CategoryControllerTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::C69FF807-A0AC-41DE-AF4D-7C83C64A1402::.NETCoreApp,Version=v3.1::LetsDoIt.Moody.Web.UnitTests.UserControllerTests.SaveUserRequestUserName_ShouldHaveRequiredAttribute&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
