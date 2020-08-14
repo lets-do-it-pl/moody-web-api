@@ -1,15 +1,15 @@
+using System;
 using Moq;
 using Xunit;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LetsDoIt.Moody.Web.UnitTests
+namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
-    using Controllers;
     using Application.Category;
-    using Web.Entities.Requests;
-    using LetsDoIt.Moody.Application.CustomExceptions;
-    using System;
+    using Application.CustomExceptions;
+    using Web.Controllers;    
+    using Web.Entities.Requests;       
 
     public class CategoryControllerTests
     {
