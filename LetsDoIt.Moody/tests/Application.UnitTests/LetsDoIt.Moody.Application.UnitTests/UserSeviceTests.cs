@@ -2,6 +2,9 @@
 using System.Data;
 using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.User;
+using LetsDoIt.Moody.Persistance;
+using LetsDoIt.Moody.Persistance.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
@@ -24,6 +27,8 @@ namespace LetsDoIt.Moody.Application.UnitTests
             _sutUserService=new UserService(_mockUserRepository.Object,_mockUserTokenRepository.Object, "deneme", 12321);
         }
 
+
+        //NGuard does not throw exception
         [Theory]
         [InlineData(null)]
         public async Task SaveUserAsync_WhenUserNameIsMissing_ShouldThrowAnException(string userName)
@@ -33,6 +38,7 @@ namespace LetsDoIt.Moody.Application.UnitTests
             await Assert.ThrowsAsync<ArgumentNullException>(Action);
         }
 
+        //NGuard does not throw exception
         [Theory]
         [InlineData(null)]
         public async Task SaveUserAsync_WhenPasswordIsMissing_ShouldThrowAnException(string password)
@@ -42,14 +48,27 @@ namespace LetsDoIt.Moody.Application.UnitTests
             await Assert.ThrowsAsync<ArgumentNullException>(Test);
         }
 
-        //[Fact]
-        //public async Task SaveUserAsync_WhenUserAlreadyExists_ShouldThrowDuplicateNameException()
-        //{
-        //    _mockUserRepository.Setup(x=>x.Get()).Returns();
 
-        //    async Task Test() => await _sutUserService.SaveUserAsync("asd", "pass");
+        //Gives ::::::  System.NotSupportedException : Unsupported expression: ... => ....Any<User>()
+        //Extension methods(here: Queryable.Any) may not be used in setup / verification expressions.
+        [Fact]
+        public async Task SaveUserAsync_WhenUserAlreadyExists_ShouldThrowDuplicateNameException()
+        {
+            _mockUserRepository.Setup(x => x.Get().Where(u=>u.UserName=="asd"&& !u.IsDeleted).Any()).Returns(true);
 
-        //    await Assert.ThrowsAsync<DuplicateNameException>(Test);
-        //}
+            async Task Test() => await _sutUserService.SaveUserAsync("asd", "pass");
+
+            await Assert.ThrowsAsync<DuplicateNameException>(Test);
+        }
+
+
+        [Fact]
+        public async Task SaveUserAsync_GivenNoException_ShouldInvokeUserRepositoryAddAsync()
+        {
+            await _sutUserService.SaveUserAsync("asd", "pass");
+
+           _mockUserRepository.Verify(ur=>ur.AddAsync(It.IsAny<User>()),
+               Times.Once);
+        }
     }
 }
