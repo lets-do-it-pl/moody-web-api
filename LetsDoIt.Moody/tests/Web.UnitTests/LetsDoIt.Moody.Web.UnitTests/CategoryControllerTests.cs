@@ -8,6 +8,7 @@ namespace LetsDoIt.Moody.Web.UnitTests
     using Controllers;
     using Application.Category;
     using Web.Entities.Requests;
+    using LetsDoIt.Moody.Application.CustomExceptions;
 
     public class CategoryControllerTests
     {
@@ -111,8 +112,29 @@ namespace LetsDoIt.Moody.Web.UnitTests
                         request.Id,
                         request.Name,
                         request.Order,
-                        request.Image), 
+                        request.Image),
                     Times.Once);
+        }
+
+        [Fact]
+        public async Task GIVEN_ThereIsAnUpdateRequestNotInTheDatabase_WHEN_UpdatingACategory_THEN_ShoudReturnNotFound()
+        {
+            //Arrange
+            var request = GetCategoryUpdateRequest();
+            _mockCategoryService
+                .Setup(service =>
+                    service.UpdateAsync(
+                                It.IsAny<int>(),
+                                It.IsAny<string>(),
+                                It.IsAny<int>(),
+                                It.IsAny<byte[]>()))
+                .Throws(new ObjectNotFoundException(""));
+
+            //Act
+            var actual = await _testing.Update(request);
+
+            //Assert
+            Assert.IsType<NotFoundObjectResult>(actual);
         }
     }
 }
