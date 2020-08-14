@@ -9,6 +9,7 @@ namespace LetsDoIt.Moody.Web.UnitTests
     using Application.Category;
     using Web.Entities.Requests;
     using LetsDoIt.Moody.Application.CustomExceptions;
+    using System;
 
     public class CategoryControllerTests
     {
@@ -135,6 +136,24 @@ namespace LetsDoIt.Moody.Web.UnitTests
 
             //Assert
             Assert.IsType<NotFoundObjectResult>(actual);
+        }
+
+        [Fact]
+        public async Task GIVEN_ThereIsAnUpdateRequestAndExceptionInService_WHEN_UpdatingACategory_THEN_ShouldThrowAnException()
+        {
+            //Arrange
+            var request = GetCategoryUpdateRequest();
+            _mockCategoryService
+                .Setup(service =>
+                    service.UpdateAsync(
+                                It.IsAny<int>(),
+                                It.IsAny<string>(),
+                                It.IsAny<int>(),
+                                It.IsAny<byte[]>()))
+                .Throws<Exception>();
+
+            //Act & Assert
+            await Assert.ThrowsAsync<Exception>(() => _testing.Update(request));
         }
     }
 }
