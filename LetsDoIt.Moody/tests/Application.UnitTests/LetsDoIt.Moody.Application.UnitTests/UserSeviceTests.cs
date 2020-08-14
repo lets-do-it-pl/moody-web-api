@@ -18,20 +18,25 @@ namespace LetsDoIt.Moody.Application.UnitTests
     public class UserSeviceTests
     {
         private readonly Mock<IEntityRepository<UserToken>> _mockUserTokenRepository;
-        private Mock<IEntityRepository<User>> _mockUserRepository;
-        private readonly IUserService _sutUserService;
+        private readonly Mock<IEntityRepository<User>> _mockUserRepository;
+        private readonly IUserService _testing;
+        private readonly string _applicationKey = "something";
+        private readonly int _tokenExpirationMinutes = 123;
 
         public UserSeviceTests()
         {
             _mockUserRepository = new Mock<IEntityRepository<User>>();
             _mockUserTokenRepository=new Mock<IEntityRepository<UserToken>>();
-            _sutUserService=new UserService(_mockUserRepository.Object,_mockUserTokenRepository.Object, "deneme", 12321);
+            _testing=new UserService(_mockUserRepository.Object,_mockUserTokenRepository.Object, _applicationKey, _tokenExpirationMinutes);
         }
 
         [Fact]
         public async Task SaveUserAsync_WhenUserNameIsNull_ShouldThrowArgumentNullException()
         {
-            async Task Test() => await _sutUserService.SaveUserAsync(null, "213213");
+            string userName = null;
+            string password = "pass";
+
+            async Task Test() => await _testing.SaveUserAsync(userName, password);
 
             await Assert.ThrowsAsync<ArgumentNullException>(Test);
         }
@@ -39,27 +44,22 @@ namespace LetsDoIt.Moody.Application.UnitTests
         [Fact]
         public async Task SaveUserAsync_WhenPasswordIsNull_ShouldThrowArgumentNullException()
         {
-            async Task Test() => await _sutUserService.SaveUserAsync("deded", null);
+            string userName = "asd";
+            string password = null;
+
+            async Task Test() => await _testing.SaveUserAsync(userName, password);
 
             await Assert.ThrowsAsync<ArgumentNullException>(Test);
         }
 
         [Theory]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task SaveUserAsync_WhenPasswordEmptyOrWhiteSpace_ShouldThrowArgumentException(string password)
+        [InlineData("","pass")]
+        [InlineData(" ","pass")]
+        [InlineData("asd","")]
+        [InlineData("asd"," ")]
+        public async Task SaveUserAsync_WhenPasswordOrUserNameEmptyOrWhiteSpace_ShouldThrowArgumentException(string userName,string password)
         {
-            async Task Test() => await _sutUserService.SaveUserAsync("deded", password);
-
-            await Assert.ThrowsAsync<ArgumentException>(Test);
-        }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task SaveUserAsync_WhenUserNameEmptyOrWhiteSpace_ShouldThrowArgumentException(string userName)
-        {
-            async Task Test() => await _sutUserService.SaveUserAsync(userName, "aqweq");
+            async Task Test() => await _testing.SaveUserAsync(userName, password);
 
             await Assert.ThrowsAsync<ArgumentException>(Test);
         }
@@ -84,16 +84,21 @@ namespace LetsDoIt.Moody.Application.UnitTests
             mockContext.Setup(c => c.Users).Returns(mockSet.Object);
             _mockUserRepository.Setup(x=>x.Get()).Returns(mockContext.Object.Users);
 
-            async Task Test() => await _sutUserService.SaveUserAsync("asd", "pass");
+            async Task Test() => await _testing.SaveUserAsync("asd", "pass");
 
             await Assert.ThrowsAsync<DuplicateNameException>(Test);
         }
 
-
         [Fact]
         public async Task SaveUserAsync_GivenNoException_ShouldInvokeUserRepositoryAddAsync()
         {
-            await _sutUserService.SaveUserAsync("asd", "pass");
+            var user = new User
+            {
+                UserName = "asd",
+                Password = "pass"
+            };
+
+            await _testing.SaveUserAsync(user.UserName,user.Password);
 
            _mockUserRepository.Verify(ur=>ur.AddAsync(It.IsAny<User>()),
                Times.Once);

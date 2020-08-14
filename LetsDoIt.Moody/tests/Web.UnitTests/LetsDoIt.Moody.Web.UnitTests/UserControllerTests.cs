@@ -14,24 +14,12 @@ namespace LetsDoIt.Moody.Web.UnitTests
     using Entities.Requests;
     public class UserControllerTests
     {
-        private readonly UserController _sutUserController;
+        private readonly UserController _testing;
         private readonly Mock<IUserService> _mockUserService;
         public UserControllerTests()
         {
             _mockUserService = new Mock<IUserService>();
-            _sutUserController = new UserController(_mockUserService.Object);
-        }
-
-        [Fact]
-        public void SaveUserRequestUserName_ShouldHaveRequiredAttribute()
-        {
-           Assert.NotNull(typeof(SaveUserRequest).GetProperty("Username").GetCustomAttribute<RequiredAttribute>());
-        }
-
-        [Fact]
-        public void SaveUserRequestPassword_ShouldHaveRequiredAttribute()
-        {
-            Assert.NotNull(typeof(SaveUserRequest).GetProperty("Password").GetCustomAttribute<RequiredAttribute>());
+            _testing = new UserController(_mockUserService.Object);
         }
 
 
@@ -41,13 +29,13 @@ namespace LetsDoIt.Moody.Web.UnitTests
             _mockUserService.Setup(x =>
                 x.SaveUserAsync(It.IsAny<string>(),It.IsAny<string>())).Throws(new DuplicateNameException());
 
-            IActionResult actual = await _sutUserController.SaveUser(new SaveUserRequest
+            var actual = await _testing.SaveUser(new SaveUserRequest
             {
                 Username = "usernamefiller",
                 Password = "passwordfiller"
             });
 
-            Assert.IsAssignableFrom<BadRequestObjectResult>(actual);
+            Assert.IsType<BadRequestObjectResult>(actual);
         }
 
         [Fact]
@@ -59,7 +47,7 @@ namespace LetsDoIt.Moody.Web.UnitTests
                 Password= "test"
             };
 
-          var response =await _sutUserController.SaveUser(saveUserRequest);
+          var response =await _testing.SaveUser(saveUserRequest);
 
           Assert.IsType<ObjectResult>(response);
 
@@ -77,7 +65,7 @@ namespace LetsDoIt.Moody.Web.UnitTests
                 Password = "test"
             };
 
-            await _sutUserController.SaveUser(saveUserRequest);
+            await _testing.SaveUser(saveUserRequest);
 
             _mockUserService.Verify(us =>
                     us.SaveUserAsync(
