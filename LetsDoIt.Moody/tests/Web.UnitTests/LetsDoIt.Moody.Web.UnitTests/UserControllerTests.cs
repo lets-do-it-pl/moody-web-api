@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -52,16 +53,19 @@ namespace LetsDoIt.Moody.Web.UnitTests
         [Fact]
         public async Task SaveUser_ShouldSaveUserInformationAndReturnOk()
         {
-
             var saveUserRequest = new SaveUserRequest()
             {
                 Username = "test", 
                 Password= "test"
             };
 
-          var result =await _sutUserController.SaveUser(saveUserRequest);
+          var response =await _sutUserController.SaveUser(saveUserRequest);
 
-            Assert.IsAssignableFrom<OkResult>(result);
+          Assert.IsType<ObjectResult>(response);
+
+          var objectResponse = response as ObjectResult; //Cast to desired type
+
+          Assert.Equal((int)HttpStatusCode.Created, objectResponse.StatusCode);
         }
 
         [Fact]
