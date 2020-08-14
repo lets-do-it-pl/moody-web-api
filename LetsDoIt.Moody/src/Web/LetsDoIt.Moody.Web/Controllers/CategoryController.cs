@@ -9,7 +9,6 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Application.CustomExceptions;
     using Entities.Requests;
     using Entities.Responses;
-    using System.Collections.Generic;
 
     [ApiController]
     [Route("api/categories")]
@@ -58,7 +57,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         [HttpPost, Route("update/{id}")]
         public async Task<IActionResult> Update(CategoryUpdateRequest updateRequest)
         {
-            if (updateRequest == null)
+            if (updateRequest == null)  
             {
                 return BadRequest();
             }
