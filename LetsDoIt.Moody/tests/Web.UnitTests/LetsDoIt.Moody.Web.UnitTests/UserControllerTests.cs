@@ -23,49 +23,6 @@ namespace LetsDoIt.Moody.Web.UnitTests
             _sutUserController = new UserController(_mockUserService.Object);
         }
 
-        //[Theory]
-        //[InlineData(null)]
-        //[InlineData("")]
-        //[InlineData(" ")]
-        //public async Task SaveUserAsync_WhenUserNameIsMissing_ShouldThrownAnArgumentException(string userName)
-        //{
-        //    // act 
-        //    async Task Action() => await _sutUserController.SaveUser(userName, "asdfgh");
-
-        //    //assert
-        //    await Assert.ThrowsAsync<ArgumentException>(Action);
-        //}
-
-        //[Theory]
-        //[InlineData(null)]
-        //[InlineData("")]
-        //[InlineData(" ")]
-        //public async Task SaveUserAsync_WhenPasswordIsMissing_ShouldThrownAnArgumentException(string password)
-        //{
-        //    async Task Action() => await _sutUserController.SaveUser("ben", password);
-
-        //    //assert
-        //    await Assert.ThrowsAsync<ArgumentException>(Action);
-
-        //}
-
-        //[Fact]
-        //public async Task SaveUserAsync_ShouldSaveUserInformation()
-        //{
-        //    // arrange
-        //    var userName = "Deneme";
-        //    var password = "asdfgh";
-
-        //    _mockUserService.Setup(us => us.SaveUserAsync(userName, password));
-
-        //    // act
-        //    await _sutUserController.SaveUser(userName, password);
-
-        //    // assert
-        //    _mockUserService.Verify(us => us.SaveUserAsync(userName, password), Times.Once);
-        //}
-
-        
         [Fact]
         public void SaveUserRequestUserName_ShouldHaveRequiredAttribute()
         {
@@ -90,10 +47,44 @@ namespace LetsDoIt.Moody.Web.UnitTests
                 Username = "usernamefiller",
                 Password = "passwordfiller"
             });
-            
 
             Assert.IsAssignableFrom<BadRequestObjectResult>(actual);
         }
+
+        [Fact]
+        public async Task SaveUser_ShouldSaveUserInformationAndReturnOk()
+        {
+
+            var saveUserRequest = new SaveUserRequest()
+            {
+                Username = "test", 
+                Password= "test"
+            };
+
+          var result =await _sutUserController.SaveUser(saveUserRequest);
+
+            Assert.IsAssignableFrom<OkResult>(result);
+        }
+
+        [Fact]
+       public async Task SaveUser_ShouldInvokeUserServiceSaveUserAsync()
+        {
+            var saveUserRequest = new SaveUserRequest()
+            {
+                Username = "test",
+                Password = "test"
+            };
+
+            await _sutUserController.SaveUser(saveUserRequest);
+
+            _mockUserService.Verify(us =>
+                    us.SaveUserAsync(
+                        saveUserRequest.Username,
+                        saveUserRequest.Password
+                    ),
+                Times.Once);
+        }
+
     }
 }
     
