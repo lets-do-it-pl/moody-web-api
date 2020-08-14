@@ -28,25 +28,40 @@ namespace LetsDoIt.Moody.Application.UnitTests
             _sutUserService=new UserService(_mockUserRepository.Object,_mockUserTokenRepository.Object, "deneme", 12321);
         }
 
-
-        //NGuard does not throw exception
-        [Theory]
-        [InlineData(null)]
-        public async Task SaveUserAsync_WhenUserNameIsMissing_ShouldThrowAnException(string userName)
+        [Fact]
+        public async Task SaveUserAsync_WhenUserNameIsNull_ShouldThrowArgumentNullException()
         {
-            async Task Action() => await _sutUserService.SaveUserAsync(userName, "213213");
+            async Task Test() => await _sutUserService.SaveUserAsync(null, "213213");
 
-            await Assert.ThrowsAsync<ArgumentNullException>(Action);
+            await Assert.ThrowsAsync<ArgumentNullException>(Test);
         }
 
-        //NGuard does not throw exception
+        [Fact]
+        public async Task SaveUserAsync_WhenPasswordIsNull_ShouldThrowArgumentNullException()
+        {
+            async Task Test() => await _sutUserService.SaveUserAsync("deded", null);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(Test);
+        }
+
         [Theory]
-        [InlineData(null)]
-        public async Task SaveUserAsync_WhenPasswordIsMissing_ShouldThrowAnException(string password)
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task SaveUserAsync_WhenPasswordEmptyOrWhiteSpace_ShouldThrowArgumentException(string password)
         {
             async Task Test() => await _sutUserService.SaveUserAsync("deded", password);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(Test);
+            await Assert.ThrowsAsync<ArgumentException>(Test);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task SaveUserAsync_WhenUserNameEmptyOrWhiteSpace_ShouldThrowArgumentException(string userName)
+        {
+            async Task Test() => await _sutUserService.SaveUserAsync(userName, "aqweq");
+
+            await Assert.ThrowsAsync<ArgumentException>(Test);
         }
 
         [Fact]
