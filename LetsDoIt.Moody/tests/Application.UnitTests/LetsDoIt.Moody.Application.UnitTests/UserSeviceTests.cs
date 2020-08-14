@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq.Expressions;
+using System.Linq;
 using System.Threading.Tasks;
-using LetsDoIt.Moody.Application.User;
 using LetsDoIt.Moody.Persistance;
-using LetsDoIt.Moody.Persistance.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using MoqExpression;
 using Xunit;
 
 namespace LetsDoIt.Moody.Application.UnitTests
 {
     using Domain;
     using Persistance.Repositories.Base;
-    using System.Linq;
+    using User;
+
 
     public class UserSeviceTests
     {
@@ -51,21 +49,25 @@ namespace LetsDoIt.Moody.Application.UnitTests
             await Assert.ThrowsAsync<ArgumentNullException>(Test);
         }
 
-
-        //Gives ::::::  System.NotSupportedException : Unsupported expression: ... => ....Any<User>()
-        //Extension methods(here: Queryable.Any) may not be used in setup / verification expressions.
         [Fact]
         public async Task SaveUserAsync_WhenUserAlreadyExists_ShouldThrowDuplicateNameException()
         {
-            var user = new User()
+            var data = new List<User>
             {
-                UserName = "asd",
-                Password = "pass"
-            };
+                new User() { UserName = "asd"}
 
+            }.AsQueryable();
 
-            //Can't mock static extension methods like .Any()!!!
-            _mockUserRepository.Setup(x=>x.Get());
+            var mockSet = new Mock<DbSet<User>>();
+
+            mockSet.As<IQueryable<User>>().Setup(m => m.Provider).Returns(data.Provider);
+            mockSet.As<IQueryable<User>>().Setup(m => m.Expression).Returns(data.Expression);
+            mockSet.As<IQueryable<User>>().Setup(m => m.ElementType).Returns(data.ElementType);
+            mockSet.As<IQueryable<User>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+
+            var mockContext = new Mock<ApplicationContext>();
+            mockContext.Setup(c => c.Users).Returns(mockSet.Object);
+            _mockUserRepository.Setup(x=>x.Get()).Returns(mockContext.Object.Users);
 
             async Task Test() => await _sutUserService.SaveUserAsync("asd", "pass");
 

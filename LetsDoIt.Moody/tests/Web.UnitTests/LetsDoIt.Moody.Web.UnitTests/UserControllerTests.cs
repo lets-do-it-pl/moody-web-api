@@ -1,18 +1,16 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Reflection;
 using System.Threading.Tasks;
-using LetsDoIt.Moody.Application.User;
-using LetsDoIt.Moody.Domain;
-using LetsDoIt.Moody.Web.Controllers;
-using LetsDoIt.Moody.Web.Entities.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
 namespace LetsDoIt.Moody.Web.UnitTests
 {
+    using Application.User;
+    using Controllers;
+    using Entities.Requests;
     public class UserControllerTests
     {
         private readonly UserController _sutUserController;
