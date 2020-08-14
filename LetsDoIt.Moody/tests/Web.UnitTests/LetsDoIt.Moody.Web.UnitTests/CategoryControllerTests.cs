@@ -1,99 +1,118 @@
-//using Moq;
-//using System;
-//using Xunit;
+using Moq;
+using Xunit;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace LetsDoIt.Moody.Web.UnitTests
-//{
-//    using Application;
-//    using Controllers;
-//    using LetsDoIt.Moody.Application.Category;
-//    using LetsDoIt.Moody.Web.Entities.Requests;
-//    using System.Threading.Tasks;
+namespace LetsDoIt.Moody.Web.UnitTests
+{
+    using Controllers;
+    using Application.Category;
+    using Web.Entities.Requests;
 
-//    public class CategoryControllerTests
-//    {
-//        private readonly CategoryController _testing;
-//        private readonly Mock<ICategoryService> _mockCategoryService;
+    public class CategoryControllerTests
+    {
+        private readonly CategoryController _testing;
+        private readonly Mock<ICategoryService> _mockCategoryService;
 
-//        public CategoryControllerTests()
-//        {
-//            _mockCategoryService = new Mock<ICategoryService>();
-//            _testing = new CategoryController(_mockCategoryService.Object);
-//        }
+        #region SetUp & Helpers
 
-//        [Theory]
-//        [InlineData(null)]
-//        [InlineData("")]
-//        [InlineData(" ")]
-//        public async Task Insert_WhenNameIsMissing_ShouldThrownAnArgumentException(string name)
-//        {
-//            // arrange
-//            byte[] arr1 = { 0, 100, 120, 210, 255 };
+        public CategoryControllerTests()
+        {
+            _mockCategoryService = new Mock<ICategoryService>();
+            _testing = new CategoryController(_mockCategoryService.Object);
+        }
 
-//            var insertRequest = new CategoryInsertRequest
-//            {
-//                Name = name,
-//                Order = 5,
-//                Image = arr1
-//            };
+        private CategoryUpdateRequest GetCategoryUpdateRequest(
+            byte[] image,
+            int id = 1,
+            string name = "name",
+            int order = 1,
+            bool isNull = false)
+        {
+            if (isNull)
+            {
+                return null;
+            }
 
-//            // act
-//            async Task Action() => await _testing.Insert(insertRequest);
+            return new CategoryUpdateRequest
+            {
+                Id = id,
+                Name = name,
+                Image = image,
+                Order = order
+            };
+        }
 
-//            //assert
-//            await Assert.ThrowsAsync<ArgumentException>(Action);
-//        }
+        private CategoryUpdateRequest GetCategoryUpdateRequest(
+            int id = 1,
+            string name = "name",
+            int order = 1,
+            bool isNull = false)
+        {
+            return GetCategoryUpdateRequest(new byte[] { 1 }, id, name, order, isNull);
+        }
 
+        #endregion
 
-//        [Fact]
-//        public async Task Insert_WhenImageisMissing_ShouldThrownAnArgumentException()
-//        {
-//            //arrange
-//            var insertRequest = new CategoryInsertRequest
-//            {
-//                Name = "sdfasdf",
-//                Order = 5,
-//                Image = null
-//            };
+        [Fact(Skip = "will be corrected")]
+        public async Task GIVEN_ThereIsAnUpdateRequestWithoutName_WHEN_UpdatingACategory_THEN_ShouldGetBadRequest()
+        {
+            //Arrange         
+            var request = GetCategoryUpdateRequest(name: null);
 
-//            // act
-//            async Task Action() => await _testing.Insert(insertRequest);
+            //Act
+            var actual = await _testing.Update(request);
 
-//            //assert
-//            await Assert.ThrowsAsync<ArgumentException>(Action);
-//        }
+            //Assert
+            //Assert.IsType<BadRequestResult>(actual);
+        }
 
-//        [Fact]
-//        public async Task SaveUserAsync_ShouldSaveUserInformation()
-//        {
-//            // arrange
-//            byte[] arr1 = { 0, 100, 120, 210, 255 };
+        [Fact(Skip = "will be corrected")]
+        public async Task GIVEN_ThereIsAnUpdateRequestWithoutImage_WHEN_UpdatingACategory_THEN_ShouldGetBadRequest()
+        {
+            //Arrange
+            var request = GetCategoryUpdateRequest(image: null);
 
-//            var insertRequest = new CategoryInsertRequest
-//            {
-//                Name = "test",
-//                Order = 5,
-//                Image = arr1
-//            };
+            //Act
+            var actual = await _testing.Update(request);
 
+            //Assert
+            //Assert.IsType<BadRequestResult>(actual);
+        }
 
-//            _mockCategoryService.Setup(cs => 
-//                cs.InsertAsync(
-//                    insertRequest.Name, 
-//                    insertRequest.Order, 
-//                    insertRequest.Image));
+        [Fact]
+        public async Task GIVEN_ThereIsNoUpdateRequest_WHEN_UpdatingACategory_THEN_ShouldGetBadRequest()
+        {
+            //Arrange
+            var request = GetCategoryUpdateRequest(isNull: true);
 
-//            // act
-//            await _testing.Insert(insertRequest);
+            //Act
+            var actual = await _testing.Update(request);
 
-//            // assert
-//            _mockCategoryService.Verify(cs => 
-//                cs.InsertAsync(
-//                    insertRequest.Name,
-//                    insertRequest.Order,
-//                    insertRequest.Image), 
-//                Times.Once);
-//        }
+            //Assert
+            Assert.IsType<BadRequestResult>(actual);
+        }
 
-//    }
-//}
+        [Fact]
+        public async Task GIVEN_ThereIsAnUpdateRequest_WHEN_UpdatingACategory_THEN_ShouldReturnOkResultAndCallServiceOnce()
+        {
+            //Arrange
+            var request = GetCategoryUpdateRequest();
+
+            //Act
+            var actual = await _testing.Update(request);
+
+            //Assert
+            Assert.IsType<OkResult>(actual);
+
+            _mockCategoryService
+                .Verify(service =>
+                    service.UpdateAsync(
+                        request.Id,
+                        request.Name,
+                        request.Order,
+                        request.Image), 
+                    Times.Once);
+        }
+    }
+}
