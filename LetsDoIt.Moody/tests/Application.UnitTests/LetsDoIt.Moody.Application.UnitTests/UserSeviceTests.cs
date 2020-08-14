@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.User;
 using LetsDoIt.Moody.Persistance;
 using LetsDoIt.Moody.Persistance.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using MoqExpression;
 using Xunit;
 
 namespace LetsDoIt.Moody.Application.UnitTests
@@ -54,7 +57,15 @@ namespace LetsDoIt.Moody.Application.UnitTests
         [Fact]
         public async Task SaveUserAsync_WhenUserAlreadyExists_ShouldThrowDuplicateNameException()
         {
-            _mockUserRepository.Setup(x => x.Get().Where(u=>u.UserName=="asd"&& !u.IsDeleted).Any()).Returns(true);
+            var user = new User()
+            {
+                UserName = "asd",
+                Password = "pass"
+            };
+
+
+            //Can't mock static extension methods like .Any()!!!
+            _mockUserRepository.Setup(x=>x.Get());
 
             async Task Test() => await _sutUserService.SaveUserAsync("asd", "pass");
 
