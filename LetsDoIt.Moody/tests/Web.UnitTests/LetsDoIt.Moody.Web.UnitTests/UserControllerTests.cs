@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Reflection;
 using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.User;
@@ -77,5 +78,22 @@ namespace LetsDoIt.Moody.Web.UnitTests
             Assert.NotNull(typeof(SaveUserRequest).GetProperty("Password").GetCustomAttribute<RequiredAttribute>());
         }
 
+
+        [Fact]
+        public async Task SaveUser_WhenDuplicateNameExceptionThrown_ShouldReturnBadRequest()
+        {
+            _mockUserService.Setup(x =>
+                x.SaveUserAsync(It.IsAny<string>(),It.IsAny<string>())).Throws(new DuplicateNameException());
+
+            IActionResult actual = await _sutUserController.SaveUser(new SaveUserRequest
+            {
+                Username = "usernamefiller",
+                Password = "passwordfiller"
+            });
+            
+
+            Assert.IsAssignableFrom<BadRequestObjectResult>(actual);
+        }
     }
 }
+    
