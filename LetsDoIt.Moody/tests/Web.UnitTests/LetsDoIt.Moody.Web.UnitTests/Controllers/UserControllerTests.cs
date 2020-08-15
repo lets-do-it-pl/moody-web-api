@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Net;
 using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.User;
@@ -75,4 +75,3 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 
     }
 }
-    
