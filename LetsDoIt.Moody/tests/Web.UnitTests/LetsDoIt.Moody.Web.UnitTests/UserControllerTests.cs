@@ -1,14 +1,12 @@
 ﻿using Moq;
 using Xunit;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.UnitTests
-{
-    using System.Net;
-    using System.Threading.Tasks;
-    using LetsDoIt.Moody.Application.User;
-    using LetsDoIt.Moody.Web.Controllers;
-    using LetsDoIt.Moody.Web.Entities.Requests;
-    using Microsoft.AspNetCore.Mvc;
+{ 
+    using Application.User;
+    using Web.Controllers;
 
     public class UserControllerTests
     {

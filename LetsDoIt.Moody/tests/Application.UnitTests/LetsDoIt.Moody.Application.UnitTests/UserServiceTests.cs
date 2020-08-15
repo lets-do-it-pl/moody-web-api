@@ -1,12 +1,13 @@
 ﻿using Moq;
 using Xunit;
 
+using System.Threading.Tasks;
+
 namespace LetsDoIt.Moody.Application.UnitTests
 {
-    using LetsDoIt.Moody.Application.User;
-    using LetsDoIt.Moody.Persistance.Repositories.Base;
-    using LetsDoIt.Moody.Domain;
-    using System.Threading.Tasks;
+    using Domain;
+    using Application.User;
+    using Persistance.Repositories.Base;
 
     public class UserServiceTests
     {
