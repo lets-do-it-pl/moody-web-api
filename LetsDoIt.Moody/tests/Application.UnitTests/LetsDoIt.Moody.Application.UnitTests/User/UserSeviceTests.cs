@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using LetsDoIt.Moody.Persistance;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
+using LetsDoIt.Moody.Application.User;
 
-namespace LetsDoIt.Moody.Application.UnitTests
+namespace LetsDoIt.Moody.Application.UnitTests.User
 {
     using Domain;
     using Persistance.Repositories.Base;
-    using User;
-
 
     public class UserSeviceTests
     {
@@ -67,24 +64,18 @@ namespace LetsDoIt.Moody.Application.UnitTests
         [Fact]
         public async Task SaveUserAsync_WhenUserAlreadyExists_ShouldThrowDuplicateNameException()
         {
-            var data = new List<User>
+            var username = "asd";
+            var password = "dsa";
+
+            var userList = new List<User>
             {
                 new User() { UserName = "asd"}
 
             }.AsQueryable();
 
-            var mockSet = new Mock<DbSet<User>>();
+            _mockUserRepository.Setup(repo=>repo.Get()).Returns(userList);
 
-            mockSet.As<IQueryable<User>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockSet.As<IQueryable<User>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockSet.As<IQueryable<User>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockSet.As<IQueryable<User>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
-
-            var mockContext = new Mock<ApplicationContext>();
-            mockContext.Setup(c => c.Users).Returns(mockSet.Object);
-            _mockUserRepository.Setup(x=>x.Get()).Returns(mockContext.Object.Users);
-
-            async Task Test() => await _testing.SaveUserAsync("asd", "pass");
+            async Task Test() => await _testing.SaveUserAsync(username, password);
 
             await Assert.ThrowsAsync<DuplicateNameException>(Test);
         }
@@ -100,7 +91,8 @@ namespace LetsDoIt.Moody.Application.UnitTests
 
             await _testing.SaveUserAsync(user.UserName,user.Password);
 
-           _mockUserRepository.Verify(ur=>ur.AddAsync(It.IsAny<User>()),
+           _mockUserRepository.Verify(ur=>
+                   ur.AddAsync(It.Is<User>(x => x.UserName == user.UserName)),
                Times.Once);
         }
     }

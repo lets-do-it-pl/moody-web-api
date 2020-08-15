@@ -11,14 +11,9 @@ namespace LetsDoIt.Moody.Persistance
         {
         }
 
-        public ApplicationContext()
-        {
-            
-        }
-
         public DbSet<Category> Categories { get; set; }
 
-        public virtual DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public DbSet<UserToken> UserTokens { get; set; }
 
