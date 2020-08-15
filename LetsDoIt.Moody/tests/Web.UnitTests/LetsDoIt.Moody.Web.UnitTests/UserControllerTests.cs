@@ -1,68 +1,43 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Text;
-//using System.Threading.Tasks;
-//using LetsDoIt.Moody.Application.Category;
-//using LetsDoIt.Moody.Application.User;
-//using LetsDoIt.Moody.Web.Controllers;
-//using Moq;
-//using Xunit;
+﻿using Moq;
+using Xunit;
 
-//namespace LetsDoIt.Moody.Web.UnitTests
-//{
-//    public class UserControllerTests
-//    {
-//        private readonly UserController _testing;
-//        private readonly Mock<IUserService> _mockUserService;
-//        public UserControllerTests()
-//        {
-//            _mockUserService = new Mock<IUserService>();
-//            _testing = new UserController(_mockUserService.Object);
-//        }
+namespace LetsDoIt.Moody.Web.UnitTests
+{
+    using System.Net;
+    using System.Threading.Tasks;
+    using LetsDoIt.Moody.Application.User;
+    using LetsDoIt.Moody.Web.Controllers;
+    using LetsDoIt.Moody.Web.Entities.Requests;
+    using Microsoft.AspNetCore.Mvc;
 
-//        [Theory]
-//        [InlineData(null)]
-//        [InlineData("")]
-//        [InlineData(" ")]
-//        public async Task SaveUserAsync_WhenUserNameIsMissing_ShouldThrownAnArgumentException(string userName)
-//        {
-//            // act 
-//            async Task Action() => await _testing.SaveUser(userName, "asdfgh");
+    public class UserControllerTests
+    {
+        private readonly UserController _testing;
+        private readonly Mock<IUserService> _mockUserService;
+        public UserControllerTests()
+        {
+            _mockUserService = new Mock<IUserService>();
+            _testing = new UserController(_mockUserService.Object);
+        }
 
-//            //assert
-//            await Assert.ThrowsAsync<ArgumentException>(Action);
-//        }
-
-//        [Theory]
-//        [InlineData(null)]
-//        [InlineData("")]
-//        [InlineData(" ")]
-//        public async Task SaveUserAsync_WhenPasswordIsMissing_ShouldThrownAnArgumentException(string password)
-//        {
-//            async Task Action() => await _testing.SaveUser("ben", password);
-
-//            //assert
-//            await Assert.ThrowsAsync<ArgumentException>(Action);
-
-//        }
-
-//        [Fact]
-//        public async Task SaveUserAsync_ShouldSaveUserInformation()
-//        {
-//            // arrange
-//            var userName = "Deneme";
-//            var password = "asdfgh";
-
-//            _mockUserService.Setup(us => us.SaveUserAsync(userName,password));
-
-//            // act
-//            await _testing.SaveUser(userName, password);
-
-//            // assert
-//            _mockUserService.Verify(us => us.SaveUserAsync(userName,password),Times.Once);
-//        }
+        [Fact]
+        public async Task AuthenticateAsync_UserDoesNotExistsInTheDatabase_ReturnsBadRequest()
+        {
 
 
+        }
 
-//    }
-//}
+        [Fact]
+        public async Task AuthenticateAsync_UserDoesExistsInTheDatabase_ReturnsOkWithToken()
+        {
+            var username = "Meryem";
+            var userpassword = "12345";
+
+            _mockUserService.Setup(user => user.AuthenticateAsync(username, userpassword));
+
+            var response = await _testing.Authenticate(username, userpassword);
+
+            Assert.IsType<OkObjectResult>(response.Result);
+        }
+    }
+}
