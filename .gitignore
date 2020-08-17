@@ -4,6 +4,7 @@
 
 /.vs
 /LetsDoIt.Moody/.vs
+/LetsDoIt.Moody/LetsDoIt.Moody.sln.DotSettings.user
 /LetsDoIt.Moody/src/Application/LetsDoIt.Moody.Application/bin
 /LetsDoIt.Moody/src/Application/LetsDoIt.Moody.Application/obj
 /LetsDoIt.Moody/src/Domain/LetsDoIt.Moody.Domain/bin
