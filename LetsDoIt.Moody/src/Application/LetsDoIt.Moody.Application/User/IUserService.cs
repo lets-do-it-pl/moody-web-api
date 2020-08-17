@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.User
 {
     public interface IUserService
     {
         Task SaveUserAsync(string userName,string password);
+
+        Task<UserTokenEntity> AuthenticateAsync(string username, string password);
     }
 }

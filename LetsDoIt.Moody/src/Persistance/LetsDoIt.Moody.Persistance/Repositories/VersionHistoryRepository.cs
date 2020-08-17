@@ -19,12 +19,12 @@ namespace LetsDoIt.Moody.Persistance.Repositories
             _context = context;
         }
 
-        public async Task<List<VersionHistory>> GetListAsync(Expression<Func<VersionHistory, bool>> filter = null)
+        public Task<List<VersionHistory>> GetListAsync(Expression<Func<VersionHistory, bool>> filter = null)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<VersionHistory> GetAsync(Expression<Func<VersionHistory, bool>> filter)
+        public Task<VersionHistory> GetAsync(Expression<Func<VersionHistory, bool>> filter)
         {
             throw new NotImplementedException();
         }
@@ -46,7 +46,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories
             return entity;
         }
 
-        public async Task<VersionHistory> UpdateAsync(VersionHistory entity)
+        public Task<VersionHistory> UpdateAsync(VersionHistory entity)
         {
             throw new NotImplementedException();
         }

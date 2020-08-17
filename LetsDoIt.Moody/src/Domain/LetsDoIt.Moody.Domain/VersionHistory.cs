@@ -7,7 +7,7 @@ namespace LetsDoIt.Moody.Domain
     public class VersionHistory
     {
         [Key]        
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public long Id { get; set; }
 
         [Required]

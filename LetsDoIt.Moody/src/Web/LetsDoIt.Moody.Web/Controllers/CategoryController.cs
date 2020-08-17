@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Category;
-    using System.Threading.Tasks;
+    using Application.CustomExceptions;
+    using Entities.Requests;
+    using Entities.Responses;
 
     [ApiController]
     [Route("api/categories")]
@@ -17,28 +21,109 @@ namespace LetsDoIt.Moody.Web.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpPost]
-        [Route("{id}")]
-        public async Task Delete(int id)
+        [HttpGet, Route("{versionNumber?}")]
+        public async Task<ActionResult<CategoryResponse>> GetCategories(string versionNumber = null)
         {
-            await _categoryService.DeleteAsync(id);
+            versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
+
+            var categoryResult = await _categoryService.GetCategories(versionNumber);
+            if (categoryResult == null ||
+                (!categoryResult.IsUpdated && categoryResult.Categories == null))
+            {
+                return NoContent();
+            }
+
+            return ToCategoryResponse(categoryResult);
         }
-        
+
         [HttpPost]
-        public async Task Insert(string name, int order, byte[] image)
+        public async Task<IActionResult> Insert([FromBody] CategoryInsertRequest insertRequest)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (insertRequest == null)
             {
-                throw new ArgumentException("Name can not be null");
+                return BadRequest();
             }
 
-            if (image == null)
+            var byteImage = Convert.FromBase64String(insertRequest.Image);
+
+            await _categoryService.InsertAsync(
+                insertRequest.Name,
+                insertRequest.Order,
+                byteImage);
+
+            return Ok();
+        }
+
+        [HttpPost, Route("update/{id}")]
+        public async Task<IActionResult> Update(CategoryUpdateRequest updateRequest)
+        {
+            if (updateRequest == null)  
             {
-                throw new ArgumentException("Image cannot be null!");
+                return BadRequest();
             }
 
-            await _categoryService.InsertAsync(name, order, image);
+            try
+            {
+                await _categoryService.UpdateAsync(
+                    updateRequest.Id,
+                    updateRequest.Name,
+                    updateRequest.Order,
+                    updateRequest.Image);
 
+                return Ok();
+            }
+            catch (ObjectNotFoundException)
+            {
+                return NotFound(updateRequest.Id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete, Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _categoryService.DeleteAsync(id);
+
+                return Ok();
+            }
+            catch (ObjectNotFoundException)
+            {
+                return NotFound(id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private CategoryResponse ToCategoryResponse(CategoryGetResult categoryResult)
+        {
+            var result = new CategoryResponse
+                        {
+                            IsUpdated = categoryResult.IsUpdated,
+                            VersionNumber = categoryResult.VersionNumber                            
+                        };
+
+            if(categoryResult.Categories != null)
+            {
+                result.Categories = categoryResult
+                                        .Categories
+                                        .Select(c =>
+                                             new CategoryEntity
+                                             {
+                                                 Id = c.Id,
+                                                 Name = c.Name,
+                                                 Order = c.Order,
+                                                 Image = c.Image
+                                             });
+            }
+
+            return result;
         }
     }
 }

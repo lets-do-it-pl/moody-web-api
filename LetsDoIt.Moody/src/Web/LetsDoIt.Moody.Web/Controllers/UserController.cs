@@ -1,14 +1,19 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.User;
+    using LetsDoIt.Moody.Web.Entities.Requests;
+    using Microsoft.Extensions.Logging;
+    using System.Data;
+    using System.Security.Authentication;
 
     [ApiController]
     [Route("api/users")]
-    public class UserController:ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
 
@@ -17,21 +22,46 @@ namespace LetsDoIt.Moody.Web.Controllers
             _userService = userService;
         }
 
-
         [HttpPost]
-        public async  Task  SaveUser(string userName, string password)
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> SaveUser(SaveUserRequest saveRequest)
         {
-            if (string.IsNullOrWhiteSpace(userName))
+            try
             {
-                throw new ArgumentException("Username cannot be null!");
-            } 
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                throw new ArgumentException("Password cannot be null!");
-            }
-            
-            await _userService.SaveUserAsync(userName,password);
+                await _userService.SaveUserAsync(
+                                saveRequest.Username,
+                                saveRequest.Password);
 
+                return StatusCode((int)HttpStatusCode.Created,"Created");
+
+            }
+            catch (DuplicateNameException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost("authenticate")]
+        public async Task<ActionResult<UserTokenEntity>> Authenticate(string username, string password)
+        {
+            try
+            {
+                var token = await _userService.AuthenticateAsync(username, password);
+
+                return Ok(token);
+            }
+            catch (AuthenticationException)
+            {
+                return BadRequest("Username or Password is wrong!");
+            }
+            catch (Exception)
+            {
+                throw;
+            }                       
         }
     }
-}   
+}

@@ -8,6 +8,6 @@ namespace LetsDoIt.Moody.Domain
 
         DateTime? ModifiedDate { get; set; }
 
-        bool isDeleted { get; set; }
+        bool IsDeleted { get; set; }
     }
 }
