@@ -33,12 +33,10 @@ namespace LetsDoIt.Moody.Web.UnitTests
         }
 
         [Fact]
-        public async Task AuthenticateAsync_UserDoesExistsInTheDatabase_ReturnsOkWithToken()
+        public async Task AuthenticateAsync_UserDoesExistsInTheDatabase_ReturnsOk()
         {
             var username = "Test";
             var userpassword = "12345";
-
-           // _mockUserService.Setup(user => user.AuthenticateAsync(username, userpassword));
 
             var response = await _testing.Authenticate(username, userpassword);
 
