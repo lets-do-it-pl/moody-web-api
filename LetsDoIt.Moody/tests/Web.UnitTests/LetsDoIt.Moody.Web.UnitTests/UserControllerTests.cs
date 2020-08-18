@@ -2,9 +2,10 @@
 using Xunit;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Authentication;
 
 namespace LetsDoIt.Moody.Web.UnitTests
-{ 
+{
     using Application.User;
     using Web.Controllers;
 
@@ -21,17 +22,23 @@ namespace LetsDoIt.Moody.Web.UnitTests
         [Fact]
         public async Task AuthenticateAsync_UserDoesNotExistsInTheDatabase_ReturnsBadRequest()
         {
+            var username = "Test";
+            var userpassword = "12345";
 
+            _mockUserService.Setup(user =>
+                user.AuthenticateAsync(It.IsAny<string>(), It.IsAny<string>())).Throws(new AuthenticationException());
 
+            var actual = await _testing.Authenticate(username, userpassword);
+            Assert.IsType<BadRequestObjectResult>(actual.Result);
         }
 
         [Fact]
         public async Task AuthenticateAsync_UserDoesExistsInTheDatabase_ReturnsOkWithToken()
         {
-            var username = "Meryem";
+            var username = "Test";
             var userpassword = "12345";
 
-            _mockUserService.Setup(user => user.AuthenticateAsync(username, userpassword));
+           // _mockUserService.Setup(user => user.AuthenticateAsync(username, userpassword));
 
             var response = await _testing.Authenticate(username, userpassword);
 
