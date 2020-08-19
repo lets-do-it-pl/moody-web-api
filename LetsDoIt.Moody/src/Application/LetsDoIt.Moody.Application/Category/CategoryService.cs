@@ -15,6 +15,7 @@ namespace LetsDoIt.Moody.Application.Category
         private readonly IEntityRepository<VersionHistory> _versionHistoryRepository;
         private readonly IVersionHistoryService _versionHistoryService;
 
+
         public CategoryService(
             IEntityRepository<Category> categoryRepository,
             IEntityRepository<VersionHistory> versionHistoryRepository,

@@ -1,5 +1,4 @@
 using Moq;
-using System;
 using Xunit;
 
 namespace LetsDoIt.Moody.Web.UnitTests
@@ -7,12 +6,10 @@ namespace LetsDoIt.Moody.Web.UnitTests
     using Application;
     using Controllers;
     using LetsDoIt.Moody.Application.Category;
-    using LetsDoIt.Moody.Domain;
-    using LetsDoIt.Moody.Web.Entities.Requests;
-    using LetsDoIt.Moody.Web.Entities.Responses;
     using Microsoft.AspNetCore.Mvc;
-    using System.Collections.Generic;
+    using System.Net;
     using System.Threading.Tasks;
+
     public class CategoryControllerTests
     {
         private readonly CategoryController _testing;
@@ -41,49 +38,19 @@ namespace LetsDoIt.Moody.Web.UnitTests
             _mockCategoryService.Verify(service => service.GetCategories(expected), Times.Once);
 
         }
-        //public async Task Should_ReturnNoContent_When_CategoryResultIsNullOrCategoryResultIsNotUpdatedAndCategoriesIsNull(string versionNumber, string expected)
-        //{
-        //    //Arrange
 
-        //    //Act
-            
-        //    //Assert
+        [Theory]
+        [InlineData(" ")]
+        public async Task Should_ReturnNoContent_When_CategoryResultIsNull(string versionNumber)
+        {
+            var categoryResult = await _testing.GetCategories(versionNumber);
+           
+            Assert.IsType<ObjectResult>(categoryResult);
+            var objectResponse = categoryResult as ObjectResult; //Cast to desired type
 
-        //}
+            Assert.Equal((int)HttpStatusCode.NoContent, objectResponse.StatusCode);
 
-
-        //[Theory]
-        //[InlineData("")]
-        //public async Task Should_ReturnCategoryGetResult_When_VersionNumberIsMissing(string versionNumber)
-        //{
-        //    //Arrange 
-
-        //    List<Category> list = new List<Category>();
-        // // list.Add();
-        
-
-        //    IEnumerable<Category> categoryList = list;
-
-        //   // IEnumerable<Category> cats = new IEnumerable<Category>();
-        //    var expected = new CategoryGetResult
-        //    {
-        //        VersionNumber = "aaa",
-        //        IsUpdated = false,
-        //        Categories = categoryList
-        //    };
-
-        //    _mockCategoryService
-        //            .Setup(service => service.GetCategories(It.IsAny<>()))
-        //            .ReturnsAsync(new CategoryGetResult() { VersionNumber = "" });
-
-        //    //Act
-        //    var categories = await _testing.GetCategories(versionNumber);
-
-        //    //Assert
-        //    bool comparer = categories.Equals(expected);
-        //    Assert.Equal(true, comparer);
-        
-        //}
+        }
 
         //[Theory]
         //[InlineData("aaa")]
@@ -93,7 +60,7 @@ namespace LetsDoIt.Moody.Web.UnitTests
         //    DateTime date1 = new DateTime(2014, 07, 25, 13, 30, 01);
         //    DateTime date2 = new DateTime(2014, 07, 25, 13, 30, 00);
 
-          
+
         //    _mockCategoryService.Setup(x => x.GetCategories(versionNumber)).Returns();
 
         //    //Act
