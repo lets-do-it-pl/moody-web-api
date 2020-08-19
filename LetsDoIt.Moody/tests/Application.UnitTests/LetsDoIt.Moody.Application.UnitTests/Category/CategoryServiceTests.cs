@@ -1,4 +1,7 @@
-﻿using Moq;
+﻿using System;
+using System.Threading.Tasks;
+using Moq;
+using Xunit;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Category
 {
@@ -26,5 +29,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                     _mockVersionHistoryRepository.Object,
                     _mockVersionHistoryService.Object);
         }
+        
     }
 }
