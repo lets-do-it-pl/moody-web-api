@@ -28,7 +28,6 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             try
             {
-                throw new ArgumentOutOfRangeException();
 
                 await _userService.SaveUserAsync(
                                 saveRequest.Username,
