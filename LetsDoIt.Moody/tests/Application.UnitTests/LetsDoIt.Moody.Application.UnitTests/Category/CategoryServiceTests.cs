@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Net.Mime;
 using System.Threading.Tasks;
+using LetsDoIt.Moody.Web.Entities.Requests;
 using Moq;
 using Xunit;
 
@@ -29,6 +31,42 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                     _mockVersionHistoryRepository.Object,
                     _mockVersionHistoryService.Object);
         }
-        
+        [Fact]
+        public async Task InsertAsync_GivenNoException_ShouldInvokeRepositoryAddAsync()
+        {
+            var request = new CategoryInsertRequest
+            {
+                Name = "asd",
+                Order = 5,
+                Image = "USrCELxGejBZI4W/Llsvmw==\r\n"
+            };
+
+            var byteImage = Convert.FromBase64String(request.Image);
+            await _testing.InsertAsync(request.Name, request.Order,byteImage);
+
+            _mockCategoryRepository.Verify(ur =>
+                    ur.AddAsync(It.Is<Category>(x => x.Name == request.Name))
+                );
+        }
+
+        [Fact]
+        public async Task InsertAsync_GivenNoException_ShouldInvokeVersionHistory()
+        {
+            var request = new CategoryInsertRequest
+            {
+                Name = "asd",
+                Order = 5,
+                Image = "USrCELxGejBZI4W/Llsvmw==\r\n"
+            };
+
+            var byteImage = Convert.FromBase64String(request.Image);
+            await _testing.InsertAsync(request.Name, request.Order, byteImage);
+
+            _mockVersionHistoryService.Verify(ur =>
+                ur.CreateNewVersionAsync()
+            );
+        }
     }
+
+    
 }
