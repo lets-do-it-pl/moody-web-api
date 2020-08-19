@@ -1,7 +1,5 @@
 ﻿using Moq;
 using Xunit;
-using System;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -28,7 +26,7 @@ namespace LetsDoIt.Moody.Application.UnitTests
             _testing = new UserService(_mockUserRepository.Object, _mockUserTokenRepository.Object, _applicationKey, _tokenExpirationMinutes);
         }
 
-        [Fact(Skip = "I would like to test if the testing method returns token")]
+        [Fact]
         public async Task AuthenticateAsync_UserExistsAndTokenIsNotNull_ReturnToken()
         {
             var username = "Test";
@@ -52,19 +50,31 @@ namespace LetsDoIt.Moody.Application.UnitTests
                     Token = token
                 }
             }.AsQueryable();
-            
+
 
             _mockUserRepository.Setup(repo => repo.Get()).Returns(user);
             _mockUserTokenRepository.Setup(token => token.Get()).Returns(userToken);
 
-             await _testing.AuthenticateAsync(username, userpassword);
+            var actual = await _testing.AuthenticateAsync(username, userpassword);
+            Assert.IsType<UserToken>(actual.Token);
         }
 
-        [Fact(Skip = "I don't understand why isn't it working?")]
+        [Fact]
         public async Task AuthenticateAsync_UserDoesNotExistsInTheDatabase_ThrowAuthenticationException()
         {
             var username = "Test";
             var userpassword = "12345";
+
+            var user = new List<User>
+            {
+                new User()
+                {
+                    UserName = null,
+                    Password = null
+                }
+            }.AsQueryable();
+
+            _mockUserRepository.Setup(repo => repo.Get()).Returns(user);
 
             Task Test() =>  _testing.AuthenticateAsync(username, userpassword);
 

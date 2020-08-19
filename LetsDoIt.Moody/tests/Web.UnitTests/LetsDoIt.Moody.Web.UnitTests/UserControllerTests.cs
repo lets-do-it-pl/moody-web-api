@@ -38,6 +38,8 @@ namespace LetsDoIt.Moody.Web.UnitTests
             var username = "Test";
             var userpassword = "12345";
 
+            _mockUserService.Setup(user => user.AuthenticateAsync(username, userpassword));
+
             var response = await _testing.Authenticate(username, userpassword);
 
             Assert.IsType<OkObjectResult>(response.Result);
