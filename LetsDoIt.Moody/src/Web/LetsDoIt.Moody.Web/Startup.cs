@@ -1,9 +1,12 @@
+using LetsDoIt.Moody.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace LetsDoIt.Moody.Web
@@ -15,6 +18,8 @@ namespace LetsDoIt.Moody.Web
     using Application.VersionHistory;
     using Persistance.Repositories;
     using Domain;
+    using Microsoft.AspNetCore.Http;
+    using System;
 
     public class Startup
     {
@@ -68,10 +73,11 @@ namespace LetsDoIt.Moody.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            app.UseApiExceptionHandler(options=>
             {
-                app.UseDeveloperExceptionPage();
-            }
+                options.AddResponseDetails = UpdateApiErrorResponse;
+                options.DetermineLogLevel = DetermineLogLevel;
+            });
 
             app.UseResponseCompression();
 
@@ -91,6 +97,26 @@ namespace LetsDoIt.Moody.Web
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private LogLevel DetermineLogLevel(Exception ex)
+        {
+            if (ex.Message.StartsWith("cannot open database", StringComparison.InvariantCultureIgnoreCase) ||
+                ex.Message.StartsWith("a network-related", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return LogLevel.Critical;
+            }
+            return LogLevel.Error;
+        }
+
+        private void UpdateApiErrorResponse(HttpContext context, Exception ex, ApiError error)
+        {
+
+            if (ex.GetType().Name == nameof(SqlException))
+            {
+                error.Detail = "Exception was a database exception!";
+            }
+            //error.Links = "https://gethelpformyerror.com/";
         }
     }
 }
