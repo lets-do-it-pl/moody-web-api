@@ -8,8 +8,8 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
     using Application.Category;
     using Application.CustomExceptions;
-    using Web.Controllers;    
-    using Web.Entities.Requests;       
+    using Web.Controllers;
+    using Web.Entities.Requests;
 
     public class CategoryControllerTests
     {
@@ -36,6 +36,22 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 
             //Assert
             Assert.IsType<OkResult>(actual);
-        
+
         }
-        }}
+
+        [Fact]
+        public async Task GIVEN_ThereIsAnDeleteRequestWithoutId_WHEN_DeletingTheRequest_THEN_ShouldGetBadRequest()
+        {
+            int id = 0;
+            _mockCategoryService.Setup(c => c.DeleteAsync(id)).Throws(new ObjectNotFoundException("Not found"));
+
+            //Act
+            var actual = await _testing.Delete(id);
+
+            //Assert
+            Assert.IsType<NotFoundObjectResult>(actual);
+        }
+
+
+    }
+}
