@@ -1,15 +1,13 @@
-﻿using System;
-using System.Net.Mime;
-using System.Threading.Tasks;
-using LetsDoIt.Moody.Web.Entities.Requests;
-using Moq;
+﻿using Moq;
 using Xunit;
+using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Category
 {
     using Application.Category;
     using Application.VersionHistory;
     using Domain;
+    using LetsDoIt.Moody.Application.CustomExceptions;
     using Persistance.Repositories.Base;
 
     public class CategoryServiceTests
@@ -31,35 +29,36 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                     _mockVersionHistoryRepository.Object,
                     _mockVersionHistoryService.Object);
         }
-        [Fact]
-        public async Task DeleteAsync_GivenNoException_ShouldInvokeRepositoryAddAsync()
-        {
-            var request = new CategoryInsertRequest
-            {
-                Id = 1
-            };
-            await _testing.DeleteAsync(request.Id);
-            _mockCategoryRepository.Verify(ur =>
-                   ur.AddAsync(It.Is<Category>(c => c.Id == request.Id))
-               );
 
+        [Fact]
+        public async Task DeleteAsync_IdExists_DeleteIdAndCreateNewVersion()
+        {
+            var category = new Category
+            {
+                Id = 3
+            };
+
+            _mockCategoryRepository.Setup(c => c.GetAsync(id => id.Id == category.Id));
+
+            await _testing.DeleteAsync(category.Id);
+
+            _mockCategoryRepository.Verify(c => c.DeleteAsync(category), Times.Once);
+
+            _mockVersionHistoryService.Verify(v => v.CreateNewVersionAsync(), Times.Once);
         }
 
         [Fact]
-        public async Task DeleteAsync_GivenNoException_ShouldInvokeVersionHistory()
+        public async Task DeleteAsync_IdDoesNotExistsInTheDatabase_ThrowsObjectNotFoundException()
         {
-            var request = new CategoryDeleteRequest
+            var category = new Category
             {
-                Id = 1
+                Id = 3
             };
 
-            await _testing.DeleteAsync(request.Id);
+            async Task Test() => await _testing.DeleteAsync(category.Id);
 
-            _mockVersionHistoryService.Verify(ur =>
-                ur.CreateNewVersionAsync()
-            );
+            await Assert.ThrowsAsync<ObjectNotFoundException>(Test);
         }
+
     }
-
-
 }
