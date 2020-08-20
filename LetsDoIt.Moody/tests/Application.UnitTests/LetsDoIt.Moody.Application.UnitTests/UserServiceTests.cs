@@ -105,10 +105,9 @@ namespace LetsDoIt.Moody.Application.UnitTests
 
             var actual = await _testing.AuthenticateAsync(username, userpassword);
 
-            _mockUserTokenRepository.Setup(token => token.UpdateAsync(userTokens.AsQueryable()));
-
-            //Assert.Equal(actual.Token, );
-
+            _mockUserTokenRepository.Verify(token =>
+                    token.UpdateAsync(It.Is<UserToken>(x => x.Token == actual.Token)),
+                    Times.Once);
         }
 
         [Fact]
@@ -143,9 +142,9 @@ namespace LetsDoIt.Moody.Application.UnitTests
 
             var actual = await _testing.AuthenticateAsync(username, userpassword);
 
-            _mockUserTokenRepository.Setup(token => token.UpdateAsync(userTokens.AsQueryable));
-
-            //Assert.Equal(actual.Token,);
+            _mockUserTokenRepository.Verify(token =>
+                    token.UpdateAsync(It.Is<UserToken>(x => x.Token == actual.Token)),
+                    Times.Once);
         }
 
     }
