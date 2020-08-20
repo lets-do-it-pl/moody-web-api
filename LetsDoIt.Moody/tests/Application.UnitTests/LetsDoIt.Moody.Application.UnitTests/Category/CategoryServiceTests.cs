@@ -22,8 +22,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         private readonly Mock<IEntityRepository<VersionHistory>> _mockVersionHistoryRepository;
         private readonly Mock<IVersionHistoryService> _mockVersionHistoryService;
 
-        private readonly CategoryController _testingController;
-        private readonly Mock<ICategoryService> _mockCategoryService;
 
         public CategoryServiceTests()
         {
@@ -36,8 +34,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                     _mockVersionHistoryRepository.Object,
                     _mockVersionHistoryService.Object);
 
-            _mockCategoryService = new Mock<ICategoryService>();
-            _testingController = new CategoryController(_mockCategoryService.Object);
         }
 
         private CategoryGetResult GetCategory(string versionNumber)
@@ -53,35 +49,60 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                 Categories = categoryList
             };
         }
-/*
-        [Fact]
-        public async Task Should_ThrowsException_When_LatestVersionIsMissing()
-        {
-            //Arrange
-            // var latestVersion = _testing.Get().OrderByDescending(vh => vh.CreateDate).FirstOrDefault();
 
-            //Act
 
-            //Assert
 
-        }
-*/
         [Theory]
         [InlineData(null)]
         public async Task Should_ReturnCategoryGetResult_When_VersionNumberIsMissing(string versionNumber)
         {
             //Arrange
             var result = GetCategory(versionNumber);
-            _mockCategoryService.Setup(service => service.GetCategories(versionNumber)).ReturnsAsync(result);
-
+            _mockCategoryRepository.Setup(cr => cr.GetListAsync()).ReturnsAsync(result);
 
             //Act
-            var categories = await _testingController.GetCategories(versionNumber);
+            var actual = await _testing.GetCategories(versionNumber);
 
             //Assert
-            Assert.IsType<CategoryGetResult>(categories);
+            Assert.IsType<CategoryGetResult>(actual);
+        }
 
+
+
+        [Fact]
+        public async Task Should_ReturnCategoryGetResult_When_GetCategoryIsCalled()
+        {
+            //Arrange
+            string versionNumber = "abc";
+            //Act
+            var actual = await _testing.GetCategories(versionNumber);
+
+            //Assert
+            Assert.IsType<CategoryGetResult>(actual);
+        }
+
+        [Fact]
+        public async Task Should_ReturnResultWithoutCategoryInfo_When_ResultIsUpdated()
+        {
+            //Arrange
+            string versionNumber = "abc";
+
+            var result = new CategoryGetResult
+            {
+                IsUpdated = true,
+                VersionNumber = versionNumber
+            };
+            //Act
+            var actual = await _testing.GetCategories(versionNumber);
+
+            //Assert
+            Assert.IsType<CategoryGetResult>(actual);
+        }
+
+        [Fact]
+        public async Task Should_ReturnResultWithCategoryInfo_When_ResultIsNotUpdated()
+        {
 
         }
-    }
+        }
 }
