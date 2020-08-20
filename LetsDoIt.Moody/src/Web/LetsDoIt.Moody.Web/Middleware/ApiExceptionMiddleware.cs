@@ -48,7 +48,7 @@ namespace LetsDoIt.Moody.Web.Middleware
 
             opts.AddResponseDetails?.Invoke(context, exception, error);
             var level = _options.DetermineLogLevel?.Invoke(exception) ?? LogLevel.Error;
-            _logger.Log(level, exception, "BADNESS!!! " + innerExMessage + " -- {ErrorId}.", error.Id);
+            _logger.Log(level, exception, "CUSTOM ERROR LOG ::: " + innerExMessage + " -- {ErrorId}.", error.Id);
 
             var result = JsonConvert.SerializeObject(error);
             context.Response.ContentType = "application/json";
