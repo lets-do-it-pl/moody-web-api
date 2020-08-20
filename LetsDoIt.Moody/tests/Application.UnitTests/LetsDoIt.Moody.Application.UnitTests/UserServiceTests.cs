@@ -1,5 +1,6 @@
 ﻿using Moq;
 using Xunit;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -10,7 +11,6 @@ namespace LetsDoIt.Moody.Application.UnitTests
     using Domain;
     using Application.User;
     using Persistance.Repositories.Base;
-    using System;
 
     public class UserServiceTests
     {
