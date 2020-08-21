@@ -7,18 +7,18 @@ using Newtonsoft.Json;
 
 namespace LetsDoIt.Moody.Web.Middleware
 {
+    using LetsDoIt.Moody.Application.Utils;
+
     public class ApiExceptionMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ApiExceptionMiddleware> _logger;
-        private readonly ApiExceptionOptions _options;
 
-        public ApiExceptionMiddleware(ApiExceptionOptions options, RequestDelegate next, 
+        public ApiExceptionMiddleware(RequestDelegate next, 
             ILogger<ApiExceptionMiddleware> logger)
         {
             _next = next;
             _logger = logger;
-            _options = options;
         }
 
         public async Task Invoke(HttpContext context /* other dependencies */)
@@ -29,11 +29,11 @@ namespace LetsDoIt.Moody.Web.Middleware
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex, _options);
+                await HandleExceptionAsync(context, ex);
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception exception, ApiExceptionOptions opts)
+        private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var error = new ApiError
             {
@@ -43,12 +43,10 @@ namespace LetsDoIt.Moody.Web.Middleware
                         "support team if the problem persists."
             };
 
-            var innerExMessage = GetInnermostExceptionMessage(exception);
+            var innerExMessage = exception.GetInnermostExceptionMessage();
 
 
-            opts.AddResponseDetails?.Invoke(context, exception, error);
-            var level = _options.DetermineLogLevel?.Invoke(exception) ?? LogLevel.Error;
-            _logger.Log(level, exception, "CUSTOM ERROR LOG ::: " + innerExMessage + " -- {ErrorId}.", error.Id);
+            _logger.LogError( exception, "CUSTOM ERROR LOG ::: " + innerExMessage + " -- {ErrorId}.", error.Id);
 
             var result = JsonConvert.SerializeObject(error);
             context.Response.ContentType = "application/json";
@@ -56,12 +54,6 @@ namespace LetsDoIt.Moody.Web.Middleware
             return context.Response.WriteAsync(result);
         }
 
-        private string GetInnermostExceptionMessage(Exception exception)
-        {
-            if (exception.InnerException != null)
-                return GetInnermostExceptionMessage(exception.InnerException);
-
-            return exception.Message;
-        }
+       
     }
 }

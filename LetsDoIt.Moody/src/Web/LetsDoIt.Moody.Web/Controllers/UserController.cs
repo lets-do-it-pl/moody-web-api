@@ -28,7 +28,6 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             try
             {
-
                 await _userService.SaveUserAsync(
                                 saveRequest.Username,
                                 saveRequest.Password);
@@ -48,7 +47,6 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
         }
 
-        public Exception ArgumentOutOfRangeException { get; set; }
 
         [HttpPost("authenticate")]
         public async Task<ActionResult<UserTokenEntity>> Authenticate(string username, string password)

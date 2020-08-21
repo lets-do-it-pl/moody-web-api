@@ -73,11 +73,7 @@ namespace LetsDoIt.Moody.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseApiExceptionHandler(options=>
-            {
-                options.AddResponseDetails = UpdateApiErrorResponse;
-                options.DetermineLogLevel = DetermineLogLevel;
-            });
+            app.UseApiExceptionHandler();
 
             app.UseResponseCompression();
 
@@ -97,26 +93,6 @@ namespace LetsDoIt.Moody.Web
             {
                 endpoints.MapControllers();
             });
-        }
-
-        private LogLevel DetermineLogLevel(Exception ex)
-        {
-            if (ex.Message.StartsWith("cannot open database", StringComparison.InvariantCultureIgnoreCase) ||
-                ex.Message.StartsWith("a network-related", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return LogLevel.Critical;
-            }
-            return LogLevel.Error;
-        }
-
-        private void UpdateApiErrorResponse(HttpContext context, Exception ex, ApiError error)
-        {
-
-            if (ex.GetType().Name == nameof(SqlException))
-            {
-                error.Detail = "Exception was a database exception!";
-            }
-            //error.Links = "https://gethelpformyerror.com/";
         }
     }
 }

@@ -19,10 +19,9 @@ namespace LetsDoIt.Moody.Web.UnitTests.Middlewares
         public async Task WhenAnUnExpectedExceptionIsRaised_CustomExceptionMiddlewareShouldHandleItToApiErrorResponseAndReturnInternalServerErrorHttpStatusCode()
         {
             // Arrange
-            ApiExceptionOptions mockOptions=new ApiExceptionOptions();
             ILogger<ApiExceptionMiddleware> mockLogger = new NullLogger<ApiExceptionMiddleware>();
 
-            var middleware = new ApiExceptionMiddleware(mockOptions, next: (innerHttpContext) => 
+            var middleware = new ApiExceptionMiddleware( next: (innerHttpContext) => 
                 throw new Exception("Test exception"),mockLogger);
 
             var context = new DefaultHttpContext();

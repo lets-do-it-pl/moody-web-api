@@ -129,4 +129,4 @@ namespace LetsDoIt.Moody.Application.User
                 ProtectionHelper.EncryptValue(username + password)
             );
     }
-}
+}   
