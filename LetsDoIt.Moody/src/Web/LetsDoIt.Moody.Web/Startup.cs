@@ -1,12 +1,9 @@
 using LetsDoIt.Moody.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace LetsDoIt.Moody.Web
@@ -18,8 +15,6 @@ namespace LetsDoIt.Moody.Web
     using Application.VersionHistory;
     using Persistance.Repositories;
     using Domain;
-    using Microsoft.AspNetCore.Http;
-    using System;
 
     public class Startup
     {

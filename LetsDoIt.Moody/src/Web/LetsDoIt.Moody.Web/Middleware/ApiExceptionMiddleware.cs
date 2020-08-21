@@ -37,7 +37,6 @@ namespace LetsDoIt.Moody.Web.Middleware
         {
             var error = new ApiError
             {
-                Id = Guid.NewGuid().ToString(),
                 Status = (short)HttpStatusCode.InternalServerError,
                 Title = "Some kind of error occurred in the API.  Please use the id and contact our " +
                         "support team if the problem persists."
@@ -45,8 +44,7 @@ namespace LetsDoIt.Moody.Web.Middleware
 
             var innerExMessage = exception.GetInnermostExceptionMessage();
 
-
-            _logger.LogError( exception, "CUSTOM ERROR LOG ::: " + innerExMessage + " -- {ErrorId}.", error.Id);
+            _logger.LogError( exception, "CUSTOM ERROR LOG ::: " + innerExMessage);
 
             var result = JsonConvert.SerializeObject(error);
             context.Response.ContentType = "application/json";
