@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Net.Mime;
 using System.Threading.Tasks;
-using LetsDoIt.Moody.Web.Entities.Requests;
 using Moq;
 using Xunit;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Category
 {
+    using Web.Entities.Requests;
     using Application.Category;
-    using Application.VersionHistory;
+    using VersionHistory;
     using Domain;    
     using Persistance.Repositories.Base;
 
