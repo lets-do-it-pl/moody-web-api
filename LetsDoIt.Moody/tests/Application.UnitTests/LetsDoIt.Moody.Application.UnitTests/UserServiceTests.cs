@@ -5,19 +5,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Authentication;
+using MockQueryable.Moq;
 
 namespace LetsDoIt.Moody.Application.UnitTests
 {
     using Domain;
     using Application.User;
+    using Application.Utils;
     using Persistance.Repositories.Base;
 
     public class UserServiceTests
     {
+        private readonly UserService _testing;
         private readonly Mock<IEntityRepository<UserToken>> _mockUserTokenRepository;
         private readonly Mock<IEntityRepository<User>> _mockUserRepository;
-        private readonly IUserService _testing;
-        private readonly string _applicationKey = "something";
+        private readonly string _applicationKey = "d1442e0f-01e0-4074-bdae-28b8f57a6b40";
         private readonly int _tokenExpirationMinutes = 123;
 
         public UserServiceTests()
@@ -34,117 +36,159 @@ namespace LetsDoIt.Moody.Application.UnitTests
         [Fact]
         public async Task AuthenticateAsync_UserExistsAndTokenIsNotNull_ReturnToken()
         {
-            var username = "Test";
-            var userpassword = "12345";
-            var token = "jhafusfcuyfeuycewhvbcbhec";
+            //Arrange
+            var username = "good.username";
+            var password = "good.password";
 
-            var user = new List<User>
+            var token = new UserToken
+            {
+                Token = "good.token",
+                ExpirationDate = DateTime.Now.AddMinutes(12)
+            };
+
+            var users = new List<User>
             {
                 new User()
                 {
                     UserName = username,
-                    Password = userpassword
+                    Password = ProtectionHelper.EncryptValue(username + password),
+                    UserToken = token
                 }
 
             };
 
-            var userToken = new List<UserToken>
-            {
-                new UserToken()
-                {
-                    Token = token
-                }
-            };
+            //Act
+            _mockUserRepository.Setup(repo => repo.Get()).
+                Returns(users.AsQueryable().BuildMockDbSet().Object);
 
+            var actual = await _testing.AuthenticateAsync(username, password);
 
-            _mockUserRepository.Setup(repo => repo.Get()).Returns(user.AsQueryable());
-            _mockUserTokenRepository.Setup(token => token.Get()).Returns(userToken.AsQueryable());
-
-            var actual = await _testing.AuthenticateAsync(username, userpassword);
-            Assert.Equal(actual.Token , token);
-
+            //Assert
+            Assert.NotNull(actual);
+            Assert.Equal(username, actual.Username);
+            Assert.Equal(token.Token, actual.Token);
+            Assert.True(DateTime.Now < actual.ExpirationDate);
         }
 
         [Fact]
         public async Task AuthenticateAsync_UserDoesNotExistsInTheDatabase_ThrowAuthenticationException()
         {
-            var username = "Test";
-            var userpassword = "12345";
+            var username = "bad.username";
+            var password = "bad.password";
 
-            async Task Test() => await _testing.AuthenticateAsync(username, userpassword);
+            async Task Test() => await _testing.AuthenticateAsync(username, password);
 
-            Assert.ThrowsAsync<AuthenticationException>(Test);
+            await Assert.ThrowsAsync<AuthenticationException>(Test);
         }
 
         [Fact]
         public async Task AuthenticateAsync_UserExistsWithoutToken_ShouldGenerateAToken()
         {
-            var username = "Test";
-            var userpassword = "12345";
+            var username = "good.username";
+            var password = "good.password";
 
-            var user = new List<User>
+            var users = new List<User>
             {
                 new User()
                 {
+                    Id = 1,
                     UserName = username,
-                    Password = userpassword
+                    Password = ProtectionHelper.EncryptValue(username + password),
+                    UserToken = null
                 }
 
             };
 
-            var userTokens = new List<UserToken>
+            var userToken = new UserToken
             {
-                new UserToken()
-                {
-                    Token = null
-                }
+                UserId = 1,
+                Token = "good.token",
+                ExpirationDate = DateTime.Now.AddMinutes(5)
             };
 
-            _mockUserRepository.Setup(user => user.Get()).Returns(user.AsQueryable());
-            _mockUserTokenRepository.Setup(token => token.Get()).Returns(userTokens.AsQueryable());
+            _mockUserTokenRepository
+                .Setup(repo => repo.UpdateAsync(It.IsAny<UserToken>()))
+                .ReturnsAsync(userToken);
 
-            var actual = await _testing.AuthenticateAsync(username, userpassword);
+            _mockUserRepository.Setup(user => user.Get()).
+                Returns(users.AsQueryable().BuildMockDbSet().Object);
+
+             var actual = await _testing.AuthenticateAsync(username, password);
 
             _mockUserTokenRepository.Verify(token =>
-                    token.UpdateAsync(It.Is<UserToken>(x => x.Token == actual.Token)),
+                    token.UpdateAsync(It.IsAny<UserToken>()),
                     Times.Once);
         }
 
         [Fact]
         public async Task AuthenticateAsync_UserExistsWithExpiredToken_ShouldGenerateNewToken()
         {
-            var username = "Test";
-            var userpassword = "12345";
-            var userToken = "jhafusfcuyfeuycewhvbcbhec";
+            var username = "good.username";
+            var password = "good.password";
+            
+            var expiredUserToken = new UserToken
+            {
+                UserId = 1,
+                Token = "expired.token",
+                ExpirationDate = DateTime.Now
+            };
 
-            var user = new List<User>
+            var userToken = new UserToken
+            {
+                UserId = 1,
+                Token = "good.token",
+                ExpirationDate = DateTime.Now.AddMinutes(5)
+            };
+
+            var users = new List<User>
             {
                 new User()
                 {
+                    Id = 1,
                     UserName = username,
-                    Password = userpassword
+                    Password =  ProtectionHelper.EncryptValue(username + password),
+                    UserToken = expiredUserToken
                 }
 
             };
+            
+            _mockUserTokenRepository
+                .Setup(repo => repo.UpdateAsync(It.IsAny<UserToken>()))
+                .ReturnsAsync(userToken);
 
-            var userTokens = new List<UserToken>
-            {
-                new UserToken()
-                {
-                    Token = userToken,
-                    ExpirationDate = DateTime.Now
-                }
-            };
+            _mockUserRepository.Setup(repo => repo.Get()).
+                Returns(users.AsQueryable().BuildMockDbSet().Object);
 
+           var actual = await _testing.AuthenticateAsync(username, password);
 
-            _mockUserRepository.Setup(repo => repo.Get()).Returns(user.AsQueryable());
-            _mockUserTokenRepository.Setup(token => token.Get()).Returns(userTokens.AsQueryable());
-
-            var actual = await _testing.AuthenticateAsync(username, userpassword);
+            Assert.NotEqual(expiredUserToken.Token, actual.Token);
+            Assert.Equal(userToken.Token, actual.Token);
 
             _mockUserTokenRepository.Verify(token =>
-                    token.UpdateAsync(It.Is<UserToken>(x => x.Token == actual.Token)),
+                    token.UpdateAsync(It.IsAny<UserToken>()),
                     Times.Once);
+        }
+
+        [Fact]
+        public async Task AuthenticateAsync_UserNameIsNull_ThrowsArgumentNullException()
+        {
+            string username = null;
+            string password = "Test";
+
+            async Task Test() => await _testing.AuthenticateAsync(username, password);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(Test);
+        }
+
+        [Fact]
+        public async Task AuthenticateAsync_PasswordIsNull_ThrowsArgumentNullException()
+        {
+            string username = "Test";
+            string password = null;
+
+            async Task Test() => await _testing.AuthenticateAsync(username, password);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(Test);
         }
 
     }
