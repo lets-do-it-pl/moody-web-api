@@ -37,8 +37,8 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task SaveUserAsync(string username, string password)
         {
-            Guard.Requires(username, nameof(username));
-            Guard.Requires(password, nameof(password));
+            Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
+            Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
             var isUserExisted = _userRepository.Get().Where(u => u.UserName == username && !u.IsDeleted).Any();
             if (isUserExisted)
@@ -129,4 +129,4 @@ namespace LetsDoIt.Moody.Application.User
                 ProtectionHelper.EncryptValue(username + password)
             );
     }
-}
+}   

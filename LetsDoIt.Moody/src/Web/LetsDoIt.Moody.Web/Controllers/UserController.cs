@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> SaveUser(SaveUserRequest saveRequest)
         {
             try
@@ -31,7 +33,10 @@ namespace LetsDoIt.Moody.Web.Controllers
                                 saveRequest.Username,
                                 saveRequest.Password);
 
-                return Ok();
+                
+
+                return StatusCode((int)HttpStatusCode.Created,"Created");
+
             }
             catch (DuplicateNameException ex)
             {
@@ -42,6 +47,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 throw;
             }
         }
+
 
         [HttpPost("authenticate")]
         public async Task<ActionResult<UserTokenEntity>> Authenticate(string username, string password)
