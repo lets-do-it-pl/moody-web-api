@@ -98,7 +98,7 @@ namespace LetsDoIt.Moody.Application.User
         private UserToken GetNewUserToken(UserEntity user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenKey = Encoding.UTF8.GetBytes(_applicationKey);
+            var tokenKey = Encoding.ASCII.GetBytes(_applicationKey);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

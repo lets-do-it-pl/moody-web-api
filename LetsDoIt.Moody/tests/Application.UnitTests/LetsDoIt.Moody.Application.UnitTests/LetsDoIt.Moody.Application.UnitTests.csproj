@@ -25,4 +25,7 @@
     <ProjectReference Include="..\..\..\src\Domain\LetsDoIt.Moody.Domain\LetsDoIt.Moody.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="User\" />
+  </ItemGroup>
 </Project>

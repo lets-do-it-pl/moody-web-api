@@ -14,7 +14,7 @@ namespace LetsDoIt.Moody.Application.UnitTests
     using Application.Utils;
     using Persistance.Repositories.Base;
 
-    public class UserServiceTests
+    public class UserSeviceTests
     {
         private readonly UserService _testing;
         private readonly Mock<IEntityRepository<UserToken>> _mockUserTokenRepository;
@@ -22,7 +22,7 @@ namespace LetsDoIt.Moody.Application.UnitTests
         private readonly string _applicationKey = "d1442e0f-01e0-4074-bdae-28b8f57a6b40";
         private readonly int _tokenExpirationMinutes = 123;
 
-        public UserServiceTests()
+        public UserSeviceTests()
         {
             _mockUserRepository = new Mock<IEntityRepository<User>>();
             _mockUserTokenRepository = new Mock<IEntityRepository<UserToken>>();

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Security.Authentication;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.User;
+    using LetsDoIt.Moody.Web.Entities.Requests;
+    using Microsoft.Extensions.Logging;
+    using System.Data;
+    using System.Security.Authentication;
     using Web.Entities.Requests;
 
     [ApiController]
