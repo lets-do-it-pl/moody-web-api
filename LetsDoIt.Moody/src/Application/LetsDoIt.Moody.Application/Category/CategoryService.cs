@@ -89,9 +89,6 @@ namespace LetsDoIt.Moody.Application.Category
             await _versionHistoryService.CreateNewVersionAsync();
         }
 
-        public void InsertAsync(string name, int order, string image)
-        {
-            throw new System.NotImplementedException();
-        }
+      
     }
 }
