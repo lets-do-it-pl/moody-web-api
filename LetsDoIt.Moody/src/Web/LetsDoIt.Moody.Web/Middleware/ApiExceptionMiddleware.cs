@@ -42,7 +42,7 @@ namespace LetsDoIt.Moody.Web.Middleware
                         "support team if the problem persists."
             };
 
-            var innerExMessage = exception.GetInnermostExceptionMessage();
+            var innerExMessage = exception.GetExceptionMessages();
 
             _logger.LogError( exception, "CUSTOM ERROR LOG ::: " + innerExMessage);
 

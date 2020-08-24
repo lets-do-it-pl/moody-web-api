@@ -4,9 +4,9 @@ namespace LetsDoIt.Moody.Application.Utils
 {
     public static class ExceptionHelper
     {
-        public static string GetInnermostExceptionMessage(this Exception exception)
+        public static string GetExceptionMessages(this Exception exception)
         {
-            return exception.InnerException != null ? GetInnermostExceptionMessage(exception.InnerException) : exception.Message;
+            return exception.InnerException != null ? GetExceptionMessages(exception.InnerException) : exception.Message;
         }
     }
 }
