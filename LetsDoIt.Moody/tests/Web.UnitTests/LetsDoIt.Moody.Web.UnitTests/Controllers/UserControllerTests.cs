@@ -1,29 +1,16 @@
-<<<<<<< HEAD
 ﻿using Moq;
 using Xunit;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Authentication;
-
-namespace LetsDoIt.Moody.Web.UnitTests
-{
-    using Application.User;
-    using Web.Controllers;
-
-=======
 using System.Data;
 using System.Net;
-using System.Threading.Tasks;
-using LetsDoIt.Moody.Application.User;
-using LetsDoIt.Moody.Web.Controllers;
-using LetsDoIt.Moody.Web.Entities.Requests;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using Xunit;
+ using LetsDoIt.Moody.Web.Controllers;
 
 namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
->>>>>>> 81c6bfc63c952b4dc89c09dfabf14f031cb67670
+    using Application.User;
+    using Entities.Requests;
     public class UserControllerTests
     {
         private readonly UserController _testing;
@@ -34,7 +21,6 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             _testing = new UserController(_mockUserService.Object);
         }
 
-<<<<<<< HEAD
         [Fact]
         public async Task AuthenticateAsync_UserDoesNotExistsInTheDatabase_ReturnsBadRequest()
         {
@@ -60,7 +46,6 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 
             Assert.IsType<OkObjectResult>(response.Result);
         }
-=======
 
         [Fact]
         public async Task SaveUser_WhenDuplicateNameExceptionThrown_ShouldReturnBadRequest()
@@ -114,6 +99,5 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
                 Times.Once);
         }
 
->>>>>>> 81c6bfc63c952b4dc89c09dfabf14f031cb67670
     }
 }

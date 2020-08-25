@@ -1,53 +1,33 @@
-<<<<<<< HEAD
-﻿using Moq;
+using Moq;
 using Xunit;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Data;
 using System.Security.Authentication;
 using MockQueryable.Moq;
-
-namespace LetsDoIt.Moody.Application.UnitTests
-{
-    using Domain;
-    using Application.User;
-    using Application.Utils;
-=======
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using Moq;
-using Xunit;
 using LetsDoIt.Moody.Application.User;
+
+
 
 namespace LetsDoIt.Moody.Application.UnitTests.User
 {
     using Domain;
->>>>>>> 81c6bfc63c952b4dc89c09dfabf14f031cb67670
     using Persistance.Repositories.Base;
+    using Utils;
 
     public class UserSeviceTests
     {
-<<<<<<< HEAD
-        private readonly UserService _testing;
+        private readonly IUserService _testing;
         private readonly Mock<IEntityRepository<UserToken>> _mockUserTokenRepository;
         private readonly Mock<IEntityRepository<User>> _mockUserRepository;
         private readonly string _applicationKey = "d1442e0f-01e0-4074-bdae-28b8f57a6b40";
-=======
-        private readonly Mock<IEntityRepository<UserToken>> _mockUserTokenRepository;
-        private readonly Mock<IEntityRepository<User>> _mockUserRepository;
-        private readonly IUserService _testing;
-        private readonly string _applicationKey = "something";
->>>>>>> 81c6bfc63c952b4dc89c09dfabf14f031cb67670
         private readonly int _tokenExpirationMinutes = 123;
 
         public UserSeviceTests()
         {
             _mockUserRepository = new Mock<IEntityRepository<User>>();
-<<<<<<< HEAD
             _mockUserTokenRepository = new Mock<IEntityRepository<UserToken>>();
             _testing = new UserService
                 (_mockUserRepository.Object,
@@ -77,7 +57,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                     Password = ProtectionHelper.EncryptValue(username + password),
                     UserToken = token
                 }
-
             };
 
             //Act
@@ -93,11 +72,38 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             Assert.True(DateTime.Now < actual.ExpirationDate);
         }
 
+        //Test failing
         [Fact]
         public async Task AuthenticateAsync_UserDoesNotExistsInTheDatabase_ThrowAuthenticationException()
         {
             var username = "bad.username";
             var password = "bad.password";
+
+            var userToken = new UserToken
+            {
+                UserId = 1,
+                Token = "good.token",
+                ExpirationDate = DateTime.Now.AddMinutes(5)
+            };
+
+            var users = new List<User>
+            {
+                new User()
+                {
+                    Id = 1,
+                    UserName = "random.user",
+                    Password =  ProtectionHelper.EncryptValue("random.user" + "random.user"),
+                    UserToken = userToken
+                }
+
+            };
+
+            _mockUserTokenRepository
+                .Setup(repo => repo.UpdateAsync(It.IsAny<UserToken>()))
+                .ReturnsAsync(userToken);
+
+            _mockUserRepository.Setup(user => user.Get()).
+                Returns(users.AsQueryable().BuildMockDbSet().Object);
 
             async Task Test() => await _testing.AuthenticateAsync(username, password);
 
@@ -119,7 +125,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                     Password = ProtectionHelper.EncryptValue(username + password),
                     UserToken = null
                 }
-
             };
 
             var userToken = new UserToken
@@ -191,7 +196,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                     token.UpdateAsync(It.IsAny<UserToken>()),
                     Times.Once);
         }
-
+        
+        //Test failing
         [Fact]
         public async Task AuthenticateAsync_UserNameIsNull_ThrowsArgumentNullException()
         {
@@ -203,6 +209,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             await Assert.ThrowsAsync<ArgumentNullException>(Test);
         }
 
+        //Test failing
+
         [Fact]
         public async Task AuthenticateAsync_PasswordIsNull_ThrowsArgumentNullException()
         {
@@ -212,11 +220,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             async Task Test() => await _testing.AuthenticateAsync(username, password);
 
             await Assert.ThrowsAsync<ArgumentNullException>(Test);
-        }
-
-=======
-            _mockUserTokenRepository=new Mock<IEntityRepository<UserToken>>();
-            _testing=new UserService(_mockUserRepository.Object,_mockUserTokenRepository.Object, _applicationKey, _tokenExpirationMinutes);
         }
 
         [Fact]
@@ -287,6 +290,5 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                    ur.AddAsync(It.Is<User>(x => x.UserName == user.UserName)),
                Times.Once);
         }
->>>>>>> 81c6bfc63c952b4dc89c09dfabf14f031cb67670
     }
 }
