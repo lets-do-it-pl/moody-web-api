@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System;
+using MockQueryable.Moq;
 using Moq;
 using Xunit;
 
@@ -10,7 +11,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 {
     using Application.Category;
     using Application.VersionHistory;
-    using Domain;
+    using Domain;    
     using Persistance.Repositories.Base;
 
     public class CategoryServiceTests
@@ -61,7 +62,57 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                 VersionNumber = versionNumber
             };
 
+        private void SetupGetVersionHistory(List<VersionHistory> versionHistory)
+        {
+            _mockVersionHistoryRepository
+                            .Setup(vh => vh.Get())
+                            .Returns(versionHistory.AsQueryable().BuildMockDbSet().Object);
+        }
+
         #endregion
+
+        [Fact] //1. if version number is latest. IsUpdate should be true and Categories should be empty
+        public async Task Should_ReturnIsUpdated_And_EmptyCategories_When_VersionNumberIsLatest()
+        {
+            // Arrange
+            var versionNumber = "latest.versionNumber";
+            var versionHistory = GetVersionHistory(versionNumber);
+            SetupGetLatestVersionNumber(versionHistory);
+            SetupGetCategoriesFromRepository(Enumerable.Empty<Category>().ToList());
+
+            // Act
+            var actual = await _testing.GetCategories(versionNumber);
+
+            // Assert
+            Assert.True(actual.IsUpdated);
+            Assert.Equal(versionNumber, actual.VersionNumber);
+            Assert.Null(actual.Categories);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void Should_ThrowAnException_When_VersionNumberInLatestVersionIsNullOrEmptyOrWhiteSpace(string versionNumber)
+        {
+            //Arrange
+            var versionHistory = GetVersionHistory(versionNumber);
+            SetupGetLatestVersionNumber(versionHistory);
+
+            //Act
+            Func<Task<CategoryGetResult>> action = async () => await _testing.GetCategories(versionNumber);
+
+            //Assert
+            Assert.ThrowsAsync<ArgumentException>(action);
+        }
+
+        [Fact]
+        public void Should_ThrowAnException_When_LatestVersionIsNull()
+        {
+            SetupGetLatestVersionNumber(null);            
+
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _testing.GetCategories(null));
+        }
 
         [Theory]
         [InlineData(null)]
@@ -85,46 +136,25 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             Assert.Equal(categories, actual.Categories);
         }
 
-        //[Fact]
-        //public async Task Should_ReturnResultWithoutCategoryInfo_When_ResultIsUpdated()
-        //{
-        //    // Arrange // abi logic version history service te sadece bir soru 
-        //    var versionNumber = "good.versionNumber";
-        //    var versionHistory = new List<VersionHistory> {
-        //        new VersionHistory { VersionNumber = versionNumber }
-        //    };
-        //    _mockVersionHistoryRepository.Setup(vh => vh.Get()).Returns(versionHistory.AsQueryable().BuildMockDbSet().Object);
+        [Fact]
+        public async Task Should_ReturnResultWithoutCategoryInfo_When_ResultIsUpdated()
+        {
+            // Arrange  
+            var versionNumber = "good.versionNumber";
 
-        //    // Act
-        //    var actual = await _testingVersionHistory.GetCategories(versionNumber);
+            var versionHistory = GetVersionHistory(versionNumber);            
+            SetupGetLatestVersionNumber(versionHistory);
+            
+            var versionHistories = new List<VersionHistory> { versionHistory };
+            SetupGetVersionHistory(versionHistories);
+            
+            // Act
+            var actual = await _testing.GetCategories(versionNumber);
 
-        //    // Assert
-        //    Assert.True(actual.IsUpdated);
-        //    Assert.Equal(actual.VersionNumber, versionNumber);
-        //    Assert.Empty(actual.Categories);
-        //}
-
-        //[Fact]
-        //public async Task Should_ReturnResultWithCategoryInfo_When_ResultIsNotUpdated()
-        //{
-        //    var latestVersionNumber = "latest.VersionNumber";
-
-        //    var versionNumber = "good.versionNumber";
-        //    var versionHistory = new List<VersionHistory> {
-        //        new VersionHistory { VersionNumber = versionNumber }
-        //    };
-
-        //    // Arrange
-        //    _mockVersionHistoryRepository.Setup(vh => vh.Get()).Returns(versionHistory.AsQueryable().BuildMockDbSet().Object);
-
-        //    // Act
-        //    var actual = await _testingVersionHistory.GetCategories(versionNumber);
-
-        //    // Assert
-        //    Assert.False(actual.IsUpdated);
-        //    Assert.NotEqual(actual.VersionNumber, latestVersionNumber);
-        //    Assert.NotEmpty(actual.Categories);
-
-        //}
+            // Assert
+            Assert.True(actual.IsUpdated);
+            Assert.Equal(actual.VersionNumber, versionNumber);
+            Assert.Null(actual.Categories);
+        }
     }
 }
