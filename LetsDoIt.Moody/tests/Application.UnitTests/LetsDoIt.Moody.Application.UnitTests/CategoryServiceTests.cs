@@ -5,14 +5,11 @@ using System.Threading.Tasks;
 namespace LetsDoIt.Moody.Application.UnitTests.Category
 {
     using Application.Category;
-    using Application.VersionHistory;
+    using VersionHistory;
     using Domain;
-    using LetsDoIt.Moody.Application.CustomExceptions;
-    using MockQueryable.Moq;
+    using CustomExceptions;
     using Persistance.Repositories.Base;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Linq.Expressions;
 
     public class CategoryServiceTests
@@ -37,21 +34,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 
         #region SetUp & Helpers
 
-        private List<Category> GetCategories() => new List<Category>
-            {
-                new Category
-                {
-                    Id = 3 
-                }
-            };
-
-        private void SetupGetCategoriesFromRepository(List<Category> categories)
-        {
-            _mockCategoryRepository
-                            .Setup(repository => repository.GetAsync(It.IsNotNull<Expression<Func<Category, bool>>>()))
-                            .Returns(categories);
-        }
-
         #endregion
 
         [Fact]
@@ -63,8 +45,10 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                 Id = 3
             };
 
-            var categories = GetCategories();
-            SetupGetCategoriesFromRepository(categories);
+            _mockCategoryRepository
+                .Setup(repository => repository.GetAsync(It.IsNotNull<Expression<Func<Category, bool>>>()))
+                .ReturnsAsync(category);
+
 
             await _testing.DeleteAsync(category.Id);
 
