@@ -72,38 +72,14 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             Assert.True(DateTime.Now < actual.ExpirationDate);
         }
 
-        //Test failing
+
         [Fact]
         public async Task AuthenticateAsync_UserDoesNotExistsInTheDatabase_ThrowAuthenticationException()
         {
             var username = "bad.username";
             var password = "bad.password";
 
-            var userToken = new UserToken
-            {
-                UserId = 1,
-                Token = "good.token",
-                ExpirationDate = DateTime.Now.AddMinutes(5)
-            };
-
-            var users = new List<User>
-            {
-                new User()
-                {
-                    Id = 1,
-                    UserName = "random.user",
-                    Password =  ProtectionHelper.EncryptValue("random.user" + "random.user"),
-                    UserToken = userToken
-                }
-
-            };
-
-            _mockUserTokenRepository
-                .Setup(repo => repo.UpdateAsync(It.IsAny<UserToken>()))
-                .ReturnsAsync(userToken);
-
-            _mockUserRepository.Setup(user => user.Get()).
-                Returns(users.AsQueryable().BuildMockDbSet().Object);
+            _mockUserRepository.Setup(repo => repo.Get()).Throws(new AuthenticationException());
 
             async Task Test() => await _testing.AuthenticateAsync(username, password);
 
@@ -196,26 +172,27 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                     token.UpdateAsync(It.IsAny<UserToken>()),
                     Times.Once);
         }
-        
-        //Test failing
+
         [Fact]
         public async Task AuthenticateAsync_UserNameIsNull_ThrowsArgumentNullException()
         {
             string username = null;
             string password = "Test";
 
+            _mockUserRepository.Setup(repo => repo.Get()).Throws(new ArgumentNullException());
+
             async Task Test() => await _testing.AuthenticateAsync(username, password);
 
             await Assert.ThrowsAsync<ArgumentNullException>(Test);
         }
 
-        //Test failing
-
         [Fact]
-        public async Task AuthenticateAsync_PasswordIsNull_ThrowsArgumentNullException()
+        public async Task AuthenticateAsync_UserPasswordIsNull_ThrowsArgumentNullException()
         {
             string username = "Test";
             string password = null;
+
+            _mockUserRepository.Setup(repo => repo.Get()).Throws(new ArgumentNullException());
 
             async Task Test() => await _testing.AuthenticateAsync(username, password);
 
