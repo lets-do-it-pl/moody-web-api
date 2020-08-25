@@ -19,4 +19,7 @@
     <ProjectReference Include="..\..\..\src\Web\LetsDoIt.Moody.Web\LetsDoIt.Moody.Web.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
 </Project>

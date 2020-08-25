@@ -10,6 +10,7 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Microsoft.Extensions.Logging;
     using System.Data;
     using System.Security.Authentication;
+    using Web.Entities.Requests;
 
     [ApiController]
     [Route("api/users")]

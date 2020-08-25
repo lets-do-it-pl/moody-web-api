@@ -23,10 +23,16 @@
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
+    <PackageReference Include="Moq" Version="4.14.5" />
+    <PackageReference Include="MockQueryable.Moq" Version="3.1.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Application\LetsDoIt.Moody.Application\LetsDoIt.Moody.Application.csproj" />
+    <ProjectReference Include="..\..\..\src\Domain\LetsDoIt.Moody.Domain\LetsDoIt.Moody.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="User\" />
+  </ItemGroup>
 </Project>
