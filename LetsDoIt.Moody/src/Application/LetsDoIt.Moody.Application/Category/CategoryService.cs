@@ -28,8 +28,10 @@ namespace LetsDoIt.Moody.Application.Category
 
         public async Task<CategoryGetResult> GetCategories(string versionNumber)
         {
-            var latestVersion = _versionHistoryRepository.Get().OrderByDescending(vh => vh.CreateDate).FirstOrDefault();
-            Guard.Requires(latestVersion, nameof(latestVersion));
+            VersionHistory latestVersion = await _versionHistoryService.GetLatestVersionNumberAsync();
+            
+            Guard.Requires(latestVersion, nameof(latestVersion)).IsNotNull();
+            Guard.Requires(latestVersion.VersionNumber, nameof(latestVersion.VersionNumber)).IsNotNullOrEmptyOrWhiteSpace();
 
             var result = new CategoryGetResult
             {
@@ -42,7 +44,7 @@ namespace LetsDoIt.Moody.Application.Category
                 return result;
             }
 
-            result.Categories = await _categoryRepository.GetListAsync(c => !c.IsDeleted);            
+            result.Categories = await _categoryRepository.GetListAsync(c => !c.IsDeleted);
 
             return result;
         }
@@ -76,7 +78,6 @@ namespace LetsDoIt.Moody.Application.Category
             await _versionHistoryService.CreateNewVersionAsync();
         }
 
-
         public async Task DeleteAsync(int id)
         {
             var entity = await _categoryRepository.GetAsync(c => c.Id == id);
@@ -88,7 +89,5 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _versionHistoryService.CreateNewVersionAsync();
         }
-
-      
     }
 }
