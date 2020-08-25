@@ -72,7 +72,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             Assert.True(DateTime.Now < actual.ExpirationDate);
         }
 
-
         [Fact]
         public async Task AuthenticateAsync_UserDoesNotExistsInTheDatabase_ThrowAuthenticationException()
         {
@@ -179,20 +178,17 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             string username = null;
             string password = "Test";
 
-            _mockUserRepository.Setup(repo => repo.Get()).Throws(new ArgumentNullException());
-
             async Task Test() => await _testing.AuthenticateAsync(username, password);
 
             await Assert.ThrowsAsync<ArgumentNullException>(Test);
         }
 
+
         [Fact]
-        public async Task AuthenticateAsync_UserPasswordIsNull_ThrowsArgumentNullException()
+        public async Task AuthenticateAsync_PasswordNameIsNull_ThrowsArgumentNullException()
         {
             string username = "Test";
             string password = null;
-
-            _mockUserRepository.Setup(repo => repo.Get()).Throws(new ArgumentNullException());
 
             async Task Test() => await _testing.AuthenticateAsync(username, password);
 
