@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Moq;
 using Xunit;
@@ -14,7 +15,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
     public class CategoryServiceTests
     {
         private readonly CategoryService _testing;
-
         private readonly Mock<IEntityRepository<Category>> _mockCategoryRepository;
         private readonly Mock<IEntityRepository<VersionHistory>> _mockVersionHistoryRepository;
         private readonly Mock<IVersionHistoryService> _mockVersionHistoryService;
@@ -30,40 +30,22 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                     _mockVersionHistoryRepository.Object,
                     _mockVersionHistoryService.Object);
         }
-        [Fact]
-        public async Task InsertAsync_GivenNoException_ShouldInvokeRepositoryAddAsync()
-        {
-            var request = new CategoryInsertRequest
-            {
-                Name = "asd",
-                Order = 5,
-                Image = "USrCELxGejBZI4W/Llsvmw==\r\n"
-            };
 
-            var byteImage = Convert.FromBase64String(request.Image);
-            await _testing.InsertAsync(request.Name, request.Order,byteImage);
+        [Fact]
+        public async Task InsertAsync_GivenNoException_ShouldInvokeRepositoryAddAsyncAndInvokeVersion()
+        {
+            var name = "asd";
+            var order = 5;
+            var image = "USrCELxGejBZI4W/Llsvmw==\r\n";
+            var byteImage = Convert.FromBase64String(image);
+
+            await _testing.InsertAsync(name, order, byteImage);
 
             _mockCategoryRepository.Verify(ur =>
-                    ur.AddAsync(It.Is<Category>(x => x.Name == request.Name))
-                );
-        }
-
-        [Fact]
-        public async Task InsertAsync_GivenNoException_ShouldInvokeVersionHistory()
-        {
-            var request = new CategoryInsertRequest
-            {
-                Name = "asd",
-                Order = 5,
-                Image = "USrCELxGejBZI4W/Llsvmw==\r\n"
-            };
-
-            var byteImage = Convert.FromBase64String(request.Image);
-            await _testing.InsertAsync(request.Name, request.Order, byteImage);
-
+                    ur.AddAsync(It.Is<Category>(x => x.Name == name)), Times.Once);
+           
             _mockVersionHistoryService.Verify(ur =>
-                ur.CreateNewVersionAsync()
-            );
+                ur.CreateNewVersionAsync(), Times.Once);
         }
     }
 

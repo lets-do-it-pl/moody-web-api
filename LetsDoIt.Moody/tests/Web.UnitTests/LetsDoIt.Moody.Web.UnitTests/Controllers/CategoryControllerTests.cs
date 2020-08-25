@@ -13,6 +13,8 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 
     public class CategoryControllerTests
     {
+        private readonly byte[] _byteImage;
+        private readonly CategoryInsertRequest _request;
         private readonly CategoryController _testing;
         private readonly Mock<ICategoryService> _mockCategoryService;
 
@@ -22,6 +24,14 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         {
             _mockCategoryService = new Mock<ICategoryService>();
             _testing = new CategoryController(_mockCategoryService.Object);
+            _request = new CategoryInsertRequest
+            {
+                Name = "adsfasdf",
+                Order = 5,
+                Image = "USrCELxGejBZI4W/Llsvmw==\r\n"
+            }; 
+            _byteImage = Convert.FromBase64String(_request.Image);
+
         }
 
         private CategoryUpdateRequest GetCategoryUpdateRequest(
@@ -157,7 +167,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task GIVEN_t_WHEN_InsertingACategory_THEN_ShouldGetBadRequest()
+        public async Task GIVEN_ThereIsAnEmptyInsertRequest_THEN_ShouldGetBadRequest()
         {
             CategoryInsertRequest insertRequest = null;
 
@@ -168,46 +178,21 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             Assert.IsType<BadRequestResult>(actual);
         }
 
-
         [Fact]
-        public async Task GIVEN_InsertingACategory_THEN_ShouldGetReturnOk()
-        {
-            CategoryInsertRequest insertRequest = new CategoryInsertRequest
-            {
-                Image = "USrCELxGejBZI4W/Llsvmw==\r\n",
-                Name = "adaw0",
-                Order = 1
-            };
-
-            //Act
-            var actual = await _testing.Insert(insertRequest);
-
-            //Assert
-            Assert.IsType<OkResult>(actual);
-        }
-        [Fact]
-        public async Task GIVEN_ThereIsAnInsertRequest_WHEN_InsertingACategory_THN_ShouldReturnOkResultAndCallServiceOnce()
+        public async Task GIVEN_ThereIsAnInsertRequest_WHEN_InsertingACategory_THEN_ShouldReturnOkResultAndCallServiceOnce()
         {
             //Arrange
-            var request = new CategoryInsertRequest
-            {
-                Name = "adsfasdf",
-                Order = 5,
-                Image = "USrCELxGejBZI4W/Llsvmw==\r\n"
-            };
-            
-            //Act
-            var byteImage = Convert.FromBase64String(request.Image);
-            var actual = await _testing.Insert(request);
+            var actual = await _testing.Insert(_request);
 
             //Assert
             _mockCategoryService
                 .Verify(service =>
                         service.InsertAsync(
-                            request.Name,
-                            request.Order,
-                           byteImage)
+                            _request.Name,
+                            _request.Order,
+                            _byteImage)
                     );
+            Assert.IsType<OkResult>(actual);
         }
 
     }
