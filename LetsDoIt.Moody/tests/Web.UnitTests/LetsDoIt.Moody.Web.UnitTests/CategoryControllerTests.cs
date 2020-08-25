@@ -1,4 +1,3 @@
-using System;
 using Moq;
 using Xunit;
 using System.Threading.Tasks;
@@ -9,14 +8,11 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
     using Application.Category;
     using Application.CustomExceptions;
     using Web.Controllers;
-    using Web.Entities.Requests;
 
     public class CategoryControllerTests
     {
         private readonly CategoryController _testing;
         private readonly Mock<ICategoryService> _mockCategoryService;
-
-        #region SetUp & Helpers
 
         public CategoryControllerTests()
         {
@@ -51,7 +47,5 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             //Assert
             Assert.IsType<NotFoundObjectResult>(actual);
         }
-
-
     }
 }
