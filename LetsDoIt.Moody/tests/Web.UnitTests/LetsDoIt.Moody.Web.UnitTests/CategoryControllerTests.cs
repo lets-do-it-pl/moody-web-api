@@ -6,6 +6,7 @@ namespace LetsDoIt.Moody.Web.UnitTests
     using Controllers;
     using LetsDoIt.Moody.Application.Category;
     using LetsDoIt.Moody.Domain;
+    using LetsDoIt.Moody.Web.Entities.Responses;
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Linq;
@@ -23,67 +24,64 @@ namespace LetsDoIt.Moody.Web.UnitTests
             _testing = new CategoryController(_mockCategoryService.Object);
         }
 
-
         [Theory]
-        [InlineData("asd","asd")]
+        [InlineData("asd", "asd")]
         [InlineData("asd ", "asd")]
         [InlineData("asd  ", "asd")]
         [InlineData("   asd", "asd")]
         [InlineData("  asd", "asd")]
         public async Task Should_BeTrimmedVersionNumber_When_VersionNumberWithSpaces(string versionNumber, string expected)
         {
-
             //Act
-            var categories = await _testing.GetCategories(versionNumber);
+            await _testing.GetCategories(versionNumber);
 
             //Assert
             _mockCategoryService.Verify(service => service.GetCategories(expected), Times.Once);
 
         }
 
-        //[Fact]
-        //public async Task Should_ReturnNoContent_When_CategoryResultIsNull()
-        //{
-        //    var versionNumber = " ";
+        [Fact]
+        public async Task Should_ReturnNoContent_When_CategoryResultIsNull()
+        {
+            var versionNumber = " ";
 
-        //    // _mockCategoryService.Setup(cs => cs.GetCategories(It.IsAny<string>()).Result).Equals(null);
-        //    var result = await _testing.GetCategories(versionNumber);
+             _mockCategoryService
+                .Setup(cs => cs.GetCategories(It.IsAny<string>()))
+                .ReturnsAsync(new CategoryGetResult());
 
-        //    Assert.IsType<ObjectResult>(result);
-        //    var objectResponse = result as ObjectResult; //Cast to desired type
+            var result = await _testing.GetCategories(versionNumber);
 
-        //    Assert.Equal((int)HttpStatusCode.NoContent, objectResponse.StatusCode);
-        //    Assert.IsType<HttpStatusCode.NoContent>(objectResponse.StatusCode);
+            Assert.NotNull(result);
+            Assert.IsType<NoContentResult>(result.Result);
+        }
 
-        //}
+        [Fact]
+        public async Task Should_ReturnNoContent_When_CategoryResultIsNotUpdatedAndCategoriesIsNull()
+        {
+            //arrange
+            var versionNumber = "good.VersionNumber";
 
+            var categoryResult = new CategoryGetResult
+            {
+                IsUpdated = false,
+                VersionNumber = "good.VersionNumber",
+                Categories = Enumerable.Empty<Category>()
+            };
 
-        //[Fact]
-        //public async Task Should_ReturnNoContent_When_CategoryResultIsNotUpdatedAndCategoriesIsNull()
-        //{
-        //    ////arrange
-        //    var versionNumber = "good.VersionNumber";
+            _mockCategoryService
+                 .Setup(service => service.GetCategories(It.IsAny<string>()))
+                 .ReturnsAsync(categoryResult);
 
-        //    var categoryResult = new CategoryGetResult
-        //    {
-        //        IsUpdated = false,
-        //        VersionNumber = "good.VersionNumber",
-        //        Categories = Enumerable.Empty<Category>()
-        //    };
+            //act
+            var actual = await _testing.GetCategories(versionNumber);
 
-        //    _mockCategoryService
-        //         .Setup(service => service.GetCategories(It.IsAny<string>()))
-        //         .ReturnsAsync(categoryResult);
+            //Assert
+            Assert.NotNull(actual);
+            Assert.IsType<ActionResult<CategoryResponse>>(actual);
 
-        //    ////act
-        //    var actual = await _testing.GetCategories(versionNumber);
-
-        //    //Assert
-           
-        //    Assert.False(actual.IsUpdated);
-        //    Assert.Empty(actual.Categories);
-
-        //}
+            Assert.False(actual.Value.IsUpdated);
+            Assert.Empty(actual.Value.Categories); 
+        }
 
     }
 }
