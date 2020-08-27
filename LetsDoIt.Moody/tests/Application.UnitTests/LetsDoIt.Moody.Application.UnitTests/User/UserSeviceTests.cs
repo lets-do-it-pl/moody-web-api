@@ -95,7 +95,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             {
                 new User()
                 {
-                    Id = 1,
+                    Id  = 1,
                     UserName = username,
                     Password = ProtectionHelper.EncryptValue(username + password),
                     UserToken = null

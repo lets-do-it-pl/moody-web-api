@@ -33,9 +33,10 @@
             throw new NotImplementedException();
         }
 
-        public Task<UserToken> GetAsync(Expression<Func<UserToken, bool>> filter)
+        public async Task<UserToken> GetAsync(Expression<Func<UserToken, bool>> filter)
         {
-            throw new NotImplementedException();
+            return await _context.UserTokens.FirstOrDefaultAsync(filter);
+
         }
 
         public Task<List<UserToken>> GetListAsync(Expression<Func<UserToken, bool>> filter = null)

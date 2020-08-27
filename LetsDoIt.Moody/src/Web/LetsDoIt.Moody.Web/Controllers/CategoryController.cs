@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using LetsDoIt.Moody.Web.Filters;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -22,6 +23,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpGet, Route("{versionNumber?}")]
+        [TokenAuthorizationAttritbute]
         public async Task<ActionResult<CategoryResponse>> GetCategories(string versionNumber = null)
         {
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
