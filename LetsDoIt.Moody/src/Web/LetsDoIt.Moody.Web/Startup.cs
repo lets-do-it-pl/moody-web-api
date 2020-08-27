@@ -1,9 +1,10 @@
+using LetsDoIt.Moody.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
 namespace LetsDoIt.Moody.Web
@@ -71,6 +72,10 @@ namespace LetsDoIt.Moody.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseApiExceptionHandler();
             }
 
             app.UseResponseCompression();

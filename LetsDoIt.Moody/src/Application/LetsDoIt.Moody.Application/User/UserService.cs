@@ -57,8 +57,8 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task<UserTokenEntity> AuthenticateAsync(string username, string password)
         {
-            Guard.Requires(username, nameof(username));
-            Guard.Requires(password, nameof(password));
+            Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
+            Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
             var user = GetUser(username, password);
 
@@ -129,4 +129,4 @@ namespace LetsDoIt.Moody.Application.User
                 ProtectionHelper.EncryptValue(username + password)
             );
     }
-}
+}   
