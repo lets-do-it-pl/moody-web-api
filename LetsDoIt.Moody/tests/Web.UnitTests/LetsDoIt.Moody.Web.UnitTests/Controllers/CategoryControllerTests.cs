@@ -20,15 +20,12 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         private readonly CategoryInsertRequest _request;
         private readonly CategoryController _testing;
         private readonly Mock<ICategoryService> _mockCategoryService;
-        private readonly Mock<ILogger<CategoryController>> _mockILogger;
-
         #region SetUp & Helpers
 
         public CategoryControllerTests()
         {
-            _mockILogger = new Mock<ILogger<CategoryController>>();
             _mockCategoryService = new Mock<ICategoryService>();
-            _testing = new CategoryController(_mockCategoryService.Object,_mockILogger.Object);
+            _testing = new CategoryController(_mockCategoryService.Object);
             _request = new CategoryInsertRequest
             {
                 Name = "adsfasdf",
