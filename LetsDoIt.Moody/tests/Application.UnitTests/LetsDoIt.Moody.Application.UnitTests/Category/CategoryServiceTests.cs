@@ -72,5 +72,22 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             await Assert.ThrowsAsync<ObjectNotFoundException>(Test);
         }
 
+        [Fact]
+        public async Task InsertAsync_GivenNoException_ShouldInvokeRepositoryAddAsyncAndInvokeVersion()
+        {
+            var name = "asd";
+            var order = 5;
+            var image = "USrCELxGejBZI4W/Llsvmw==\r\n";
+            var byteImage = Convert.FromBase64String(image);
+
+            await _testing.InsertAsync(name, order, byteImage);
+
+            _mockCategoryRepository.Verify(ur =>
+                ur.AddAsync(It.Is<Category>(x => x.Name == name)), Times.Once);
+
+            _mockVersionHistoryService.Verify(ur =>
+                ur.CreateNewVersionAsync(), Times.Once);
+        }
+
     }
 }
