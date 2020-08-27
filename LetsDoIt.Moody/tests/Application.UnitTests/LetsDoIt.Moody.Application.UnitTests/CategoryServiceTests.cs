@@ -65,7 +65,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                 Id = 3
             };
 
-            _mockCategoryRepository.Setup(repo => repo.GetAsync(c => c.Id == It.IsAny<int>()));
+            Action action = async () => await _testing.DeleteAsync(category.Id);
 
             async Task Test() => await _testing.DeleteAsync(category.Id);
 
