@@ -7,6 +7,7 @@ namespace LetsDoIt.Moody.Web.UnitTests
     using LetsDoIt.Moody.Application.Category;
     using LetsDoIt.Moody.Domain;
     using LetsDoIt.Moody.Web.Entities.Responses;
+    using LetsDoIt.Moody.Web.Controllers;
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Linq;
