@@ -50,7 +50,7 @@ jobs:
       # run tests with built project
     - name: Test PR      
       run: dotnet test --no-restore --no-build --configuration $config --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" --collect "Code coverage"
-      working-directory: ././LetsDoIt.Moody/tests/
+      working-directory: ././LetsDoIt.Moody/
 
       # upload report as build artifact
     - name: Upload a Build Artifact
