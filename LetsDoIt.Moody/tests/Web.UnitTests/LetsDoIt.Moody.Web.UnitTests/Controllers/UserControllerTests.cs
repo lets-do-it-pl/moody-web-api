@@ -1,4 +1,3 @@
-
 ﻿using Moq;
 using Xunit;
 using System.Threading.Tasks;
@@ -6,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Authentication;
 using System.Data;
 using System.Net;
+ using LetsDoIt.Moody.Web.Controllers;
 
 namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
     using Application.User;
     using Entities.Requests;
-
     public class UserControllerTests
     {
         private readonly UserController _testing;
@@ -33,6 +32,19 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 
             var actual = await _testing.Authenticate(username, userpassword);
             Assert.IsType<BadRequestObjectResult>(actual.Result);
+        }
+
+        [Fact]
+        public async Task AuthenticateAsync_UserDoesExistsInTheDatabase_ReturnsOk()
+        {
+            var username = "Test";
+            var userpassword = "12345";
+
+            _mockUserService.Setup(user => user.AuthenticateAsync(username, userpassword));
+
+            var response = await _testing.Authenticate(username, userpassword);
+
+            Assert.IsType<OkObjectResult>(response.Result);
         }
 
         [Fact]
@@ -86,5 +98,6 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
                     ),
                 Times.Once);
         }
+
     }
 }

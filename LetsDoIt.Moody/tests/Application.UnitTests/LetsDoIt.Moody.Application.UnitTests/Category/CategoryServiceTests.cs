@@ -1,20 +1,21 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Moq;
+﻿using Moq;
 using Xunit;
+using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Category
 {
-    using Web.Entities.Requests;
     using Application.Category;
     using VersionHistory;
-    using Domain;    
+    using Domain;
+    using CustomExceptions;
     using Persistance.Repositories.Base;
+    using System;
+    using System.Linq.Expressions;
 
     public class CategoryServiceTests
     {
         private readonly CategoryService _testing;
+
         private readonly Mock<IEntityRepository<Category>> _mockCategoryRepository;
         private readonly Mock<IEntityRepository<VersionHistory>> _mockVersionHistoryRepository;
         private readonly Mock<IVersionHistoryService> _mockVersionHistoryService;
@@ -31,23 +32,45 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                     _mockVersionHistoryService.Object);
         }
 
+        #region SetUp & Helpers
+
+        #endregion
+
         [Fact]
-        public async Task InsertAsync_GivenNoException_ShouldInvokeRepositoryAddAsyncAndInvokeVersion()
+        public async Task DeleteAsync_IdExists_DeleteIdAndCreateNewVersion()
         {
-            var name = "asd";
-            var order = 5;
-            var image = "USrCELxGejBZI4W/Llsvmw==\r\n";
-            var byteImage = Convert.FromBase64String(image);
+            // Arrange
+            var category = new Category
+            {
+                Id = 3
+            };
 
-            await _testing.InsertAsync(name, order, byteImage);
+            _mockCategoryRepository
+                .Setup(repository => repository.GetAsync(It.IsNotNull<Expression<Func<Category, bool>>>()))
+                .ReturnsAsync(category);
 
-            _mockCategoryRepository.Verify(ur =>
-                    ur.AddAsync(It.Is<Category>(x => x.Name == name)), Times.Once);
-           
-            _mockVersionHistoryService.Verify(ur =>
-                ur.CreateNewVersionAsync(), Times.Once);
+
+            await _testing.DeleteAsync(category.Id);
+
+            _mockCategoryRepository.Verify(c => c.DeleteAsync(It.IsAny<Category>()), Times.Once);
+
+            _mockVersionHistoryService.Verify(v => v.CreateNewVersionAsync(), Times.Once);
         }
-    }
 
-    
+        [Fact]
+        public async Task DeleteAsync_IdDoesNotExistsInTheDatabase_ThrowsObjectNotFoundException()
+        {
+            var category = new Category
+            {
+                Id = 3
+            };
+
+            _mockCategoryRepository.Setup(repo => repo.GetAsync(c => c.Id == It.IsAny<int>()));
+
+            async Task Test() => await _testing.DeleteAsync(category.Id);
+
+            await Assert.ThrowsAsync<ObjectNotFoundException>(Test);
+        }
+
+    }
 }
