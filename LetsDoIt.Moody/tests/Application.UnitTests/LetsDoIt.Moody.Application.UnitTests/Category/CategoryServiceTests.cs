@@ -1,6 +1,7 @@
 ﻿using Moq;
 using Xunit;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Category
 {

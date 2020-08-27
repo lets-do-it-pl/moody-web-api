@@ -2,7 +2,10 @@ using System;
 using Moq;
 using Xunit;
 using System.Threading.Tasks;
+using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
@@ -17,13 +20,15 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         private readonly CategoryInsertRequest _request;
         private readonly CategoryController _testing;
         private readonly Mock<ICategoryService> _mockCategoryService;
+        private readonly Mock<ILogger<CategoryController>> _mockILogger;
 
         #region SetUp & Helpers
 
         public CategoryControllerTests()
         {
+            _mockILogger = new Mock<ILogger<CategoryController>>();
             _mockCategoryService = new Mock<ICategoryService>();
-            _testing = new CategoryController(_mockCategoryService.Object);
+            _testing = new CategoryController(_mockCategoryService.Object,_mockILogger.Object);
             _request = new CategoryInsertRequest
             {
                 Name = "adsfasdf",
