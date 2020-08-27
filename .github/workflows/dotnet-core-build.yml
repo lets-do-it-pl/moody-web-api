@@ -23,11 +23,11 @@ jobs:
         
     - name: Install dependencies
       run: dotnet restore
-      # working-directory: .\LetsDoIt.Moody
+      working-directory: moody-web-api\LetsDoIt.Moody
       
     - name: Build
       run: dotnet build --configuration $config --no-restore
-      # working-directory: .\LetsDoIt.Moody\src\Web\LetsDoIt.Moody.Web
+      working-directory: moody-web-api\LetsDoIt.Moody\src\Web\LetsDoIt.Moody.Web
       
       # set pr number, if it's a pr build
     - name: set pr build number
@@ -49,7 +49,7 @@ jobs:
             
       # run tests with built project
     - name: Test PR      
-      run: dotnet test --no-restore --no-build --configuration $config --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};"
+      run: dotnet test --no-restore --no-build --configuration $config --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" --collect "Code coverage"
 
       # upload report as build artifact
     - name: Upload a Build Artifact
