@@ -78,12 +78,13 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             var name = "asd";
             var order = 5;
             var image = "USrCELxGejBZI4W/Llsvmw==\r\n";
-            var byteImage = Convert.FromBase64String(image);
+            byte[] byteImage = { 80, 65, 78, 75, 65, 74 }; 
 
             await _testing.InsertAsync(name, order, byteImage);
 
             _mockCategoryRepository.Verify(ur =>
-                ur.AddAsync(It.Is<Category>(x => x.Name == name)), Times.Once);
+                ur.AddAsync(It.Is<Category>(x => x.Name == name && x.Order == order && x.Image == byteImage))
+                , Times.Once);
 
             _mockVersionHistoryService.Verify(ur =>
                 ur.CreateNewVersionAsync(), Times.Once);
