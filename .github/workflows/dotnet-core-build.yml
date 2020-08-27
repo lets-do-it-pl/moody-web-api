@@ -23,11 +23,11 @@ jobs:
         
     - name: Install dependencies
       run: dotnet restore
-      working-directory: moody-web-api\LetsDoIt.Moody
+      working-directory: ../LetsDoIt.Moody
       
     - name: Build
       run: dotnet build --configuration $config --no-restore
-      working-directory: moody-web-api\LetsDoIt.Moody\src\Web\LetsDoIt.Moody.Web
+      working-directory: ../LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web
       
       # set pr number, if it's a pr build
     - name: set pr build number
