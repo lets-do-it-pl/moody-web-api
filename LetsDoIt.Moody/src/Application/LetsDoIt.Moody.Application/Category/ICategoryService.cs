@@ -14,5 +14,6 @@ namespace LetsDoIt.Moody.Application.Category
         Task UpdateAsync(int id, string name, int order, byte[] image);
 
         Task DeleteAsync(int id);
+        
     }
 }
