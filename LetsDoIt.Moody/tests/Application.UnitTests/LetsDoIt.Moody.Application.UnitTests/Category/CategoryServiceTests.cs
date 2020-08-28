@@ -1,6 +1,7 @@
 ﻿using Moq;
 using Xunit;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Category
 {
@@ -70,6 +71,24 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             async Task Test() => await _testing.DeleteAsync(category.Id);
 
             await Assert.ThrowsAsync<ObjectNotFoundException>(Test);
+        }
+
+        [Fact]
+        public async Task InsertAsync_GivenNoException_ShouldInvokeRepositoryAddAsyncAndInvokeVersion()
+        {
+            var name = "asd";
+            var order = 5;
+            var image = "USrCELxGejBZI4W/Llsvmw==\r\n";
+            byte[] byteImage = { 80, 65, 78, 75, 65, 74 }; 
+
+            await _testing.InsertAsync(name, order, byteImage);
+
+            _mockCategoryRepository.Verify(ur =>
+                ur.AddAsync(It.Is<Category>(x => x.Name == name && x.Order == order && x.Image == byteImage))
+                , Times.Once);
+
+            _mockVersionHistoryService.Verify(ur =>
+                ur.CreateNewVersionAsync(), Times.Once);
         }
 
     }

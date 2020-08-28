@@ -2,6 +2,9 @@
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.Logging;
+using NLog;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -24,6 +27,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         [HttpGet, Route("{versionNumber?}")]
         public async Task<ActionResult<CategoryResponse>> GetCategories(string versionNumber = null)
         {
+
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
 
             var categoryResult = await _categoryService.GetCategories(versionNumber);
@@ -32,13 +36,13 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 return NoContent();
             }
-
             return ToCategoryResponse(categoryResult);
         }
 
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody] CategoryInsertRequest insertRequest)
         {
+
             if (insertRequest == null)
             {
                 return BadRequest();
@@ -57,8 +61,10 @@ namespace LetsDoIt.Moody.Web.Controllers
         [HttpPost, Route("update/{id}")]
         public async Task<IActionResult> Update(CategoryUpdateRequest updateRequest)
         {
+
             if (updateRequest == null)  
             {
+  
                 return BadRequest();
             }
 
@@ -69,7 +75,6 @@ namespace LetsDoIt.Moody.Web.Controllers
                     updateRequest.Name,
                     updateRequest.Order,
                     updateRequest.Image);
-
                 return Ok();
             }
             catch (ObjectNotFoundException)
@@ -80,6 +85,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 throw;
             }
+           
         }
 
         [HttpDelete, Route("{id}")]
@@ -103,6 +109,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         private CategoryResponse ToCategoryResponse(CategoryGetResult categoryResult)
         {
+
             var result = new CategoryResponse
                         {
                             IsUpdated = categoryResult.IsUpdated,
@@ -122,7 +129,6 @@ namespace LetsDoIt.Moody.Web.Controllers
                                                  Image = c.Image
                                              });
             }
-
             return result;
         }
     }
