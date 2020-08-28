@@ -2,6 +2,7 @@
 using NGuard;
 using System.Linq;
 using System.Data;
+using System.Security;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -56,7 +57,7 @@ namespace LetsDoIt.Moody.Application.User
         }
 
         public async Task<UserTokenEntity> AuthenticateAsync(string username, string password)
-        {
+            {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
@@ -64,6 +65,7 @@ namespace LetsDoIt.Moody.Application.User
 
             var userDb = await _userRepository
                                     .Get()
+                                    .Include(u=>u.UserToken)
                                     .FirstOrDefaultAsync(u =>
                                         u.UserName == user.Username &&
                                         u.Password == user.EncryptedPassword &&
@@ -128,5 +130,16 @@ namespace LetsDoIt.Moody.Application.User
                 username,
                 ProtectionHelper.EncryptValue(username + password)
             );
+
+        public async Task IsTokenValidAsync(string token)
+        { 
+            Guard.Requires(token, nameof(token)).IsNotNullOrEmptyOrWhiteSpace();
+            
+            if (await _userTokenRepository.GetAsync(ut => ut.Token == token && ut.ExpirationDate > DateTime.UtcNow && ut.User.IsDeleted == false) == null)
+            {
+              throw new SecurityException();
+            }
+
+        }
     }
 }   

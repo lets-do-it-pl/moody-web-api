@@ -35,7 +35,7 @@
 
         public async Task<UserToken> GetAsync(Expression<Func<UserToken, bool>> filter)
         {
-            return await _context.UserTokens.FirstOrDefaultAsync(filter);
+            return await _context.UserTokens.Include(ut=>ut.User).FirstOrDefaultAsync(filter);
 
         }
 

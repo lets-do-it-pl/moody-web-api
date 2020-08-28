@@ -13,6 +13,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
     [ApiController]
     [Route("api/categories")]
+    [TokenAuthorizationAttritbute]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -23,7 +24,6 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpGet, Route("{versionNumber?}")]
-        [TokenAuthorizationAttritbute]
         public async Task<ActionResult<CategoryResponse>> GetCategories(string versionNumber = null)
         {
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;

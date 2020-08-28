@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Security;
 using System.Threading.Tasks;
+using LetsDoIt.Moody.Application.User;
 using LetsDoIt.Moody.Domain;
 using LetsDoIt.Moody.Persistance.Repositories.Base;
 using Microsoft.AspNetCore.Mvc;
@@ -20,16 +22,28 @@ namespace LetsDoIt.Moody.Web.Filters
                 return;
             }
 
-            var userTokenRepository = context.HttpContext.RequestServices.GetRequiredService<IEntityRepository<UserToken>>();
+            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
 
             Console.WriteLine(tokens[0]);
 
-            var userTokenDb = await userTokenRepository.GetAsync(ut => ut.Token == tokens[0] && ut.ExpirationDate > DateTime.UtcNow);
-
-            if (userTokenDb==null)
+            try
             {
-                context.Result=new UnauthorizedResult();
+                await userService.IsTokenValidAsync(tokens[0]);
+
+            }
+            catch (Exception ex) when (ex is ArgumentNullException || ex is ArgumentException)
+            {
+                context.Result = new UnauthorizedResult();
                 return;
+            }
+            catch(SecurityException)
+            {
+                context.Result = new UnauthorizedResult();
+                return;
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
             await next();

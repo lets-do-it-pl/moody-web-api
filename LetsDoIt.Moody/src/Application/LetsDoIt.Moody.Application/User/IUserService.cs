@@ -7,5 +7,8 @@ namespace LetsDoIt.Moody.Application.User
         Task SaveUserAsync(string userName,string password);
 
         Task<UserTokenEntity> AuthenticateAsync(string username, string password);
+        Task IsTokenValidAsync(string token);
+
+
     }
 }
