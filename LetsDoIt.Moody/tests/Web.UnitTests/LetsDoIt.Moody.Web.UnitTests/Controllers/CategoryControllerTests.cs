@@ -11,8 +11,8 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
     using Application.Category;
     using Application.CustomExceptions;
-    using Web.Controllers;    
-    using Entities.Requests;       
+    using Web.Controllers;
+    using Entities.Requests;
 
     public class CategoryControllerTests
     {
@@ -20,18 +20,21 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         private readonly CategoryInsertRequest _request;
         private readonly CategoryController _testing;
         private readonly Mock<ICategoryService> _mockCategoryService;
+        private readonly Mock<ILogger<CategoryController>> _mockILogger;
+
         #region SetUp & Helpers
 
         public CategoryControllerTests()
         {
+            _mockILogger = new Mock<ILogger<CategoryController>>();
             _mockCategoryService = new Mock<ICategoryService>();
-            _testing = new CategoryController(_mockCategoryService.Object);
+            _testing = new CategoryController(_mockCategoryService.Object, _mockILogger.Object);
             _request = new CategoryInsertRequest
             {
                 Name = "adsfasdf",
                 Order = 5,
                 Image = "USrCELxGejBZI4W/Llsvmw==\r\n"
-            }; 
+            };
             _byteImage = Convert.FromBase64String(_request.Image);
 
         }
