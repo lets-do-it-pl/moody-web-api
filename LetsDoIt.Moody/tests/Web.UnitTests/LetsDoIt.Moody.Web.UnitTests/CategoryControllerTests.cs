@@ -1,18 +1,17 @@
 using Moq;
 using Xunit;
+using System.Linq;
+using System.Threading.Tasks;
+
+
 
 namespace LetsDoIt.Moody.Web.UnitTests
 {
-    using Controllers;
     using LetsDoIt.Moody.Application.Category;
     using LetsDoIt.Moody.Domain;
     using LetsDoIt.Moody.Web.Entities.Responses;
     using LetsDoIt.Moody.Web.Controllers;
     using Microsoft.AspNetCore.Mvc;
-    using System;
-    using System.Linq;
-    using System.Net;
-    using System.Threading.Tasks;
 
     public class CategoryControllerTests
     {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Linq.Expressions;
-using System;
 using MockQueryable.Moq;
+using System;
+using System.Linq.Expressions;
 using Moq;
 using Xunit;
 
@@ -14,8 +14,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
     using Domain;
     using CustomExceptions;
     using Persistance.Repositories.Base;
-    using System;
-    using System.Linq.Expressions;
+  
 
     public class CategoryServiceTests
     {
@@ -74,7 +73,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 
         #endregion
 
-        [Fact] //1. if version number is latest. IsUpdate should be true and Categories should be empty
+        [Fact] 
         public async Task Should_ReturnIsUpdated_And_EmptyCategories_When_VersionNumberIsLatest()
         {
             // Arrange
