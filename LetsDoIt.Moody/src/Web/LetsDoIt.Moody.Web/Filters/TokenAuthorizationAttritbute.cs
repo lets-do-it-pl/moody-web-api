@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.User;
-using LetsDoIt.Moody.Domain;
-using LetsDoIt.Moody.Persistance.Repositories.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,8 +20,6 @@ namespace LetsDoIt.Moody.Web.Filters
             }
 
             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-
-            Console.WriteLine(tokens[0]);
 
             try
             {
