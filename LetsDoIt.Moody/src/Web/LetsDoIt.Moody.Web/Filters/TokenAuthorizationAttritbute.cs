@@ -31,12 +31,7 @@ namespace LetsDoIt.Moody.Web.Filters
                 await userService.ValidateTokenAsync(tokens[0]);
 
             }
-            catch (Exception ex) when (ex is ArgumentNullException || ex is ArgumentException)
-            {
-                context.Result = new UnauthorizedResult();
-                return;
-            }
-            catch(SecurityException)
+            catch (Exception ex) when (ex is ArgumentNullException || ex is ArgumentException || ex is SecurityException) 
             {
                 context.Result = new UnauthorizedResult();
                 return;
