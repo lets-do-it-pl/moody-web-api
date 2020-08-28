@@ -28,7 +28,7 @@ namespace LetsDoIt.Moody.Web.Filters
 
             try
             {
-                await userService.IsTokenValidAsync(tokens[0]);
+                await userService.ValidateTokenAsync(tokens[0]);
 
             }
             catch (Exception ex) when (ex is ArgumentNullException || ex is ArgumentException)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Data;
+using System.Security;
 using System.Security.Authentication;
 using MockQueryable.Moq;
 using LetsDoIt.Moody.Application.User;
@@ -262,6 +263,40 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
            _mockUserRepository.Verify(ur=>
                    ur.AddAsync(It.Is<User>(x => x.UserName == user.UserName)),
                Times.Once);
+        }
+
+
+        [Fact]
+        public async Task ValidateTokenAsync_WhenTokenIsNull_ShouldThrowArgumentNullException()
+        {
+            string token = null;
+
+            async Task Test() => await _testing.ValidateTokenAsync(token);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(Test);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task ValidateTokenAsync_WhenTokenIsEmptyOrWhitespace_ShouldThrowArgumentException(string token)
+        {
+            async Task Test() => await _testing.ValidateTokenAsync(token);
+
+            await Assert.ThrowsAsync<ArgumentException>(Test);
+        }
+
+        [Fact]
+        public async Task ValidateTokenAsync_WhenUserTokenIsNull_ShouldThrowSecurityException()
+        {
+            string token = "good.token";
+            UserToken userToken = null;
+
+            _mockUserTokenRepository.Setup(repo => repo.GetAsync(ut => ut.Token == token && ut.ExpirationDate > DateTime.UtcNow && ut.User.IsDeleted == false)).ReturnsAsync(userToken);
+
+            async Task Test() => await _testing.ValidateTokenAsync(token);
+
+            await Assert.ThrowsAsync<SecurityException>(Test);
         }
     }
 }
