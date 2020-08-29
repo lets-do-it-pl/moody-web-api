@@ -15,7 +15,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
 {
     using Domain;
     using Persistance.Repositories.Base;
-    using Utils;
+    using Infrastructure;
 
     public class UserSeviceTests
     {

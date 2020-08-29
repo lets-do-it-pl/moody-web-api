@@ -29,11 +29,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application.IntegrationTest
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain.UnitTests", "Domain.UnitTests", "{304BE79B-E4D2-4016-B505-9B464C8427EC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Application.IntegrationTests", "tests\Application.IntegrationTests\LetsDoIt.Moody.Application.IntegrationTests\LetsDoIt.Moody.Application.IntegrationTests.csproj", "{55D91F04-9389-4BEC-AEB6-E3D72008ED84}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetsDoIt.Moody.Application.IntegrationTests", "tests\Application.IntegrationTests\LetsDoIt.Moody.Application.IntegrationTests\LetsDoIt.Moody.Application.IntegrationTests.csproj", "{55D91F04-9389-4BEC-AEB6-E3D72008ED84}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Application.UnitTests", "tests\Application.UnitTests\LetsDoIt.Moody.Application.UnitTests\LetsDoIt.Moody.Application.UnitTests.csproj", "{2C785824-6F86-46A4-873A-9707DD9867DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetsDoIt.Moody.Application.UnitTests", "tests\Application.UnitTests\LetsDoIt.Moody.Application.UnitTests\LetsDoIt.Moody.Application.UnitTests.csproj", "{2C785824-6F86-46A4-873A-9707DD9867DC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Domain.UnitTests", "tests\Domain.UnitTests\LetsDoIt.Moody.Domain.UnitTests\LetsDoIt.Moody.Domain.UnitTests.csproj", "{E09F4529-39E9-4768-A9EB-FA1CADC66784}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetsDoIt.Moody.Domain.UnitTests", "tests\Domain.UnitTests\LetsDoIt.Moody.Domain.UnitTests\LetsDoIt.Moody.Domain.UnitTests.csproj", "{E09F4529-39E9-4768-A9EB-FA1CADC66784}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistance", "Persistance", "{B5984459-89E5-4059-88FE-C47300AF6D48}"
 EndProject
@@ -47,6 +47,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetsDoIt.Moody.Web.UnitTests", "tests\Web.UnitTests\LetsDoIt.Moody.Web.UnitTests\LetsDoIt.Moody.Web.UnitTests.csproj", "{7805103C-9EC9-429E-AEA0-D1B937848953}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "New Folder", "New Folder", "{C158DEBC-DB3B-4DEE-B4D8-5B082091F52D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetsDoIt.Moody.TemporaryTokenGenerator", "src\LetsDoIt.Moody.TemporaryTokenGenerator\LetsDoIt.Moody.TemporaryTokenGenerator.csproj", "{4EDC19D6-75E3-4546-A6B7-2B18F776F7D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +94,10 @@ Global
 		{7805103C-9EC9-429E-AEA0-D1B937848953}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7805103C-9EC9-429E-AEA0-D1B937848953}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7805103C-9EC9-429E-AEA0-D1B937848953}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EDC19D6-75E3-4546-A6B7-2B18F776F7D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EDC19D6-75E3-4546-A6B7-2B18F776F7D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EDC19D6-75E3-4546-A6B7-2B18F776F7D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EDC19D6-75E3-4546-A6B7-2B18F776F7D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,6 +121,8 @@ Global
 		{A46F3578-E2F2-46CA-9198-AF529F757E65} = {B5984459-89E5-4059-88FE-C47300AF6D48}
 		{1158B3CC-169B-426A-9B01-CAB5C8DBB150} = {E58C65D5-036D-4070-B42B-2F58E3BD6E34}
 		{7805103C-9EC9-429E-AEA0-D1B937848953} = {1158B3CC-169B-426A-9B01-CAB5C8DBB150}
+		{C158DEBC-DB3B-4DEE-B4D8-5B082091F52D} = {79243330-7626-456D-BFB3-8EB4756C616B}
+		{4EDC19D6-75E3-4546-A6B7-2B18F776F7D4} = {C158DEBC-DB3B-4DEE-B4D8-5B082091F52D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9A096469-A3CF-4011-AAE1-EF464CB0345B}
