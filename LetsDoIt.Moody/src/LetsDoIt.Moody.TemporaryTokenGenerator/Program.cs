@@ -2,11 +2,13 @@
 
 namespace LetsDoIt.Moody.TemporaryTokenGenerator
 {
+    using Infrastructure;
+
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine(TemporaryToken.TemporaryTokenGenerator());
         }
     }
 }

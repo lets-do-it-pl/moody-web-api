@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LetsDoIt.Moody.Infrastructure
+namespace LetsDoIt.Moody.Infrastructure.Utils
 {
     public static class ExceptionHelper
     {

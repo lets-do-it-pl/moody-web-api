@@ -1,0 +1,474 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/tests/Web.UnitTests/LetsDoIt.Moody.Web.UnitTests/LetsDoIt.Moody.Web.UnitTests.csproj": {}
+  },
+  "projects": {
+    "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Application/LetsDoIt.Moody.Application/LetsDoIt.Moody.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Application/LetsDoIt.Moody.Application/LetsDoIt.Moody.Application.csproj",
+        "projectName": "LetsDoIt.Moody.Application",
+        "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Application/LetsDoIt.Moody.Application/LetsDoIt.Moody.Application.csproj",
+        "packagesPath": "/Users/zeynepsel/.nuget/packages/",
+        "outputPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Application/LetsDoIt.Moody.Application/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/NuGet.Config",
+          "/Users/zeynepsel/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Domain/LetsDoIt.Moody.Domain/LetsDoIt.Moody.Domain.csproj": {
+                "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Domain/LetsDoIt.Moody.Domain/LetsDoIt.Moody.Domain.csproj"
+              },
+              "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Infrastructure/LetsDoIt.Moody.Infrastructure/LetsDoIt.Moody.Infrastructure.csproj": {
+                "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Infrastructure/LetsDoIt.Moody.Infrastructure/LetsDoIt.Moody.Infrastructure.csproj"
+              },
+              "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Persistance/LetsDoIt.Moody.Persistance/LetsDoIt.Moody.Persistance.csproj": {
+                "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Persistance/LetsDoIt.Moody.Persistance/LetsDoIt.Moody.Persistance.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "NGuard": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.7.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.302/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Domain/LetsDoIt.Moody.Domain/LetsDoIt.Moody.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Domain/LetsDoIt.Moody.Domain/LetsDoIt.Moody.Domain.csproj",
+        "projectName": "LetsDoIt.Moody.Domain",
+        "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Domain/LetsDoIt.Moody.Domain/LetsDoIt.Moody.Domain.csproj",
+        "packagesPath": "/Users/zeynepsel/.nuget/packages/",
+        "outputPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Domain/LetsDoIt.Moody.Domain/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/NuGet.Config",
+          "/Users/zeynepsel/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.6, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.302/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Infrastructure/LetsDoIt.Moody.Infrastructure/LetsDoIt.Moody.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Infrastructure/LetsDoIt.Moody.Infrastructure/LetsDoIt.Moody.Infrastructure.csproj",
+        "projectName": "LetsDoIt.Moody.Infrastructure",
+        "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Infrastructure/LetsDoIt.Moody.Infrastructure/LetsDoIt.Moody.Infrastructure.csproj",
+        "packagesPath": "/Users/zeynepsel/.nuget/packages/",
+        "outputPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Infrastructure/LetsDoIt.Moody.Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/NuGet.Config",
+          "/Users/zeynepsel/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Domain/LetsDoIt.Moody.Domain/LetsDoIt.Moody.Domain.csproj": {
+                "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Domain/LetsDoIt.Moody.Domain/LetsDoIt.Moody.Domain.csproj"
+              },
+              "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Persistance/LetsDoIt.Moody.Persistance/LetsDoIt.Moody.Persistance.csproj": {
+                "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Persistance/LetsDoIt.Moody.Persistance/LetsDoIt.Moody.Persistance.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.AspNetCore.Cryptography.KeyDerivation": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.6, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.302/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Persistance/LetsDoIt.Moody.Persistance/LetsDoIt.Moody.Persistance.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Persistance/LetsDoIt.Moody.Persistance/LetsDoIt.Moody.Persistance.csproj",
+        "projectName": "LetsDoIt.Moody.Persistance",
+        "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Persistance/LetsDoIt.Moody.Persistance/LetsDoIt.Moody.Persistance.csproj",
+        "packagesPath": "/Users/zeynepsel/.nuget/packages/",
+        "outputPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Persistance/LetsDoIt.Moody.Persistance/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/NuGet.Config",
+          "/Users/zeynepsel/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Domain/LetsDoIt.Moody.Domain/LetsDoIt.Moody.Domain.csproj": {
+                "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Domain/LetsDoIt.Moody.Domain/LetsDoIt.Moody.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.6, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.302/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/LetsDoIt.Moody.Web.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/LetsDoIt.Moody.Web.csproj",
+        "projectName": "LetsDoIt.Moody.Web",
+        "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/LetsDoIt.Moody.Web.csproj",
+        "packagesPath": "/Users/zeynepsel/.nuget/packages/",
+        "outputPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/NuGet.Config",
+          "/Users/zeynepsel/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Application/LetsDoIt.Moody.Application/LetsDoIt.Moody.Application.csproj": {
+                "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Application/LetsDoIt.Moody.Application/LetsDoIt.Moody.Application.csproj"
+              },
+              "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Infrastructure/LetsDoIt.Moody.Infrastructure/LetsDoIt.Moody.Infrastructure.csproj": {
+                "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Infrastructure/LetsDoIt.Moody.Infrastructure/LetsDoIt.Moody.Infrastructure.csproj"
+              },
+              "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Persistance/LetsDoIt.Moody.Persistance/LetsDoIt.Moody.Persistance.csproj": {
+                "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Persistance/LetsDoIt.Moody.Persistance/LetsDoIt.Moody.Persistance.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "NGuard": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "NLog": {
+              "target": "Package",
+              "version": "[4.7.3, )"
+            },
+            "NLog.Web.AspNetCore": {
+              "target": "Package",
+              "version": "[4.9.3, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[10.0.1, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[5.5.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.302/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/tests/Web.UnitTests/LetsDoIt.Moody.Web.UnitTests/LetsDoIt.Moody.Web.UnitTests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/tests/Web.UnitTests/LetsDoIt.Moody.Web.UnitTests/LetsDoIt.Moody.Web.UnitTests.csproj",
+        "projectName": "LetsDoIt.Moody.Web.UnitTests",
+        "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/tests/Web.UnitTests/LetsDoIt.Moody.Web.UnitTests/LetsDoIt.Moody.Web.UnitTests.csproj",
+        "packagesPath": "/Users/zeynepsel/.nuget/packages/",
+        "outputPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/tests/Web.UnitTests/LetsDoIt.Moody.Web.UnitTests/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/NuGet.Config",
+          "/Users/zeynepsel/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/LetsDoIt.Moody.Web.csproj": {
+                "projectPath": "/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/LetsDoIt.Moody.Web.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "FluentAssertions": {
+              "target": "Package",
+              "version": "[5.10.3, )"
+            },
+            "LiquidTestReports.Markdown": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[16.5.0, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.14.5, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[1.2.0, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.4.0, )"
+            },
+            "xunit.runner.visualstudio": {
+              "target": "Package",
+              "version": "[2.4.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.302/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

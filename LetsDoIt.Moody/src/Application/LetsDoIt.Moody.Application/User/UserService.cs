@@ -1,20 +1,20 @@
-﻿using System.Threading.Tasks;
-using NGuard;
+﻿using NGuard;
+using System;
+using System.Text;
 using System.Linq;
 using System.Data;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Authentication;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace LetsDoIt.Moody.Application.User
 {
-    using Infrastructure;
-    using Persistance.Repositories.Base;
     using Domain;
-    using System.Security.Authentication;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Text;
-    using Microsoft.IdentityModel.Tokens;
-    using System.Security.Claims;
-    using System;
-    using Microsoft.EntityFrameworkCore;
+    using Infrastructure.Utils;
+    using Persistance.Repositories.Base;
 
     public class UserService : IUserService
     {

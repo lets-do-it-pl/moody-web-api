@@ -1,16 +1,17 @@
 ﻿using Moq;
 using Xunit;
+using System.Net;
+using System.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Authentication;
-using System.Data;
-using System.Net;
- using LetsDoIt.Moody.Web.Controllers;
 
 namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
+    using Web.Controllers;
     using Application.User;
     using Entities.Requests;
+
     public class UserControllerTests
     {
         private readonly UserController _testing;
