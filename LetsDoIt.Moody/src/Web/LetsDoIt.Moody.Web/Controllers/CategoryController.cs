@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using LetsDoIt.Moody.Application.User;
 using LetsDoIt.Moody.Web.Filters;
 
 namespace LetsDoIt.Moody.Web.Controllers
@@ -13,7 +14,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
     [ApiController] 
     [Route("api/categories")]
-    [TokenAuthorizationAttritbute]
+    [TokenAuthorizationAttritbute()]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
