@@ -266,37 +266,28 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
         }
 
 
-        [Fact]
-        public async Task ValidateTokenAsync_WhenTokenIsNull_ShouldThrowArgumentNullException()
-        {
-            string token = null;
-
-            async Task Test() => await _testing.ValidateTokenAsync(token);
-
-            await Assert.ThrowsAsync<ArgumentNullException>(Test);
-        }
-
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task ValidateTokenAsync_WhenTokenIsEmptyOrWhitespace_ShouldThrowArgumentException(string token)
+        [InlineData(null)]
+        public async Task IsTokenValidAsync_WhenTokenIsEmptyOrWhitespaceOrNull_ShouldReturnFalse(string token)
         {
-            async Task Test() => await _testing.ValidateTokenAsync(token);
+            var result = await _testing.IsTokenValidAsync(token);
 
-            await Assert.ThrowsAsync<ArgumentException>(Test);
+            Assert.False(result);
         }
 
         [Fact]
-        public async Task ValidateTokenAsync_WhenUserTokenIsNull_ShouldThrowSecurityException()
+        public async Task IsTokenValidAsync_WhenUserTokenIsNull_ShouldReturnFalse()
         {
             string token = "good.token";
             UserToken userToken = null;
 
             _mockUserTokenRepository.Setup(repo => repo.GetAsync(ut => ut.Token == token && ut.ExpirationDate > DateTime.UtcNow && ut.User.IsDeleted == false)).ReturnsAsync(userToken);
 
-            async Task Test() => await _testing.ValidateTokenAsync(token);
+            var result = await _testing.IsTokenValidAsync(token);
 
-            await Assert.ThrowsAsync<SecurityException>(Test);
+            Assert.False(result);
         }
     }
 }

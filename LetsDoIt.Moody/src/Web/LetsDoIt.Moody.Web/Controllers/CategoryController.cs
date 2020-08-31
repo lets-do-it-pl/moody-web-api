@@ -11,7 +11,7 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Entities.Requests;
     using Entities.Responses;
 
-    [ApiController]
+    [ApiController] 
     [Route("api/categories")]
     [TokenAuthorizationAttritbute]
     public class CategoryController : ControllerBase

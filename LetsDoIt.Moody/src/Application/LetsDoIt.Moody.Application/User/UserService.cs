@@ -131,15 +131,26 @@ namespace LetsDoIt.Moody.Application.User
                 ProtectionHelper.EncryptValue(username + password)
             );
 
-        public async Task ValidateTokenAsync(string token)
-        { 
-            Guard.Requires(token, nameof(token)).IsNotNullOrEmptyOrWhiteSpace();
-            
-            if (await _userTokenRepository.GetAsync(ut => ut.Token == token && ut.ExpirationDate > DateTime.UtcNow && ut.User.IsDeleted == false) == null)
+        public async Task<bool> IsTokenValidAsync(string token)
+        {
+            try
             {
-              throw new SecurityException();
-            }
+                Guard.Requires(token, nameof(token)).IsNotNullOrEmptyOrWhiteSpace();
 
+                if (await _userTokenRepository.GetAsync(ut => ut.Token == token && 
+                                                              ut.ExpirationDate > DateTime.Now &&
+                                                              ut.User.IsDeleted == false) == null)
+                {
+                    return false;
+                }
+
+                return true;
+
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }   

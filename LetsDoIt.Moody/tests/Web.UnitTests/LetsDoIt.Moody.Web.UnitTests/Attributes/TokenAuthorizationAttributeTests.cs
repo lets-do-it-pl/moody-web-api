@@ -2,16 +2,11 @@
 using LetsDoIt.Moody.Web.Filters;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LetsDoIt.Moody.Application.User;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using Xunit;
 
@@ -48,7 +43,9 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
 
             var context = new ActionExecutedContext(actionContext, new List<IFilterMetadata>(), Mock.Of<Controller>());
 
-            await _testing.OnActionExecutionAsync(actionExecutingContext, async  ()  =>  context);
+            Task<ActionExecutedContext> Next() => Task.FromResult(context);
+
+            await _testing.OnActionExecutionAsync(actionExecutingContext, Next);
 
             actionExecutingContext.Result.Should().BeOfType<UnauthorizedResult>();
         }

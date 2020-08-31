@@ -14,26 +14,17 @@ namespace LetsDoIt.Moody.Web.Filters
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             if (!context.HttpContext.Request.Headers.TryGetValue("Token", out var tokens))
-            {
+            { 
                 context.Result = new UnauthorizedResult();
                 return;
             }
 
             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
 
-            try
-            {
-                await userService.ValidateTokenAsync(tokens[0]);
-
-            }
-            catch (Exception ex) when (ex is ArgumentNullException || ex is ArgumentException || ex is SecurityException) 
+            if (await userService.IsTokenValidAsync(tokens[0]) == false)
             {
                 context.Result = new UnauthorizedResult();
                 return;
-            }
-            catch (Exception)
-            {
-                throw;
             }
 
             await next();
