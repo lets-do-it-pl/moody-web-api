@@ -1,3 +1,4 @@
+using LetsDoIt.Moody.Web.Filters;
 using LetsDoIt.Moody.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -64,6 +65,11 @@ namespace LetsDoIt.Moody.Web
                     JwtEncryptionKey,
                     tokenExpirationMinutes
                 ));
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<TokenAuthorizationFilter>();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

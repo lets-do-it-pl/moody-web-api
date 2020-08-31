@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using LetsDoIt.Moody.Web.Filters;
 using System.Threading.Tasks;
 using FluentAssertions;
+using LetsDoIt.Moody.Web.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -15,15 +16,20 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
 {
     using Application.User;
 
-    public class TokenAuthorizationAttributeTests
+    public class TokenAuthorizationFilterTests
     {
-        private readonly TokenAuthorizationAttritbute _testing;
+        private readonly TokenAuthorizationFilter _testing;
+        private readonly Mock<IUserService> _userService;
         private readonly ActionExecutingContext _actionExecutingContext;
         private readonly ActionExecutedContext _context;
 
-        public TokenAuthorizationAttributeTests()
+        public TokenAuthorizationFilterTests()
         {
-            _testing = new TokenAuthorizationAttritbute();
+            var authorizationAttribute = new Mock<TokenAuthorizationAttritbute>();
+
+            _userService = new Mock<IUserService>();
+
+            _testing = new TokenAuthorizationFilter(_userService.Object);
 
              var defaultHttpContext = new DefaultHttpContext();
 
@@ -34,12 +40,14 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
 
              _actionExecutingContext = new ActionExecutingContext(
                 actionContext,
-                new List<IFilterMetadata>(),
+                new List<IFilterMetadata>
+                {
+                    authorizationAttribute.Object
+                },
                 new Dictionary<string, object>(),
-                Mock.Of<Controller>()
-            );
+                Mock.Of<Controller>());
 
-              _context = new ActionExecutedContext(actionContext, new List<IFilterMetadata>(), Mock.Of<Controller>());
+              _context = new ActionExecutedContext(actionContext, new List<IFilterMetadata>(), new CustomController());
         }
 
         [Fact]
@@ -53,18 +61,13 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
         }
 
         [Fact]
-        public async Task OnActionExecutionAsync_WhenIsNotValid_ShouldReturnUnauthorizedResult()
+        public async Task OnActionExecutionAsync_WhenTokenIsNotValid_ShouldReturnUnauthorizedResult()
         {
-            var serviceProvider = new Mock<IServiceProvider>();
-            var userService = new Mock<IUserService>();
-
             var token = "bad.token";
 
-            userService.Setup(us => us.IsTokenValidAsync(token)).ReturnsAsync(false);
+            _actionExecutingContext.HttpContext.Request.Headers.Add("Token",token);
 
-            serviceProvider
-                .Setup(x => x.GetService(typeof(IUserService)))
-                .Returns(userService.Object);
+            _userService.Setup(us => us.IsTokenValidAsync(token)).ReturnsAsync(false);
 
             Task<ActionExecutedContext> Next() => Task.FromResult(_context);
 
@@ -73,5 +76,20 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
             _actionExecutingContext.Result.Should().BeOfType<UnauthorizedResult>();
         }
 
+        [Fact]
+        public async Task OnActionExecutionAsync_ShouldInvokeUserServiceIsTokenValid()
+        {
+            var token = "good.token";
+
+            _actionExecutingContext.HttpContext.Request.Headers.Add("Token", token);
+
+            _userService.Setup(us => us.IsTokenValidAsync(token)).ReturnsAsync(false);
+
+            Task<ActionExecutedContext> Next() => Task.FromResult(_context);
+
+            await _testing.OnActionExecutionAsync(_actionExecutingContext, Next);
+
+            _userService.Verify(us=>us.IsTokenValidAsync(It.IsAny<string>()),Times.Once);
+        }
     }
 }

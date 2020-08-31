@@ -9,25 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 namespace LetsDoIt.Moody.Web.Filters
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class TokenAuthorizationAttritbute : Attribute, IAsyncActionFilter
+    public class TokenAuthorizationAttritbute : Attribute, IFilterMetadata
     {
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        {
-            if (!context.HttpContext.Request.Headers.TryGetValue("Token", out var tokens))
-            { 
-                context.Result = new UnauthorizedResult();
-                return;
-            }
 
-            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-
-            if (await userService.IsTokenValidAsync(tokens[0]) == false)
-            {
-                context.Result = new UnauthorizedResult();
-                return;
-            }
-
-            await next();
-        }
     }
 }
