@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace LetsDoIt.Moody.Web.Middleware
 {
-    using LetsDoIt.Moody.Application.Utils;
+    using Application.Utils;
 
     public class ApiExceptionMiddleware
     {

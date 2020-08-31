@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.Category
 {
-    using Domain;
-
     public interface ICategoryService
     {
         Task<CategoryGetResult> GetCategories(string versionNumber);

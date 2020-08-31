@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LetsDoIt.Moody.Web.Filters;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LetsDoIt.Moody.Web.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;

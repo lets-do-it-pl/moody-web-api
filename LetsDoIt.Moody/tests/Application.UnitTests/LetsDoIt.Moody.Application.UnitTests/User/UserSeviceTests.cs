@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Data;
-using System.Security;
 using System.Security.Authentication;
 using MockQueryable.Moq;
 using LetsDoIt.Moody.Application.User;

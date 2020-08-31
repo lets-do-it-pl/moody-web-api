@@ -2,7 +2,6 @@
 using NGuard;
 using System.Linq;
 using System.Data;
-using System.Security;
 
 namespace LetsDoIt.Moody.Application.User
 {

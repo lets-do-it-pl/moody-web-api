@@ -9,7 +9,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
     using Application.Category;
     using Application.CustomExceptions;
     using Web.Controllers;    
-    using Web.Entities.Requests;       
+    using Entities.Requests;       
 
     public class CategoryControllerTests
     {

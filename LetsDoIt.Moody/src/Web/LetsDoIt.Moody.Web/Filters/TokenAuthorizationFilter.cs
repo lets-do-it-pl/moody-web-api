@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.User;
 using Microsoft.AspNetCore.Mvc;

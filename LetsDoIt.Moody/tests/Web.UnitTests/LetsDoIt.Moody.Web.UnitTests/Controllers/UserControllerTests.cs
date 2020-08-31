@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Authentication;
 using System.Data;
 using System.Net;
- using LetsDoIt.Moody.Web.Controllers;
+using LetsDoIt.Moody.Web.Controllers;
 
 namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
