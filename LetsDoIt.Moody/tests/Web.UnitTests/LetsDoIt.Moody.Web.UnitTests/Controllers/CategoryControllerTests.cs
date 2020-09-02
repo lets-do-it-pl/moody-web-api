@@ -2,7 +2,10 @@ using System;
 using Moq;
 using Xunit;
 using System.Threading.Tasks;
+using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
@@ -13,15 +16,24 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 
     public class CategoryControllerTests
     {
+        private readonly byte[] _byteImage;
+        private readonly CategoryInsertRequest _request;
         private readonly CategoryController _testing;
         private readonly Mock<ICategoryService> _mockCategoryService;
-
         #region SetUp & Helpers
 
         public CategoryControllerTests()
         {
             _mockCategoryService = new Mock<ICategoryService>();
             _testing = new CategoryController(_mockCategoryService.Object);
+            _request = new CategoryInsertRequest
+            {
+                Name = "adsfasdf",
+                Order = 5,
+                Image = "USrCELxGejBZI4W/Llsvmw==\r\n"
+            }; 
+            _byteImage = Convert.FromBase64String(_request.Image);
+
         }
 
         private CategoryUpdateRequest GetCategoryUpdateRequest(
@@ -155,5 +167,35 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             //Act & Assert
             await Assert.ThrowsAsync<Exception>(() => _testing.Update(request));
         }
+
+        [Fact]
+        public async Task GIVEN_ThereIsAnEmptyInsertRequest_THEN_ShouldGetBadRequest()
+        {
+            CategoryInsertRequest insertRequest = null;
+
+            //Act
+            var actual = await _testing.Insert(insertRequest);
+
+            //Assert
+            Assert.IsType<BadRequestResult>(actual);
+        }
+
+        [Fact]
+        public async Task GIVEN_ThereIsAnInsertRequest_WHEN_InsertingACategory_THEN_ShouldReturnOkResultAndCallServiceOnce()
+        {
+            //Arrange
+            var actual = await _testing.Insert(_request);
+
+            //Assert
+            _mockCategoryService
+                .Verify(service =>
+                        service.InsertAsync(
+                            _request.Name,
+                            _request.Order,
+                            _byteImage)
+                    );
+            Assert.IsType<OkResult>(actual);
+        }
+
     }
 }

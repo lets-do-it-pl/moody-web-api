@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace LetsDoIt.Moody.Web.Entities.Requests
 {
@@ -11,5 +12,6 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
 
         [Required]
         public string Image { get; set; }
+
     }
 }
