@@ -45,7 +45,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
                 new Dictionary<string, object>(),
                 Mock.Of<Controller>());
 
-              _context = new ActionExecutedContext(actionContext, new List<IFilterMetadata>(), new CustomController());
+              _context = new ActionExecutedContext(actionContext, new List<IFilterMetadata>(), Mock.Of<Controller>());
         }
 
         [Fact]
