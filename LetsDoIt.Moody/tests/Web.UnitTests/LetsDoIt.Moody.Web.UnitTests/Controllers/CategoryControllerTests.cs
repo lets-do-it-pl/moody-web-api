@@ -2,17 +2,14 @@ using System;
 using Moq;
 using Xunit;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
     using Application.Category;
     using Application.CustomExceptions;
-    using Web.Controllers;    
-    using Entities.Requests;       
+    using Web.Controllers;
+    using Entities.Requests;
 
     public class CategoryControllerTests
     {
