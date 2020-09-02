@@ -6,7 +6,6 @@ using System;
 using System.Linq.Expressions;
 using Moq;
 using Xunit;
-using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Category
 {
@@ -15,7 +14,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
     using Domain;
     using CustomExceptions;
     using Persistance.Repositories.Base;
-  
 
     public class CategoryServiceTests
     {
@@ -74,7 +72,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 
         #endregion
 
-        [Fact] 
+        [Fact]
         public async Task Should_ReturnIsUpdated_And_EmptyCategories_When_VersionNumberIsLatest()
         {
             // Arrange
@@ -112,7 +110,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         [Fact]
         public void Should_ThrowAnException_When_LatestVersionIsNull()
         {
-            SetupGetLatestVersionNumber(null);            
+            SetupGetLatestVersionNumber(null);
 
             Assert.ThrowsAsync<ArgumentNullException>(async () => await _testing.GetCategories(null));
         }
@@ -145,12 +143,12 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             // Arrange  
             var versionNumber = "good.versionNumber";
 
-            var versionHistory = GetVersionHistory(versionNumber);            
+            var versionHistory = GetVersionHistory(versionNumber);
             SetupGetLatestVersionNumber(versionHistory);
-            
+
             var versionHistories = new List<VersionHistory> { versionHistory };
             SetupGetVersionHistory(versionHistories);
-            
+
             // Act
             var actual = await _testing.GetCategories(versionNumber);
 
@@ -200,8 +198,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         public async Task InsertAsync_GivenNoException_ShouldInvokeRepositoryAddAsyncAndInvokeVersion()
         {
             var name = "asd";
-            var order = 5;            
-            byte[] byteImage = { 80, 65, 78, 75, 65, 74 }; 
+            var order = 5;
+            byte[] byteImage = { 80, 65, 78, 75, 65, 74 };
 
             await _testing.InsertAsync(name, order, byteImage);
 
