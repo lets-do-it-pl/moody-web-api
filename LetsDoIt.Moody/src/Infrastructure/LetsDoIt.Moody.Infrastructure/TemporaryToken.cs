@@ -2,7 +2,7 @@
 
 namespace LetsDoIt.Moody.Infrastructure
 {
-    public class TemporaryToken
+    public class TemporaryToken : ITemporaryToken
     { 
         public static string TemporaryTokenGenerator()
         {
@@ -12,14 +12,9 @@ namespace LetsDoIt.Moody.Infrastructure
                 $"{saveUtcNow.Day}/KU2/{saveUtcNow.Hour}/G5i/{saveUtcNow.Minute}/74VHuMbg==";
         }
 
-        public string TemporaryTokenValidator(string guid)
+        public bool TemporaryTokenValidator(string guid)
         {
-            if(guid != TemporaryTokenGenerator() || guid == null)
-            {
-                throw new UnauthorizedAccessException();
-            }
-
-            return guid;
+            return guid == TemporaryTokenGenerator() ? true : false;
         }
     }
 }

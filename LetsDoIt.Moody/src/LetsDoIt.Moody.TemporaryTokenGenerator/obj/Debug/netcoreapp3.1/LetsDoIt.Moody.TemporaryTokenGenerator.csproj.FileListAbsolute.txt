@@ -52,3 +52,5 @@
 /Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/LetsDoIt.Moody.TemporaryTokenGenerator/bin/Debug/netcoreapp3.1/LetsDoIt.Moody.Domain.pdb
 /Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/LetsDoIt.Moody.TemporaryTokenGenerator/bin/Debug/netcoreapp3.1/LetsDoIt.Moody.Persistance.pdb
 /Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/LetsDoIt.Moody.TemporaryTokenGenerator/obj/Debug/netcoreapp3.1/LetsDoIt.Moody.TemporaryTokenGenerator.csproj.CopyComplete
+/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/LetsDoIt.Moody.TemporaryTokenGenerator/bin/Debug/netcoreapp3.1/Microsoft.Extensions.CommandLineUtils.dll
+/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/LetsDoIt.Moody.TemporaryTokenGenerator/bin/Debug/netcoreapp3.1/CommandDotNet.dll

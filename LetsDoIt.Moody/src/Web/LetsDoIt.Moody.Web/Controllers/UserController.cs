@@ -9,6 +9,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.User;
     using Entities.Requests;
+    using Web;
 
     [ApiController]
     [Route("api/users")]
@@ -22,6 +23,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpPost]
+        [TemporaryTokenValidator]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> SaveUser(SaveUserRequest saveRequest)
         {
