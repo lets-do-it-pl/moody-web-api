@@ -132,24 +132,14 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task<bool> IsTokenValidAsync(string token)
         {
-            try
-            {
-                Guard.Requires(token, nameof(token)).IsNotNullOrEmptyOrWhiteSpace();
-
-                if (await _userTokenRepository.GetAsync(ut => ut.Token == token && 
-                                                              ut.ExpirationDate > DateTime.Now &&
-                                                              ut.User.IsDeleted == false) == null)
+                if (string.IsNullOrWhiteSpace(token))
                 {
                     return false;
                 }
 
-                return true;
-
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+                return await _userTokenRepository.GetAsync(ut => ut.Token == token && 
+                                                                 ut.ExpirationDate > DateTime.UtcNow &&
+                                                                 !ut.User.IsDeleted) != null;
         }
     }
 }   

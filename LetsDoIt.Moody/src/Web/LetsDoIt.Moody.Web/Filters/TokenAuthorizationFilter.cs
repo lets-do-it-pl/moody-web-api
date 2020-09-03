@@ -8,25 +8,27 @@ namespace LetsDoIt.Moody.Web.Filters
 {
     public class TokenAuthorizationFilter:IAsyncActionFilter
     {
-        private readonly IUserService userService;
+        private readonly IUserService _userService;
+        private const string Token = "Token";
         public TokenAuthorizationFilter(IUserService userService)
         {
-            this.userService = userService;
+            _userService = userService;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-             var authorizationAttritbute = context.Filters.OfType<TokenAuthorizationAttritbute>().FirstOrDefault();
+             var authorizationAttritbute = context.Filters.OfType<Authorization>().FirstOrDefault();
 
              if (authorizationAttritbute != null)
              {
-                if (!context.HttpContext.Request.Headers.TryGetValue("Token", out var tokens))
+                if (!context.HttpContext.Request.Headers.TryGetValue(Token, out var tokens))
                 {
                     context.Result = new UnauthorizedResult();
                     return;
                 }
 
-                if (await userService.IsTokenValidAsync(tokens[0]) == false)
+                var isValidToken = await _userService.IsTokenValidAsync(tokens[0]);
+                if (!isValidToken)
                 {
                     context.Result = new UnauthorizedResult();
                     return;

@@ -23,7 +23,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
 
         public TokenAuthorizationFilterTests()
         {
-            var authorizationAttribute = new Mock<TokenAuthorizationAttritbute>();
+            var authorizationAttribute = new Mock<Authorization>();
 
             _userService = new Mock<IUserService>();
 

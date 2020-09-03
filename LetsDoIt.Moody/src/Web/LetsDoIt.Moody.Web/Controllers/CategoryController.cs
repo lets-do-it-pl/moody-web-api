@@ -18,7 +18,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
     [ApiController] 
     [Route("api/categories")]
-    [TokenAuthorizationAttritbute]
+    [Authorization]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
