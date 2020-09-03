@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using System.Data;
+using System.Security.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.User;
-    using System.Data;
-    using System.Security.Authentication;
     using Entities.Requests;
 
     [ApiController]
@@ -45,7 +45,6 @@ namespace LetsDoIt.Moody.Web.Controllers
                 throw;
             }
         }
-
 
         [HttpPost("authenticate")]
         public async Task<ActionResult<UserTokenEntity>> Authenticate(string username, string password)
