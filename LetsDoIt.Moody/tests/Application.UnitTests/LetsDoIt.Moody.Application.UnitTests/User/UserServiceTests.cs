@@ -263,5 +263,30 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                    ur.AddAsync(It.Is<User>(x => x.UserName == user.UserName)),
                Times.Once);
         }
+
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public async Task IsTokenValidAsync_WhenTokenIsEmptyOrWhitespaceOrNull_ShouldReturnFalse(string token)
+        {
+            var result = await _testing.IsTokenValidAsync(token);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task IsTokenValidAsync_WhenUserTokenIsNull_ShouldReturnFalse()
+        {
+            string token = "good.token";
+            UserToken userToken = null;
+
+            _mockUserTokenRepository.Setup(repo => repo.GetAsync(ut => ut.Token == token && ut.ExpirationDate > DateTime.UtcNow && ut.User.IsDeleted == false)).ReturnsAsync(userToken);
+
+            var result = await _testing.IsTokenValidAsync(token);
+
+            Assert.False(result);
+        }
     }
 }
