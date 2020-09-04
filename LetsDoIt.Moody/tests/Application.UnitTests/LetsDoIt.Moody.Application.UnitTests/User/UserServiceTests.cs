@@ -284,7 +284,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             var user = new User
             {
                 Id = 3,
-                CreateDate = DateTime.Now,
+                CreateDate = DateTime.UtcNow,
                 IsDeleted = false,
                 Password = "good.password",
                 UserName = "good.username",
@@ -321,7 +321,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             var user = new User
             {
                 Id = 3,
-                CreateDate = DateTime.Now,
+                CreateDate = DateTime.UtcNow,
                 IsDeleted = true,
                 Password = "good.password",
                 UserName = "good.username",
