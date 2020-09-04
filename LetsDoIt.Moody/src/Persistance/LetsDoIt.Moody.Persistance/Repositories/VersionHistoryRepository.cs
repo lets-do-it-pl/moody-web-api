@@ -29,7 +29,8 @@ namespace LetsDoIt.Moody.Persistance.Repositories
             throw new NotImplementedException();
         }
 
-        public IQueryable<VersionHistory> Get(){
+        public IQueryable<VersionHistory> Get()
+        {
             return _context.Set<VersionHistory>();
         }
         

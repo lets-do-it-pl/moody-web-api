@@ -137,9 +137,10 @@ namespace LetsDoIt.Moody.Application.User
                     return false;
                 }
 
-                return await _userTokenRepository.GetAsync(ut => ut.Token == token && 
-                                                                 ut.ExpirationDate > DateTime.UtcNow &&
-                                                                 !ut.User.IsDeleted) != null;
+                return await _userTokenRepository.Get().AnyAsync(ut => ut.Token == token &&
+                                                            ut.ExpirationDate > DateTime.Now &&
+                                                            !ut.User.IsDeleted);
         }
     }
 }   
+    

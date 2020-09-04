@@ -32,7 +32,8 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             return await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
         }
 
-        public IQueryable<TEntity> Get(){
+        public IQueryable<TEntity> Get()
+        {
             return _context.Set<TEntity>();
         }
 

@@ -8,7 +8,7 @@ using System.Data;
 using System.Security.Authentication;
 using MockQueryable.Moq;
 using LetsDoIt.Moody.Application.User;
-
+using Microsoft.EntityFrameworkCore;
 
 
 namespace LetsDoIt.Moody.Application.UnitTests.User
@@ -271,19 +271,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
         [InlineData(null)]
         public async Task IsTokenValidAsync_WhenTokenIsEmptyOrWhitespaceOrNull_ShouldReturnFalse(string token)
         {
-            var result = await _testing.IsTokenValidAsync(token);
-
-            Assert.False(result);
-        }
-
-        [Fact]
-        public async Task IsTokenValidAsync_WhenUserTokenIsNull_ShouldReturnFalse()
-        {
-            string token = "good.token";
-            UserToken userToken = null;
-
-            _mockUserTokenRepository.Setup(repo => repo.GetAsync(ut => ut.Token == token && ut.ExpirationDate > DateTime.UtcNow && ut.User.IsDeleted == false)).ReturnsAsync(userToken);
-
             var result = await _testing.IsTokenValidAsync(token);
 
             Assert.False(result);
