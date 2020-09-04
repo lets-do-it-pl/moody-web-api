@@ -38,7 +38,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 
         public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
-            entity.CreateDate = DateTime.Now;
+            entity.CreateDate = DateTime.UtcNow;
 
             var addedEntity = _context.Entry(entity);
 
@@ -51,7 +51,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 
         public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            entity.ModifiedDate = DateTime.Now;
+            entity.ModifiedDate = DateTime.UtcNow;
 
             var updatedEntity = _context.Entry(entity);
 
@@ -64,7 +64,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 
         public virtual async Task DeleteAsync(TEntity entity)
         {
-            entity.ModifiedDate = DateTime.Now;
+            entity.ModifiedDate = DateTime.UtcNow;
             entity.IsDeleted = true;
 
             var deletedEntity = _context.Entry(entity);
