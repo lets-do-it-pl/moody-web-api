@@ -275,5 +275,79 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
 
             Assert.False(result);
         }
+
+        [Fact]
+        public async Task IsTokenValidAsync_WhenTokenIsWrong_ShouldReturnFalse()
+        {
+            string token = "bad.token";
+
+            var user = new User
+            {
+                Id = 3,
+                CreateDate = DateTime.Now,
+                IsDeleted = false,
+                Password = "good.password",
+                UserName = "good.username",
+
+            };
+
+            var userToken = new UserToken
+            {
+                UserId = 3,
+                Token = "good.token",
+                User = user,
+                ExpirationDate = DateTime.UtcNow.AddMinutes(999999)
+            };
+
+            user.UserToken = userToken;
+
+            var userTokens = new List<UserToken>
+            {
+                userToken
+            };
+
+            _mockUserTokenRepository.Setup(repo => repo.Get()).Returns(userTokens.AsQueryable().BuildMockDbSet().Object);
+
+            var result = await _testing.IsTokenValidAsync(token);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task IsTokenValidAsync_WhenUserIsDeleted_ShouldReturnFalse()
+        {
+            string token = "good.token";
+
+            var user = new User
+            {
+                Id = 3,
+                CreateDate = DateTime.Now,
+                IsDeleted = true,
+                Password = "good.password",
+                UserName = "good.username",
+
+            };
+
+            var userToken = new UserToken
+            {
+                UserId = 3,
+                Token = token,
+                User = user,
+                ExpirationDate = DateTime.UtcNow.AddMinutes(999999)
+            };
+
+            user.UserToken = userToken;
+
+            var userTokens = new List<UserToken>
+            {
+                userToken
+            };
+
+            _mockUserTokenRepository.Setup(repo => repo.Get()).Returns(userTokens.AsQueryable().BuildMockDbSet().Object);
+
+            var result = await _testing.IsTokenValidAsync(token);
+
+            Assert.False(result);
+        }
     }
 }
