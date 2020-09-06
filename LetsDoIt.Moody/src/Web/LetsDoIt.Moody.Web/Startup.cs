@@ -16,7 +16,9 @@ namespace LetsDoIt.Moody.Web
     using Application.VersionHistory;
     using Persistance.Repositories;
     using Domain;
-    using Microsoft.Extensions.Diagnostics.HealthChecks;
+    using System.IO;
+    using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+    using HealthChecks.UI.Client;
 
     public class Startup
     {
@@ -35,11 +37,13 @@ namespace LetsDoIt.Moody.Web
         {
             services.AddResponseCompression();
 
-            services.AddHealthChecks()
-                .AddCheck("Test Health check", () => HealthCheckResult.Healthy("Server is healthy" ) );
-
+           
             var connectionString = _config.GetConnectionString("MoodyDBConnection");
             services.AddDbContext<ApplicationContext>(opt =>opt.UseSqlServer(connectionString));
+
+            services.AddHealthChecks();
+          //  services.AddHealthChecks()
+            //    .AddSqlServer(Configuration["ConnectionStrings:Server=(localdb)\\MSSQLLocalDB;database=Moody;Trusted_Connection=True"]);
 
             services.AddControllers();
 
@@ -98,7 +102,11 @@ namespace LetsDoIt.Moody.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHealthChecks("/healthCheck");
+                endpoints.MapHealthChecks("/healthCheck",new HealthCheckOptions(){
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+
                 endpoints.MapControllers();
             });
         }
