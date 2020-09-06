@@ -16,6 +16,7 @@ namespace LetsDoIt.Moody.Web
     using Application.VersionHistory;
     using Persistance.Repositories;
     using Domain;
+    using Microsoft.Extensions.Diagnostics.HealthChecks;
 
     public class Startup
     {
@@ -33,6 +34,9 @@ namespace LetsDoIt.Moody.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddResponseCompression();
+
+            services.AddHealthChecks()
+                .AddCheck("Test Health check", () => HealthCheckResult.Healthy("Server is healthy" ) );
 
             var connectionString = _config.GetConnectionString("MoodyDBConnection");
             services.AddDbContext<ApplicationContext>(opt =>opt.UseSqlServer(connectionString));
@@ -94,6 +98,7 @@ namespace LetsDoIt.Moody.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/healthCheck");
                 endpoints.MapControllers();
             });
         }
