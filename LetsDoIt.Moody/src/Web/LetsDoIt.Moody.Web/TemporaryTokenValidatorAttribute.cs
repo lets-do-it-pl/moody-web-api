@@ -10,20 +10,19 @@ namespace LetsDoIt.Moody.Web
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class TemporaryTokenValidatorAttribute : Attribute, IAsyncActionFilter
     {
-        private const string ApiKeyHeaderName = "Validate";
-        private readonly ITemporaryToken token;
+        private const string ApiKeyHeaderName = "Token";        
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (!context.HttpContext.Request.Headers.TryGetValue(ApiKeyHeaderName, out var guid))
+            if (!context.HttpContext.Request.Headers.TryGetValue(ApiKeyHeaderName, out var token))
             {
                 context.Result = new UnauthorizedResult();
                 return;
             }
 
-            var temporaryToken = token.TemporaryTokenValidator(guid);
+            var temporaryToken = TemporaryToken.ValidateTemporaryToken(token);
 
-            if(temporaryToken == false)
+            if(!temporaryToken)
             {
                 context.Result = new UnauthorizedResult();
                 return;

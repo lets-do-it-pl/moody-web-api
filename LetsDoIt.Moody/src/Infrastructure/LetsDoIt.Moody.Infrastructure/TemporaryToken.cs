@@ -2,19 +2,20 @@
 
 namespace LetsDoIt.Moody.Infrastructure
 {
-    public class TemporaryToken : ITemporaryToken
-    { 
-        public static string TemporaryTokenGenerator()
+    public class TemporaryToken
+    {
+        public static string GenerateTemporaryToken()
         {
-            DateTime saveUtcNow = DateTime.UtcNow;
-            return
-                $"8e/{saveUtcNow.Year}/53E/{saveUtcNow.Month}/Sey/" +
-                $"{saveUtcNow.Day}/KU2/{saveUtcNow.Hour}/G5i/{saveUtcNow.Minute}/74VHuMbg==";
+            var saveUtcNow = DateTime.UtcNow;
+
+            return $"8e/{saveUtcNow.Year}" +
+                   $"/53E/{saveUtcNow.Month}" +
+                   $"/Sey/{saveUtcNow.Day}" +
+                   "/KU25ecb/G5i4f46/74VHuMbg"+
+                   "/f862021cf8f5==";
         }
 
-        public bool TemporaryTokenValidator(string guid)
-        {
-            return guid == TemporaryTokenGenerator() ? true : false;
-        }
+        public static bool ValidateTemporaryToken(string tempToken) =>
+            tempToken == GenerateTemporaryToken();
     }
 }

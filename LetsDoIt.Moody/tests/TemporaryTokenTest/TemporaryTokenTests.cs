@@ -13,19 +13,16 @@ namespace LetsDoIt.Moody.TemporaryToken.Test
 {
     using Web;
     using Infrastructure;
-    using LetsDoIt.Moody.Web.Controllers;
-    using LetsDoIt.Moody.Application.User;
 
     public class TemporaryTokenTests
     {
-        private readonly ActionExecutedContext _context;
-        private readonly Mock<ITemporaryToken> _temporaryToken;
+        private const string TokenHeaderName = "Token";
         private readonly TemporaryTokenValidatorAttribute _testing;
+        private readonly ActionExecutedContext _context;
         private readonly ActionExecutingContext _actionExecutingContext;
 
         public TemporaryTokenTests()
         {
-            _temporaryToken = new Mock<ITemporaryToken>();
             _testing = new TemporaryTokenValidatorAttribute();
 
             var httpContext = new DefaultHttpContext();
@@ -61,14 +58,12 @@ namespace LetsDoIt.Moody.TemporaryToken.Test
 
         }
 
-        [Fact]
-        public async Task OnActionExecutionAsync_WhenTokenIsNotValid_ShouldReturnUnauthorizedResult()
+        [Theory]
+        [InlineData("bad.guid")]
+        [InlineData(null)]
+        public async Task OnActionExecutionAsync_WhenTokenIsNotValid_ShouldReturnUnauthorizedResult(string token)
         {
-            var guid = "bad.guid";
-
-            _actionExecutingContext.HttpContext.Request.Headers.Add("Validate", guid);
-
-            _temporaryToken.Setup(token => token.TemporaryTokenValidator(guid)).Returns(false);
+            _actionExecutingContext.HttpContext.Request.Headers.Add(TokenHeaderName, token);
 
             ActionExecutionDelegate Next = () => {
                 var ctx = _context;
@@ -83,11 +78,9 @@ namespace LetsDoIt.Moody.TemporaryToken.Test
         [Fact]
         public async Task OnActionExecutionAsync_ShouldInvokeUserServiceIsTokenValid()
         {
-            var guid = "good.guid";
+            var token = TemporaryToken.GenerateTemporaryToken();
 
-            _actionExecutingContext.HttpContext.Request.Headers.Add("Validate", guid);
-
-            _temporaryToken.Setup(token => token.TemporaryTokenValidator(guid)).Returns(true);
+            _actionExecutingContext.HttpContext.Request.Headers.Add(TokenHeaderName, token);
 
             Task<ActionExecutedContext> Next() => Task.FromResult(_context);
 

@@ -1,30 +1,10 @@
 ﻿<Properties StartupConfiguration="{1C59363F-BB54-4066-A4FD-8FAAF357880E}|LetsDoIt.Moody.Web">
-  <MonoDevelop.Ide.Workbench ActiveDocument="src/LetsDoIt.Moody.TemporaryTokenGenerator/Program.cs">
-    <Files>
-      <File FileName="src/LetsDoIt.Moody.TemporaryTokenGenerator/Program.cs" Line="8" Column="1" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="LetsDoIt.Moody" expanded="True">
-            <Node name="src" expanded="True">
-              <Node name="Infrastructure" expanded="True">
-                <Node name="LetsDoIt.Moody.Infrastructure" expanded="True" />
-              </Node>
-              <Node name="TemporaryToken" expanded="True">
-                <Node name="LetsDoIt.Moody.TemporaryTokenGenerator" expanded="True">
-                  <Node name="Program.cs" selected="True" />
-                </Node>
-              </Node>
-              <Node name="Web" expanded="True">
-                <Node name="LetsDoIt.Moody.Web" expanded="True">
-                  <Node name="Controllers" expanded="True" />
-                </Node>
-              </Node>
-            </Node>
-            <Node name="tests" expanded="True">
-              <Node name="LetsDoIt.Moody.TemporaryToken.Test" expanded="True" />
-            </Node>
+            <Node name="src" expanded="True" />
           </Node>
         </State>
       </Pad>
@@ -39,9 +19,7 @@
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/tests/TemporaryTokenTest/TemporaryTokenTests.cs" relfile="tests/TemporaryTokenTest/TemporaryTokenTests.cs" line="78" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>

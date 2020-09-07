@@ -38,3 +38,13 @@
 2020-09-02 17:38:08.9382 Info Adding target FileTarget(Name=allfile)
 2020-09-02 17:38:08.9761 Info Adding target FileTarget(Name=ownFile-web)
 2020-09-02 17:38:09.1021 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/bin/Debug/netcoreapp3.1/nlog.config
+2020-09-07 14:43:50.1076 Info Message Template Auto Format enabled
+2020-09-07 14:43:50.1669 Info Loading assembly: NLog.Web.AspNetCore
+2020-09-07 14:43:50.3015 Info Adding target FileTarget(Name=allfile)
+2020-09-07 14:43:50.3554 Info Adding target FileTarget(Name=ownFile-web)
+2020-09-07 14:43:50.6051 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/bin/Debug/netcoreapp3.1/nlog.config
+2020-09-07 16:50:32.2905 Info Message Template Auto Format enabled
+2020-09-07 16:50:32.3620 Info Loading assembly: NLog.Web.AspNetCore
+2020-09-07 16:50:32.5102 Info Adding target FileTarget(Name=allfile)
+2020-09-07 16:50:32.5386 Info Adding target FileTarget(Name=ownFile-web)
+2020-09-07 16:50:32.6549 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/bin/Debug/netcoreapp3.1/nlog.config
