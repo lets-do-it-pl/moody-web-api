@@ -75,7 +75,7 @@ namespace LetsDoIt.Moody.Application.User
 
             UserToken userToken;
 
-            if(userDb.UserToken == null || userDb.UserToken.ExpirationDate < DateTime.Now)
+            if(userDb.UserToken == null || userDb.UserToken.ExpirationDate < DateTime.UtcNow)
             {
                 var newUserToken = GetNewUserToken(user);
                 newUserToken.UserId = userDb.Id;

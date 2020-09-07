@@ -49,7 +49,7 @@
 
             userToken.Token = entity.Token;
             userToken.ExpirationDate = entity.ExpirationDate;
-            userToken.ModifiedDate = DateTime.Now;
+            userToken.ModifiedDate = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
