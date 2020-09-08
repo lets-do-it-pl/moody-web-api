@@ -5,7 +5,7 @@ using System.Data;
 
 namespace LetsDoIt.Moody.Application.User
 {
-    using Utils;
+    using Infrastructure.Utils;
     using Persistance.Repositories.Base;
     using Domain;
     using System.Security.Authentication;
