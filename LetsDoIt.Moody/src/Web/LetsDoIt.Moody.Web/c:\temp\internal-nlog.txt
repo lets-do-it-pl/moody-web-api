@@ -1,5 +1,0 @@
-2020-09-08 17:21:29.4765 Info Message Template Auto Format enabled
-2020-09-08 17:21:29.5316 Info Loading assembly: NLog.Web.AspNetCore
-2020-09-08 17:21:29.6656 Info Adding target FileTarget(Name=allfile)
-2020-09-08 17:21:29.6960 Info Adding target FileTarget(Name=ownFile-web)
-2020-09-08 17:21:29.8423 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=/Users/zeynepsel/Desktop/moody-web-api/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/bin/Debug/netcoreapp3.1/nlog.config

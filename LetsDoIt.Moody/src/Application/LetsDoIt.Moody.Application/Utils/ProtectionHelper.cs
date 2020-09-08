@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace LetsDoIt.Moody.Infrastructure.Utils
+namespace LetsDoIt.Moody.Application.Utils
 {
     public static class ProtectionHelper
     {
