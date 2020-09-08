@@ -49,10 +49,7 @@ namespace LetsDoIt.Moody.Web
 
             services.AddHealthChecks();
 
-            //   services.AddHealthChecks()
-            //        .AddSqlServer(Configuration["ConnectionStrings:Server=(localdb)\\MSSQLLocalDB;database=Moody;Trusted_Connection=True"]);
-
-            services.AddHealthChecks()
+             services.AddHealthChecks()
                         .AddCheck("sql", () =>
                             {
                                 using (var connection = new SqlConnection(connectionString))
@@ -65,6 +62,7 @@ namespace LetsDoIt.Moody.Web
                                 return HealthCheckResult.Healthy();
 
                             });
+         
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -144,6 +142,7 @@ namespace LetsDoIt.Moody.Web
                     value = e.Value.Status.ToString()
                 })
             });
+
             return context.Response.WriteAsync(result);
 
         }
