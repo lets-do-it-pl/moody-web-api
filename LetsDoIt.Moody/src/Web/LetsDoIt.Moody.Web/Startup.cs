@@ -19,6 +19,12 @@ namespace LetsDoIt.Moody.Web
     using System.IO;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using HealthChecks.UI.Client;
+    using Microsoft.Data.SqlClient;
+    using Microsoft.Extensions.Diagnostics.HealthChecks;
+    using Microsoft.AspNetCore.Http;
+    using System.Threading.Tasks;
+    using Newtonsoft.Json;
+    using System.Linq;
 
     public class Startup
     {
@@ -37,14 +43,28 @@ namespace LetsDoIt.Moody.Web
         {
             services.AddResponseCompression();
 
-           
+
             var connectionString = _config.GetConnectionString("MoodyDBConnection");
-            services.AddDbContext<ApplicationContext>(opt =>opt.UseSqlServer(connectionString));
+            services.AddDbContext<ApplicationContext>(opt => opt.UseSqlServer(connectionString));
 
             services.AddHealthChecks();
-          //  services.AddHealthChecks()
-            //    .AddSqlServer(Configuration["ConnectionStrings:Server=(localdb)\\MSSQLLocalDB;database=Moody;Trusted_Connection=True"]);
 
+            //   services.AddHealthChecks()
+            //        .AddSqlServer(Configuration["ConnectionStrings:Server=(localdb)\\MSSQLLocalDB;database=Moody;Trusted_Connection=True"]);
+
+            services.AddHealthChecks()
+                        .AddCheck("sql", () =>
+                            {
+                                using (var connection = new SqlConnection(connectionString))
+                                {
+                                    try { connection.Open(); }
+
+                                    catch (SqlException) { return HealthCheckResult.Unhealthy(); }
+                                }
+
+                                return HealthCheckResult.Healthy();
+
+                            });
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -90,7 +110,7 @@ namespace LetsDoIt.Moody.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            
+
             app.UseRouting();
 
             app.UseSwagger();
@@ -102,13 +122,30 @@ namespace LetsDoIt.Moody.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHealthChecks("/healthCheck",new HealthCheckOptions(){
+                endpoints.MapHealthChecks("/healthCheck", new HealthCheckOptions()
+                {
                     Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    ResponseWriter = CustomResponseWriter
                 });
 
                 endpoints.MapControllers();
             });
+        }
+
+        private static Task CustomResponseWriter(HttpContext context, HealthReport healthReport)
+        {
+            context.Response.ContentType = "application/json";
+
+            var result = JsonConvert.SerializeObject(new
+            {
+                status = healthReport.Status.ToString(),
+                errors = healthReport.Entries.Select(e => new {
+                    key = e.Key,
+                    value = e.Value.Status.ToString()
+                })
+            });
+            return context.Response.WriteAsync(result);
+
         }
     }
 }
