@@ -30,8 +30,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         [HttpGet, Route("{versionNumber?}")]
         public async Task<ActionResult<CategoryResponse>> GetCategories(string versionNumber = null)
         {
-            _logger.LogInformation("START Get all Categories");
-            _logger.LogInformation("versionNumber : {0}", (versionNumber));
+            _logger.LogInformation($"{GetCategories(versionNumber)} is started with version number = {versionNumber}");
 
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
 
@@ -45,7 +44,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 return NoContent();
             }
 
-            _logger.LogInformation("End Get all Categories");
+            _logger.LogInformation($"{GetCategories(versionNumber)} is finished successfully");
             return ToCategoryResponse(categoryResult);
         }
 
@@ -53,7 +52,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         public async Task<IActionResult> Insert([FromBody] CategoryInsertRequest insertRequest)
         {
 
-            _logger.LogInformation("START Insert");
+            _logger.LogInformation($"{Insert(insertRequest)} is started with insert request = {insertRequest}");
 
             if (insertRequest == null)
             {
@@ -72,24 +71,19 @@ namespace LetsDoIt.Moody.Web.Controllers
                 insertRequest.Order,
                 byteImage);
 
-            _logger.LogInformation("End Insert");
+            _logger.LogInformation($"{Insert(insertRequest)} is finished successfully");
             return Ok();
         }
 
         [HttpPost, Route("update/{id}")]
         public async Task<IActionResult> Update(CategoryUpdateRequest updateRequest)
         {
-            _logger.LogInformation("START Update");
-
+            _logger.LogInformation($"{Update(updateRequest)} is started with update request = {updateRequest}");
 
             if (updateRequest == null)
             {
-                _logger.LogInformation("updateRequest : {0} does not exist", updateRequest);
                 return BadRequest();
             }
-
-            _logger.LogInformation("INPUT object Id : {0},Name : {1},Order : {2} Image : {3}",
-                (updateRequest.Id), (updateRequest.Name), (updateRequest.Order), (updateRequest.Image));
 
             try
             {
@@ -99,7 +93,6 @@ namespace LetsDoIt.Moody.Web.Controllers
                     updateRequest.Order,
                     updateRequest.Image);
 
-                _logger.LogInformation("END Update Order");
                 return Ok();
             }
             catch (ObjectNotFoundException)
@@ -110,15 +103,13 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 throw;
             }
-
+            _logger.LogInformation($"{Update(updateRequest)} is finished successfully");
         }
 
         [HttpDelete, Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            _logger.LogInformation("START Delete");
-            _logger.LogInformation("INPUT ID {0}", id);
-            _logger.LogInformation("END  Delete");
+            _logger.LogInformation($"{Delete(id)} is started with id = {id}");
             try
             {
                 await _categoryService.DeleteAsync(id);
@@ -134,18 +125,11 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 throw;
             }
+            _logger.LogInformation($"{Delete(id)} is finished successfully");
         }
 
         private CategoryResponse ToCategoryResponse(CategoryGetResult categoryResult)
         {
-
-            _logger.LogInformation("START to Category Response");
-
-            _logger.LogInformation(
-                "INPUT object categoryResult.VersionNumber : {0} , categoryResult.IsUpdated : {1}",
-                (categoryResult.VersionNumber), (categoryResult.IsUpdated));
-
-
             var result = new CategoryResponse
             {
                 IsUpdated = categoryResult.IsUpdated,
@@ -154,9 +138,6 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             if (categoryResult.Categories != null)
             {
-
-                _logger.LogInformation("categoryResult.Categories with categoryResult : {0}", categoryResult);
-
                 result.Categories = categoryResult
                     .Categories
                     .Select(c =>
@@ -169,10 +150,6 @@ namespace LetsDoIt.Moody.Web.Controllers
                         });
             }
 
-            _logger.LogInformation("INPUT object categoryResult.Categories : {0}", (categoryResult.Categories));
-
-
-            _logger.LogInformation("END to Category Response");
             return result;
         }
     }

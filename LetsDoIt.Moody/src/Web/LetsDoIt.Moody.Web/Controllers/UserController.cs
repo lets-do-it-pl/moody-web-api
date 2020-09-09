@@ -16,17 +16,21 @@ namespace LetsDoIt.Moody.Web.Controllers
     [Route("api/users")]
     public class UserController : ControllerBase
     {
+        private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService,
+            ILogger<UserController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> SaveUser(SaveUserRequest saveRequest)
         {
+            _logger.LogInformation($"{SaveUser(saveRequest)} is started with save request = {saveRequest}");
             try
             {
                 await _userService.SaveUserAsync(
@@ -46,12 +50,14 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 throw;
             }
+            _logger.LogInformation($"{SaveUser(saveRequest)} is finished successfully");
         }
 
 
         [HttpPost("authenticate")]
         public async Task<ActionResult<UserTokenEntity>> Authenticate(string username, string password)
         {
+            _logger.LogInformation($"{Authenticate(username,password)} is started with user name and password  = {username}{password}");
             try
             {
                 var token = await _userService.AuthenticateAsync(username, password);
