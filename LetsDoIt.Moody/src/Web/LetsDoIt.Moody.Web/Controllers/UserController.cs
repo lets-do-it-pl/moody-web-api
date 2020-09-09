@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using System.Data;
+using System.Security.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.User;
-    using LetsDoIt.Moody.Web.Entities.Requests;
-    using Microsoft.Extensions.Logging;
-    using System.Data;
-    using System.Security.Authentication;
-    using Web.Entities.Requests;
+    using Entities.Requests;
 
     [ApiController]
     [Route("api/users")]
@@ -52,7 +50,6 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
             _logger.LogInformation($"{SaveUser(saveRequest)} is finished successfully");
         }
-
 
         [HttpPost("authenticate")]
         public async Task<ActionResult<UserTokenEntity>> Authenticate(string username, string password)
