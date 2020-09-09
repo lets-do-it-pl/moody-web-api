@@ -3,6 +3,7 @@ using Moq;
 using Xunit;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {

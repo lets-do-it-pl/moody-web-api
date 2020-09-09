@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Security.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
