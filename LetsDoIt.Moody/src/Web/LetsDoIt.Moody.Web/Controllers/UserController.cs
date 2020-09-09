@@ -71,7 +71,8 @@ namespace LetsDoIt.Moody.Web.Controllers
             catch (Exception)
             {
                 throw;
-            }                       
+            }
+            _logger.LogInformation($"{Authenticate(username, password)} is finished successfully");
         }
     }
 }
