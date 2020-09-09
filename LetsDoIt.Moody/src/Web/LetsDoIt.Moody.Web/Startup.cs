@@ -32,6 +32,8 @@ namespace LetsDoIt.Moody.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHealthChecks();
+
             services.AddResponseCompression();
 
             var connectionString = _config.GetConnectionString("MoodyDBConnection");
@@ -94,6 +96,7 @@ namespace LetsDoIt.Moody.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/healthcheck");
                 endpoints.MapControllers();
             });
         }
