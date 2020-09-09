@@ -130,7 +130,7 @@ namespace LetsDoIt.Moody.Application.User
                 ProtectionHelper.EncryptValue(username + password)
             );
 
-        public async Task<bool> IsTokenValidAsync(string token)
+        public async Task<bool> ValidateTokenAsync(string token)
         {
                 if (string.IsNullOrWhiteSpace(token))
                 {

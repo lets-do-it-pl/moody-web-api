@@ -65,7 +65,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
 
             _actionExecutingContext.HttpContext.Request.Headers.Add("Token",token);
 
-            _userService.Setup(us => us.IsTokenValidAsync(token)).ReturnsAsync(false);
+            _userService.Setup(us => us.ValidateTokenAsync(token)).ReturnsAsync(false);
 
             Task<ActionExecutedContext> Next() => Task.FromResult(_context);
 
@@ -81,13 +81,13 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
 
             _actionExecutingContext.HttpContext.Request.Headers.Add("Token", token);
 
-            _userService.Setup(us => us.IsTokenValidAsync(token)).ReturnsAsync(false);
+            _userService.Setup(us => us.ValidateTokenAsync(token)).ReturnsAsync(false);
 
             Task<ActionExecutedContext> Next() => Task.FromResult(_context);
 
             await _testing.OnActionExecutionAsync(_actionExecutingContext, Next);
 
-            _userService.Verify(us=>us.IsTokenValidAsync(It.IsAny<string>()),Times.Once);
+            _userService.Verify(us=>us.ValidateTokenAsync(It.IsAny<string>()),Times.Once);
         }
     }
 }

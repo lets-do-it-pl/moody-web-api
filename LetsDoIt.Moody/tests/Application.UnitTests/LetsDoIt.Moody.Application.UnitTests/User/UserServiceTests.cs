@@ -269,15 +269,15 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
         [InlineData("")]
         [InlineData(" ")]
         [InlineData(null)]
-        public async Task IsTokenValidAsync_WhenTokenIsEmptyOrWhitespaceOrNull_ShouldReturnFalse(string token)
+        public async Task ValidateTokenAsync_WhenTokenIsEmptyOrWhitespaceOrNull_ShouldReturnFalse(string token)
         {
-            var result = await _testing.IsTokenValidAsync(token);
+            var result = await _testing.ValidateTokenAsync(token);
 
             Assert.False(result);
         }
 
         [Fact]
-        public async Task IsTokenValidAsync_WhenTokenIsWrong_ShouldReturnFalse()
+        public async Task ValidateTokenAsync_WhenTokenIsWrong_ShouldReturnFalse()
         {
             string token = "bad.token";
 
@@ -308,13 +308,13 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
 
             _mockUserTokenRepository.Setup(repo => repo.Get()).Returns(userTokens.AsQueryable().BuildMockDbSet().Object);
 
-            var result = await _testing.IsTokenValidAsync(token);
+            var result = await _testing.ValidateTokenAsync(token);
 
             Assert.False(result);
         }
 
         [Fact]
-        public async Task IsTokenValidAsync_WhenUserIsDeleted_ShouldReturnFalse()
+        public async Task ValidateTokenAsync_WhenUserIsDeleted_ShouldReturnFalse()
         {
             string token = "good.token";
 
@@ -345,7 +345,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
 
             _mockUserTokenRepository.Setup(repo => repo.Get()).Returns(userTokens.AsQueryable().BuildMockDbSet().Object);
 
-            var result = await _testing.IsTokenValidAsync(token);
+            var result = await _testing.ValidateTokenAsync(token);
 
             Assert.False(result);
         }
