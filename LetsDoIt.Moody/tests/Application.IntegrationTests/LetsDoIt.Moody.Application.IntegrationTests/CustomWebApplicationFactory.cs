@@ -12,13 +12,11 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
     using Persistance.Repositories.Base;
     using Web;
 
-
     public class CustomWebApplicationFactory<TStartup>:WebApplicationFactory<Startup> where TStartup : class
     {
-
         private readonly InMemoryDatabaseRoot _databaseRoot = new InMemoryDatabaseRoot();
         public IEntityRepository<Domain.User> UserRepositoryVar;
-        private  ServiceProvider _sp;
+        private  ServiceProvider _serviceProvider;
         private  ApplicationContext _dbContext;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -39,8 +37,8 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
                     options.UseInMemoryDatabase(new Guid().ToString(),_databaseRoot);
                 });
 
-                _sp = services.BuildServiceProvider();
-                var scope = _sp.CreateScope();
+                _serviceProvider = services.BuildServiceProvider();
+                var scope = _serviceProvider.CreateScope();
                 var scopedServices = scope.ServiceProvider;
                 _dbContext = scopedServices.GetRequiredService<ApplicationContext>();
                 UserRepositoryVar = scopedServices.GetRequiredService<IEntityRepository<Domain.User>>();

@@ -76,8 +76,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             _factory.ResetDbForTests();
         }
 
-
-
         [Fact]
         public async Task Authenticate_WhenUsernameDoesNotExists_ShouldReturnBadRequest()
         {
@@ -91,9 +89,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             var response = await _client.PostAsync(newUri, httpContent);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
         }
-
 
         [Fact]
         public async Task Authenticate_ShouldCheckDatabaseAndReturnOk()
@@ -126,7 +122,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             _factory.ResetDbForTests();
         }
 
-
         [Fact]
         public async Task Authenticate_WhenPasswordIsWrong_ShouldReturnBadRequest()
         {
@@ -156,7 +151,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
             _factory.ResetDbForTests();
-
         }
     }
 }
