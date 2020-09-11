@@ -1,11 +1,12 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using LetsDoIt.Moody.Web;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace LetsDoIt.Moody.Application.IntegrationTests
 {
+    using Web;
+
     public class HealthCheckTests:IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly HttpClient _httpClient;
@@ -21,8 +22,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
             var response = await _httpClient.GetAsync("/healthcheck");
 
             response.EnsureSuccessStatusCode();
-
-            // Assert.Equal(HttpStatusCode.OK,response.StatusCode);
         }
     }
 }

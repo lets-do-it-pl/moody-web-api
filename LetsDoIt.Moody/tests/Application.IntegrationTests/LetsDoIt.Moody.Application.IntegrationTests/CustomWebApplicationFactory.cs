@@ -1,18 +1,21 @@
-﻿using System.Linq;
-using LetsDoIt.Moody.Persistance;
-using LetsDoIt.Moody.Persistance.Repositories.Base;
-using LetsDoIt.Moody.Web;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Application.IntegrationTests
 {
+    using Persistance;
+    using Persistance.Repositories.Base;
+    using Web;
+
+
     public class CustomWebApplicationFactory<TStartup>:WebApplicationFactory<Startup> where TStartup : class
     {
+
         private readonly InMemoryDatabaseRoot _databaseRoot = new InMemoryDatabaseRoot();
         public IEntityRepository<Domain.User> UserRepositoryVar;
         private  ServiceProvider _sp;
@@ -33,7 +36,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
 
                 services.AddDbContext<ApplicationContext>(options =>
                 {
-                    options.UseInMemoryDatabase("TestDb",_databaseRoot);
+                    options.UseInMemoryDatabase(new Guid().ToString(),_databaseRoot);
                 });
 
                 _sp = services.BuildServiceProvider();
