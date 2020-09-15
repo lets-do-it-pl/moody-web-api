@@ -15,7 +15,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
 {
     using Domain;
     using Persistance.Repositories.Base;
-    using Utils;
+    using Infrastructure.Utils;
 
     public class UserServiceTests
     {
@@ -46,7 +46,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             var token = new UserToken
             {
                 Token = "good.token",
-                ExpirationDate = DateTime.Now.AddMinutes(12)
+                ExpirationDate = DateTime.UtcNow.AddMinutes(12)
             };
 
             var users = new List<User>
@@ -69,7 +69,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             Assert.NotNull(actual);
             Assert.Equal(username, actual.Username);
             Assert.Equal(token.Token, actual.Token);
-            Assert.True(DateTime.Now < actual.ExpirationDate);
+            Assert.True(DateTime.UtcNow < actual.ExpirationDate);
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             {
                 UserId = 1,
                 Token = "good.token",
-                ExpirationDate = DateTime.Now.AddMinutes(5)
+                ExpirationDate = DateTime.UtcNow.AddMinutes(5)
             };
 
             _mockUserTokenRepository
@@ -133,14 +133,14 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             {
                 UserId = 1,
                 Token = "expired.token",
-                ExpirationDate = DateTime.Now
+                ExpirationDate = DateTime.UtcNow
             };
 
             var userToken = new UserToken
             {
                 UserId = 1,
                 Token = "good.token",
-                ExpirationDate = DateTime.Now.AddMinutes(5)
+                ExpirationDate = DateTime.UtcNow.AddMinutes(5)
             };
 
             var users = new List<User>
