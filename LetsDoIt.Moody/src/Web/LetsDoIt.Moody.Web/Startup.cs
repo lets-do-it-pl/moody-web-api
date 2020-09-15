@@ -6,6 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Linq;
+
 
 namespace LetsDoIt.Moody.Web
 {
@@ -16,15 +24,9 @@ namespace LetsDoIt.Moody.Web
     using Application.VersionHistory;
     using Persistance.Repositories;
     using Domain;
-    using System.IO;
-    using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using HealthChecks.UI.Client;
-    using Microsoft.Data.SqlClient;
-    using Microsoft.Extensions.Diagnostics.HealthChecks;
-    using Microsoft.AspNetCore.Http;
-    using System.Threading.Tasks;
-    using Newtonsoft.Json;
-    using System.Linq;
+    using HealthChecks.UI.Configuration;
+    using System.Net;
 
     public class Startup
     {
@@ -43,26 +45,21 @@ namespace LetsDoIt.Moody.Web
         {
             services.AddResponseCompression();
 
-
             var connectionString = _config.GetConnectionString("MoodyDBConnection");
             services.AddDbContext<ApplicationContext>(opt => opt.UseSqlServer(connectionString));
 
-            services.AddHealthChecks();
+            services
+                .AddHealthChecks()
+                .AddSqlServer(connectionString, "SELECT 1");
 
-             services.AddHealthChecks()
-                        .AddCheck("sql", () =>
-                            {
-                                using (var connection = new SqlConnection(connectionString))
-                                {
-                                    try { connection.Open(); }
+            var url = _config.GetValue<string>("HealthChecksUI:HealthChecks:Uri"); 
 
-                                    catch (SqlException) { return HealthCheckResult.Unhealthy(); }
-                                }
+            services.AddHealthChecksUI(s=>
+            {
+                s.AddHealthCheckEndpoint("endpoint1", "https://localhost:1234/healthcheck");
+            })
+            .AddInMemoryStorage();
 
-                                return HealthCheckResult.Healthy();
-
-                            });
-         
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -90,6 +87,8 @@ namespace LetsDoIt.Moody.Web
                     JwtEncryptionKey,
                     tokenExpirationMinutes
                 ));
+
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,31 +119,18 @@ namespace LetsDoIt.Moody.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecksUI();
+
                 endpoints.MapHealthChecks("/healthCheck", new HealthCheckOptions()
                 {
                     Predicate = _ => true,
-                    ResponseWriter = CustomResponseWriter
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
-
-                endpoints.MapControllers();
-            });
-        }
-
-        private static Task CustomResponseWriter(HttpContext context, HealthReport healthReport)
-        {
-            context.Response.ContentType = "application/json";
-
-            var result = JsonConvert.SerializeObject(new
-            {
-                status = healthReport.Status.ToString(),
-                errors = healthReport.Entries.Select(e => new {
-                    key = e.Key,
-                    value = e.Value.Status.ToString()
-                })
             });
 
-            return context.Response.WriteAsync(result);
-
+            
         }
+
     }
 }
