@@ -31,6 +31,8 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
         public async Task SaveUser_ShouldReturnCreatedStatusCodeAndRecordToDatabase()
         {
             // Arrange
+            var token = _factory.GenerateTempSaveUserTokenForTests();
+
             var saveUserRequest = new SaveUserRequest
             {
                 Username = "good.username",
@@ -39,6 +41,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
             var httpContent = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            httpContent.Headers.Add("Token",token);
 
             // Act
             var response = await _client.PostAsync("/api/users", httpContent);
@@ -57,6 +60,9 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
         [Fact]
         public async Task SaveUser_WhenUserAlreadyExistsShouldReturnBadRequest()
         {
+
+            var token = _factory.GenerateTempSaveUserTokenForTests();
+
             var saveUserRequest = new SaveUserRequest
             {
                 Username = "good.username",
@@ -65,6 +71,8 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
             var httpContent = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            httpContent.Headers.Add("Token", token);
+
 
             // Act
             var response1 = await _client.PostAsync("/api/users", httpContent);
@@ -94,7 +102,9 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
         [Fact]
         public async Task Authenticate_ShouldCheckDatabaseAndReturnOk()
         {
-            //Save User to Database
+            //Save User to 
+            var token = _factory.GenerateTempSaveUserTokenForTests();
+
             var saveUserRequest = new SaveUserRequest
             {
                 Username = "good.username",
@@ -103,6 +113,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
             var httpContentSaveUser = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
             httpContentSaveUser.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            httpContentSaveUser.Headers.Add("Token", token);
 
             var responseSaveUser = await _client.PostAsync("/api/users", httpContentSaveUser);
 
@@ -126,6 +137,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
         public async Task Authenticate_WhenPasswordIsWrong_ShouldReturnBadRequest()
         {
             //Save User to Database
+            var token = _factory.GenerateTempSaveUserTokenForTests();
             var saveUserRequest = new SaveUserRequest
             {
                 Username = "good.username",
@@ -134,6 +146,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
             var httpContentSaveUser = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
             httpContentSaveUser.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            httpContentSaveUser.Headers.Add("Token", token);
 
             var responseSaveUser = await _client.PostAsync("/api/users", httpContentSaveUser);
 

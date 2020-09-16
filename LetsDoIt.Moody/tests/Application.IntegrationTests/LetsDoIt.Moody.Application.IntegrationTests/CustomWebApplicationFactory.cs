@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using LetsDoIt.Moody.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +48,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
             });
         }
 
-        public  void ResetDbForTests()
+        public void ResetDbForTests()
         {
             var users = _dbContext.Users.ToArray();
             var categories = _dbContext.Categories.ToArray();
@@ -60,6 +61,11 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
             _dbContext.VersionHistories.RemoveRange(versionHistories);
 
             _dbContext.SaveChanges();
+        }
+
+        public string GenerateTempSaveUserTokenForTests()
+        {
+           return  TemporaryToken.GenerateTemporaryToken();
         }
     }
 }
