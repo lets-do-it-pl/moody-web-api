@@ -25,6 +25,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             _baseUri =new Uri("http://localhost/api/users");
             _factory = factory;
             _client = factory.CreateDefaultClient();
+            _factory.ResetDbForTests();
         }
 
         [Fact]
