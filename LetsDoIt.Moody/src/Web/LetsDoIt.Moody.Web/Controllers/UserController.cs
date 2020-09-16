@@ -22,6 +22,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpPost]
+        [AuthorizationByTempToken]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> SaveUser(SaveUserRequest saveRequest)
         {

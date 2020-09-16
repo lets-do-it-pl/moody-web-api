@@ -5,7 +5,7 @@ using System.Data;
 
 namespace LetsDoIt.Moody.Application.User
 {
-    using Utils;
+    using Infrastructure.Utils;
     using Persistance.Repositories.Base;
     using Domain;
     using System.Security.Authentication;
@@ -76,7 +76,7 @@ namespace LetsDoIt.Moody.Application.User
 
             UserToken userToken;
 
-            if(userDb.UserToken == null || userDb.UserToken.ExpirationDate < DateTime.Now)
+            if(userDb.UserToken == null || userDb.UserToken.ExpirationDate < DateTime.UtcNow)
             {
                 var newUserToken = GetNewUserToken(user);
                 newUserToken.UserId = userDb.Id;

@@ -36,7 +36,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories
         
         public async Task<VersionHistory> AddAsync(VersionHistory entity)
         {
-            entity.CreateDate = DateTime.Now;
+            entity.CreateDate = DateTime.UtcNow;
 
             var addedEntity = _context.Entry(entity);
 

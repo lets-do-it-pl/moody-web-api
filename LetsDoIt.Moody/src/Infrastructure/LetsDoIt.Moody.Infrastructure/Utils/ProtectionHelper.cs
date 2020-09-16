@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace LetsDoIt.Moody.Application.Utils
+namespace LetsDoIt.Moody.Infrastructure.Utils
 {
     public static class ProtectionHelper
     {
