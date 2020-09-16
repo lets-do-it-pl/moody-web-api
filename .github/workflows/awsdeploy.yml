@@ -22,7 +22,7 @@ jobs:
     runs-on: [ubuntu-latest]
     steps:
       - name: Git clone our repository
-        uses: action/checkout@v1
+        uses: actions/checkout@v1
         
       - name:  Create ZIP deployement package
         run: zip -r ${{ env.DEPLOY_PACKAGE_NAME }} ./ -x *.git*
