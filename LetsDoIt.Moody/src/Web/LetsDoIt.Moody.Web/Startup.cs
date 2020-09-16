@@ -32,6 +32,7 @@ namespace LetsDoIt.Moody.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddResponseCompression();
 
             var connectionString = _config.GetConnectionString("MoodyDBConnection");
@@ -81,6 +82,7 @@ namespace LetsDoIt.Moody.Web
             app.UseResponseCompression();
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
             
             app.UseRouting();
