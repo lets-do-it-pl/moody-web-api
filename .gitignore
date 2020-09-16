@@ -23,5 +23,5 @@
 /LetsDoIt.Moody/tests/Domain.UnitTests/LetsDoIt.Moody.Domain.UnitTests/obj
 /LetsDoIt.Moody/tests/Web.UnitTests/LetsDoIt.Moody.Web.UnitTests/obj
 /LetsDoIt.Moody/tests/Web.UnitTests/LetsDoIt.Moody.Web.UnitTests/bin
-/LetsDoIt.Moody/src/LetsDoIt.Moody.TemporaryTokenGenerator/LetsDoIt.Moody.Domain/bin
-/LetsDoIt.Moody/src/LetsDoIt.Moody.TemporaryTokenGenerator/LetsDoIt.Moody.Domain/obj
+/LetsDoIt.Moody/src/LetsDoIt.Moody.TemporaryTokenGenerator/bin
+/LetsDoIt.Moody/src/LetsDoIt.Moody.TemporaryTokenGenerator/obj
