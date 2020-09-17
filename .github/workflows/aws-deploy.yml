@@ -38,11 +38,6 @@ jobs:
         run: |
          dotnet publish -c Release -o dotnetcorewebapp
          
-      - name: Create zip file
-        uses: thedoctor0/zip-release@master
-        with:
-         directory: ././LetsDoIt.Moody/dotnetcorewebapp
-         filename: '${{ env.DEPLOY_PACKAGE_NAME }}.zip'
  
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
@@ -54,7 +49,7 @@ jobs:
          AWS_SECRET_ACCESS_KEY: ${{ secrets.MY_AWS_SECRET_KEY }}
          AWS_REGION: ${{ env.AWS_REGION }}
          SOURCE_DIR: "././LetsDoIt.Moody/dotnetcorewebapp"
-         DEST_DIR: "${{ env.DEPLOY_PACKAGE_NAME }}"
+         DEST_DIR: "${{ env.DEPLOY_PACKAGE_NAME }}.zip"
         
       - name: Print nice message on completion of CI Pipeline
         run: echo "CI Pipeline part finished successfully"
