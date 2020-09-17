@@ -25,6 +25,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             _baseUri =new Uri("http://localhost/api/users");
             _factory = factory;
             _client = factory.CreateDefaultClient();
+            _factory.ResetDbForTests();
         }
 
         [Fact]
@@ -54,7 +55,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             Assert.NotNull(user);
             Assert.Equal("good.username", user.UserName);
 
-            _factory.ResetDbForTests();
         }
 
         [Fact]
@@ -81,7 +81,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             response1.StatusCode.Should().Be(HttpStatusCode.Created);
             response2.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-            _factory.ResetDbForTests();
         }
 
         [Fact]
@@ -130,7 +129,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
             responseAuthenticate.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            _factory.ResetDbForTests();
         }
 
         [Fact]
@@ -163,7 +161,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-            _factory.ResetDbForTests();
         }
     }
 }

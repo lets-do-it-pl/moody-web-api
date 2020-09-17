@@ -30,12 +30,13 @@
 
         public IQueryable<UserToken> Get()
         {
-            throw new NotImplementedException();
+            return _context.Set<UserToken>().Include(ut=>ut.User);
         }
 
-        public Task<UserToken> GetAsync(Expression<Func<UserToken, bool>> filter)
+        public async Task<UserToken> GetAsync(Expression<Func<UserToken, bool>> filter)
         {
-            throw new NotImplementedException();
+            return await _context.UserTokens.Include(ut=>ut.User).FirstOrDefaultAsync(filter);
+
         }
 
         public Task<List<UserToken>> GetListAsync(Expression<Func<UserToken, bool>> filter = null)
