@@ -5,7 +5,7 @@ env:
   EB_PACKAGE_S3_BUCKET_NAME: "github-actions-moody" 
   EB_APPLICATON_NAME: "MoodyTest"
   EB_ENV_NAME: "MoodyTest-env"
-  DEPLOY_PACKAGE_NAME: "MoodyTest-app${{ github.sha }}.zip"
+  DEPLOY_PACKAGE_NAME: "MoodyTest-app${{ github.sha }}"
   AWS_REGION: "eu-central-1"
 
 # Controls when the action will run. Triggers the workflow on push or pull request
