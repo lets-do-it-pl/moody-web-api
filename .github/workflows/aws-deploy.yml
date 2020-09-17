@@ -53,7 +53,7 @@ jobs:
          AWS_ACCESS_KEY_ID: ${{ secrets.MY_AWS_ACCESS_KEY }}
          AWS_SECRET_ACCESS_KEY: ${{ secrets.MY_AWS_SECRET_KEY }}
          AWS_REGION: ${{ env.AWS_REGION }}
-         SOURCE_DIR: "././LetsDoIt.Moody/dotnetcorewebapp/${{ env.DEPLOY_PACKAGE_NAME }}"
+         SOURCE_DIR: "././LetsDoIt.Moody/dotnetcorewebapp"
          DEST_DIR: "${{ env.DEPLOY_PACKAGE_NAME }}"
         
       - name: Print nice message on completion of CI Pipeline
