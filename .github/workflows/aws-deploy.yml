@@ -31,8 +31,10 @@ jobs:
            
       - name: Build with dotnet
         run: dotnet build --configuration Release
+        working-directory: ././LetsDoIt.Moody
         
       - name: dotnet publish
+        working-directory: ././LetsDoIt.Moody
         run: |
          dotnet publish -c Release -o ${{ env.DEPLOY_PACKAGE_NAME }}
         
