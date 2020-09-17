@@ -48,6 +48,7 @@ jobs:
          AWS_SECRET_ACCESS_KEY: ${{ secrets.MY_AWS_SECRET_KEY }}
          AWS_REGION: ${{ env.AWS_REGION }}
          SOURCE_DIR: "././LetsDoIt.Moody/${{ env.DEPLOY_PACKAGE_NAME }}"
+         DEST_DIR: "${{ env.DEPLOY_PACKAGE_NAME }}"
         
       - name: Print nice message on completion of CI Pipeline
         run: echo "CI Pipeline part finished successfully"
