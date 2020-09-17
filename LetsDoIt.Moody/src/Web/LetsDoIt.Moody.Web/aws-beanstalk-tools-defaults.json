@@ -3,7 +3,7 @@
     "region" : "eu-central-1",
     "configuration" : "Release",
     "framework"     : "netcoreapp3.1",
-    "self-contained" : true,
+    "self-contained" : false,
     "application"    : "MoodyTest",
     "environment"    : "Moodytest-env",
     "enable-xray"    : false,
