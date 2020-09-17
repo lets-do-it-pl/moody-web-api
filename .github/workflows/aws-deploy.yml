@@ -40,7 +40,7 @@ jobs:
          
       - name:  Create ZIP deployement package
         working-directory: ././LetsDoIt.Moody/dotnetcorewebapp
-        run: zip -r ${{ env.DEPLOY_PACKAGE_NAME }}.zip
+        run: zip -r ${{ env.DEPLOY_PACKAGE_NAME }}.zip .
         
 
       - name: Deploy to EB
