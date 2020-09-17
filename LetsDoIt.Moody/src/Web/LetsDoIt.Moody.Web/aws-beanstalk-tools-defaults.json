@@ -9,5 +9,5 @@
     "enable-xray"    : false,
     "enhanced-health-type" : "enhanced",
     "additional-options"   : "",
-    "proxy-server"         : "nginx"
+    "proxy-server"         : "none"
 }
