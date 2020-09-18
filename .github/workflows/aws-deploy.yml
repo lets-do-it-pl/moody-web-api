@@ -31,15 +31,15 @@ jobs:
            
       - name: Build with dotnet
         run: dotnet build --configuration Release
-        working-directory: ././LetsDoIt.Moody/src/Web
+        working-directory: ././LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web
         
       - name: dotnet publish
-        working-directory: ././LetsDoIt.Moody/src/Web
+        working-directory: ././LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web
         run: |
          dotnet publish -o dotnetcorewebapp
          
       - name:  Create ZIP deployement package
-        working-directory: ././LetsDoIt.Moody/src/Web/dotnetcorewebapp
+        working-directory: ././LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/dotnetcorewebapp
         run: zip -r ${{ env.DEPLOY_PACKAGE_NAME }}.zip .
         
 
@@ -52,7 +52,7 @@ jobs:
          environment_name: ${{ env.EB_ENV_NAME }}
          version_label: Ver-${{ github.sha }}
          region: ${{ env.AWS_REGION }}
-         deployment_package: ././LetsDoIt.Moody/src/Web/dotnetcorewebapp/${{ env.DEPLOY_PACKAGE_NAME }}.zip
+         deployment_package: ././LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/dotnetcorewebapp/${{ env.DEPLOY_PACKAGE_NAME }}.zip
      
      
      
