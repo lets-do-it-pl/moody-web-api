@@ -1,6 +1,5 @@
-﻿using System.Linq;
+﻿using NGuard;
 using System.Threading.Tasks;
-using NGuard;
 
 namespace LetsDoIt.Moody.Application.Category
 {
@@ -8,20 +7,24 @@ namespace LetsDoIt.Moody.Application.Category
     using CustomExceptions;
     using Persistance.Repositories.Base;
     using VersionHistory;
+    using System.Collections.Generic;
 
     public class CategoryService : ICategoryService
     {
         private readonly IEntityRepository<Category> _categoryRepository;
+        private readonly IEntityRepository<CategoryDetails> _categoryDetailsRepository;
         private readonly IEntityRepository<VersionHistory> _versionHistoryRepository;
         private readonly IVersionHistoryService _versionHistoryService;
 
 
         public CategoryService(
             IEntityRepository<Category> categoryRepository,
+            IEntityRepository<CategoryDetails> categoryDetailsRepository,
             IEntityRepository<VersionHistory> versionHistoryRepository,
             IVersionHistoryService versionHistoryService)
         {
             _categoryRepository = categoryRepository;
+            _categoryDetailsRepository = categoryDetailsRepository;
             _versionHistoryRepository = versionHistoryRepository;
             _versionHistoryService = versionHistoryService;
         }
@@ -45,6 +48,7 @@ namespace LetsDoIt.Moody.Application.Category
             }
 
             result.Categories = await _categoryRepository.GetListAsync(c => !c.IsDeleted);
+            
 
             return result;
         }
@@ -54,6 +58,19 @@ namespace LetsDoIt.Moody.Application.Category
             await _categoryRepository.AddAsync(new Category
             {
                 Name = name,
+                Order = order,
+                Image = image
+            });
+
+            await _versionHistoryService.CreateNewVersionAsync();
+        }
+
+        public async Task InsertCategoryDetailsAsync(int categoryId, int id, int order, byte[] image)
+        {
+            await _categoryDetailsRepository.AddAsync(new CategoryDetails
+            {
+                CategoryId = categoryId,
+                Id = id,
                 Order = order,
                 Image = image
             });
@@ -78,14 +95,44 @@ namespace LetsDoIt.Moody.Application.Category
             await _versionHistoryService.CreateNewVersionAsync();
         }
 
+        public async Task UpdateCategoryDetailsAsync(int id, int order, byte[] image)
+        {
+            var entity = await _categoryDetailsRepository.GetAsync(c => c.Id == id);
+            if (entity == null)
+            {
+                throw new ObjectNotFoundException("Category Detail", id);
+            }
+
+            entity.Id = id;
+            entity.Order = order;
+            entity.Image = image;
+
+            await _categoryDetailsRepository.UpdateAsync(entity);
+
+            await _versionHistoryService.CreateNewVersionAsync();
+        }
+
         public async Task DeleteAsync(int id)
         {
             var entity = await _categoryRepository.GetAsync(c => c.Id == id);
+            var detailsEntity = await _categoryDetailsRepository.GetListAsync(c => c.CategoryId == id);
             if (entity == null)
             {
                 throw new ObjectNotFoundException("Category", id);
             }
             await _categoryRepository.DeleteAsync(entity);
+            await _categoryDetailsRepository.BulkDeleteAsync(detailsEntity);
+            await _versionHistoryService.CreateNewVersionAsync();
+        }
+
+        public async Task DeleteCategoryDetailsAsync(int id)
+        {
+            var entity = await _categoryDetailsRepository.GetAsync(c => c.Id == id);
+            if (entity == null)
+            {
+                throw new ObjectNotFoundException("Category Detail", id);
+            }
+            await _categoryDetailsRepository.DeleteAsync(entity);
 
             await _versionHistoryService.CreateNewVersionAsync();
         }

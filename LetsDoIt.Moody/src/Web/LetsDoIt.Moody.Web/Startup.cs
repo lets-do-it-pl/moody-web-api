@@ -55,7 +55,8 @@ namespace LetsDoIt.Moody.Web
             services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
             services.AddTransient<IEntityRepository<User>, UserRepository>();
             services.AddTransient<IEntityRepository<UserToken>, UserTokenRepository>();
-
+            services.AddTransient<IEntityRepository<CategoryDetails>, CategoryDetailsRepository>();
+               
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
             services.AddTransient<IUserService>(us => new UserService(

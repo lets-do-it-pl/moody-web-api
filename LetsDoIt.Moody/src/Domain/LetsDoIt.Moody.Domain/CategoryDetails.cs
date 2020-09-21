@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LetsDoIt.Moody.Domain
 {
-
-    public class Category : IEntity
+    public class CategoryDetails : IEntity
     {
-        private ICollection<CategoryDetails> _posts;
+        private Category _category;
 
-        public Category()
+        public CategoryDetails()
         {
         }
 
-        private Category(Action<object, string> lazyLoader)
+        private CategoryDetails(Action<object, string> lazyLoader)
         {
             LazyLoader = lazyLoader;
         }
@@ -25,9 +23,8 @@ namespace LetsDoIt.Moody.Domain
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required]
-        [MaxLength(500)]
-        public string Name { get; set; }
+        [Key, ForeignKey(nameof(Category))]
+        public int CategoryId { get; set; }
 
         [Required]
         public int Order { get; set; }
@@ -35,17 +32,16 @@ namespace LetsDoIt.Moody.Domain
         [Required]
         public byte[] Image { get; set; }
 
-        [Required]
         public DateTime CreateDate { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
 
         public bool IsDeleted { get; set; }
 
-        public ICollection<CategoryDetails> CategoryDetail
+        public Category Categories
         {
-            get => LazyLoader.Load(this, ref _posts);
-            set => _posts = value;
+            get => LazyLoader.Load(this, ref _category);
+            set => _category = value;
         }
     }
 }

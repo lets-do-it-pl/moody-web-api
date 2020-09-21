@@ -1,4 +1,7 @@
-﻿namespace LetsDoIt.Moody.Web.Entities.Responses
+﻿using System.Collections.Generic;
+using LetsDoIt.Moody.Domain;
+
+namespace LetsDoIt.Moody.Web.Entities.Responses
 {
     public class CategoryEntity
     {
@@ -9,5 +12,6 @@
         public int Order { get; set; }
 
         public byte[] Image { get; set; }
+
     }
 }

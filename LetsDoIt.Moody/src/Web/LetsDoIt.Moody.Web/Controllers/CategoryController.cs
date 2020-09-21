@@ -2,9 +2,6 @@
 using System;
 using System.Threading.Tasks;
 using System.Linq;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.Extensions.Logging;
-using NLog;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -58,6 +55,27 @@ namespace LetsDoIt.Moody.Web.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        [Route("detail/insert")]
+        public async Task<IActionResult> InsertCategoryDetails([FromBody] CategoryDetailsInsertRequest insertRequest)
+        {
+
+            if (insertRequest == null)
+            {
+                return BadRequest();
+            }
+
+            var byteImage = Convert.FromBase64String(insertRequest.Image);
+
+            await _categoryService.InsertCategoryDetailsAsync(
+                insertRequest.CategoryId,
+                insertRequest.Id,
+                insertRequest.Order,
+                byteImage);
+
+            return Ok();
+        }
+
         [HttpPost, Route("update/{id}")]
         public async Task<IActionResult> Update(CategoryUpdateRequest updateRequest)
         {
@@ -88,6 +106,35 @@ namespace LetsDoIt.Moody.Web.Controllers
            
         }
 
+        [HttpPost, Route("detail/update")]
+        public async Task<IActionResult> UpdateCategoryDetails(CategoryUpdateRequest updateRequest)
+        {
+
+            if (updateRequest == null)
+            {
+
+                return BadRequest();
+            }
+
+            try
+            {
+                await _categoryService.UpdateCategoryDetailsAsync(
+                    updateRequest.Id,
+                    updateRequest.Order,
+                    updateRequest.Image);
+                return Ok();
+            }
+            catch (ObjectNotFoundException)
+            {
+                return NotFound(updateRequest.Id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
         [HttpDelete, Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -100,6 +147,25 @@ namespace LetsDoIt.Moody.Web.Controllers
             catch (ObjectNotFoundException)
             {
                 return NotFound(id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete, Route("detail/delete")]
+        public async Task<IActionResult> DeleteCategoryDetails(int categoryId)
+        {
+            try
+            {
+                await _categoryService.DeleteCategoryDetailsAsync(categoryId);
+
+                return Ok();
+            }
+            catch (ObjectNotFoundException)
+            {
+                return NotFound(categoryId);
             }
             catch (Exception)
             {
@@ -126,8 +192,9 @@ namespace LetsDoIt.Moody.Web.Controllers
                                                  Id = c.Id,
                                                  Name = c.Name,
                                                  Order = c.Order,
-                                                 Image = c.Image
+                                                 Image = c.Image,
                                              });
+                                            
             }
             return result;
         }
