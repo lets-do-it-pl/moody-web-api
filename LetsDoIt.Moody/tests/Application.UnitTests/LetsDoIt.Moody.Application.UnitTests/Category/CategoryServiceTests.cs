@@ -179,8 +179,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 
             _mockCategoryRepository.Verify(c => c.DeleteAsync(It.IsAny<Category>()), Times.Once);
 
-            _mockCategoryDetailsRepository.Verify(c => c.BulkDeleteAsync(It.IsAny<IList<CategoryDetails>>()), Times.Once);
-
             _mockVersionHistoryService.Verify(v => v.CreateNewVersionAsync(), Times.Once);
         }
 
