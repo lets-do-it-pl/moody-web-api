@@ -219,12 +219,11 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         [Fact]
         public async Task InsertCategoryDetailsAsync_NoException_ShouldInvokeRepositoryAddAsyncAndInvokeVersion()
         {
-            int categoryId = 1;
-            int id = 1;
+            var categoryId = 1;            
             var order = 5;
-            string image = "cGxlYXN1cmUu";
+            var image = "cGxlYXN1cmUu";
 
-            await _testing.InsertCategoryDetailsAsync(categoryId, id, order, image);
+            await _testing.InsertCategoryDetailsAsync(categoryId, order, image);
 
             _mockCategoryDetailsRepository.Verify(cd => cd.AddAsync(It.IsAny<CategoryDetails>()),
                 Times.Once);

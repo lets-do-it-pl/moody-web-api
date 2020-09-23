@@ -5,22 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LetsDoIt.Moody.Domain
 {
-
     public class Category : IEntity
-    {
-        private ICollection<CategoryDetails> _posts;
-
-        public Category()
-        {
-        }
-
-        private Category(Action<object, string> lazyLoader)
-        {
-            LazyLoader = lazyLoader;
-        }
-
-        private Action<object, string> LazyLoader { get; set; }
-
+    {        
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -40,12 +26,8 @@ namespace LetsDoIt.Moody.Domain
 
         public DateTime? ModifiedDate { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public virtual ICollection<CategoryDetails> CategoryDetails { get; set; }
 
-        public ICollection<CategoryDetails> CategoryDetail
-        {
-            get => LazyLoader.Load(this, ref _posts);
-            set => _posts = value;
-        }
+        public bool IsDeleted { get; set; }
     }
 }

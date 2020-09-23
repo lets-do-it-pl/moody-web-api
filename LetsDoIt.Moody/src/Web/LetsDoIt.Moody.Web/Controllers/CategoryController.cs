@@ -2,10 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
-using LetsDoIt.Moody.Application.User;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.Extensions.Logging;
-using NLog;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -13,8 +9,9 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Application.CustomExceptions;
     using Entities.Requests;
     using Entities.Responses;
+    using LetsDoIt.Moody.Domain;
 
-    [ApiController] 
+    [ApiController]
     [Route("api/categories")]
     public class CategoryController : ControllerBase
     {
@@ -43,7 +40,6 @@ namespace LetsDoIt.Moody.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody] CategoryInsertRequest insertRequest)
         {
-
             if (insertRequest == null)
             {
                 return BadRequest();
@@ -60,38 +56,34 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpPost]
-        [Route("detail/insert")]
-        public async Task<IActionResult> InsertCategoryDetails([FromBody] CategoryDetailsInsertRequest insertRequest)
+        [Route("/{categoryId}/details")]
+        public async Task<IActionResult> InsertCategoryDetails(int categoryId, [FromBody] CategoryDetailsInsertRequest insertRequest)
         {
-
             if (insertRequest == null)
             {
                 return BadRequest();
             }
 
             await _categoryService.InsertCategoryDetailsAsync(
-                insertRequest.CategoryId,
-                insertRequest.Id,
+                categoryId,                
                 insertRequest.Order,
                 insertRequest.Image);
 
             return Ok();
         }
 
-        [HttpPost, Route("update/{id}")]
-        public async Task<IActionResult> Update(CategoryUpdateRequest updateRequest)
+        [HttpPut, Route("{id}")]
+        public async Task<IActionResult> Update(int id, CategoryUpdateRequest updateRequest)
         {
-
-            if (updateRequest == null)  
+            if (updateRequest == null)
             {
-  
                 return BadRequest();
             }
 
             try
             {
                 await _categoryService.UpdateAsync(
-                    updateRequest.Id,
+                    id,
                     updateRequest.Name,
                     updateRequest.Order,
                     updateRequest.Image);
@@ -99,36 +91,34 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
             catch (ObjectNotFoundException)
             {
-                return NotFound(updateRequest.Id);
+                return NotFound(id);
             }
             catch (Exception)
             {
                 throw;
             }
-           
+
         }
 
-        [HttpPost, Route("detail/update/{id}")]
-        public async Task<IActionResult> UpdateCategoryDetails(CategoryDetailsUpdateRequest updateRequest)
+        [HttpPut, Route("/{categoryId}/details/{categoryDetailsId}")]
+        public async Task<IActionResult> UpdateCategoryDetails(int categoryDetailsId, CategoryDetailsUpdateRequest updateRequest)
         {
-
             if (updateRequest == null)
             {
-
                 return BadRequest();
             }
 
             try
             {
                 await _categoryService.UpdateCategoryDetailsAsync(
-                    updateRequest.Id,
+                    categoryDetailsId,
                     updateRequest.Order,
                     updateRequest.Image);
                 return Ok();
             }
             catch (ObjectNotFoundException)
             {
-                return NotFound(updateRequest.Id);
+                return NotFound(categoryDetailsId);
             }
             catch (Exception)
             {
@@ -156,18 +146,18 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
         }
 
-        [HttpDelete, Route("detail/delete")]
-        public async Task<IActionResult> DeleteCategoryDetails(int categoryId)
+        [HttpDelete, Route("/{categoryId}/details/{categoryDetailsId}")]
+        public async Task<IActionResult> DeleteCategoryDetails(int categoryDetailsId)
         {
             try
             {
-                await _categoryService.DeleteCategoryDetailsAsync(categoryId);
+                await _categoryService.DeleteCategoryDetailsAsync(categoryDetailsId);
 
                 return Ok();
             }
             catch (ObjectNotFoundException)
             {
-                return NotFound(categoryId);
+                return NotFound(categoryDetailsId);
             }
             catch (Exception)
             {
@@ -176,38 +166,47 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         private CategoryResponse ToCategoryResponse(CategoryGetResult categoryResult)
-        { 
+        {
             var result = new CategoryResponse
-                        {
-                            IsUpdated = categoryResult.IsUpdated,
-                            VersionNumber = categoryResult.VersionNumber                            
-                        };
-            if(categoryResult.Categories != null)
+            {
+                IsUpdated = categoryResult.IsUpdated,
+                VersionNumber = categoryResult.VersionNumber
+            };
+
+            if (categoryResult.Categories != null)
             {
                 result.Categories = categoryResult
                     .Categories
-                    .Select(c =>
-                            new CategoryEntity
-                            {
-                                Id = c.Id,
-                                Name = c.Name,
-                                Order = c.Order,
-                                Image = c.Image,
-                                CategoryDetails = c.CategoryDetail
-                                                    .Select(c =>
-                                                    new CategoryDetailsEntity
-                                                    {
-                                                        Id = c.Id,
-                                                        Image = c.Image,
-                                                        Order = c.Order
-
-                                                    }).ToList()
-                            });
-                                            
+                    .Select(c => ToCategoryEntity(c));
             }
 
-            return result ;
+            return result;
         }
+
+        private static Entities.Responses.CategoryEntity ToCategoryEntity(Category c)
+        {
+            var result = new Entities.Responses.CategoryEntity
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Order = c.Order,
+                Image = c.Image                
+            };
+
+            if(c.CategoryDetails != null)
+            {
+                result.CategoryDetails = c.CategoryDetails.Select(c => ToCategoryDetailsEntity(c)).ToList();
+            }
+
+            return result;
+        }
+
+        private static CategoryDetailsEntity ToCategoryDetailsEntity(CategoryDetails c) => new CategoryDetailsEntity
+        {
+            Id = c.Id,
+            Image = c.Image,
+            Order = c.Order
+        };
     }
 }
 

@@ -6,24 +6,11 @@ namespace LetsDoIt.Moody.Domain
 {
     public class CategoryDetails : IEntity
     {
-        private Category _category;
-
-        public CategoryDetails()
-        {
-        }
-
-        private CategoryDetails(Action<object, string> lazyLoader)
-        {
-            LazyLoader = lazyLoader;
-        }
-
-        private Action<object, string> LazyLoader { get; set; }
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Key, ForeignKey(nameof(Category))]
+        [ForeignKey(nameof(Domain.Category))]
         public int CategoryId { get; set; }
 
         [Required]
@@ -38,10 +25,6 @@ namespace LetsDoIt.Moody.Domain
 
         public bool IsDeleted { get; set; }
 
-        public Category Categories
-        {
-            get => LazyLoader.Load(this, ref _category);
-            set => _category = value;
-        }
+        public virtual Category Category { get; set; }
     }
 }

@@ -8,14 +8,14 @@ namespace LetsDoIt.Moody.Persistance
     {
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
                   : base(options)
-        {
+        {            
         }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CategoryDetails>()
-                .HasOne<Category>(c => c.Categories)
-                .WithMany(c => c.CategoryDetail)
+                .HasOne(c => c.Category)
+                .WithMany(c => c.CategoryDetails)
                 .HasForeignKey(c => c.CategoryId);
         }
 
@@ -27,6 +27,6 @@ namespace LetsDoIt.Moody.Persistance
 
         public DbSet<VersionHistory> VersionHistories { get; set; }
 
-        public DbSet<CategoryDetails> CategoryDetail {get; set;}
+        public DbSet<CategoryDetails> CategoryDetail { get; set; }
     }
 }
