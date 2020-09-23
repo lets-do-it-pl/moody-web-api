@@ -9,6 +9,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 {
 
     using Domain;
+    using EFCore.BulkExtensions;
 
     public abstract class EntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         where TEntity : class, IEntity
@@ -22,7 +23,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 
         public virtual async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter = null)
         {
-            return filter == null
+            return filter == null 
                 ? await _context.Set<TEntity>().ToListAsync()
                 : await _context.Set<TEntity>().Where(filter).ToListAsync();
         }
@@ -73,6 +74,16 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             deletedEntity.State = EntityState.Modified;
             
             await _context.SaveChangesAsync();
+        }
+
+        public virtual async Task BulkDeleteAsync(IList<TEntity> entities)
+        {
+            foreach(var entity in entities)
+            {
+                entity.ModifiedDate = DateTime.UtcNow;
+                entity.IsDeleted = true;
+            }
+            await _context.BulkUpdateAsync(entities);
         }
     }
 }

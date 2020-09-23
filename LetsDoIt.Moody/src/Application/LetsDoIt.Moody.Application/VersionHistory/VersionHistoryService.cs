@@ -12,11 +12,14 @@ namespace LetsDoIt.Moody.Application.VersionHistory
     {
         private readonly IEntityRepository<VersionHistory> _versionHistoryRepository;
         private readonly IEntityRepository<Category> _categoryRepository;
+        private readonly IEntityRepository<CategoryDetails> _categoryDetailsRepository;
 
         public VersionHistoryService(
             IEntityRepository<Category> categoryRepository,
-            IEntityRepository<VersionHistory> versionHistoryRepository)
+            IEntityRepository<VersionHistory> versionHistoryRepository,
+            IEntityRepository<CategoryDetails> categoryDetailsRepository)
         {
+            _categoryDetailsRepository = categoryDetailsRepository;
             _versionHistoryRepository = versionHistoryRepository;
             _categoryRepository = categoryRepository;
         }

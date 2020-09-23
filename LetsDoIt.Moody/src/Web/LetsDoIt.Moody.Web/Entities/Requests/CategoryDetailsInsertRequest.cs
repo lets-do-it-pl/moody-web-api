@@ -2,14 +2,11 @@
 
 namespace LetsDoIt.Moody.Web.Entities.Requests
 {
-    public class CategoryUpdateRequest
+    public class CategoryDetailsInsertRequest
     {
-        [Required]
-        public string Name { get; set; }
-
         public int Order { get; set; }
 
         [Required]
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
     }
 }

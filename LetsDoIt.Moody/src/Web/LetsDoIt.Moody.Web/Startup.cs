@@ -37,7 +37,14 @@ namespace LetsDoIt.Moody.Web
             services.AddResponseCompression();
 
             var connectionString = _config.GetConnectionString("MoodyDBConnection");
-            services.AddDbContext<ApplicationContext>(opt =>opt.UseSqlServer(connectionString));
+
+            services.AddDbContext<ApplicationContext>(opt =>
+                opt.UseSqlServer(
+                    connectionString,
+                    builder =>
+                    {
+                        builder.MigrationsAssembly("LetsDoIt.Moody.Persistance");
+                    }).UseLazyLoadingProxies());
 
             services.AddControllers();
 
@@ -76,6 +83,7 @@ namespace LetsDoIt.Moody.Web
             services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
             services.AddTransient<IEntityRepository<User>, UserRepository>();
             services.AddTransient<IEntityRepository<UserToken>, UserTokenRepository>();
+            services.AddTransient<IEntityRepository<CategoryDetails>, CategoryDetailsRepository>();
 
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
@@ -109,7 +117,7 @@ namespace LetsDoIt.Moody.Web
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
-            
+
             app.UseRouting();
 
             app.UseSwagger();
