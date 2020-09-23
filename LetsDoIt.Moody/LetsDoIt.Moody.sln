@@ -51,7 +51,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Web.UnitTest
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TemporaryTokenGenerator", "TemporaryTokenGenerator", "{CD56FDFF-92E3-43A2-B758-0C6366D0EEE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetsDoIt.Moody.TemporaryTokenGenerator", "src\LetsDoIt.Moody.TemporaryTokenGenerator\LetsDoIt.Moody.TemporaryTokenGenerator.csproj", "{3C5F33DB-2318-4A98-A25D-54782A988BDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.TemporaryTokenGenerator", "src\LetsDoIt.Moody.TemporaryTokenGenerator\LetsDoIt.Moody.TemporaryTokenGenerator.csproj", "{3C5F33DB-2318-4A98-A25D-54782A988BDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
