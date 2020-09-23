@@ -30,9 +30,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 await _userService.SaveUserAsync(
                                 saveRequest.Username,
-                                saveRequest.Password);
-
-                
+                                saveRequest.Password);                
 
                 return StatusCode((int)HttpStatusCode.Created,"Created");
 
