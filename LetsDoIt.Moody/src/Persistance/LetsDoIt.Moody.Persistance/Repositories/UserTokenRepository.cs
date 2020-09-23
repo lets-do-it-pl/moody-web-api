@@ -11,16 +11,23 @@
 
     public class UserTokenRepository : IEntityRepository<UserToken>
     {
+
         private readonly ApplicationContext _context;
 
-        public UserTokenRepository(ApplicationContext context)
+        public UserTokenRepository(ApplicationContext context) 
         {
             _context = context;
         }
 
-        public Task<UserToken> AddAsync(UserToken entity)
+        public async Task<UserToken> AddAsync(UserToken entity)
         {
-            throw new NotImplementedException();
+            var addedEntity = _context.Entry(entity);
+
+            addedEntity.State = EntityState.Added;
+
+            await _context.SaveChangesAsync();
+
+            return entity;
         }
 
         public Task BulkDeleteAsync(IList<UserToken> entities)
