@@ -11,9 +11,14 @@ namespace LetsDoIt.Moody.Persistance.Repositories
 
     public class CategoryRepository : EntityRepositoryBase<Category>
     {
-        public CategoryRepository(ApplicationContext context) 
+        private readonly IEntityRepository<CategoryDetails> _categoryDetailsRepository;
+
+        public CategoryRepository(
+            ApplicationContext context, 
+            IEntityRepository<CategoryDetails> categoryDetailsRepository)
             : base(context)
         {
+            _categoryDetailsRepository = categoryDetailsRepository;
         }
 
         public override async Task<List<Category>> GetListAsync(Expression<Func<Category, bool>> filter = null)
@@ -31,6 +36,16 @@ namespace LetsDoIt.Moody.Persistance.Repositories
             }
 
             return categories;
+        }
+
+
+        public override async Task DeleteAsync(Category entity)
+        {
+            var categoryDetails = await _categoryDetailsRepository.GetListAsync(c => c.CategoryId == entity.Id && !c.IsDeleted);
+
+            await _categoryDetailsRepository.BulkDeleteAsync(categoryDetails);
+
+            await base.DeleteAsync(entity);
         }
     }
 }

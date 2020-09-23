@@ -113,14 +113,15 @@ namespace LetsDoIt.Moody.Application.Category
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await _categoryRepository.GetAsync(c => c.Id == id);
-            var detailsEntity = await _categoryDetailsRepository.GetListAsync(c => c.CategoryId == id);
-            if (entity == null)
+            var category = await _categoryRepository.GetAsync(c => c.Id == id && !c.IsDeleted);
+            
+            if (category == null)
             {
                 throw new ObjectNotFoundException("Category", id);
             }
-            await _categoryRepository.DeleteAsync(entity);
-            await _categoryDetailsRepository.BulkDeleteAsync(detailsEntity);
+
+            await _categoryRepository.DeleteAsync(category);
+
             await _versionHistoryService.CreateNewVersionAsync();
         }
 
