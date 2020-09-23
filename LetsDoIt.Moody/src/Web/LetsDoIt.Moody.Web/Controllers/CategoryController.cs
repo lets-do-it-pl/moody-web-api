@@ -65,13 +65,11 @@ namespace LetsDoIt.Moody.Web.Controllers
                 return BadRequest();
             }
 
-            var byteImage = Convert.FromBase64String(insertRequest.Image);
-
             await _categoryService.InsertCategoryDetailsAsync(
                 insertRequest.CategoryId,
                 insertRequest.Id,
                 insertRequest.Order,
-                byteImage);
+                insertRequest.Image);
 
             return Ok();
         }
@@ -106,8 +104,8 @@ namespace LetsDoIt.Moody.Web.Controllers
            
         }
 
-        [HttpPost, Route("detail/update")]
-        public async Task<IActionResult> UpdateCategoryDetails(CategoryUpdateRequest updateRequest)
+        [HttpPost, Route("detail/update/{id}")]
+        public async Task<IActionResult> UpdateCategoryDetails(CategoryDetailsUpdateRequest updateRequest)
         {
 
             if (updateRequest == null)
@@ -174,29 +172,37 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         private CategoryResponse ToCategoryResponse(CategoryGetResult categoryResult)
-        {
-
+        { 
             var result = new CategoryResponse
                         {
                             IsUpdated = categoryResult.IsUpdated,
                             VersionNumber = categoryResult.VersionNumber                            
                         };
-
             if(categoryResult.Categories != null)
             {
                 result.Categories = categoryResult
-                                        .Categories
-                                        .Select(c =>
-                                             new CategoryEntity
-                                             {
-                                                 Id = c.Id,
-                                                 Name = c.Name,
-                                                 Order = c.Order,
-                                                 Image = c.Image,
-                                             });
+                    .Categories
+                    .Select(c =>
+                            new CategoryEntity
+                            {
+                                Id = c.Id,
+                                Name = c.Name,
+                                Order = c.Order,
+                                Image = c.Image,
+                                CategoryDetails = c.CategoryDetail
+                                                    .Select(c =>
+                                                    new CategoryDetailsEntity
+                                                    {
+                                                        Id = c.Id,
+                                                        Image = c.Image,
+                                                        Order = c.Order
+
+                                                    }).ToList()
+                            });
                                             
             }
-            return result;
+
+            return result ;
         }
     }
 }

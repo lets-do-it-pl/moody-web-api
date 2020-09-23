@@ -23,6 +23,11 @@
             throw new NotImplementedException();
         }
 
+        public Task BulkDeleteAsync(IList<UserToken> entities)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task DeleteAsync(UserToken entity)
         {
             throw new NotImplementedException();

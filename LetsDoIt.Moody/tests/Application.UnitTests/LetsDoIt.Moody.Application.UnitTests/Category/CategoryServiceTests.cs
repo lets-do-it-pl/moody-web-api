@@ -22,15 +22,18 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         private readonly Mock<IEntityRepository<Category>> _mockCategoryRepository;
         private readonly Mock<IEntityRepository<VersionHistory>> _mockVersionHistoryRepository;
         private readonly Mock<IVersionHistoryService> _mockVersionHistoryService;
+        private readonly Mock<IEntityRepository<CategoryDetails>> _mockCategoryDetailsRepository;
 
         public CategoryServiceTests()
         {
             _mockCategoryRepository = new Mock<IEntityRepository<Category>>();
             _mockVersionHistoryRepository = new Mock<IEntityRepository<VersionHistory>>();
             _mockVersionHistoryService = new Mock<IVersionHistoryService>();
+            _mockCategoryDetailsRepository = new Mock<IEntityRepository<CategoryDetails>>();
 
             _testing = new CategoryService(
                     _mockCategoryRepository.Object,
+                    _mockCategoryDetailsRepository.Object,
                     _mockVersionHistoryRepository.Object,
                     _mockVersionHistoryService.Object);
         }
@@ -176,6 +179,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 
             _mockCategoryRepository.Verify(c => c.DeleteAsync(It.IsAny<Category>()), Times.Once);
 
+            _mockCategoryDetailsRepository.Verify(c => c.BulkDeleteAsync(It.IsAny<IList<CategoryDetails>>()), Times.Once);
+
             _mockVersionHistoryService.Verify(v => v.CreateNewVersionAsync(), Times.Once);
         }
 
@@ -209,6 +214,58 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 
             _mockVersionHistoryService.Verify(ur =>
                 ur.CreateNewVersionAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task InsertCategoryDetailsAsync_NoException_ShouldInvokeRepositoryAddAsyncAndInvokeVersion()
+        {
+            int categoryId = 1;
+            int id = 1;
+            var order = 5;
+            string image = "cGxlYXN1cmUu";
+
+            await _testing.InsertCategoryDetailsAsync(categoryId, id, order, image);
+
+            _mockCategoryDetailsRepository.Verify(cd => cd.AddAsync(It.IsAny<CategoryDetails>()),
+                Times.Once);
+
+            _mockVersionHistoryService.Verify(v =>
+                v.CreateNewVersionAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteCategoryDetailsAsync_IdExists_DeleteIdAndCreateNewVersion()
+        {
+            var categoryDetail = new CategoryDetails
+            {
+                Id = 3
+            };
+
+            _mockCategoryDetailsRepository
+                .Setup(repository => repository.GetAsync(It.IsNotNull<Expression<Func<CategoryDetails, bool>>>()))
+                .ReturnsAsync(categoryDetail);
+
+
+            await _testing.DeleteCategoryDetailsAsync(categoryDetail.Id);
+
+            _mockCategoryDetailsRepository.Verify(c => c.DeleteAsync(It.IsAny<CategoryDetails>()), Times.Once);
+
+            _mockVersionHistoryService.Verify(v => v.CreateNewVersionAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteCategoryDetailsAsync_IdDoesNotExistsInTheDatabase_ThrowsObjectNotFoundException()
+        {
+            var categoryDetail = new CategoryDetails
+            {
+                Id = 3
+            };
+
+            _mockCategoryRepository.Setup(repo => repo.GetAsync(c => c.Id == It.IsAny<int>()));
+
+            async Task Test() => await _testing.DeleteAsync(categoryDetail.Id);
+
+            await Assert.ThrowsAsync<ObjectNotFoundException>(Test);
         }
     }
 }

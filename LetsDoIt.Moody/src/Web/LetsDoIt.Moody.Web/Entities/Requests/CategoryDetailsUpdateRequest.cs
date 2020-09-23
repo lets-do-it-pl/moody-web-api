@@ -10,6 +10,6 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
         public int Order { get; set; }
 
         [Required]
-        public string Image { get; set; }
+        public byte[] Image { get; set; }
     }
 }

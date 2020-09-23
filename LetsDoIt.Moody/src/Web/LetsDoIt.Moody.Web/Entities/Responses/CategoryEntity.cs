@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using LetsDoIt.Moody.Domain;
 
 namespace LetsDoIt.Moody.Web.Entities.Responses
 {
@@ -13,5 +12,6 @@ namespace LetsDoIt.Moody.Web.Entities.Responses
 
         public byte[] Image { get; set; }
 
+        public ICollection<CategoryDetailsEntity> CategoryDetails { get; set; }
     }
 }

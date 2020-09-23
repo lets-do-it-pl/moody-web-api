@@ -14,7 +14,10 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
     public class CategoryControllerTests
     {
         private readonly byte[] _byteImage;
+        private readonly CategoryDetailsInsertRequest _insertRequest;
+        private readonly CategoryDetailsUpdateRequest _updateRequest, _updateRequestWithoutId, _updateRequstWithoutImage;
         private readonly CategoryInsertRequest _request;
+        private readonly byte[] image = { 12, 45, 65, 34, 78, 89 };
         private readonly CategoryController _testing;
         private readonly Mock<ICategoryService> _mockCategoryService;
         #region SetUp & Helpers
@@ -23,12 +26,35 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         {
             _mockCategoryService = new Mock<ICategoryService>();
             _testing = new CategoryController(_mockCategoryService.Object);
+            _updateRequstWithoutImage = new CategoryDetailsUpdateRequest
+            {
+                Id = 2,
+                Order = 3
+            };
+            _updateRequestWithoutId = new CategoryDetailsUpdateRequest
+            {
+                Order = 5,
+                Image = image
+            };
+            _updateRequest = new CategoryDetailsUpdateRequest
+            {
+                Id = 3,
+                Image = image,
+                Order = 4
+            };
+            _insertRequest = new CategoryDetailsInsertRequest
+            {
+                CategoryId = 1,
+                Id = 3,
+                Image = "cGxlYXN1cmUu",
+                Order = 4
+            };
             _request = new CategoryInsertRequest
             {
                 Name = "adsfasdf",
                 Order = 5,
                 Image = "USrCELxGejBZI4W/Llsvmw==\r\n"
-            }; 
+            };
             _byteImage = Convert.FromBase64String(_request.Image);
 
         }
@@ -194,5 +220,118 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             Assert.IsType<OkResult>(actual);
         }
 
+        [Fact]
+        public async Task InsertCategoryDetails_NullInsertRequest_ShouldReturnBadRequest()
+        {
+            CategoryDetailsInsertRequest insertRequest = null;
+
+            var actual = await _testing.InsertCategoryDetails(insertRequest);
+
+            Assert.IsType<BadRequestResult>(actual);
+        }
+
+        [Fact]
+        public async Task InsertCategoryDetails_ThereIsAnInsertRequest_ShouldReturnOk()
+        {
+            var actual = await _testing.InsertCategoryDetails(_insertRequest);
+
+            _mockCategoryService
+                .Verify(service =>
+                        service.InsertCategoryDetailsAsync(
+                            _insertRequest.CategoryId,
+                            _insertRequest.Id,
+                            _insertRequest.Order,
+                            _insertRequest.Image)
+                    , Times.Once);
+            Assert.IsType<OkResult>(actual);
+        }
+
+        [Fact]
+        public async Task DeleteCategoryDetails_WithoutId_ShoulThrowObjectNotFoundException()
+        {
+            var id = 3;
+
+            _mockCategoryService
+                .Setup(service =>
+                    service.DeleteCategoryDetailsAsync(
+                                It.IsAny<int>()))
+                .Throws(new ObjectNotFoundException(""));
+
+            var actual = await _testing.DeleteCategoryDetails(id);
+
+            Assert.IsType<NotFoundObjectResult>(actual);
+
+        }
+
+        [Fact]
+        public async Task DeleteCategoryDetails_IdExists_ShoulReturnOk()
+        {
+            var id = 3;
+
+            _mockCategoryService
+                .Setup(service =>
+                    service.DeleteCategoryDetailsAsync(
+                                It.IsAny<int>()));
+
+            var actual = await _testing.DeleteCategoryDetails(id);
+            Assert.IsType<OkResult>(actual);
+
+        }
+
+        [Fact]
+        public async Task UpdateCategoryDetails_NullUpdateRequest_ShouldReturnBadRequest()
+        {
+            CategoryDetailsUpdateRequest request = null;
+
+            var actual = await _testing.UpdateCategoryDetails(request);
+
+            Assert.IsType<BadRequestResult>(actual);
+        }
+
+        [Fact]
+        public async Task UpdateCategoryDetails_UpdateRequest_ShouldReturnOk()
+        {
+            var actual = await _testing.UpdateCategoryDetails(_updateRequest);
+
+            _mockCategoryService
+                .Verify(service =>
+                        service.UpdateCategoryDetailsAsync(
+                            _updateRequest.Id,
+                            _updateRequest.Order,
+                            _updateRequest.Image)
+                    , Times.Once);
+
+            Assert.IsType<OkResult>(actual);
+        }
+
+        [Fact]
+        public async Task UpdateCategoryDetails_UpdateRequestWithoutId_ShouldThrowObjectNotFoundException()
+        {
+            _mockCategoryService
+                .Setup(c =>
+                        c.UpdateCategoryDetailsAsync(
+                            It.IsAny<int>(),
+                            _updateRequestWithoutId.Order,
+                             _updateRequestWithoutId.Image)
+                    ).Throws(new ObjectNotFoundException(""));
+
+            var actual = await _testing.UpdateCategoryDetails(_updateRequestWithoutId);
+
+            Assert.IsType<NotFoundObjectResult>(actual);
+        }
+
+        [Fact]
+        public async Task UpdateCategoryDetails_UpdateRequestWithoutImage_ShouldThrowAnException()
+        {
+            _mockCategoryService
+                .Setup(service =>
+                    service.UpdateCategoryDetailsAsync(
+                                _updateRequstWithoutImage.Id,
+                                _updateRequstWithoutImage.Order,
+                                It.IsAny<byte[]>()))
+                .Throws<Exception>();
+
+            await Assert.ThrowsAsync<Exception>(() => _testing.UpdateCategoryDetails(_updateRequstWithoutImage));
+        }
     }
 }

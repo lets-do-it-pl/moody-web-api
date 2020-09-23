@@ -1,13 +1,14 @@
 ﻿using NGuard;
+using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace LetsDoIt.Moody.Application.Category
 {
     using Domain;
+    using VersionHistory;
     using CustomExceptions;
     using Persistance.Repositories.Base;
-    using VersionHistory;
-    using System.Collections.Generic;
 
     public class CategoryService : ICategoryService
     {
@@ -65,14 +66,16 @@ namespace LetsDoIt.Moody.Application.Category
             await _versionHistoryService.CreateNewVersionAsync();
         }
 
-        public async Task InsertCategoryDetailsAsync(int categoryId, int id, int order, byte[] image)
+        public async Task InsertCategoryDetailsAsync(int categoryId, int id, int order, string image)
         {
+            var byteImage = Convert.FromBase64String(image);
+
             await _categoryDetailsRepository.AddAsync(new CategoryDetails
             {
                 CategoryId = categoryId,
                 Id = id,
                 Order = order,
-                Image = image
+                Image = byteImage
             });
 
             await _versionHistoryService.CreateNewVersionAsync();
@@ -108,7 +111,6 @@ namespace LetsDoIt.Moody.Application.Category
             entity.Image = image;
 
             await _categoryDetailsRepository.UpdateAsync(entity);
-
             await _versionHistoryService.CreateNewVersionAsync();
         }
 
@@ -133,7 +135,6 @@ namespace LetsDoIt.Moody.Application.Category
                 throw new ObjectNotFoundException("Category Detail", id);
             }
             await _categoryDetailsRepository.DeleteAsync(entity);
-
             await _versionHistoryService.CreateNewVersionAsync();
         }
     }
