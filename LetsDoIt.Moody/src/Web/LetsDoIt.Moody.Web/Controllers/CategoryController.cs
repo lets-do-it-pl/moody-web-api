@@ -1,7 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+<<<<<<< HEAD
+=======
+using LetsDoIt.Moody.Application.User;
+using LetsDoIt.Moody.Web.Filters;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.Logging;
+using NLog;
+>>>>>>> 36a23d9896b414ceec473837e696540fd22d4b1e
+
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -10,8 +19,9 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Entities.Requests;
     using Entities.Responses;
 
-    [ApiController]
+    [ApiController] 
     [Route("api/categories")]
+    [Authorization]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
