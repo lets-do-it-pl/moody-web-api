@@ -8,11 +8,13 @@ using FluentAssertions;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Xunit;
+using Microsoft.EntityFrameworkCore.Sqlite;
 
 namespace LetsDoIt.Moody.Application.IntegrationTests.Category
 {
     using Web;
     using Web.Entities.Requests;
+    using Application.IntegrationTests;
 
     public class CategoryRelatedTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
@@ -29,9 +31,11 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
             _factory.ResetDbForTests();
         }
 
+
         [Fact]
         public async Task Insert_ShouldReturnCreatedStatusCodeAndRecordToDatabase()
         {
+            
             // Arrange
             var userToken = _factory.GetUserTokenForTestsAndRecordToDatabase();
 
@@ -52,10 +56,10 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            //var user = await _factory.UserRepositoryVar.GetAsync(u => u.UserName == "good.username");
+            var user = await _factory.UserRepositoryVar.GetAsync(u => u.UserName == "good.username");
 
-            //Assert.NotNull(user);
-            //Assert.Equal("good.username", user.UserName);
+            Assert.NotNull(user);
+            Assert.Equal("good.username", user.UserName);
 
         }
 

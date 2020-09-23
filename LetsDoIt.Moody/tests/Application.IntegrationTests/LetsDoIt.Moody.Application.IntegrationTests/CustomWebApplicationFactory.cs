@@ -7,12 +7,15 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore.Sqlite;
 
 namespace LetsDoIt.Moody.Application.IntegrationTests
 {
+    using Microsoft.Data.Sqlite;
     using Persistance;
     using Persistance.Repositories.Base;
     using Web;
+
 
     public class CustomWebApplicationFactory<TStartup>:WebApplicationFactory<Startup> where TStartup : class
     {
@@ -20,8 +23,10 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
         public IEntityRepository<Domain.User> UserRepositoryVar;
         public IEntityRepository<Domain.Category> CategoryRepositoryVar;
         public IEntityRepository<UserToken> UserTokenRepositoryVar;
+
         private  ServiceProvider _serviceProvider;
         private  ApplicationContext _dbContext;
+
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -34,11 +39,12 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
                 if (descriptor != null)
                 {
                   services.Remove(descriptor);
-                }
+                }                
 
                 services.AddDbContext<ApplicationContext>(options =>
                 {
-                    options.UseInMemoryDatabase(new Guid().ToString(),_databaseRoot);
+                        options.UseInMemoryDatabase(new Guid().ToString(), _databaseRoot);
+                    
                 });
 
                 _serviceProvider = services.BuildServiceProvider();
@@ -48,6 +54,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
                 UserRepositoryVar = scopedServices.GetRequiredService<IEntityRepository<Domain.User>>();
                 CategoryRepositoryVar = scopedServices.GetRequiredService<IEntityRepository<Domain.Category>>();
                 UserTokenRepositoryVar = scopedServices.GetRequiredService<IEntityRepository<UserToken>>();
+
 
                 _dbContext.Database.EnsureCreated();
             });
@@ -75,7 +82,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
 
         public UserToken GetUserTokenForTestsAndRecordToDatabase()
         {
-
+            
             var user = new Domain.User
             {
                 Id = 1,
@@ -89,7 +96,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
             {
                 UserId = 1,
                 User = user,
-                Token = "123",
+                Token = TemporaryToken.GenerateTemporaryToken(),
                 ExpirationDate = DateTime.UtcNow.AddMinutes(1440)
             };
 
