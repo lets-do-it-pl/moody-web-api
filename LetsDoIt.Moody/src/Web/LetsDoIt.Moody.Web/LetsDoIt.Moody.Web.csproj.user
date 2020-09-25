@@ -5,5 +5,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>LetsDoIt.Moody.Web</ActiveDebugProfile>
+    <Controller_SelectedScaffolderID>MvcControllerEmptyScaffolder</Controller_SelectedScaffolderID>
+    <Controller_SelectedScaffolderCategoryPath>root/Controller</Controller_SelectedScaffolderCategoryPath>
   </PropertyGroup>
 </Project>

@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Authentication;
 using System.Data;
 using System.Net;
- using LetsDoIt.Moody.Web.Controllers;
-using Microsoft.Extensions.Logging;
+using LetsDoIt.Moody.Web.Controllers;
 
 namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
@@ -16,12 +15,10 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
     {
         private readonly UserController _testing;
         private readonly Mock<IUserService> _mockUserService;
-        private readonly Mock<ILogger<UserController>> _mockILogger;
         public UserControllerTests()
         {
-            _mockILogger = new Mock<ILogger<UserController>>();
             _mockUserService = new Mock<IUserService>();
-            _testing = new UserController(_mockUserService.Object, _mockILogger.Object);
+            _testing = new UserController(_mockUserService.Object);
         }
 
         [Fact]

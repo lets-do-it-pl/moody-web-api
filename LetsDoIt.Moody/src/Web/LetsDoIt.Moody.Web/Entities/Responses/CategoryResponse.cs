@@ -1,5 +1,4 @@
-﻿using LetsDoIt.Moody.Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace LetsDoIt.Moody.Web.Entities.Responses
 {

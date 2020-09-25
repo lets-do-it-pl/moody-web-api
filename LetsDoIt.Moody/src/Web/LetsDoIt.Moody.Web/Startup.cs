@@ -1,3 +1,4 @@
+using LetsDoIt.Moody.Web.Filters;
 using LetsDoIt.Moody.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,10 +33,18 @@ namespace LetsDoIt.Moody.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddResponseCompression();
 
             var connectionString = _config.GetConnectionString("MoodyDBConnection");
-            services.AddDbContext<ApplicationContext>(opt =>opt.UseSqlServer(connectionString));
+
+            services.AddDbContext<ApplicationContext>(opt =>
+                opt.UseSqlServer(
+                    connectionString,
+                    builder =>
+                    {
+                        builder.MigrationsAssembly("LetsDoIt.Moody.Persistance");
+                    }).UseLazyLoadingProxies());
 
             services.AddControllers();
 
@@ -47,6 +56,25 @@ namespace LetsDoIt.Moody.Web
                     Version = "v1",
                     Description = "Moody API details are here."
                 });
+
+                var securitySchema = new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                };
+                c.AddSecurityDefinition("Bearer", securitySchema);
+
+                var securityRequirement = new OpenApiSecurityRequirement();
+                securityRequirement.Add(securitySchema, new[] { "Bearer" });
+                c.AddSecurityRequirement(securityRequirement);
             });
 
             var tokenExpirationMinutes = _config.GetValue<int>("TokenExpirationMinutes");
@@ -55,6 +83,7 @@ namespace LetsDoIt.Moody.Web
             services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
             services.AddTransient<IEntityRepository<User>, UserRepository>();
             services.AddTransient<IEntityRepository<UserToken>, UserTokenRepository>();
+            services.AddTransient<IEntityRepository<CategoryDetails>, CategoryDetailsRepository>();
 
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
@@ -64,6 +93,11 @@ namespace LetsDoIt.Moody.Web
                     JwtEncryptionKey,
                     tokenExpirationMinutes
                 ));
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<TokenAuthorizationFilter>();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,8 +115,9 @@ namespace LetsDoIt.Moody.Web
             app.UseResponseCompression();
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
-            
+
             app.UseRouting();
 
             app.UseSwagger();

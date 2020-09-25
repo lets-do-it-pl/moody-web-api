@@ -56,5 +56,10 @@ namespace LetsDoIt.Moody.Persistance.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public Task BulkDeleteAsync(IList<VersionHistory> entities)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

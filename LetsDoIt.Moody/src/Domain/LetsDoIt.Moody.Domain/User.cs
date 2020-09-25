@@ -25,6 +25,6 @@ namespace LetsDoIt.Moody.Domain
 
         public bool IsDeleted { get; set; } 
 
-        public UserToken UserToken { get; set; }
+        public virtual UserToken UserToken { get; set; }
     }
 }
