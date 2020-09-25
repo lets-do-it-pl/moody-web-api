@@ -30,14 +30,14 @@ namespace LetsDoIt.Moody.Web.Controllers
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> SaveUser(SaveUserRequest saveRequest)
         {
-            _logger.LogInformation($"{SaveUser(saveRequest)} is started with save request = {saveRequest}");
+            _logger.LogInformation($"{nameof(SaveUser)} is started with save request = {saveRequest}");
             try
             {
                 await _userService.SaveUserAsync(
                                 saveRequest.Username,
-                                saveRequest.Password);                
+                                saveRequest.Password);
 
-                return StatusCode((int)HttpStatusCode.Created,"Created");
+                return StatusCode((int)HttpStatusCode.Created, "Created");
 
             }
             catch (DuplicateNameException ex)
@@ -48,13 +48,13 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 throw;
             }
-            _logger.LogInformation($"{SaveUser(saveRequest)} is finished successfully");
+            _logger.LogInformation($"{nameof(SaveUser)} is finished successfully");
         }
 
         [HttpPost("authenticate")]
         public async Task<ActionResult<UserTokenEntity>> Authenticate(string username, string password)
         {
-            _logger.LogInformation($"{Authenticate(username,password)} is started with user name and password  = {username}{password}");
+            _logger.LogInformation($"{nameof(Authenticate)} is started with username and  password = {username},{password}");
             try
             {
                 var token = await _userService.AuthenticateAsync(username, password);
@@ -69,7 +69,9 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 throw;
             }
-            _logger.LogInformation($"{Authenticate(username, password)} is finished successfully");
+            _logger.LogInformation($"{nameof(Authenticate)} is finished successfully");
         }
     }
 }
+
+
