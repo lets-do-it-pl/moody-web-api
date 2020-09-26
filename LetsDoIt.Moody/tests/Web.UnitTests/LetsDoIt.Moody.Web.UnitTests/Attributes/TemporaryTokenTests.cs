@@ -16,7 +16,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
 
     public class TemporaryTokenTests
     {
-        private const string TokenHeaderName = "Token";
+        private const string TokenHeaderName = "Authorization";
         private readonly AuthorizationByTempToken _testing;
         private readonly ActionExecutedContext _context;
         private readonly ActionExecutingContext _actionExecutingContext;
