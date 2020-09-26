@@ -69,7 +69,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpPost]
-        [Route("/{categoryId}/details")]
+        [Route("{categoryId}/details")]
         public async Task<IActionResult> InsertCategoryDetails(int categoryId, [FromBody] CategoryDetailsInsertRequest insertRequest)
         {
             _logger.LogInformation(
@@ -92,8 +92,8 @@ namespace LetsDoIt.Moody.Web.Controllers
             return Ok();
         }
 
-        [HttpPut, Route("{id}")]
-        public async Task<IActionResult> Update(int id, CategoryUpdateRequest updateRequest)
+        [HttpPut, Route("{categoryId}")]
+        public async Task<IActionResult> Update(int categoryId, CategoryUpdateRequest updateRequest)
         {
             _logger.LogInformation(
                 $"{nameof(Update)} is started with " +
@@ -107,7 +107,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             try
             {
                 await _categoryService.UpdateAsync(
-                    id,
+                    categoryId,
                     updateRequest.Name,
                     updateRequest.Order,
                     updateRequest.Image);
@@ -120,7 +120,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 _logger.LogInformation($"{nameof(Update)} is finished with Not Found!");
 
-                return NotFound(id);
+                return NotFound(categoryId);
             }
             catch (Exception)
             {
@@ -128,7 +128,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             }            
         }
 
-        [HttpPut, Route("/{categoryId}/details/{categoryDetailsId}")]
+        [HttpPut, Route("{categoryId}/details/{categoryDetailsId}")]
         public async Task<IActionResult> UpdateCategoryDetails(int categoryDetailsId, CategoryDetailsUpdateRequest updateRequest)
         {
             _logger.LogInformation(
@@ -164,16 +164,16 @@ namespace LetsDoIt.Moody.Web.Controllers
             }            
         }
 
-        [HttpDelete, Route("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete, Route("{categoryId}")]
+        public async Task<IActionResult> Delete(int categoryId)
         {
             _logger.LogInformation(
                 $"{nameof(Delete)} is started with " +
-                $"id = {id}");
+                $"id = {categoryId}");
 
             try
             {
-                await _categoryService.DeleteAsync(id);
+                await _categoryService.DeleteAsync(categoryId);
 
                 _logger.LogInformation($"{nameof(Delete)} is finished successfully");
 
@@ -183,7 +183,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 _logger.LogInformation($"{nameof(Delete)} is finished with Not Found.");
 
-                return NotFound(id);
+                return NotFound(categoryId);
             }
             catch (Exception)
             {
@@ -191,7 +191,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             }            
         }
 
-        [HttpDelete, Route("/{categoryId}/details/{categoryDetailsId}")]
+        [HttpDelete, Route("{categoryId}/details/{categoryDetailsId}")]
         public async Task<IActionResult> DeleteCategoryDetails(int categoryDetailsId)
         {
             _logger.LogInformation(
