@@ -3,18 +3,20 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Category;
     using Application.CustomExceptions;
+    using Domain;
     using Entities.Requests;
-    using Entities.Responses;
-    using LetsDoIt.Moody.Domain;
-    using Newtonsoft.Json;
+    using Entities.Responses;    
+    using Filters;    
 
     [ApiController]
     [Route("api/categories")]
+    [Authorization]
     public class CategoryController : ControllerBase
     {
         private readonly ILogger<CategoryController> _logger;

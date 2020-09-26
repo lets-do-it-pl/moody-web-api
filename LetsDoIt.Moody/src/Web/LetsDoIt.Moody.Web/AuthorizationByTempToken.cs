@@ -10,7 +10,7 @@ namespace LetsDoIt.Moody.Web
         [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
         public class AuthorizationByTempToken : Attribute, IAsyncActionFilter
         {
-            private const string ApiKeyHeaderName = "Token";
+            private const string ApiKeyHeaderName = "Authorization";
 
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {

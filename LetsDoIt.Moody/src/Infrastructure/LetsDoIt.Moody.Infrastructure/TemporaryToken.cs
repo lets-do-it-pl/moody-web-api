@@ -8,7 +8,8 @@ namespace LetsDoIt.Moody.Infrastructure
         {
             var saveUtcNow = DateTime.UtcNow;
 
-            return $"8e/{saveUtcNow.Year}" +
+            return $"Bearer " +
+                   $"8e/{saveUtcNow.Year}" +
                    $"/53E/{saveUtcNow.Month}" +
                    $"/Sey/{saveUtcNow.Day}" +
                    "/KU25ecb/G5i4f46/74VHuMbg" +
