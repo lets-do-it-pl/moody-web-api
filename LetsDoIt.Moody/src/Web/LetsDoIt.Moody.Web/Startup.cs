@@ -7,6 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Linq;
+
 
 namespace LetsDoIt.Moody.Web
 {
@@ -17,6 +25,9 @@ namespace LetsDoIt.Moody.Web
     using Application.VersionHistory;
     using Persistance.Repositories;
     using Domain;
+    using HealthChecks.UI.Client;
+    using HealthChecks.UI.Configuration;
+    using System.Net;
 
     public class Startup
     {
@@ -37,6 +48,19 @@ namespace LetsDoIt.Moody.Web
             services.AddResponseCompression();
 
             var connectionString = _config.GetConnectionString("MoodyDBConnection");
+            services.AddDbContext<ApplicationContext>(opt => opt.UseSqlServer(connectionString));
+
+            services
+                .AddHealthChecks()
+                .AddSqlServer(connectionString, "SELECT 1");
+
+            var url = _config.GetValue<string>("HealthChecksUI:HealthChecks:Uri"); 
+
+            services.AddHealthChecksUI(s=>
+            {
+                s.AddHealthCheckEndpoint("endpoint1", "https://localhost:1234/healthcheck");
+            })
+            .AddInMemoryStorage();
 
             services.AddDbContext<ApplicationContext>(opt =>
                 opt.UseSqlServer(
@@ -130,7 +154,17 @@ namespace LetsDoIt.Moody.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecksUI();
+
+                endpoints.MapHealthChecks("/healthCheck", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
             });
+
+            
         }
+
     }
 }
