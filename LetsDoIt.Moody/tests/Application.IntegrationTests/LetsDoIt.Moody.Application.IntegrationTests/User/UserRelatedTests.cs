@@ -11,6 +11,7 @@ using Xunit;
 
 namespace LetsDoIt.Moody.Application.IntegrationTests.User
 {
+    using LetsDoIt.Moody.Web.Entities.Requests;
     using Web;
     using Web.Entities.Requests;
 
@@ -28,6 +29,16 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             _factory.ResetDbForTests();
         }
 
+        private StringContent GetStringContent(string token, SaveUserRequest saveUserRequest)
+        {
+            var httpContent = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
+
+            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            httpContent.Headers.Add("Authorization", token);
+            
+            return httpContent;
+        }
+
         [Fact]
         public async Task SaveUser_ShouldReturnCreatedStatusCodeAndRecordToDatabase()
         {
@@ -40,9 +51,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
                 Password = "good.password"
             };
 
-            var httpContent = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            httpContent.Headers.Add("Token", token);
+            var httpContent = GetStringContent(token, saveUserRequest);
 
             // Act
             var response = await _client.PostAsync("/api/users", httpContent);
@@ -56,7 +65,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             Assert.Equal("good.username", user.UserName);
 
         }
-
+                
         [Fact]
         public async Task SaveUser_WhenUserAlreadyExistsShouldReturnBadRequest()
         {
@@ -69,9 +78,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
                 Password = "good.password"
             };
 
-            var httpContent = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            httpContent.Headers.Add("Token", token);
+            var httpContent = GetStringContent(token, saveUserRequest);
 
 
             // Act
@@ -110,9 +117,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
                 Password = "good.password"
             };
 
-            var httpContentSaveUser = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
-            httpContentSaveUser.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            httpContentSaveUser.Headers.Add("Token", token);
+            var httpContentSaveUser = GetStringContent(token, saveUserRequest);
 
             var responseSaveUser = await _client.PostAsync("/api/users", httpContentSaveUser);
 
@@ -142,9 +147,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
                 Password = "good.password"
             };
 
-            var httpContentSaveUser = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
-            httpContentSaveUser.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            httpContentSaveUser.Headers.Add("Token", token);
+            var httpContentSaveUser = GetStringContent(token, saveUserRequest);
 
             var responseSaveUser = await _client.PostAsync("/api/users", httpContentSaveUser);
 
