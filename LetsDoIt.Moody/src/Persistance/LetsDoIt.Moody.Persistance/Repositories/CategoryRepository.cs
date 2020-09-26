@@ -29,9 +29,14 @@ namespace LetsDoIt.Moody.Persistance.Repositories
             {
                 return categories;
             }
-
+            
             foreach (var category in categories)
             {
+                if(category.CategoryDetails == null)
+                {
+                    continue;
+                }
+
                 category.CategoryDetails = category.CategoryDetails.Where(cd => !cd.IsDeleted).ToList();
             }
 
