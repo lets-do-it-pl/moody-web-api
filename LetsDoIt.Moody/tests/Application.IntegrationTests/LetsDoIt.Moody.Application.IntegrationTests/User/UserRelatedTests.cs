@@ -14,7 +14,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
     using Web;
     using Web.Entities.Requests;
 
-    public class UserRelatedTests:IClassFixture<CustomWebApplicationFactory<Startup>>
+    public class UserRelatedTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private readonly HttpClient _client;
         private readonly CustomWebApplicationFactory<Startup> _factory;
@@ -22,7 +22,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
         public UserRelatedTests(CustomWebApplicationFactory<Startup> factory)
         {
-            _baseUri =new Uri("http://localhost/api/users");
+            _baseUri = new Uri("http://localhost/api/users");
             _factory = factory;
             _client = factory.CreateDefaultClient();
             _factory.ResetDbForTests();
@@ -42,7 +42,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
             var httpContent = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            httpContent.Headers.Add("Token",token);
+            httpContent.Headers.Add("Token", token);
 
             // Act
             var response = await _client.PostAsync("/api/users", httpContent);
@@ -87,7 +87,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
         public async Task Authenticate_WhenUsernameDoesNotExists_ShouldReturnBadRequest()
         {
 
-            var parametersToAdd = new Dictionary<string, string> { { "username", "asd" },{"password","sss"} };
+            var parametersToAdd = new Dictionary<string, string> { { "username", "asd" }, { "password", "sss" } };
             var newUri = QueryHelpers.AddQueryString(_baseUri.OriginalString, parametersToAdd);
 
             var httpContent = new StringContent("");

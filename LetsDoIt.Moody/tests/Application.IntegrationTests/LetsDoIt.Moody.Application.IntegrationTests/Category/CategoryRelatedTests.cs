@@ -35,13 +35,13 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
         [Fact]
         public async Task Insert_ShouldReturnCreatedStatusCodeAndRecordToDatabase()
         {
-            
+
             // Arrange
             var userToken = _factory.GetUserTokenForTestsAndRecordToDatabase();
 
             var categoryInsertRequest = new CategoryInsertRequest
             {
-                Order = 1,  
+                Order = 1,
                 Image = "USrCELxGejBZI4W/Llsvmw==\r\n",
                 Name = "good.category"
             };
@@ -56,10 +56,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var user = await _factory.UserRepositoryVar.GetAsync(u => u.UserName == "good.username");
-
-            Assert.NotNull(user);
-            Assert.Equal("good.username", user.UserName);
 
         }
 
