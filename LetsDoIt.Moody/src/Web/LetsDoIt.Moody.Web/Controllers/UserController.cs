@@ -10,6 +10,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.User;
     using Entities.Requests;
+    using Newtonsoft.Json;
 
     [ApiController]
     [Route("api/users")]
@@ -30,46 +31,60 @@ namespace LetsDoIt.Moody.Web.Controllers
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> SaveUser(SaveUserRequest saveRequest)
         {
-            _logger.LogInformation($"{nameof(SaveUser)} is started with save request = {saveRequest}");
+            _logger.LogInformation(
+                $"{nameof(SaveUser)} is started with " +
+                $"save request = {JsonConvert.SerializeObject(saveRequest)}");
+
             try
             {
                 await _userService.SaveUserAsync(
                                 saveRequest.Username,
                                 saveRequest.Password);
 
+                _logger.LogInformation($"{nameof(SaveUser)} is finished successfully");
+
                 return StatusCode((int)HttpStatusCode.Created, "Created");
 
             }
             catch (DuplicateNameException ex)
             {
+                _logger.LogInformation($"{nameof(SaveUser)} is finished with bad request!");
+
                 return BadRequest(ex.Message);
             }
             catch (Exception)
             {
                 throw;
             }
-            _logger.LogInformation($"{nameof(SaveUser)} is finished successfully");
         }
 
         [HttpPost("authenticate")]
         public async Task<ActionResult<UserTokenEntity>> Authenticate(string username, string password)
         {
-            _logger.LogInformation($"{nameof(Authenticate)} is started with username and  password = {username},{password}");
+            _logger.LogInformation(
+                $"{nameof(Authenticate)} is started with " +
+                $"username={username}," +
+                $"password={password}");
+
             try
             {
                 var token = await _userService.AuthenticateAsync(username, password);
+
+                _logger.LogInformation($"{nameof(Authenticate)} is finished successfully");
 
                 return Ok(token);
             }
             catch (AuthenticationException)
             {
+                _logger.LogInformation($"{nameof(Authenticate)} is finished with Bad Request!");
+
                 return BadRequest("Username or Password is wrong!");
             }
             catch (Exception)
             {
                 throw;
             }
-            _logger.LogInformation($"{nameof(Authenticate)} is finished successfully");
+
         }
     }
 }

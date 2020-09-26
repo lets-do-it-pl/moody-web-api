@@ -50,7 +50,6 @@ namespace LetsDoIt.Moody.Application.Category
 
             result.Categories = await _categoryRepository.GetListAsync(c => !c.IsDeleted);
 
-
             return result;
         }
 
