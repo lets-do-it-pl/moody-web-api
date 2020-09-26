@@ -9,6 +9,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 {
 
     using Domain;
+    using EFCore.BulkExtensions;
 
     public abstract class EntityRepositoryBase<TEntity> : IEntityRepository<TEntity>
         where TEntity : class, IEntity
@@ -22,7 +23,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 
         public virtual async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter = null)
         {
-            return filter == null
+            return filter == null 
                 ? await _context.Set<TEntity>().ToListAsync()
                 : await _context.Set<TEntity>().Where(filter).ToListAsync();
         }
@@ -32,13 +33,14 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             return await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
         }
 
-        public IQueryable<TEntity> Get(){
+        public IQueryable<TEntity> Get()
+        {
             return _context.Set<TEntity>();
         }
 
         public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
-            entity.CreateDate = DateTime.Now;
+            entity.CreateDate = DateTime.UtcNow;
 
             var addedEntity = _context.Entry(entity);
 
@@ -51,7 +53,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 
         public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            entity.ModifiedDate = DateTime.Now;
+            entity.ModifiedDate = DateTime.UtcNow;
 
             var updatedEntity = _context.Entry(entity);
 
@@ -64,7 +66,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 
         public virtual async Task DeleteAsync(TEntity entity)
         {
-            entity.ModifiedDate = DateTime.Now;
+            entity.ModifiedDate = DateTime.UtcNow;
             entity.IsDeleted = true;
 
             var deletedEntity = _context.Entry(entity);
@@ -72,6 +74,16 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             deletedEntity.State = EntityState.Modified;
             
             await _context.SaveChangesAsync();
+        }
+
+        public virtual async Task BulkDeleteAsync(IList<TEntity> entities)
+        {
+            foreach(var entity in entities)
+            {
+                entity.ModifiedDate = DateTime.UtcNow;
+                entity.IsDeleted = true;
+            }
+            await _context.BulkUpdateAsync(entities);
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LetsDoIt.Moody.Domain
 {
     public class Category : IEntity
-    {
+    {        
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -25,6 +26,8 @@ namespace LetsDoIt.Moody.Domain
 
         public DateTime? ModifiedDate { get; set; }
 
-        public bool IsDeleted { get; set; }        
+        public virtual ICollection<CategoryDetails> CategoryDetails { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

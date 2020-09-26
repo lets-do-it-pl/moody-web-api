@@ -9,7 +9,7 @@ namespace LetsDoIt.Moody.Domain
         [Key, ForeignKey(nameof(User))]
         public int UserId { get; set; }
 
-        public User User { get; set; }
+        public virtual User User { get; set; }
 
         [MaxLength(1000)]
         public string Token { get; set; }

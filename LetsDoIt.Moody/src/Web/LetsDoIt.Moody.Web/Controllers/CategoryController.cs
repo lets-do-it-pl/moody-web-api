@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.Extensions.Logging;
-using NLog;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -12,6 +9,7 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Application.CustomExceptions;
     using Entities.Requests;
     using Entities.Responses;
+    using LetsDoIt.Moody.Domain;
 
     [ApiController]
     [Route("api/categories")]
@@ -42,7 +40,6 @@ namespace LetsDoIt.Moody.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody] CategoryInsertRequest insertRequest)
         {
-
             if (insertRequest == null)
             {
                 return BadRequest();
@@ -58,20 +55,35 @@ namespace LetsDoIt.Moody.Web.Controllers
             return Ok();
         }
 
-        [HttpPost, Route("update/{id}")]
-        public async Task<IActionResult> Update(CategoryUpdateRequest updateRequest)
+        [HttpPost]
+        [Route("/{categoryId}/details")]
+        public async Task<IActionResult> InsertCategoryDetails(int categoryId, [FromBody] CategoryDetailsInsertRequest insertRequest)
         {
-
-            if (updateRequest == null)  
+            if (insertRequest == null)
             {
-  
+                return BadRequest();
+            }
+
+            await _categoryService.InsertCategoryDetailsAsync(
+                categoryId,                
+                insertRequest.Order,
+                insertRequest.Image);
+
+            return Ok();
+        }
+
+        [HttpPut, Route("{id}")]
+        public async Task<IActionResult> Update(int id, CategoryUpdateRequest updateRequest)
+        {
+            if (updateRequest == null)
+            {
                 return BadRequest();
             }
 
             try
             {
                 await _categoryService.UpdateAsync(
-                    updateRequest.Id,
+                    id,
                     updateRequest.Name,
                     updateRequest.Order,
                     updateRequest.Image);
@@ -79,13 +91,40 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
             catch (ObjectNotFoundException)
             {
-                return NotFound(updateRequest.Id);
+                return NotFound(id);
             }
             catch (Exception)
             {
                 throw;
             }
-           
+
+        }
+
+        [HttpPut, Route("/{categoryId}/details/{categoryDetailsId}")]
+        public async Task<IActionResult> UpdateCategoryDetails(int categoryDetailsId, CategoryDetailsUpdateRequest updateRequest)
+        {
+            if (updateRequest == null)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await _categoryService.UpdateCategoryDetailsAsync(
+                    categoryDetailsId,
+                    updateRequest.Order,
+                    updateRequest.Image);
+                return Ok();
+            }
+            catch (ObjectNotFoundException)
+            {
+                return NotFound(categoryDetailsId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
 
         [HttpDelete, Route("{id}")]
@@ -107,30 +146,67 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
         }
 
+        [HttpDelete, Route("/{categoryId}/details/{categoryDetailsId}")]
+        public async Task<IActionResult> DeleteCategoryDetails(int categoryDetailsId)
+        {
+            try
+            {
+                await _categoryService.DeleteCategoryDetailsAsync(categoryDetailsId);
+
+                return Ok();
+            }
+            catch (ObjectNotFoundException)
+            {
+                return NotFound(categoryDetailsId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         private CategoryResponse ToCategoryResponse(CategoryGetResult categoryResult)
         {
-
             var result = new CategoryResponse
-                        {
-                            IsUpdated = categoryResult.IsUpdated,
-                            VersionNumber = categoryResult.VersionNumber                            
-                        };
+            {
+                IsUpdated = categoryResult.IsUpdated,
+                VersionNumber = categoryResult.VersionNumber
+            };
 
-            if(categoryResult.Categories != null)
+            if (categoryResult.Categories != null)
             {
                 result.Categories = categoryResult
-                                        .Categories
-                                        .Select(c =>
-                                             new CategoryEntity
-                                             {
-                                                 Id = c.Id,
-                                                 Name = c.Name,
-                                                 Order = c.Order,
-                                                 Image = c.Image
-                                             });
+                    .Categories
+                    .Select(c => ToCategoryEntity(c));
             }
+
             return result;
         }
+
+        private static Entities.Responses.CategoryEntity ToCategoryEntity(Category c)
+        {
+            var result = new Entities.Responses.CategoryEntity
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Order = c.Order,
+                Image = c.Image                
+            };
+
+            if(c.CategoryDetails != null)
+            {
+                result.CategoryDetails = c.CategoryDetails.Select(c => ToCategoryDetailsEntity(c)).ToList();
+            }
+
+            return result;
+        }
+
+        private static CategoryDetailsEntity ToCategoryDetailsEntity(CategoryDetails c) => new CategoryDetailsEntity
+        {
+            Id = c.Id,
+            Image = c.Image,
+            Order = c.Order
+        };
     }
 }
 

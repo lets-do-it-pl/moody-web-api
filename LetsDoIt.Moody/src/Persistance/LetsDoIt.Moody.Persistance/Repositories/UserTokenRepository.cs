@@ -11,14 +11,26 @@
 
     public class UserTokenRepository : IEntityRepository<UserToken>
     {
+
         private readonly ApplicationContext _context;
 
-        public UserTokenRepository(ApplicationContext context)
+        public UserTokenRepository(ApplicationContext context) 
         {
             _context = context;
         }
 
-        public Task<UserToken> AddAsync(UserToken entity)
+        public async Task<UserToken> AddAsync(UserToken entity)
+        {
+            var addedEntity = _context.Entry(entity);
+
+            addedEntity.State = EntityState.Added;
+
+            await _context.SaveChangesAsync();
+
+            return entity;
+        }
+
+        public Task BulkDeleteAsync(IList<UserToken> entities)
         {
             throw new NotImplementedException();
         }
@@ -30,12 +42,13 @@
 
         public IQueryable<UserToken> Get()
         {
-            throw new NotImplementedException();
+            return _context.Set<UserToken>().Include(ut=>ut.User);
         }
 
-        public Task<UserToken> GetAsync(Expression<Func<UserToken, bool>> filter)
+        public async Task<UserToken> GetAsync(Expression<Func<UserToken, bool>> filter)
         {
-            throw new NotImplementedException();
+            return await _context.UserTokens.Include(ut=>ut.User).FirstOrDefaultAsync(filter);
+
         }
 
         public Task<List<UserToken>> GetListAsync(Expression<Func<UserToken, bool>> filter = null)
@@ -49,7 +62,7 @@
 
             userToken.Token = entity.Token;
             userToken.ExpirationDate = entity.ExpirationDate;
-            userToken.ModifiedDate = DateTime.Now;
+            userToken.ModifiedDate = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 

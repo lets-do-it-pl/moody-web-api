@@ -11,6 +11,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="3.1.8" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,4 +19,7 @@
     <ProjectReference Include="..\..\Persistance\LetsDoIt.Moody.Persistance\LetsDoIt.Moody.Persistance.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Utils\" />
+  </ItemGroup>
 </Project>
