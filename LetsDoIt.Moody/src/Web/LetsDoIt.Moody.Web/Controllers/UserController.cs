@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Data;
 using System.Security.Authentication;
+using LetsDoIt.Moody.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

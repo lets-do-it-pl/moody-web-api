@@ -11,9 +11,8 @@ using Xunit;
 
 namespace LetsDoIt.Moody.Application.IntegrationTests.User
 {
-    using LetsDoIt.Moody.Web.Entities.Requests;
-    using Web;
     using Web.Entities.Requests;
+    using Web;
 
     public class UserRelatedTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
@@ -29,7 +28,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             _factory.ResetDbForTests();
 
             var token = factory.GenerateTempSaveUserTokenForTests();
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Authorization", $"Bearer {token}");
+            _client.DefaultRequestHeaders.Add("Authorization",token); 
         }
 
         private StringContent GetStringContent(string token, SaveUserRequest saveUserRequest)
