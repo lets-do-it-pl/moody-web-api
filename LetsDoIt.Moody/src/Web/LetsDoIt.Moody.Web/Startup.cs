@@ -57,7 +57,7 @@ namespace LetsDoIt.Moody.Web
 
             services.AddHealthChecksUI(s=>
             {
-                s.AddHealthCheckEndpoint("endpoint1", "https://localhost:1234/healthcheck");
+                s.AddHealthCheckEndpoint("endpoint1", url);
             })
             .AddInMemoryStorage();
 
