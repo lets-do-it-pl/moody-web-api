@@ -46,9 +46,11 @@ namespace LetsDoIt.Moody.Persistance.Repositories
 
         public override async Task DeleteAsync(Category entity)
         {
-            var categoryDetails = await _categoryDetailsRepository.GetListAsync(c => c.CategoryId == entity.Id && !c.IsDeleted);
-
-            await _categoryDetailsRepository.BulkDeleteAsync(categoryDetails);
+            if (entity.CategoryDetails != null)
+            {
+                var categoryDetails = await _categoryDetailsRepository.GetListAsync(c => c.CategoryId == entity.Id && !c.IsDeleted);
+                await _categoryDetailsRepository.BulkDeleteAsync(categoryDetails);
+            }
 
             await base.DeleteAsync(entity);
         }
