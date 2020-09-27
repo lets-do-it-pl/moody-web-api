@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace LetsDoIt.Moody.Persistance.Repositories
 {
@@ -23,9 +24,12 @@ namespace LetsDoIt.Moody.Persistance.Repositories
 
         public override async Task<List<Category>> GetListAsync(Expression<Func<Category, bool>> filter = null)
         {
-            var categories = await base.GetListAsync(filter);
+            var categories = 
+                filter == null
+                ? await _context.Set<Category>().Include(c => c.CategoryDetails).ToListAsync()
+                : await _context.Set<Category>().Where(filter).Include(c=>c.CategoryDetails).ToListAsync();
 
-            if(categories == null || categories.Count == 0)
+            if (categories == null || categories.Count == 0)
             {
                 return categories;
             }
@@ -42,6 +46,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories
 
             return categories;
         }
+
 
 
         public override async Task DeleteAsync(Category entity)

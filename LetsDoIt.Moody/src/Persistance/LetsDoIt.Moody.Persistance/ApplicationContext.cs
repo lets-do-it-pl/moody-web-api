@@ -27,6 +27,6 @@ namespace LetsDoIt.Moody.Persistance
 
         public DbSet<VersionHistory> VersionHistories { get; set; }
 
-        public DbSet<CategoryDetails> CategoryDetail { get; set; }
+        public DbSet<CategoryDetails> CategoryDetails { get; set; }
     }
 }
