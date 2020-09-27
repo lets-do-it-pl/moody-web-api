@@ -27,6 +27,9 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             _factory = factory;
             _client = factory.CreateDefaultClient();
             _factory.ResetDbForTests();
+
+            var token = factory.GenerateTempSaveUserTokenForTests();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Authorization", $"Bearer {token}");
         }
 
         private StringContent GetStringContent(string token, SaveUserRequest saveUserRequest)
@@ -34,7 +37,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             var httpContent = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
 
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            httpContent.Headers.Add("Authorization", token);
             
             return httpContent;
         }
