@@ -8,12 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Linq;
 
 
 namespace LetsDoIt.Moody.Web
@@ -26,9 +20,6 @@ namespace LetsDoIt.Moody.Web
     using Persistance.Repositories;
     using Domain;
     using HealthChecks.UI.Client;
-    using HealthChecks.UI.Configuration;
-    using System.Net;
-
     public class Startup
     {
         private const string JwtEncryptionKey = "2hN70OoacUi5SDU0rNuIXg==";
