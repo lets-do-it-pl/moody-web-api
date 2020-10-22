@@ -35,7 +35,7 @@ namespace LetsDoIt.Moody.Application.User
             _tokenExpirationMinutes = tokenExpirationMinutes;
         }
 
-        public async Task SaveUserAsync(string username, string password, string name = null, string surname = null, string email = null)
+        public async Task SaveUserAsync(string username, string password, string name = null, string surname = null, string email = null, UserTypes userType = UserTypes.Mobile)
         {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
@@ -46,12 +46,16 @@ namespace LetsDoIt.Moody.Application.User
                 throw new DuplicateNameException($"The username is already in the database. Username = {username}");
             }
 
-            var newUser = GetUser(username, password);
+            var newUser = GetUser(username, password,name,surname,email,userType);
 
             await _userRepository.AddAsync(new User
             {
                 UserName = newUser.Username,
-                Password = newUser.EncryptedPassword
+                Password = newUser.EncryptedPassword,
+                Name = name,
+                Surname = surname,
+                Email = email,
+                UserType = userType
             });
         }
 
@@ -69,6 +73,7 @@ namespace LetsDoIt.Moody.Application.User
                                         u.UserName == user.Username &&
                                         u.Password == user.EncryptedPassword &&
                                         !u.IsDeleted);
+
             if (userDb == null)
             {
                 throw new AuthenticationException();
@@ -124,11 +129,15 @@ namespace LetsDoIt.Moody.Application.User
             };
         }
 
-        private static UserEntity GetUser(string username, string password) =>
+        private static UserEntity GetUser(string username, string password, string name = null, string surname = null, string email = null, UserTypes userType = UserTypes.Mobile) =>
             new UserEntity
             (
                 username,
-                ProtectionHelper.EncryptValue(username + password)
+                ProtectionHelper.EncryptValue(username + password),
+                name,
+                surname,
+                email,
+                userType
             );
 
         public async Task<bool> ValidateTokenAsync(string token)

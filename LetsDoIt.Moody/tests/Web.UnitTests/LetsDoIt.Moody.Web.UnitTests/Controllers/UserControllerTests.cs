@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Authentication;
 using System.Data;
 using System.Net;
-using Castle.Core.Logging;
 using LetsDoIt.Moody.Domain;
 using LetsDoIt.Moody.Web.Controllers;
 using Microsoft.Extensions.Logging;
@@ -57,7 +56,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         public async Task SaveUser_WhenDuplicateNameExceptionThrown_ShouldReturnBadRequest()
         {
             _mockUserService.Setup(x =>
-                x.SaveUserAsync(It.IsAny<string>(),It.IsAny<string>())).Throws(new DuplicateNameException());
+                x.SaveUserAsync(It.IsAny<string>(),It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<UserTypes>())).Throws(new DuplicateNameException());
 
             var actual = await _testing.SaveUser(new SaveUserRequest
             {
@@ -100,7 +99,8 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             _mockUserService.Verify(us =>
                     us.SaveUserAsync(
                         saveUserRequest.Username,
-                        saveUserRequest.Password
+                        saveUserRequest.Password,
+                        null,null,null,UserTypes.Mobile
                     ),
                 Times.Once);
         }

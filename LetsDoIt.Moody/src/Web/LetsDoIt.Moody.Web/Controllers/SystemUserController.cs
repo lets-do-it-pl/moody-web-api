@@ -3,6 +3,7 @@ using System.Data;
 using System.Net;
 using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.User;
+using LetsDoIt.Moody.Domain;
 using LetsDoIt.Moody.Web.Entities.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -35,7 +36,11 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 await _userService.SaveUserAsync(
                     saveSystemUserRequest.Username,
-                    saveSystemUserRequest.Password);
+                    saveSystemUserRequest.Password,
+                    saveSystemUserRequest.Name,
+                    saveSystemUserRequest.Surname,
+                    saveSystemUserRequest.Email,
+                    UserTypes.Normal);
 
                 _logger.LogInformation($"{nameof(SaveSystemUser)} is finished successfully");
 

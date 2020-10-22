@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using LetsDoIt.Moody.Domain;
 
 namespace LetsDoIt.Moody.Web.Entities.Requests
 {
@@ -10,8 +9,5 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
 
         [Required]
         public string Password { get; set; }
-
-        public UserTypes UserType { get; set; }
-
     }
 }

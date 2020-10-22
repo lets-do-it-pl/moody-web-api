@@ -27,6 +27,12 @@ namespace LetsDoIt.Moody.Domain
 
         public virtual UserToken UserToken { get; set; }
 
+        public string Name { get; set; }
+
+        public string Surname { get; set; }
+
+        public string Email { get; set; }
+
         public bool IsActive { get; set; }
 
         public UserTypes UserType { get; set; }
