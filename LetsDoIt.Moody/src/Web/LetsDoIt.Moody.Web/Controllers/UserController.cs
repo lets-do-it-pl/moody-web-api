@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Data;
 using System.Security.Authentication;
+using LetsDoIt.Moody.Application.CustomExceptions;
 using LetsDoIt.Moody.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -80,6 +81,16 @@ namespace LetsDoIt.Moody.Web.Controllers
                 _logger.LogInformation($"{nameof(Authenticate)} is finished with Bad Request!");
 
                 return BadRequest("Username or Password is wrong!");
+            }
+
+            catch (UserNotActiveException exception)
+            {
+                _logger.LogInformation($"{nameof(Authenticate)} is finished with Bad Request!");
+
+
+                //////REDIRECT TO ACTIVATION.
+
+                return BadRequest(exception.Message);
             }
             catch (Exception)
             {

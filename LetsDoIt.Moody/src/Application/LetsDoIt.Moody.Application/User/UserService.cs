@@ -2,6 +2,7 @@
 using NGuard;
 using System.Linq;
 using System.Data;
+using LetsDoIt.Moody.Application.CustomExceptions;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -46,16 +47,20 @@ namespace LetsDoIt.Moody.Application.User
                 throw new DuplicateNameException($"The username is already in the database. Username = {username}");
             }
 
-            var newUser = GetUser(username, password,name,surname,email,userType);
+            bool isActive = userType == UserTypes.Mobile;
 
+            var newUser = GetUser(username, password,name,surname,email,userType, isActive);
+
+           
             await _userRepository.AddAsync(new User
             {
                 UserName = newUser.Username,
                 Password = newUser.EncryptedPassword,
-                Name = name,
-                Surname = surname,
-                Email = email,
-                UserType = userType
+                Name = newUser.Name,
+                Surname = newUser.Surname,
+                Email = newUser.Email,
+                UserType = newUser.UserType,
+                IsActive = newUser.IsActive
             });
         }
 
@@ -77,6 +82,11 @@ namespace LetsDoIt.Moody.Application.User
             if (userDb == null)
             {
                 throw new AuthenticationException();
+            }
+
+            if (userDb.IsActive == false)
+            {
+                throw new UserNotActiveException(userDb.UserName); 
             }
 
             UserToken userToken;
@@ -129,7 +139,7 @@ namespace LetsDoIt.Moody.Application.User
             };
         }
 
-        private static UserEntity GetUser(string username, string password, string name = null, string surname = null, string email = null, UserTypes userType = UserTypes.Mobile) =>
+        private static UserEntity GetUser(string username, string password, string name = null, string surname = null, string email = null, UserTypes userType = UserTypes.Mobile, bool isActive = false) =>
             new UserEntity
             (
                 username,
@@ -137,7 +147,9 @@ namespace LetsDoIt.Moody.Application.User
                 name,
                 surname,
                 email,
-                userType
+                userType,
+                isActive
+
             );
 
         public async Task<bool> ValidateTokenAsync(string token)
