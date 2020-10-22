@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using LetsDoIt.Moody.Domain;
 
 namespace LetsDoIt.Moody.Web.Entities.Requests
 {
@@ -22,5 +19,8 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
 
         [Required]
         public string Password { get; set; }
+
+        public UserTypes UserType { get; set; } 
+
     }
 }

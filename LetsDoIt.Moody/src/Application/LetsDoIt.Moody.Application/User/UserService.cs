@@ -35,7 +35,7 @@ namespace LetsDoIt.Moody.Application.User
             _tokenExpirationMinutes = tokenExpirationMinutes;
         }
 
-        public async Task SaveUserAsync(string username, string password)
+        public async Task SaveUserAsync(string username, string password, string name = null, string surname = null, string email = null)
         {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
