@@ -58,5 +58,15 @@ namespace LetsDoIt.Moody.Web.Controllers
                 throw;
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> VerifySystemUserEmail(string token)
+        {
+            _logger.LogInformation(
+                $"{nameof(VerifySystemUserEmail)} is started with " +
+                $"save request = {token}");
+
+
+        }
     }
 }

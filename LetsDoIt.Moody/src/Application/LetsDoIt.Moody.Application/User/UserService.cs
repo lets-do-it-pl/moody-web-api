@@ -21,6 +21,7 @@ namespace LetsDoIt.Moody.Application.User
     {
         private readonly IEntityRepository<User> _userRepository;
         private readonly IEntityRepository<UserToken> _userTokenRepository;
+        private readonly IEntityRepository<EmailVerificaitonToken> _emailVerificationTokenRepository;
         private readonly string _applicationKey;
         private readonly int _tokenExpirationMinutes;
 
@@ -58,7 +59,7 @@ namespace LetsDoIt.Moody.Application.User
                 Password = newUser.EncryptedPassword,
                 Name = newUser.Name,
                 Surname = newUser.Surname,
-                Email = newUser.Email,
+                Email = newUser.Email,  
                 UserType = newUser.UserType,
                 IsActive = newUser.IsActive
             });
@@ -162,6 +163,13 @@ namespace LetsDoIt.Moody.Application.User
                 return await _userTokenRepository.Get().AnyAsync(ut => ut.Token == token.Split(new char[] { ' ' })[1] &&
                                                             ut.ExpirationDate > DateTime.UtcNow
                                                             && !ut.User.IsDeleted);
+        }
+
+        public async Task<bool> VerifyEmailTokenAsync(string token)
+        {
+           return await _emailVerificationTokenRepository.Get().AnyAsync(evt => evt.Token == token &&
+                                                                          evt.ExpirationDate > DateTime.UtcNow 
+                                                                          && !evt.User.IsDeleted);
         }
     }
 }   
