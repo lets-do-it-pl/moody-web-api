@@ -40,13 +40,13 @@ namespace LetsDoIt.Moody.Web
 
             services
                 .AddHealthChecks()
-                .AddSqlServer(connectionString, "SELECT 1");
+                .AddSqlServer(connectionString, "SELECT 1", name: "SqlServerApplicationDb");
 
             var url = Configuration.GetValue<string>("HealthChecksUri");
 
             services.AddHealthChecksUI(s =>
             {
-                s.AddHealthCheckEndpoint("endpoint1", url);
+                s.AddHealthCheckEndpoint("Moody API", url);
             })
             .AddInMemoryStorage();
 
