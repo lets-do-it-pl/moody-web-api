@@ -26,8 +26,8 @@ namespace LetsDoIt.Moody.Persistance.Repositories
         {
             var categories = 
                 filter == null
-                ? await _context.Set<Category>().Include(c => c.CategoryDetails).ToListAsync()
-                : await _context.Set<Category>().Where(filter).Include(c=>c.CategoryDetails).ToListAsync();
+                ? await _context.Set<Category>().ToListAsync()
+                : await _context.Set<Category>().Where(filter).ToListAsync();
 
             if (categories == null || categories.Count == 0)
             {

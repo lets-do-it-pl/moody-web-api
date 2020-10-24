@@ -37,7 +37,6 @@ namespace LetsDoIt.Moody.Web
             services.AddResponseCompression();
 
             var connectionString = Configuration.GetConnectionString("MoodyDBConnection");
-            services.AddDbContext<ApplicationContext>(opt => opt.UseSqlServer(connectionString));
 
             services
                 .AddHealthChecks()
@@ -52,12 +51,13 @@ namespace LetsDoIt.Moody.Web
             .AddInMemoryStorage();
 
             services.AddDbContext<ApplicationContext>(opt =>
-                opt.UseSqlServer(
+                opt.UseLazyLoadingProxies()
+                .UseSqlServer(
                     connectionString,
                     builder =>
                     {
                         builder.MigrationsAssembly("LetsDoIt.Moody.Persistance");
-                    }).UseLazyLoadingProxies());
+                    }));
 
             services.AddControllers();
 

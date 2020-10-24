@@ -42,12 +42,12 @@
 
         public IQueryable<UserToken> Get()
         {
-            return _context.Set<UserToken>().Include(ut=>ut.User);
+            return _context.Set<UserToken>();
         }
 
         public async Task<UserToken> GetAsync(Expression<Func<UserToken, bool>> filter)
         {
-            return await _context.UserTokens.Include(ut=>ut.User).FirstOrDefaultAsync(filter);
+            return await _context.UserTokens.FirstOrDefaultAsync(filter);
 
         }
 
