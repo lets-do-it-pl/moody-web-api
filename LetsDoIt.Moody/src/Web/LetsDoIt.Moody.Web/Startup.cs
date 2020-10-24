@@ -1,5 +1,4 @@
-using LetsDoIt.Moody.Web.Filters;
-using LetsDoIt.Moody.Web.Middleware;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,25 +8,25 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
-
 namespace LetsDoIt.Moody.Web
 {
     using Application.User;
-    using Persistance;
-    using Persistance.Repositories.Base;
     using Application.Category;
     using Application.VersionHistory;
-    using Persistance.Repositories;
     using Domain;
-    using HealthChecks.UI.Client;
+    using Filters;
+    using Middleware;
+    using Persistance;
+    using Persistance.Repositories;
+    using Persistance.Repositories.Base;
+
     public class Startup
     {
         private const string JwtEncryptionKey = "2hN70OoacUi5SDU0rNuIXg==";
-        private readonly IConfiguration _config;
 
         public Startup(IConfiguration configuration)
         {
-            _config = configuration;
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -37,16 +36,16 @@ namespace LetsDoIt.Moody.Web
         {
             services.AddResponseCompression();
 
-            var connectionString = _config.GetConnectionString("MoodyDBConnection");
+            var connectionString = Configuration.GetConnectionString("MoodyDBConnection");
             services.AddDbContext<ApplicationContext>(opt => opt.UseSqlServer(connectionString));
 
             services
                 .AddHealthChecks()
                 .AddSqlServer(connectionString, "SELECT 1");
 
-            var url = _config.GetValue<string>("HealthChecksUI:HealthChecks:Uri"); 
+            var url = Configuration.GetValue<string>("HealthChecksUri");
 
-            services.AddHealthChecksUI(s=>
+            services.AddHealthChecksUI(s =>
             {
                 s.AddHealthCheckEndpoint("endpoint1", url);
             })
@@ -91,7 +90,7 @@ namespace LetsDoIt.Moody.Web
                 c.AddSecurityRequirement(securityRequirement);
             });
 
-            var tokenExpirationMinutes = _config.GetValue<int>("TokenExpirationMinutes");
+            var tokenExpirationMinutes = Configuration.GetValue<int>("TokenExpirationMinutes");
 
             services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
             services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
@@ -153,7 +152,7 @@ namespace LetsDoIt.Moody.Web
                 });
             });
 
-            
+
         }
 
     }
