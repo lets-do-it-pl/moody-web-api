@@ -114,7 +114,10 @@ namespace LetsDoIt.Moody.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(
+            IApplicationBuilder app, 
+            IWebHostEnvironment env,
+            ApplicationContext context)
         {
             if (env.IsDevelopment())
             {
@@ -124,6 +127,8 @@ namespace LetsDoIt.Moody.Web
             {
                 app.UseApiExceptionHandler();
             }
+
+            context.Database.Migrate();
 
             app.UseResponseCompression();
 
