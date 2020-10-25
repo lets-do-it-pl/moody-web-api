@@ -2,6 +2,7 @@
 using NGuard;
 using System.Linq;
 using System.Data;
+using System.IO;
 using LetsDoIt.MailSender;
 using LetsDoIt.Moody.Application.CustomExceptions;
 
@@ -168,8 +169,9 @@ namespace LetsDoIt.Moody.Application.User
         public Task<bool> SendEmailTokenAsync(string email)
         {
 
+            FileStream fs = new FileStream("",FileMode.Open);
 
-            _mailSender.SendAsync();
+
 
             throw new NotImplementedException();
         }
