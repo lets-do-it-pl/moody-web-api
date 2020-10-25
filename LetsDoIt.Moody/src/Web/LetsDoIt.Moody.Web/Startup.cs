@@ -24,6 +24,7 @@ namespace LetsDoIt.Moody.Web
     public class Startup
     {
         private const string JwtEncryptionKey = "2hN70OoacUi5SDU0rNuIXg==";
+        private const string InMemoryProviderName = "Microsoft.EntityFrameworkCore.InMemory";
 
         public Startup(IConfiguration configuration)
         {
@@ -132,8 +133,11 @@ namespace LetsDoIt.Moody.Web
             {
                 app.UseApiExceptionHandler();
             }
-
-            context.Database.Migrate();
+            
+            if (context.Database.ProviderName != InMemoryProviderName)
+            {
+                context.Database.Migrate();
+            }
 
             app.UseResponseCompression();
 

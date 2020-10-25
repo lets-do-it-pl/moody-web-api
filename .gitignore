@@ -15,6 +15,9 @@
 /LetsDoIt.Moody/src/Persistance/LetsDoIt.Moody.Persistance/obj
 /LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/bin
 /LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/obj
+/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/LetsDoIt.Moody.Web.csproj.user
+/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/Properties/PublishProfiles
+/LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/Properties/ServiceDependencies
 /LetsDoIt.Moody/tests/Application.IntegrationTests/LetsDoIt.Moody.Application.IntegrationTests/bin
 /LetsDoIt.Moody/tests/Application.IntegrationTests/LetsDoIt.Moody.Application.IntegrationTests/obj
 /LetsDoIt.Moody/tests/Application.UnitTests/LetsDoIt.Moody.Application.UnitTests/bin
