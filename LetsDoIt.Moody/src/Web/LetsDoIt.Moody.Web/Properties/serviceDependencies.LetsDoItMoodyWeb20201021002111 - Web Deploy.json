@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/letsdoit-moody-webdbserver/databases/LetsDoIt.Moody.Web_db",
+      "type": "mssql.azure",
+      "connectionId": "MoodyDBConnection",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}

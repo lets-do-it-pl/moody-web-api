@@ -36,3 +36,4 @@ namespace LetsDoIt.Moody.Web
                 .UseNLog(); // NLog: Setup NLog for Dependency injection
     }
 }
+
