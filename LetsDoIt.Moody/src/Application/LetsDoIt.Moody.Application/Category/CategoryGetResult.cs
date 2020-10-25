@@ -13,3 +13,4 @@ namespace LetsDoIt.Moody.Application.Category
         public IEnumerable<Category> Categories { get; set; }
     }
 }
+
