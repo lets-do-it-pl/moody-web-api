@@ -10,11 +10,8 @@ env:
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: 
+  workflow_dispatch:  
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -28,11 +25,15 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
            dotnet-version: 3.1.301
-           
+                      
       - name: Build with dotnet
         run: dotnet build --configuration Release
         working-directory: ././LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web
-        
+          
+      - name: Test PR      
+        run: dotnet test --no-restore --no-build 
+        working-directory: ././LetsDoIt.Moody
+                   
       - name: dotnet publish
         working-directory: ././LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web
         run: |

@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
+using LetsDoIt.Moody.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace LetsDoIt.Moody.Web
+namespace LetsDoIt.Moody.Web.Filters
     {
-        using Infrastructure;
-
         [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
         public class AuthorizationByTempToken : Attribute, IAsyncActionFilter
         {
-            private const string ApiKeyHeaderName = "Token";
+            private const string ApiKeyHeaderName = "Authorization";
 
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {

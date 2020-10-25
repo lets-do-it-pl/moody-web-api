@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using LetsDoIt.Moody.Web.Filters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -16,7 +17,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
 
     public class TemporaryTokenTests
     {
-        private const string TokenHeaderName = "Token";
+        private const string TokenHeaderName = "Authorization";
         private readonly AuthorizationByTempToken _testing;
         private readonly ActionExecutedContext _context;
         private readonly ActionExecutingContext _actionExecutingContext;

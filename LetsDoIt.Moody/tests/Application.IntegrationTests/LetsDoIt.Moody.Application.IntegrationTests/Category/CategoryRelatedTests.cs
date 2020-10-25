@@ -8,13 +8,12 @@ using FluentAssertions;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Xunit;
-using Microsoft.EntityFrameworkCore.Sqlite;
 
 namespace LetsDoIt.Moody.Application.IntegrationTests.Category
 {
     using Web;
     using Web.Entities.Requests;
-    using Application.IntegrationTests;
+    using IntegrationTests;
 
     public class CategoryRelatedTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
@@ -29,45 +28,35 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
             _factory = factory;
             _client = factory.CreateDefaultClient();
             _factory.ResetDbForTests();
-        }
-
-
-        [Fact]
-        public async Task Insert_ShouldReturnCreatedStatusCodeAndRecordToDatabase()
-        {
-            
-            // Arrange
             var userToken = _factory.GetUserTokenForTestsAndRecordToDatabase();
 
-            var categoryInsertRequest = new CategoryInsertRequest
-            {
-                Order = 1,  
-                Image = "USrCELxGejBZI4W/Llsvmw==\r\n",
-                Name = "good.category"
-            };
-
-            var httpContent = new StringContent(JsonConvert.SerializeObject(categoryInsertRequest));
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            httpContent.Headers.Add("Token", userToken.Token);
-
-            // Act
-            var response = await _client.PostAsync("/api/categories", httpContent);
-
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var user = await _factory.UserRepositoryVar.GetAsync(u => u.UserName == "good.username");
-
-            Assert.NotNull(user);
-            Assert.Equal("good.username", user.UserName);
-
+            _client.DefaultRequestHeaders.Add("Authorization", userToken.Token);
         }
+
+        //[Fact]
+        //public async Task Insert_ShouldReturnCreatedStatusCodeAndRecordToDatabase()
+        //{
+        //    // Arrange
+        //    var categoryInsertRequest = new CategoryInsertRequest
+        //    {
+        //        Order = 1,
+        //        Image = "USrCELxGejBZI4W/Llsvmw==\r\n",
+        //        Name = "good.category"
+        //    };
+
+        //    var httpContent = new StringContent(JsonConvert.SerializeObject(categoryInsertRequest));
+        //    httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+        //    // Act
+        //    var response = await _client.PostAsync("/api/categories", httpContent);
+
+        //    // Assert
+        //    response.StatusCode.Should().Be(HttpStatusCode.OK);
+        //}
 
         [Fact]
         public async Task SaveUser_WhenUserAlreadyExistsShouldReturnBadRequest()
         {
-
-            var token = _factory.GenerateTempSaveUserTokenForTests();
 
             var saveUserRequest = new SaveUserRequest
             {
@@ -77,7 +66,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
 
             var httpContent = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            httpContent.Headers.Add("Token", token);
 
 
             // Act
@@ -107,9 +95,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
         [Fact]
         public async Task Authenticate_ShouldCheckDatabaseAndReturnOk()
         {
-            //Save User to 
-            var token = _factory.GenerateTempSaveUserTokenForTests();
-
             var saveUserRequest = new SaveUserRequest
             {
                 Username = "good.username",
@@ -118,7 +103,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
 
             var httpContentSaveUser = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
             httpContentSaveUser.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            httpContentSaveUser.Headers.Add("Token", token);
 
             var responseSaveUser = await _client.PostAsync("/api/users", httpContentSaveUser);
 
@@ -141,7 +125,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
         public async Task Authenticate_WhenPasswordIsWrong_ShouldReturnBadRequest()
         {
             //Save User to Database
-            var token = _factory.GenerateTempSaveUserTokenForTests();
             var saveUserRequest = new SaveUserRequest
             {
                 Username = "good.username",
@@ -150,7 +133,6 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
 
             var httpContentSaveUser = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
             httpContentSaveUser.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            httpContentSaveUser.Headers.Add("Token", token);
 
             var responseSaveUser = await _client.PostAsync("/api/users", httpContentSaveUser);
 

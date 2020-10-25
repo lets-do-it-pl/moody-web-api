@@ -8,8 +8,10 @@ namespace LetsDoIt.Moody.Web.Filters
 {
     public class TokenAuthorizationFilter:IAsyncActionFilter
     {
-        private readonly IUserService _userService;
-        private const string Token = "Token";
+        private const string Token = "Authorization";
+
+        private readonly IUserService _userService;  
+        
         public TokenAuthorizationFilter(IUserService userService)
         {
             _userService = userService;

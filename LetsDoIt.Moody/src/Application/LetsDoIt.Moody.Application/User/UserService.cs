@@ -64,7 +64,6 @@ namespace LetsDoIt.Moody.Application.User
 
             var userDb = await _userRepository
                                     .Get()
-                                    .Include(u=>u.UserToken)
                                     .FirstOrDefaultAsync(u =>
                                         u.UserName == user.Username &&
                                         u.Password == user.EncryptedPassword &&
@@ -107,6 +106,7 @@ namespace LetsDoIt.Moody.Application.User
                 {
                     new Claim(ClaimTypes.Name, user.EncryptedPassword)
                 }),
+                
                 Expires = DateTime.UtcNow.AddMinutes(_tokenExpirationMinutes),
                 SigningCredentials =
                     new SigningCredentials(
@@ -132,15 +132,14 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task<bool> ValidateTokenAsync(string token)
         {
-                if (string.IsNullOrWhiteSpace(token))
+                if (string.IsNullOrWhiteSpace(token) || token.Split(new char[] { ' ' }).Length != 2)
                 {
                     return false;
                 }
 
-                return await _userTokenRepository.Get().AnyAsync(ut => ut.Token == token &&
+                return await _userTokenRepository.Get().AnyAsync(ut => ut.Token == token.Split(new char[] { ' ' })[1] &&
                                                             ut.ExpirationDate > DateTime.UtcNow
-                                                            && !ut.User.IsDeleted
-                                                            );
+                                                            && !ut.User.IsDeleted);
         }
     }
 }   

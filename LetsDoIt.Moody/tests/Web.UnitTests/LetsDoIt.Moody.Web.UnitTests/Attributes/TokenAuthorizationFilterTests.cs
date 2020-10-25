@@ -61,9 +61,9 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
         [Fact]
         public async Task OnActionExecutionAsync_WhenTokenIsNotValid_ShouldReturnUnauthorizedResult()
         {
-            var token = "bad.token";
+            var token = "Bearer bad.token";
 
-            _actionExecutingContext.HttpContext.Request.Headers.Add("Token",token);
+            _actionExecutingContext.HttpContext.Request.Headers.Add("Authorization", token);
 
             _userService.Setup(us => us.ValidateTokenAsync(token)).ReturnsAsync(false);
 
@@ -77,9 +77,9 @@ namespace LetsDoIt.Moody.Web.UnitTests.Attributes
         [Fact]
         public async Task OnActionExecutionAsync_ShouldInvokeUserServiceIsTokenValid()
         {
-            var token = "good.token";
+            var token = "Bearer good.token";
 
-            _actionExecutingContext.HttpContext.Request.Headers.Add("Token", token);
+            _actionExecutingContext.HttpContext.Request.Headers.Add("Authorization", token);
 
             _userService.Setup(us => us.ValidateTokenAsync(token)).ReturnsAsync(false);
 

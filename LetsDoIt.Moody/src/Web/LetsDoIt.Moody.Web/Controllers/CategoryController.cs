@@ -2,29 +2,37 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Category;
     using Application.CustomExceptions;
+    using Domain;
     using Entities.Requests;
-    using Entities.Responses;
-    using LetsDoIt.Moody.Domain;
+    using Entities.Responses;    
+    using Filters;    
 
     [ApiController]
     [Route("api/categories")]
+    [Authorization]
     public class CategoryController : ControllerBase
     {
+        private readonly ILogger<CategoryController> _logger;
         private readonly ICategoryService _categoryService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService,
+            ILogger<CategoryController> logger)
         {
             _categoryService = categoryService;
+            _logger = logger;
         }
 
         [HttpGet, Route("{versionNumber?}")]
         public async Task<ActionResult<CategoryResponse>> GetCategories(string versionNumber = null)
         {
+            _logger.LogInformation($"{nameof(GetCategories)} is started with version number = {versionNumber}");
 
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
 
@@ -34,12 +42,17 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 return NoContent();
             }
+
+            _logger.LogInformation($"{nameof(GetCategories)} is finished successfully");
+
             return ToCategoryResponse(categoryResult);
         }
 
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody] CategoryInsertRequest insertRequest)
         {
+            _logger.LogInformation($"{nameof(Insert)} is started with insert request = {insertRequest}");
+
             if (insertRequest == null)
             {
                 return BadRequest();
@@ -52,29 +65,42 @@ namespace LetsDoIt.Moody.Web.Controllers
                 insertRequest.Order,
                 byteImage);
 
+            _logger.LogInformation($"{nameof(Insert)} is finished successfully");
+
             return Ok();
         }
 
         [HttpPost]
-        [Route("/{categoryId}/details")]
+        [Route("{categoryId}/details")]
         public async Task<IActionResult> InsertCategoryDetails(int categoryId, [FromBody] CategoryDetailsInsertRequest insertRequest)
         {
+            _logger.LogInformation(
+                $"{nameof(InsertCategoryDetails)} is started with " +
+                $"category Id = {categoryId}; " +
+                $"insertRequest = {JsonConvert.SerializeObject(insertRequest)}");
+
             if (insertRequest == null)
             {
                 return BadRequest();
             }
 
             await _categoryService.InsertCategoryDetailsAsync(
-                categoryId,                
+                categoryId,
                 insertRequest.Order,
                 insertRequest.Image);
+
+            _logger.LogInformation($"{nameof(InsertCategoryDetails)} is finished successfully");
 
             return Ok();
         }
 
-        [HttpPut, Route("{id}")]
-        public async Task<IActionResult> Update(int id, CategoryUpdateRequest updateRequest)
+        [HttpPut, Route("{categoryId}")]
+        public async Task<IActionResult> Update(int categoryId, CategoryUpdateRequest updateRequest)
         {
+            _logger.LogInformation(
+                $"{nameof(Update)} is started with " +
+                $"update request = {JsonConvert.SerializeObject(updateRequest)}");
+
             if (updateRequest == null)
             {
                 return BadRequest();
@@ -83,26 +109,35 @@ namespace LetsDoIt.Moody.Web.Controllers
             try
             {
                 await _categoryService.UpdateAsync(
-                    id,
+                    categoryId,
                     updateRequest.Name,
                     updateRequest.Order,
                     updateRequest.Image);
+
+                _logger.LogInformation($"{nameof(Update)} is finished successfully");
+
                 return Ok();
             }
             catch (ObjectNotFoundException)
             {
-                return NotFound(id);
+                _logger.LogInformation($"{nameof(Update)} is finished with Not Found!");
+
+                return NotFound(categoryId);
             }
             catch (Exception)
             {
                 throw;
-            }
-
+            }            
         }
 
-        [HttpPut, Route("/{categoryId}/details/{categoryDetailsId}")]
+        [HttpPut, Route("{categoryId}/details/{categoryDetailsId}")]
         public async Task<IActionResult> UpdateCategoryDetails(int categoryDetailsId, CategoryDetailsUpdateRequest updateRequest)
         {
+            _logger.LogInformation(
+                $"{nameof(UpdateCategoryDetails)} is started with " +
+                $"category detailsId = {categoryDetailsId} " +
+                $"update request = {JsonConvert.SerializeObject(updateRequest)}");
+
             if (updateRequest == null)
             {
                 return BadRequest();
@@ -114,55 +149,75 @@ namespace LetsDoIt.Moody.Web.Controllers
                     categoryDetailsId,
                     updateRequest.Order,
                     updateRequest.Image);
+
+                _logger.LogInformation($"{nameof(UpdateCategoryDetails)} is finished successfully");
+
                 return Ok();
             }
             catch (ObjectNotFoundException)
             {
+                _logger.LogInformation($"{nameof(UpdateCategoryDetails)} is finished with Not Found!");
+
                 return NotFound(categoryDetailsId);
             }
             catch (Exception)
             {
                 throw;
-            }
-
+            }            
         }
 
-        [HttpDelete, Route("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete, Route("{categoryId}")]
+        public async Task<IActionResult> Delete(int categoryId)
         {
+            _logger.LogInformation(
+                $"{nameof(Delete)} is started with " +
+                $"id = {categoryId}");
+
             try
             {
-                await _categoryService.DeleteAsync(id);
+                await _categoryService.DeleteAsync(categoryId);
+
+                _logger.LogInformation($"{nameof(Delete)} is finished successfully");
 
                 return Ok();
             }
             catch (ObjectNotFoundException)
             {
-                return NotFound(id);
+                _logger.LogInformation($"{nameof(Delete)} is finished with Not Found.");
+
+                return NotFound(categoryId);
             }
             catch (Exception)
             {
                 throw;
-            }
+            }            
         }
 
-        [HttpDelete, Route("/{categoryId}/details/{categoryDetailsId}")]
+        [HttpDelete, Route("{categoryId}/details/{categoryDetailsId}")]
         public async Task<IActionResult> DeleteCategoryDetails(int categoryDetailsId)
         {
+            _logger.LogInformation(
+                $"{nameof(DeleteCategoryDetails)} is started with " +
+                $"category detailsId = {categoryDetailsId}");
+
             try
             {
                 await _categoryService.DeleteCategoryDetailsAsync(categoryDetailsId);
 
+                _logger.LogInformation($"{nameof(DeleteCategoryDetails)} is finished successfully");
+
                 return Ok();
             }
             catch (ObjectNotFoundException)
             {
+                _logger.LogInformation($"{nameof(DeleteCategoryDetails)} is finished with Not Found");
+
                 return NotFound(categoryDetailsId);
             }
             catch (Exception)
             {
                 throw;
-            }
+            }            
         }
 
         private CategoryResponse ToCategoryResponse(CategoryGetResult categoryResult)
@@ -190,10 +245,10 @@ namespace LetsDoIt.Moody.Web.Controllers
                 Id = c.Id,
                 Name = c.Name,
                 Order = c.Order,
-                Image = c.Image                
+                Image = c.Image
             };
 
-            if(c.CategoryDetails != null)
+            if (c.CategoryDetails != null)
             {
                 result.CategoryDetails = c.CategoryDetails.Select(c => ToCategoryDetailsEntity(c)).ToList();
             }
@@ -209,4 +264,3 @@ namespace LetsDoIt.Moody.Web.Controllers
         };
     }
 }
-

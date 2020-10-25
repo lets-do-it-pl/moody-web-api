@@ -17,15 +17,15 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
     using Web;
 
 
-    public class CustomWebApplicationFactory<TStartup>:WebApplicationFactory<Startup> where TStartup : class
+    public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Startup> where TStartup : class
     {
         private readonly InMemoryDatabaseRoot _databaseRoot = new InMemoryDatabaseRoot();
         public IEntityRepository<Domain.User> UserRepositoryVar;
         public IEntityRepository<Domain.Category> CategoryRepositoryVar;
         public IEntityRepository<UserToken> UserTokenRepositoryVar;
 
-        private  ServiceProvider _serviceProvider;
-        private  ApplicationContext _dbContext;
+        private ServiceProvider _serviceProvider;
+        private ApplicationContext _dbContext;
 
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -38,13 +38,13 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
 
                 if (descriptor != null)
                 {
-                  services.Remove(descriptor);
-                }                
+                    services.Remove(descriptor);
+                }
 
                 services.AddDbContext<ApplicationContext>(options =>
                 {
-                        options.UseInMemoryDatabase(new Guid().ToString(), _databaseRoot);
-                    
+                    options.UseInMemoryDatabase(new Guid().ToString(), _databaseRoot);
+
                 });
 
                 _serviceProvider = services.BuildServiceProvider();
@@ -77,12 +77,12 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
 
         public string GenerateTempSaveUserTokenForTests()
         {
-           return  TemporaryToken.GenerateTemporaryToken();
+            return TemporaryToken.GenerateTemporaryToken();
         }
 
         public UserToken GetUserTokenForTestsAndRecordToDatabase()
         {
-            
+
             var user = new Domain.User
             {
                 Id = 1,
