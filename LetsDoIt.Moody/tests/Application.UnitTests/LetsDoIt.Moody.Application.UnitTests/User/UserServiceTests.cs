@@ -8,14 +8,14 @@ using System.Data;
 using System.Security.Authentication;
 using MockQueryable.Moq;
 using LetsDoIt.Moody.Application.User;
-
+using Microsoft.EntityFrameworkCore;
 
 
 namespace LetsDoIt.Moody.Application.UnitTests.User
 {
     using Domain;
     using Persistance.Repositories.Base;
-    using Utils;
+    using Infrastructure.Utils;
 
     public class UserServiceTests
     {
@@ -46,7 +46,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             var token = new UserToken
             {
                 Token = "good.token",
-                ExpirationDate = DateTime.Now.AddMinutes(12)
+                ExpirationDate = DateTime.UtcNow.AddMinutes(12)
             };
 
             var users = new List<User>
@@ -69,7 +69,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             Assert.NotNull(actual);
             Assert.Equal(username, actual.Username);
             Assert.Equal(token.Token, actual.Token);
-            Assert.True(DateTime.Now < actual.ExpirationDate);
+            Assert.True(DateTime.UtcNow < actual.ExpirationDate);
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             {
                 UserId = 1,
                 Token = "good.token",
-                ExpirationDate = DateTime.Now.AddMinutes(5)
+                ExpirationDate = DateTime.UtcNow.AddMinutes(5)
             };
 
             _mockUserTokenRepository
@@ -133,14 +133,14 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             {
                 UserId = 1,
                 Token = "expired.token",
-                ExpirationDate = DateTime.Now
+                ExpirationDate = DateTime.UtcNow
             };
 
             var userToken = new UserToken
             {
                 UserId = 1,
                 Token = "good.token",
-                ExpirationDate = DateTime.Now.AddMinutes(5)
+                ExpirationDate = DateTime.UtcNow.AddMinutes(5)
             };
 
             var users = new List<User>
@@ -262,6 +262,92 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
            _mockUserRepository.Verify(ur=>
                    ur.AddAsync(It.Is<User>(x => x.UserName == user.UserName)),
                Times.Once);
+        }
+
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public async Task ValidateTokenAsync_WhenTokenIsEmptyOrWhitespaceOrNull_ShouldReturnFalse(string token)
+        {
+            var result = await _testing.ValidateTokenAsync(token);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task ValidateTokenAsync_WhenTokenIsWrong_ShouldReturnFalse()
+        {
+            string token = "bad.token";
+
+            var user = new User
+            {
+                Id = 3,
+                CreateDate = DateTime.UtcNow,
+                IsDeleted = false,
+                Password = "good.password",
+                UserName = "good.username",
+
+            };
+
+            var userToken = new UserToken
+            {
+                UserId = 3,
+                Token = "good.token",
+                User = user,
+                ExpirationDate = DateTime.UtcNow.AddMinutes(999999)
+            };
+
+            user.UserToken = userToken;
+
+            var userTokens = new List<UserToken>
+            {
+                userToken
+            };
+
+            _mockUserTokenRepository.Setup(repo => repo.Get()).Returns(userTokens.AsQueryable().BuildMockDbSet().Object);
+
+            var result = await _testing.ValidateTokenAsync(token);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task ValidateTokenAsync_WhenUserIsDeleted_ShouldReturnFalse()
+        {
+            string token = "good.token";
+
+            var user = new User
+            {
+                Id = 3,
+                CreateDate = DateTime.UtcNow,
+                IsDeleted = true,
+                Password = "good.password",
+                UserName = "good.username",
+
+            };
+
+            var userToken = new UserToken
+            {
+                UserId = 3,
+                Token = token,
+                User = user,
+                ExpirationDate = DateTime.UtcNow.AddMinutes(999999)
+            };
+
+            user.UserToken = userToken;
+
+            var userTokens = new List<UserToken>
+            {
+                userToken
+            };
+
+            _mockUserTokenRepository.Setup(repo => repo.Get()).Returns(userTokens.AsQueryable().BuildMockDbSet().Object);
+
+            var result = await _testing.ValidateTokenAsync(token);
+
+            Assert.False(result);
         }
     }
 }

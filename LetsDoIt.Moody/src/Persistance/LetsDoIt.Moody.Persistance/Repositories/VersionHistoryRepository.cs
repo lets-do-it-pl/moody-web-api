@@ -29,13 +29,14 @@ namespace LetsDoIt.Moody.Persistance.Repositories
             throw new NotImplementedException();
         }
 
-        public IQueryable<VersionHistory> Get(){
+        public IQueryable<VersionHistory> Get()
+        {
             return _context.Set<VersionHistory>();
         }
         
         public async Task<VersionHistory> AddAsync(VersionHistory entity)
         {
-            entity.CreateDate = DateTime.Now;
+            entity.CreateDate = DateTime.UtcNow;
 
             var addedEntity = _context.Entry(entity);
 
@@ -52,6 +53,11 @@ namespace LetsDoIt.Moody.Persistance.Repositories
         }
 
         public Task DeleteAsync(VersionHistory entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task BulkDeleteAsync(IList<VersionHistory> entities)
         {
             throw new NotImplementedException();
         }

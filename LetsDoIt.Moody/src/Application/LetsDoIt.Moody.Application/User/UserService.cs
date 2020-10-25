@@ -5,7 +5,7 @@ using System.Data;
 
 namespace LetsDoIt.Moody.Application.User
 {
-    using Utils;
+    using Infrastructure.Utils;
     using Persistance.Repositories.Base;
     using Domain;
     using System.Security.Authentication;
@@ -56,7 +56,7 @@ namespace LetsDoIt.Moody.Application.User
         }
 
         public async Task<UserTokenEntity> AuthenticateAsync(string username, string password)
-        {
+            {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
@@ -75,7 +75,7 @@ namespace LetsDoIt.Moody.Application.User
 
             UserToken userToken;
 
-            if(userDb.UserToken == null || userDb.UserToken.ExpirationDate < DateTime.Now)
+            if(userDb.UserToken == null || userDb.UserToken.ExpirationDate < DateTime.UtcNow || userDb.UserToken.Token == null)
             {
                 var newUserToken = GetNewUserToken(user);
                 newUserToken.UserId = userDb.Id;
@@ -106,6 +106,7 @@ namespace LetsDoIt.Moody.Application.User
                 {
                     new Claim(ClaimTypes.Name, user.EncryptedPassword)
                 }),
+                
                 Expires = DateTime.UtcNow.AddMinutes(_tokenExpirationMinutes),
                 SigningCredentials =
                     new SigningCredentials(
@@ -128,5 +129,18 @@ namespace LetsDoIt.Moody.Application.User
                 username,
                 ProtectionHelper.EncryptValue(username + password)
             );
+
+        public async Task<bool> ValidateTokenAsync(string token)
+        {
+                if (string.IsNullOrWhiteSpace(token) || token.Split(new char[] { ' ' }).Length != 2)
+                {
+                    return false;
+                }
+
+                return await _userTokenRepository.Get().AnyAsync(ut => ut.Token == token.Split(new char[] { ' ' })[1] &&
+                                                            ut.ExpirationDate > DateTime.UtcNow
+                                                            && !ut.User.IsDeleted);
+        }
     }
 }   
+    

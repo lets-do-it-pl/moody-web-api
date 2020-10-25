@@ -8,7 +8,15 @@ namespace LetsDoIt.Moody.Persistance
     {
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
                   : base(options)
+        {            
+        }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CategoryDetails>()
+                .HasOne(c => c.Category)
+                .WithMany(c => c.CategoryDetails)
+                .HasForeignKey(c => c.CategoryId);
         }
 
         public DbSet<Category> Categories { get; set; }
@@ -18,5 +26,7 @@ namespace LetsDoIt.Moody.Persistance
         public DbSet<UserToken> UserTokens { get; set; }
 
         public DbSet<VersionHistory> VersionHistories { get; set; }
+
+        public DbSet<CategoryDetails> CategoryDetails { get; set; }
     }
 }

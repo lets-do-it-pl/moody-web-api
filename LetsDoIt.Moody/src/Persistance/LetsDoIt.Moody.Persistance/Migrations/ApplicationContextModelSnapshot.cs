@@ -15,7 +15,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.6")
+                .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -50,6 +50,39 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("LetsDoIt.Moody.Domain.CategoryDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("CategoryDetails");
                 });
 
             modelBuilder.Entity("LetsDoIt.Moody.Domain.User", b =>
@@ -121,6 +154,15 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VersionHistories");
+                });
+
+            modelBuilder.Entity("LetsDoIt.Moody.Domain.CategoryDetails", b =>
+                {
+                    b.HasOne("LetsDoIt.Moody.Domain.Category", "Category")
+                        .WithMany("CategoryDetails")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("LetsDoIt.Moody.Domain.UserToken", b =>

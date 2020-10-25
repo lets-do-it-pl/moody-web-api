@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Authentication;
 using System.Data;
 using System.Net;
- using LetsDoIt.Moody.Web.Controllers;
+using Castle.Core.Logging;
+using LetsDoIt.Moody.Domain;
+using LetsDoIt.Moody.Web.Controllers;
+using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
@@ -13,13 +16,16 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
     using Entities.Requests;
     public class UserControllerTests
     {
+        private readonly Mock<ILogger<UserController>> _mockLogger;
         private readonly UserController _testing;
         private readonly Mock<IUserService> _mockUserService;
         public UserControllerTests()
         {
+            _mockLogger = new Mock<ILogger<UserController>>();
             _mockUserService = new Mock<IUserService>();
-            _testing = new UserController(_mockUserService.Object);
+            _testing = new UserController(_mockUserService.Object, _mockLogger.Object);
         }
+
 
         [Fact]
         public async Task AuthenticateAsync_UserDoesNotExistsInTheDatabase_ReturnsBadRequest()

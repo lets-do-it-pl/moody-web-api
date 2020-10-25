@@ -1,0 +1,59 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI-CD-Pipeline-to-AWS-ElasticBeansTalk
+env:
+  EB_PACKAGE_S3_BUCKET_NAME: "github-actions-moody" 
+  EB_APPLICATON_NAME: "MoodyTest"
+  EB_ENV_NAME: "MoodyTest-env"
+  DEPLOY_PACKAGE_NAME: "MoodyTest-app${{ github.sha }}"
+  AWS_REGION: "eu-central-1"
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on: 
+  workflow_dispatch:  
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  ci_pipeline:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Git clone our repository
+        uses: actions/checkout@v1
+      
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+           dotnet-version: 3.1.301
+                      
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
+        working-directory: ././LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web
+          
+      - name: Test PR      
+        run: dotnet test --no-restore --no-build 
+        working-directory: ././LetsDoIt.Moody
+                   
+      - name: dotnet publish
+        working-directory: ././LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web
+        run: |
+         dotnet publish -o dotnetcorewebapp
+         
+      - name:  Create ZIP deployement package
+        working-directory: ././LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/dotnetcorewebapp
+        run: zip -r ${{ env.DEPLOY_PACKAGE_NAME }}.zip .
+        
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v11
+        with:
+         aws_access_key: ${{ secrets.MY_AWS_ACCESS_KEY }}
+         aws_secret_key: ${{ secrets.MY_AWS_SECRET_KEY }}
+         application_name: ${{ env.EB_APPLICATON_NAME }}
+         environment_name: ${{ env.EB_ENV_NAME }}
+         version_label: Ver-${{ github.sha }}
+         region: ${{ env.AWS_REGION }}
+         deployment_package: ././LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/dotnetcorewebapp/${{ env.DEPLOY_PACKAGE_NAME }}.zip
+     
+     
+     

@@ -1,7 +1,6 @@
 using System;
 using NLog.Web;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 
 
@@ -25,7 +24,7 @@ namespace LetsDoIt.Moody.Web
             }
             finally
             {
-                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+                //Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
                 NLog.LogManager.Shutdown();
             }
         }

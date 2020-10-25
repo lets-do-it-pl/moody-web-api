@@ -5,6 +5,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>LetsDoIt.Moody.Web</ActiveDebugProfile>
-    <NameOfLastUsedPublishProfile>LetsDoItMoodyWeb20201021002111 - Web Deploy</NameOfLastUsedPublishProfile>
+    <Controller_SelectedScaffolderID>MvcControllerEmptyScaffolder</Controller_SelectedScaffolderID>
+    <Controller_SelectedScaffolderCategoryPath>root/Controller</Controller_SelectedScaffolderCategoryPath>
+    <NameOfLastUsedPublishProfile>LetsDoItMoodyWeb20201020171529 - Web Deploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
