@@ -1,4 +1,5 @@
 using HealthChecks.UI.Client;
+using LetsDoIt.MailSender.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -91,6 +92,10 @@ namespace LetsDoIt.Moody.Web
             });
 
             var tokenExpirationMinutes = Configuration.GetValue<int>("TokenExpirationMinutes");
+
+            services.Configure<SmtpOptions>(Configuration.GetSection(SmtpOptions.SmtpSectionName));
+
+            services.AddMailSender();
 
             services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
             services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();

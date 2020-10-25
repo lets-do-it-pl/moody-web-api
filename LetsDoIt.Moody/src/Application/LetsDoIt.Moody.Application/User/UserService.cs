@@ -2,6 +2,7 @@
 using NGuard;
 using System.Linq;
 using System.Data;
+using LetsDoIt.MailSender;
 using LetsDoIt.Moody.Application.CustomExceptions;
 
 namespace LetsDoIt.Moody.Application.User
@@ -22,6 +23,7 @@ namespace LetsDoIt.Moody.Application.User
         private readonly IEntityRepository<User> _userRepository;
         private readonly IEntityRepository<UserToken> _userTokenRepository;
         private readonly IEntityRepository<EmailVerificaitonToken> _emailVerificationTokenRepository;
+        private readonly IMailSender _mailSender;
         private readonly string _applicationKey;
         private readonly int _tokenExpirationMinutes;
 
@@ -165,6 +167,10 @@ namespace LetsDoIt.Moody.Application.User
 
         public Task<bool> SendEmailTokenAsync(string email)
         {
+
+
+            _mailSender.SendAsync();
+
             throw new NotImplementedException();
         }
 
