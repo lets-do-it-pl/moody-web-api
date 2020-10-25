@@ -6,7 +6,14 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
     public class SaveSystemUserRequest
     {
         [Required]
-        public string Email { get; set; }
+        public string Username { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public UserTypes UserType { get; set; } = UserTypes.Normal;
 
         [Required]
         public string Name { get; set; }
@@ -15,10 +22,6 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
         public string Surname { get; set; }
 
         [Required]
-        public string Username { get; set; }
-
-        [Required]
-        public string Password { get; set; }
-
+        public string Email { get; set; }
     }
 }

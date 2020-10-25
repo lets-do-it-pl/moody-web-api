@@ -9,5 +9,7 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
 
         [Required]
         public string Password { get; set; }
+
+        public bool IsActive { get; set; } = true;
     }
 }

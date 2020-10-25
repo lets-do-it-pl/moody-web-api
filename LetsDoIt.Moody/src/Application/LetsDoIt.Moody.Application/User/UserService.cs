@@ -37,7 +37,7 @@ namespace LetsDoIt.Moody.Application.User
             _tokenExpirationMinutes = tokenExpirationMinutes;
         }
 
-        public async Task SaveUserAsync(string username, string password, string name = null, string surname = null, string email = null, UserTypes userType = UserTypes.Mobile)
+        public async Task SaveUserAsync(string username, string password, bool isActive = false, UserTypes userType = UserTypes.Mobile, string name = null, string surname = null, string email = null)
         {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
@@ -48,9 +48,8 @@ namespace LetsDoIt.Moody.Application.User
                 throw new DuplicateNameException($"The username is already in the database. Username = {username}");
             }
 
-            bool isActive = userType == UserTypes.Mobile;
 
-            var newUser = GetUser(username, password,name,surname,email,userType, isActive);
+            var newUser = GetUser(username, password, isActive, userType, name, surname, email);
 
            
             await _userRepository.AddAsync(new User
@@ -140,17 +139,16 @@ namespace LetsDoIt.Moody.Application.User
             };
         }
 
-        private static UserEntity GetUser(string username, string password, string name = null, string surname = null, string email = null, UserTypes userType = UserTypes.Mobile, bool isActive = false) =>
+        private static UserEntity GetUser(string username, string password, bool isActive = false,  UserTypes userType = UserTypes.Mobile, string name = null, string surname = null, string email = null) =>
             new UserEntity
             (
                 username,
                 ProtectionHelper.EncryptValue(username + password),
+                isActive,
+                userType,
                 name,
                 surname,
-                email,
-                userType,
-                isActive
-
+                email
             );
 
         public async Task<bool> ValidateTokenAsync(string token)

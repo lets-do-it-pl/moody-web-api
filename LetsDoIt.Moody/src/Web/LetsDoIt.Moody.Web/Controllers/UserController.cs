@@ -41,7 +41,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 await _userService.SaveUserAsync(
                                 saveRequest.Username,
-                                saveRequest.Password);
+                                saveRequest.Password,);
 
                 _logger.LogInformation($"{nameof(SaveUser)} is finished successfully");
 

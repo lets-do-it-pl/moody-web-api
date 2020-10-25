@@ -37,10 +37,12 @@ namespace LetsDoIt.Moody.Web.Controllers
                 await _userService.SaveUserAsync(
                     saveSystemUserRequest.Username,
                     saveSystemUserRequest.Password,
+                    saveSystemUserRequest.IsActive,
+                    saveSystemUserRequest.UserType,
                     saveSystemUserRequest.Name,
                     saveSystemUserRequest.Surname,
-                    saveSystemUserRequest.Email,
-                    UserTypes.Normal);
+                    saveSystemUserRequest.Email
+                    );
 
                 _logger.LogInformation($"{nameof(SaveSystemUser)} is finished successfully");
 
