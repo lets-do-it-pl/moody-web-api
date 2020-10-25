@@ -115,6 +115,36 @@ namespace LetsDoIt.Moody.Application.User
             };
         }
 
+        public async Task<bool> ValidateTokenAsync(string token)
+        {
+                if (string.IsNullOrWhiteSpace(token) || token.Split(new char[] { ' ' }).Length != 2)
+                {
+                    return false;
+                }
+
+                return await _userTokenRepository.Get().AnyAsync(ut => ut.Token == token.Split(new char[] { ' ' })[1] &&
+                                                            ut.ExpirationDate > DateTime.UtcNow
+                                                            && !ut.User.IsDeleted
+                                                            && ut.User.IsActive);
+        }
+
+        public async Task<bool> SendEmailTokenAsync(string email)
+        {
+            var content = await ReadHtmlContent();
+
+            await _mailSender.SendAsync("Email Verification", 
+                content.Replace("{{action_url}}","231231231"),
+                email);
+
+            return true;
+        }
+
+        public async Task<bool> VerifyEmailTokenAsync(string token)
+        {
+           return await _emailVerificationTokenRepository.Get().AnyAsync(evt => evt.Token == token &&
+                                                                          evt.ExpirationDate > DateTime.UtcNow 
+                                                                          && !evt.User.IsDeleted);
+        }
         private UserToken GetNewUserToken(UserEntity user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -126,7 +156,7 @@ namespace LetsDoIt.Moody.Application.User
                 {
                     new Claim(ClaimTypes.Name, user.EncryptedPassword)
                 }),
-                
+
                 Expires = DateTime.UtcNow.AddMinutes(_tokenExpirationMinutes),
                 SigningCredentials =
                     new SigningCredentials(
@@ -143,7 +173,21 @@ namespace LetsDoIt.Moody.Application.User
             };
         }
 
-        private static UserEntity GetUser(string username, string password, bool isActive = false,  UserTypes userType = UserTypes.Mobile, string name = null, string surname = null, string email = null) =>
+        private static async Task<string> ReadHtmlContent()
+        {
+            string content;
+
+            await using (FileStream fileStream =
+                new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"\HtmlTemplates\EmailTokenVerification.html",
+                    FileMode.Open))
+            {
+                using StreamReader streamReader = new StreamReader(fileStream, Encoding.Unicode);
+                content = await streamReader.ReadToEndAsync();
+            }
+
+            return content;
+        }
+        private static UserEntity GetUser(string username, string password, bool isActive = false, UserTypes userType = UserTypes.Mobile, string name = null, string surname = null, string email = null) =>
             new UserEntity
             (
                 username,
@@ -154,42 +198,6 @@ namespace LetsDoIt.Moody.Application.User
                 surname,
                 email
             );
-
-        public async Task<bool> ValidateTokenAsync(string token)
-        {
-                if (string.IsNullOrWhiteSpace(token) || token.Split(new char[] { ' ' }).Length != 2)
-                {
-                    return false;
-                }
-
-                return await _userTokenRepository.Get().AnyAsync(ut => ut.Token == token.Split(new char[] { ' ' })[1] &&
-                                                            ut.ExpirationDate > DateTime.UtcNow
-                                                            && !ut.User.IsDeleted
-                                                            && ut.User.IsActive);
-        }
-
-        public async Task<bool> SendEmailTokenAsync(string email)
-        {
-           
-            FileStream fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"\HtmlTemplates\EmailTokenVerification.html", FileMode.Open);
-
-            string content;
-            using (StreamReader reader = new StreamReader(fs, Encoding.Unicode))
-            {
-                content = reader.ReadToEnd();
-            }
-            
-            await _mailSender.SendAsync("DENEME", content.Replace("{{action_url}}","231231231"), "ahmetkuris2308@gmail.com");
-
-            return true;
-        }
-
-        public async Task<bool> VerifyEmailTokenAsync(string token)
-        {
-           return await _emailVerificationTokenRepository.Get().AnyAsync(evt => evt.Token == token &&
-                                                                          evt.ExpirationDate > DateTime.UtcNow 
-                                                                          && !evt.User.IsDeleted);
-        }
     }
 }   
     
