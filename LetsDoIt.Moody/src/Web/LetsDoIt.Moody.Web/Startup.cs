@@ -1,5 +1,4 @@
-using LetsDoIt.Moody.Web.Filters;
-using LetsDoIt.Moody.Web.Middleware;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,25 +8,25 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
-
 namespace LetsDoIt.Moody.Web
 {
     using Application.User;
-    using Persistance;
-    using Persistance.Repositories.Base;
     using Application.Category;
     using Application.VersionHistory;
-    using Persistance.Repositories;
     using Domain;
-    using HealthChecks.UI.Client;
+    using Filters;
+    using Middleware;
+    using Persistance;
+    using Persistance.Repositories;
+    using Persistance.Repositories.Base;
+
     public class Startup
     {
         private const string JwtEncryptionKey = "2hN70OoacUi5SDU0rNuIXg==";
-        private readonly IConfiguration _config;
 
         public Startup(IConfiguration configuration)
         {
-            _config = configuration;
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -37,28 +36,28 @@ namespace LetsDoIt.Moody.Web
         {
             services.AddResponseCompression();
 
-            var connectionString = _config.GetConnectionString("MoodyDBConnection");
-            services.AddDbContext<ApplicationContext>(opt => opt.UseSqlServer(connectionString));
+            var connectionString = Configuration.GetConnectionString("MoodyDBConnection");
 
             services
                 .AddHealthChecks()
-                .AddSqlServer(connectionString, "SELECT 1");
+                .AddSqlServer(connectionString, "SELECT 1", name: "SqlServerApplicationDb");
 
-            var url = _config.GetValue<string>("HealthChecksUI:HealthChecks:Uri"); 
+            var url = Configuration.GetValue<string>("HealthChecksUri");
 
-            services.AddHealthChecksUI(s=>
+            services.AddHealthChecksUI(s =>
             {
-                s.AddHealthCheckEndpoint("endpoint1", url);
+                s.AddHealthCheckEndpoint("Moody API", url);
             })
             .AddInMemoryStorage();
 
             services.AddDbContext<ApplicationContext>(opt =>
-                opt.UseSqlServer(
+                opt.UseLazyLoadingProxies()
+                .UseSqlServer(
                     connectionString,
                     builder =>
                     {
                         builder.MigrationsAssembly("LetsDoIt.Moody.Persistance");
-                    }).UseLazyLoadingProxies());
+                    }));
 
             services.AddControllers();
 
@@ -91,7 +90,7 @@ namespace LetsDoIt.Moody.Web
                 c.AddSecurityRequirement(securityRequirement);
             });
 
-            var tokenExpirationMinutes = _config.GetValue<int>("TokenExpirationMinutes");
+            var tokenExpirationMinutes = Configuration.GetValue<int>("TokenExpirationMinutes");
 
             services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
             services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
@@ -115,7 +114,10 @@ namespace LetsDoIt.Moody.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(
+            IApplicationBuilder app, 
+            IWebHostEnvironment env,
+            ApplicationContext context)
         {
             if (env.IsDevelopment())
             {
@@ -125,6 +127,8 @@ namespace LetsDoIt.Moody.Web
             {
                 app.UseApiExceptionHandler();
             }
+
+            context.Database.Migrate();
 
             app.UseResponseCompression();
 
@@ -153,7 +157,7 @@ namespace LetsDoIt.Moody.Web
                 });
             });
 
-            
+
         }
 
     }

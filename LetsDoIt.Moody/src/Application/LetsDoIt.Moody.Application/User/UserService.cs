@@ -73,7 +73,6 @@ namespace LetsDoIt.Moody.Application.User
 
             var userDb = await _userRepository
                                     .Get()
-                                    .Include(u=>u.UserToken)
                                     .FirstOrDefaultAsync(u =>
                                         u.UserName == user.Username &&
                                         u.Password == user.EncryptedPassword &&
