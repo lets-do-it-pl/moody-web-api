@@ -58,7 +58,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
         public async Task SaveUser_WhenUserAlreadyExistsShouldReturnBadRequest()
         {
 
-            var saveUserRequest = new SaveUserRequest
+            var saveUserRequest = new SaveClientRequest
             {
                 Username = "good.username",
                 Password = "good.password"
@@ -95,7 +95,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
         [Fact]
         public async Task Authenticate_ShouldCheckDatabaseAndReturnOk()
         {
-            var saveUserRequest = new SaveUserRequest
+            var saveUserRequest = new SaveClientRequest
             {
                 Username = "good.username",
                 Password = "good.password"
@@ -125,7 +125,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.Category
         public async Task Authenticate_WhenPasswordIsWrong_ShouldReturnBadRequest()
         {
             //Save User to Database
-            var saveUserRequest = new SaveUserRequest
+            var saveUserRequest = new SaveClientRequest
             {
                 Username = "good.username",
                 Password = "good.password"

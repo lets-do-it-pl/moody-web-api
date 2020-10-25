@@ -159,7 +159,13 @@ namespace LetsDoIt.Moody.Application.User
 
                 return await _userTokenRepository.Get().AnyAsync(ut => ut.Token == token.Split(new char[] { ' ' })[1] &&
                                                             ut.ExpirationDate > DateTime.UtcNow
-                                                            && !ut.User.IsDeleted);
+                                                            && !ut.User.IsDeleted
+                                                            && ut.User.IsActive);
+        }
+
+        public Task<bool> SendEmailTokenAsync(string email)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<bool> VerifyEmailTokenAsync(string token)

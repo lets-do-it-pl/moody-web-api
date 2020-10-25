@@ -15,14 +15,14 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
     using Entities.Requests;
     public class UserControllerTests
     {
-        private readonly Mock<ILogger<UserController>> _mockLogger;
-        private readonly UserController _testing;
+        private readonly Mock<ILogger<ClientController>> _mockLogger;
+        private readonly ClientController _testing;
         private readonly Mock<IUserService> _mockUserService;
         public UserControllerTests()
         {
-            _mockLogger = new Mock<ILogger<UserController>>();
+            _mockLogger = new Mock<ILogger<ClientController>>();
             _mockUserService = new Mock<IUserService>();
-            _testing = new UserController(_mockUserService.Object, _mockLogger.Object);
+            _testing = new ClientController(_mockUserService.Object, _mockLogger.Object);
         }
 
 
@@ -58,7 +58,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             _mockUserService.Setup(x =>
                 x.SaveUserAsync(It.IsAny<string>(),It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<UserTypes>())).Throws(new DuplicateNameException());
 
-            var actual = await _testing.SaveUser(new SaveUserRequest
+            var actual = await _testing.SaveClient(new SaveClientRequest
             {
                 Username = "usernamefiller",
                 Password = "passwordfiller"
@@ -70,13 +70,13 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         [Fact]
         public async Task SaveUser_ShouldSaveUserInformationAndReturnOk()
         {
-            var saveUserRequest = new SaveUserRequest()
+            var saveUserRequest = new SaveClientRequest()
             {
                 Username = "test", 
                 Password= "test"
             };
 
-          var response =await _testing.SaveUser(saveUserRequest);
+          var response =await _testing.SaveClient(saveUserRequest);
 
           Assert.IsType<ObjectResult>(response);
 
@@ -88,13 +88,13 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         [Fact]
        public async Task SaveUser_ShouldInvokeUserServiceSaveUserAsync()
         {
-            var saveUserRequest = new SaveUserRequest()
+            var saveUserRequest = new SaveClientRequest()
             {
                 Username = "test",
                 Password = "test"
             };
 
-            await _testing.SaveUser(saveUserRequest);
+            await _testing.SaveClient(saveUserRequest);
 
             _mockUserService.Verify(us =>
                     us.SaveUserAsync(

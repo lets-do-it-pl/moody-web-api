@@ -1,19 +1,16 @@
 ﻿using System;
+using System.Data;
 using System.Net;
 using System.Threading.Tasks;
-using System.Data;
-using System.Security.Authentication;
-using LetsDoIt.Moody.Application.CustomExceptions;
-using LetsDoIt.Moody.Web.Filters;
+using LetsDoIt.Moody.Application.User;
+using LetsDoIt.Moody.Domain;
+using LetsDoIt.Moody.Web.Entities.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
-    using Application.User;
-    using Entities.Requests;
-    using Newtonsoft.Json;
-
     [ApiController]
     [Route("api/users")]
     public class UserController : ControllerBase
@@ -21,27 +18,31 @@ namespace LetsDoIt.Moody.Web.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService,
-            ILogger<UserController> logger)
+        public UserController(IUserService userService, ILogger<UserController> logger)
         {
             _userService = userService;
             _logger = logger;
         }
 
         [HttpPost]
-        [AuthorizationByTempToken]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> SaveUser(SaveUserRequest saveRequest)
+        public async Task<IActionResult> SaveUser(SaveUserRequest saveUserRequest)
         {
             _logger.LogInformation(
                 $"{nameof(SaveUser)} is started with " +
-                $"save request = {JsonConvert.SerializeObject(saveRequest)}");
+                $"save request = {JsonConvert.SerializeObject(saveUserRequest)}");
 
             try
             {
                 await _userService.SaveUserAsync(
-                                saveRequest.Username,
-                                saveRequest.Password,);
+                    saveUserRequest.Username,
+                    saveUserRequest.Password,
+                    saveUserRequest.IsActive,
+                    saveUserRequest.UserType,
+                    saveUserRequest.Name,
+                    saveUserRequest.Surname,
+                    saveUserRequest.Email
+                    );
 
                 _logger.LogInformation($"{nameof(SaveUser)} is finished successfully");
 
@@ -60,44 +61,35 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
         }
 
-        [HttpPost("authenticate")]
-        public async Task<ActionResult<UserTokenEntity>> Authenticate(string username, string password)
+        [HttpPost]
+        [Route("email")]
+        public async Task<IActionResult> SendEmailToken(string email)
         {
             _logger.LogInformation(
-                $"{nameof(Authenticate)} is started with " +
-                $"username={username}," +
-                $"password={password}");
+                $"{nameof(SendEmailToken)} is started with " +
+                $"email = {email}");
+           
+            await _userService.SendEmailTokenAsync(email);
 
-            try
-            {
-                var token = await _userService.AuthenticateAsync(username, password);
-
-                _logger.LogInformation($"{nameof(Authenticate)} is finished successfully");
-
-                return Ok(token);
-            }
-            catch (AuthenticationException)
-            {
-                _logger.LogInformation($"{nameof(Authenticate)} is finished with Bad Request!");
-
-                return BadRequest("Username or Password is wrong!");
-            }
-
-            catch (UserNotActiveException exception)
-            {
-                _logger.LogInformation($"{nameof(Authenticate)} is finished with Bad Request!");
-
-
-                //////REDIRECT TO ACTIVATION.
-
-                return BadRequest(exception.Message);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return Ok();
         }
+
+        [HttpPost]
+        [Route("email/verification")]
+        public async Task<IActionResult> VerifyUserEmailToken(string token)
+        {
+            _logger.LogInformation(
+                $"{nameof(VerifyUserEmailToken)} is started with " +
+                $"save request = {token}");
+
+            if (await _userService.VerifyEmailTokenAsync(token) == false)
+            {
+                return BadRequest("Email Verification Failed!");
+            }
+
+            return Ok();
+        }
+
+       
     }
 }
-
-

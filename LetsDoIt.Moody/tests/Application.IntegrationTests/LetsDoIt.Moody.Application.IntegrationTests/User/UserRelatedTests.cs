@@ -31,9 +31,9 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             _client.DefaultRequestHeaders.Add("Authorization",token); 
         }
 
-        private StringContent GetStringContent(string token, SaveUserRequest saveUserRequest)
+        private StringContent GetStringContent(string token, SaveClientRequest saveClientRequest)
         {
-            var httpContent = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
+            var httpContent = new StringContent(JsonConvert.SerializeObject(saveClientRequest));
 
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             
@@ -46,7 +46,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             // Arrange
             var token = _factory.GenerateTempSaveUserTokenForTests();
 
-            var saveUserRequest = new SaveUserRequest
+            var saveUserRequest = new SaveClientRequest
             {
                 Username = "good.username",
                 Password = "good.password"
@@ -73,7 +73,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
             var token = _factory.GenerateTempSaveUserTokenForTests();
 
-            var saveUserRequest = new SaveUserRequest
+            var saveUserRequest = new SaveClientRequest
             {
                 Username = "good.username",
                 Password = "good.password"
@@ -112,7 +112,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             //Save User to 
             var token = _factory.GenerateTempSaveUserTokenForTests();
 
-            var saveUserRequest = new SaveUserRequest
+            var saveUserRequest = new SaveClientRequest
             {
                 Username = "good.username",
                 Password = "good.password"
@@ -142,7 +142,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
         {
             //Save User to Database
             var token = _factory.GenerateTempSaveUserTokenForTests();
-            var saveUserRequest = new SaveUserRequest
+            var saveUserRequest = new SaveClientRequest
             {
                 Username = "good.username",
                 Password = "good.password"
