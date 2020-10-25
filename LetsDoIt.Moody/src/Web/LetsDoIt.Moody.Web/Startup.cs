@@ -1,4 +1,5 @@
 using HealthChecks.UI.Client;
+using LetsDoIt.MailSender;
 using LetsDoIt.MailSender.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -110,7 +111,8 @@ namespace LetsDoIt.Moody.Web
                     us.GetService<IEntityRepository<User>>(),
                     us.GetService<IEntityRepository<UserToken>>(),
                     JwtEncryptionKey,
-                    tokenExpirationMinutes
+                    tokenExpirationMinutes,
+                    us.GetService<IMailSender>()
                 ));
 
             services.AddMvc(options =>

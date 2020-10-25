@@ -32,12 +32,14 @@ namespace LetsDoIt.Moody.Application.User
             IEntityRepository<User> userRepository,
             IEntityRepository<UserToken> userTokenRepository,
             string applicationKey,
-            int tokenExpirationMinutes)
+            int tokenExpirationMinutes, 
+            IMailSender mailSender)
         {
             _userRepository = userRepository;
             _userTokenRepository = userTokenRepository;
             _applicationKey = applicationKey;
             _tokenExpirationMinutes = tokenExpirationMinutes;
+            _mailSender = mailSender;
         }
 
         public async Task SaveUserAsync(string username, string password, bool isActive = false, UserTypes userType = UserTypes.Mobile, string name = null, string surname = null, string email = null)
@@ -166,14 +168,20 @@ namespace LetsDoIt.Moody.Application.User
                                                             && ut.User.IsActive);
         }
 
-        public Task<bool> SendEmailTokenAsync(string email)
+        public async Task<bool> SendEmailTokenAsync(string email)
         {
+           
+            FileStream fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"\HtmlTemplates\EmailTokenVerification.html", FileMode.Open);
 
-            FileStream fs = new FileStream("",FileMode.Open);
+            string content;
+            using (StreamReader reader = new StreamReader(fs, Encoding.Unicode))
+            {
+                content = reader.ReadToEnd();
+            }
+            
+            await _mailSender.SendAsync("DENEME", content.Replace("{{action_url}}","231231231"), "ahmetkuris2308@gmail.com");
 
-
-
-            throw new NotImplementedException();
+            return true;
         }
 
         public async Task<bool> VerifyEmailTokenAsync(string token)
