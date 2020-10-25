@@ -28,15 +28,15 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             _factory.ResetDbForTests();
 
             var token = factory.GenerateTempSaveUserTokenForTests();
-            _client.DefaultRequestHeaders.Add("Authorization",token); 
+            _client.DefaultRequestHeaders.Add("Authorization", token);
         }
 
-        private StringContent GetStringContent(string token, SaveUserRequest saveUserRequest)
+        private StringContent GetStringContent(SaveUserRequest saveUserRequest)
         {
             var httpContent = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
 
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            
+
             return httpContent;
         }
 
@@ -44,15 +44,14 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
         public async Task SaveUser_ShouldReturnCreatedStatusCodeAndRecordToDatabase()
         {
             // Arrange
-            var token = _factory.GenerateTempSaveUserTokenForTests();
-
+            var createDate = DateTime.UtcNow;
             var saveUserRequest = new SaveUserRequest
             {
                 Username = "good.username",
                 Password = "good.password"
             };
 
-            var httpContent = GetStringContent(token, saveUserRequest);
+            var httpContent = GetStringContent(saveUserRequest);
 
             // Act
             var response = await _client.PostAsync("/api/users", httpContent);
@@ -63,24 +62,19 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             var user = await _factory.UserRepositoryVar.GetAsync(u => u.UserName == "good.username");
 
             Assert.NotNull(user);
-            Assert.Equal("good.username", user.UserName);
-
+            Assert.True(createDate < user.CreateDate);
         }
-                
+
         [Fact]
         public async Task SaveUser_WhenUserAlreadyExistsShouldReturnBadRequest()
         {
-
-            var token = _factory.GenerateTempSaveUserTokenForTests();
-
             var saveUserRequest = new SaveUserRequest
             {
                 Username = "good.username",
                 Password = "good.password"
             };
 
-            var httpContent = GetStringContent(token, saveUserRequest);
-
+            var httpContent = GetStringContent(saveUserRequest);
 
             // Act
             var response1 = await _client.PostAsync("/api/users", httpContent);
@@ -88,18 +82,12 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
             response1.StatusCode.Should().Be(HttpStatusCode.Created);
             response2.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
         }
 
         [Fact]
         public async Task Authenticate_WhenUsernameDoesNotExists_ShouldReturnBadRequest()
         {
-
-            var parametersToAdd = new Dictionary<string, string> { { "username", "asd" }, { "password", "sss" } };
-            var newUri = QueryHelpers.AddQueryString(_baseUri.OriginalString, parametersToAdd);
-
-            var httpContent = new StringContent("");
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var (newUri, httpContent) = GetUriAndContent("notExist.UserName", "notExist.Password");
 
             var response = await _client.PostAsync(newUri, httpContent);
 
@@ -110,61 +98,70 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
         public async Task Authenticate_ShouldCheckDatabaseAndReturnOk()
         {
             //Save User to 
-            var token = _factory.GenerateTempSaveUserTokenForTests();
 
+            var goodUsername = "good.username";
+            var goodPassword = "good.password";
             var saveUserRequest = new SaveUserRequest
             {
-                Username = "good.username",
-                Password = "good.password"
+                Username = goodUsername,
+                Password = goodPassword
             };
 
-            var httpContentSaveUser = GetStringContent(token, saveUserRequest);
+            var httpContentSaveUser = GetStringContent(saveUserRequest);
 
             var responseSaveUser = await _client.PostAsync("/api/users", httpContentSaveUser);
 
             responseSaveUser.StatusCode.Should().Be(HttpStatusCode.Created);
 
             //Authenticate
-            var parametersToAdd = new Dictionary<string, string> { { "username", "good.username" }, { "password", "good.password" } };
-            var newUri = QueryHelpers.AddQueryString(_baseUri.OriginalString + "/authenticate", parametersToAdd);
+            var (newUri, httpContent) = GetUriAndContent(goodUsername, goodPassword, "/authenticate");
 
-            var httpContentAuthenticate = new StringContent("");
-            httpContentAuthenticate.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            var responseAuthenticate = await _client.PostAsync(newUri, httpContentAuthenticate);
+            var responseAuthenticate = await _client.PostAsync(newUri, httpContent);
 
             responseAuthenticate.StatusCode.Should().Be(HttpStatusCode.OK);
-
         }
 
         [Fact]
         public async Task Authenticate_WhenPasswordIsWrong_ShouldReturnBadRequest()
         {
             //Save User to Database
-            var token = _factory.GenerateTempSaveUserTokenForTests();
+            var goodUsername = "good.username";
+
             var saveUserRequest = new SaveUserRequest
             {
-                Username = "good.username",
+                Username = goodUsername,
                 Password = "good.password"
             };
 
-            var httpContentSaveUser = GetStringContent(token, saveUserRequest);
+            var httpContentSaveUser = GetStringContent(saveUserRequest);
 
             var responseSaveUser = await _client.PostAsync("/api/users", httpContentSaveUser);
 
             responseSaveUser.StatusCode.Should().Be(HttpStatusCode.Created);
 
             //Authenticate
-            var parametersToAdd = new Dictionary<string, string> { { "username", "good.username" }, { "password", "bad.password" } };
-            var newUri = QueryHelpers.AddQueryString(_baseUri.OriginalString, parametersToAdd);
-
-            var httpContent = new StringContent("");
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var (newUri, httpContent) = GetUriAndContent(goodUsername, "bad.password");
 
             var response = await _client.PostAsync(newUri, httpContent);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
+        }
+
+        private (string, StringContent) GetUriAndContent(string username, string password, string queryString = "")
+        {
+            var parametersToAdd = new Dictionary<string, string>
+            {
+                {"username", username},
+                {"password", password}
+            };
+
+            var newUri = QueryHelpers.AddQueryString(_baseUri.OriginalString + queryString, parametersToAdd);
+
+            var httpContent = new StringContent("");
+            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            return (newUri, httpContent);
         }
     }
 }
