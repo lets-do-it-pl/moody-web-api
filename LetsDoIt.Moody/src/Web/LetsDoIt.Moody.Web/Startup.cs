@@ -1,3 +1,5 @@
+using System.Reflection;
+using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using LetsDoIt.MailSender;
 using LetsDoIt.MailSender.Options;
@@ -62,7 +64,11 @@ namespace LetsDoIt.Moody.Web
                         builder.MigrationsAssembly("LetsDoIt.Moody.Persistance");
                     }));
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation(opt =>
+            {
+                opt.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            }); ;
 
             services.AddSwaggerGen(c =>
             {
