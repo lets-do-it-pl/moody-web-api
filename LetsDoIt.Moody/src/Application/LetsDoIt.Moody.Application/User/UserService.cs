@@ -26,12 +26,15 @@ namespace LetsDoIt.Moody.Application.User
         private readonly IMailSender _mailSender;
         private readonly string _applicationKey;
         private readonly int _tokenExpirationMinutes;
+        private readonly int _emailVerificationTokenExpirationMinutes;
+        private const string HtmlFilePath= @"\HtmlTemplates\EmailTokenVerification.html";
 
         public UserService(
             IEntityRepository<User> userRepository,
             IEntityRepository<UserToken> userTokenRepository,
             string applicationKey,
-            int tokenExpirationMinutes, 
+            int tokenExpirationMinutes,
+            int _emailVerificationTokenExpirationMinutes,
             IMailSender mailSender, IEntityRepository<EmailVerificaitonToken> emailVerificationTokenRepository)
         {
             _userRepository = userRepository;
@@ -42,7 +45,14 @@ namespace LetsDoIt.Moody.Application.User
             _emailVerificationTokenRepository = emailVerificationTokenRepository;
         }
 
-        public async Task SaveUserAsync(string username, string password, bool isActive = false, UserTypes userType = UserTypes.Mobile, string name = null, string surname = null, string email = null)
+        public async Task SaveUserAsync(
+            string username,
+            string password,
+            bool isActive = false,
+            UserType userType = UserType.Mobile,
+            string name = null,
+            string surname = null,
+            string email = null )
         {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
@@ -53,7 +63,7 @@ namespace LetsDoIt.Moody.Application.User
                 throw new DuplicateNameException($"The username is already in the database. Username = {username}");
             }
 
-            var newUser = GetUser(username, password, isActive, userType, name, surname, email);
+            var newUser = ToUserEntity(username, password, isActive, userType, name, surname, email);
 
             await _userRepository.AddAsync(new User
             {
@@ -72,7 +82,7 @@ namespace LetsDoIt.Moody.Application.User
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
-            var user = GetUser(username, password);
+            var user = ToUserEntity(username, password);
 
             var userDb = await _userRepository
                                     .Get()
@@ -153,18 +163,12 @@ namespace LetsDoIt.Moody.Application.User
                 email);
         }
 
-        private EmailVerificaitonToken GenerateEmailVerificationToken(User dbUser)
+        private EmailVerificaitonToken GenerateEmailVerificationToken(User dbUser) => new EmailVerificaitonToken
         {
-
-            var emailVerificaitonToken = new EmailVerificaitonToken
-            {
-                Token = Guid.NewGuid().ToString(),
-                ExpirationDate = DateTime.UtcNow.AddMinutes(_tokenExpirationMinutes),
-                UserId = dbUser.Id
-            };
-
-            return emailVerificaitonToken;
-        }
+            Token = Guid.NewGuid().ToString(),
+            ExpirationDate = DateTime.UtcNow.AddMinutes(_emailVerificationTokenExpirationMinutes),
+            UserId = dbUser.Id
+        };
 
         public async Task VerifyEmailTokenAsync(string token)
         {
@@ -220,20 +224,17 @@ namespace LetsDoIt.Moody.Application.User
 
         private static async Task<string> ReadHtmlContent()
         {
-            string content;
-
             await using (FileStream fileStream =
-                new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"\HtmlTemplates\EmailTokenVerification.html",
+                new FileStream(AppDomain.CurrentDomain.BaseDirectory 
+                               + HtmlFilePath,
                     FileMode.Open))
             {
                 using StreamReader streamReader = new StreamReader(fileStream, Encoding.Unicode);
-                content = await streamReader.ReadToEndAsync();
+                return await streamReader.ReadToEndAsync();
             }
-
-            return content;
         }
 
-        private static UserEntity GetUser(string username, string password, bool isActive = false, UserTypes userType = UserTypes.Mobile, string name = null, string surname = null, string email = null) =>
+        private static UserEntity ToUserEntity(string username, string password, bool isActive = false, UserType userType = UserType.Mobile, string name = null, string surname = null, string email = null) =>
             new UserEntity
             (
                 username,

@@ -26,6 +26,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
         private readonly Mock<IMailSender> _mailSender;
         private readonly string _applicationKey = "d1442e0f-01e0-4074-bdae-28b8f57a6b40";
         private readonly int _tokenExpirationMinutes = 123;
+        private readonly int _emailVerificationTokenExpirationMinutes = 123;
 
         public UserServiceTests()
         {
@@ -38,6 +39,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                 _mockUserTokenRepository.Object,
                 _applicationKey,
                 _tokenExpirationMinutes,
+                _emailVerificationTokenExpirationMinutes,
                 _mailSender.Object,
                 _mockEmailVerificationTokenRepository.Object);
         }

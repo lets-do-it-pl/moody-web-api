@@ -35,10 +35,10 @@ namespace LetsDoIt.Moody.Domain
 
         public bool IsActive { get; set; }
 
-        public UserTypes UserType { get; set; }
+        public UserType UserType { get; set; }
     }
 
-    public enum UserTypes
+    public enum UserType
     {
         Mobile,
         Normal,

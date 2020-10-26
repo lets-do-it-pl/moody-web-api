@@ -56,7 +56,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         public async Task SaveClient_WhenDuplicateNameExceptionThrown_ShouldReturnBadRequest()
         {
             _mockUserService.Setup(x =>
-                x.SaveUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<UserTypes>(),
+                x.SaveUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<UserType>(),
                     It.IsAny<string>(), It.IsAny<string>(),It.IsAny<string>())).Throws(new DuplicateNameException());
 
             var actual = await _testing.SaveClient(new SaveClientRequest
@@ -103,7 +103,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
                         saveUserRequest.Username,
                         saveUserRequest.Password,
                         saveUserRequest.IsActive,
-                        UserTypes.Mobile,
+                        UserType.Mobile,
                         null,
                         null,
                         null

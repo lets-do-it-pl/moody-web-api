@@ -40,7 +40,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                     saveUserRequest.Username,
                     saveUserRequest.Password,
                     false,
-                    UserTypes.Normal,
+                    UserType.Normal,
                     saveUserRequest.Name,
                     saveUserRequest.Surname,
                     saveUserRequest.Email

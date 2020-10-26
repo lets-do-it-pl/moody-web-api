@@ -100,6 +100,7 @@ namespace LetsDoIt.Moody.Web
             });
 
             var tokenExpirationMinutes = Configuration.GetValue<int>("TokenExpirationMinutes");
+            var emailVerificationTokenMinutes = Configuration.GetValue<int>("EmailVerificationTokenExpirationMinutes");
 
             services.Configure<SmtpOptions>(Configuration.GetSection(SmtpOptions.SmtpSectionName));
 
@@ -118,6 +119,7 @@ namespace LetsDoIt.Moody.Web
                     us.GetService<IEntityRepository<User>>(),
                     us.GetService<IEntityRepository<UserToken>>(),
                     JwtEncryptionKey,
+                    emailVerificationTokenMinutes,
                     tokenExpirationMinutes,
                     us.GetService<IMailSender>(),
                     us.GetService<IEntityRepository<EmailVerificaitonToken>>()
