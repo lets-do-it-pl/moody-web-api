@@ -48,7 +48,6 @@
         public async Task<UserToken> GetAsync(Expression<Func<UserToken, bool>> filter)
         {
             return await _context.UserTokens.FirstOrDefaultAsync(filter);
-
         }
 
         public Task<List<UserToken>> GetListAsync(Expression<Func<UserToken, bool>> filter = null)

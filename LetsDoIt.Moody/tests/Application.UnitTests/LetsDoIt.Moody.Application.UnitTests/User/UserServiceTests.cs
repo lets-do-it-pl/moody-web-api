@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Data;
 using System.Security.Authentication;
+using LetsDoIt.MailSender;
 using MockQueryable.Moq;
 using LetsDoIt.Moody.Application.User;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
         private readonly IUserService _testing;
         private readonly Mock<IEntityRepository<UserToken>> _mockUserTokenRepository;
         private readonly Mock<IEntityRepository<User>> _mockUserRepository;
+        private readonly Mock<IEntityRepository<EmailVerificaitonToken>> _mockEmailVerificationTokenRepository;
+        private readonly Mock<IMailSender> _mailSender;
         private readonly string _applicationKey = "d1442e0f-01e0-4074-bdae-28b8f57a6b40";
         private readonly int _tokenExpirationMinutes = 123;
 
@@ -29,11 +32,15 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
         {
             _mockUserRepository = new Mock<IEntityRepository<User>>();
             _mockUserTokenRepository = new Mock<IEntityRepository<UserToken>>();
+            _mockEmailVerificationTokenRepository = new Mock<IEntityRepository<EmailVerificaitonToken>>();
+            _mailSender = new Mock<IMailSender>();
             _testing = new UserService
                 (_mockUserRepository.Object,
                 _mockUserTokenRepository.Object,
                 _applicationKey,
-                _tokenExpirationMinutes);
+                _tokenExpirationMinutes,
+                _mailSender.Object,
+                _mockEmailVerificationTokenRepository.Object);
         }
 
         [Fact]

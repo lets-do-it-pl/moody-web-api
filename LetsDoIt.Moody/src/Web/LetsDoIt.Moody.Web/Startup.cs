@@ -104,6 +104,7 @@ namespace LetsDoIt.Moody.Web
             services.AddTransient<IEntityRepository<User>, UserRepository>();
             services.AddTransient<IEntityRepository<UserToken>, UserTokenRepository>();
             services.AddTransient<IEntityRepository<CategoryDetails>, CategoryDetailsRepository>();
+            services.AddTransient<IEntityRepository<EmailVerificaitonToken>, EmailVerificationTokenRepository>();
 
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
@@ -112,7 +113,8 @@ namespace LetsDoIt.Moody.Web
                     us.GetService<IEntityRepository<UserToken>>(),
                     JwtEncryptionKey,
                     tokenExpirationMinutes,
-                    us.GetService<IMailSender>()
+                    us.GetService<IMailSender>(),
+                    us.GetService<IEntityRepository<EmailVerificaitonToken>>()
                 ));
 
             services.AddMvc(options =>

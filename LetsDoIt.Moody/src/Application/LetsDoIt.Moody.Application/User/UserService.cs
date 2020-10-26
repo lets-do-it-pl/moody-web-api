@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using NGuard;
-using System.Linq;
 using System.Data;
 using System.IO;
 using LetsDoIt.MailSender;
@@ -33,13 +32,14 @@ namespace LetsDoIt.Moody.Application.User
             IEntityRepository<UserToken> userTokenRepository,
             string applicationKey,
             int tokenExpirationMinutes, 
-            IMailSender mailSender)
+            IMailSender mailSender, IEntityRepository<EmailVerificaitonToken> emailVerificationTokenRepository)
         {
             _userRepository = userRepository;
             _userTokenRepository = userTokenRepository;
             _applicationKey = applicationKey;
             _tokenExpirationMinutes = tokenExpirationMinutes;
             _mailSender = mailSender;
+            _emailVerificationTokenRepository = emailVerificationTokenRepository;
         }
 
         public async Task SaveUserAsync(string username, string password, bool isActive = false, UserTypes userType = UserTypes.Mobile, string name = null, string surname = null, string email = null)
@@ -47,16 +47,14 @@ namespace LetsDoIt.Moody.Application.User
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
-            var isUserExisted = _userRepository.Get().Where(u => u.UserName == username && !u.IsDeleted).Any();
+            var isUserExisted = await _userRepository.Get().AnyAsync(u => u.UserName == username && !u.IsDeleted);
             if (isUserExisted)
             {
                 throw new DuplicateNameException($"The username is already in the database. Username = {username}");
             }
 
-
             var newUser = GetUser(username, password, isActive, userType, name, surname, email);
 
-           
             await _userRepository.AddAsync(new User
             {
                 UserName = newUser.Username,
@@ -128,23 +126,68 @@ namespace LetsDoIt.Moody.Application.User
                                                             && ut.User.IsActive);
         }
 
-        public async Task<bool> SendEmailTokenAsync(string email)
+        public async Task SendEmailTokenAsync(string email)
         {
+            var dbUser = await _userRepository.GetAsync(u => u.Email == email && !u.IsDeleted);
+
+            if (dbUser == null)
+            {
+                throw new EmailNotRegisteredException(email);
+            }
+
+            var emailVerificationToken = GenerateEmailVerificationToken(dbUser);
+
+            if (await _emailVerificationTokenRepository.Get().AnyAsync(evt => evt.UserId == dbUser.Id))
+            {
+                await _emailVerificationTokenRepository.UpdateAsync(emailVerificationToken);
+            }
+            else
+            {
+                await _emailVerificationTokenRepository.AddAsync(emailVerificationToken);
+            }
+
             var content = await ReadHtmlContent();
 
             await _mailSender.SendAsync("Email Verification", 
-                content.Replace("{{action_url}}","231231231"),
+                content.Replace("{{action_url}}","front-end/" + emailVerificationToken.Token),
                 email);
-
-            return true;
         }
 
-        public async Task<bool> VerifyEmailTokenAsync(string token)
+        private EmailVerificaitonToken GenerateEmailVerificationToken(User dbUser)
         {
-           return await _emailVerificationTokenRepository.Get().AnyAsync(evt => evt.Token == token &&
-                                                                          evt.ExpirationDate > DateTime.UtcNow 
-                                                                          && !evt.User.IsDeleted);
+
+            var emailVerificaitonToken = new EmailVerificaitonToken
+            {
+                Token = Guid.NewGuid().ToString(),
+                ExpirationDate = DateTime.UtcNow.AddMinutes(_tokenExpirationMinutes),
+                UserId = dbUser.Id
+            };
+
+            return emailVerificaitonToken;
         }
+
+        public async Task VerifyEmailTokenAsync(string token)
+        {
+           var emailVerificationToken = await _emailVerificationTokenRepository.GetAsync(evt => evt.Token == token
+                                                                          && !evt.User.IsDeleted);
+
+           if (emailVerificationToken == null)
+           {
+               throw new AuthenticationException($"No such token : {token}");
+           }
+
+           if (emailVerificationToken.ExpirationDate < DateTime.UtcNow)
+           {
+               throw new TokenExpiredException(emailVerificationToken.User.Email);
+           }
+
+           var userDb= await _userRepository.GetAsync(u => u.Id == emailVerificationToken.UserId && !u.IsDeleted);
+
+           userDb.IsActive = true;
+
+           await _userRepository.UpdateAsync(userDb);
+        }
+
         private UserToken GetNewUserToken(UserEntity user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -187,6 +230,7 @@ namespace LetsDoIt.Moody.Application.User
 
             return content;
         }
+
         private static UserEntity GetUser(string username, string password, bool isActive = false, UserTypes userType = UserTypes.Mobile, string name = null, string surname = null, string email = null) =>
             new UserEntity
             (

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.Net;
+using System.Security.Authentication;
 using System.Threading.Tasks;
+using LetsDoIt.Moody.Application.CustomExceptions;
 using LetsDoIt.Moody.Application.User;
 using LetsDoIt.Moody.Domain;
 using LetsDoIt.Moody.Web.Entities.Requests;
@@ -37,8 +39,8 @@ namespace LetsDoIt.Moody.Web.Controllers
                 await _userService.SaveUserAsync(
                     saveUserRequest.Username,
                     saveUserRequest.Password,
-                    saveUserRequest.IsActive,
-                    saveUserRequest.UserType,
+                    false,
+                    UserTypes.Normal,
                     saveUserRequest.Name,
                     saveUserRequest.Surname,
                     saveUserRequest.Email
@@ -55,10 +57,6 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return BadRequest(ex.Message);
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
 
         [HttpPost]
@@ -68,10 +66,21 @@ namespace LetsDoIt.Moody.Web.Controllers
             _logger.LogInformation(
                 $"{nameof(SendEmailToken)} is started with " +
                 $"email = {email}");
-           
-            await _userService.SendEmailTokenAsync(email);
 
-            return Ok();
+            try
+            {
+                await _userService.SendEmailTokenAsync(email);
+
+                _logger.LogInformation($"{nameof(SendEmailToken)} is finished successfully");
+
+                return Ok();
+            }
+            catch (EmailNotRegisteredException exception )
+            {
+                _logger.LogInformation($"{nameof(SendEmailToken)} is finished with bad request!");
+
+                return BadRequest(exception.Message);
+            }
         }
 
         [HttpPost]
@@ -82,14 +91,27 @@ namespace LetsDoIt.Moody.Web.Controllers
                 $"{nameof(VerifyUserEmailToken)} is started with " +
                 $"save request = {token}");
 
-            if (await _userService.VerifyEmailTokenAsync(token) == false)
+            try
             {
-                return BadRequest("Email Verification Failed!");
+                await _userService.VerifyEmailTokenAsync(token);
+
+                _logger.LogInformation($"{nameof(VerifyUserEmailToken)} is finished successfully");
+
+                return Ok();
             }
+            catch (AuthenticationException exception)
+            {
+                _logger.LogInformation($"{nameof(VerifyUserEmailToken)} is finished with bad request!");
 
-            return Ok();
+                return BadRequest(exception.Message);
+            }
+            catch (TokenExpiredException exception)
+            {
+                _logger.LogInformation($"{nameof(VerifyUserEmailToken)} is finished with bad request!");
+
+                return BadRequest(exception.Message);
+            }
+           
         }
-
-       
     }
 }

@@ -11,10 +11,6 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
         [Required]
         public string Password { get; set; }
 
-        public bool IsActive { get; set; }
-
-        public UserTypes UserType { get; set; } = UserTypes.Normal;
-
         [Required]
         public string Name { get; set; }
 
