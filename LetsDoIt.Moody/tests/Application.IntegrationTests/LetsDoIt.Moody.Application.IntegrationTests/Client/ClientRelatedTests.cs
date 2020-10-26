@@ -5,24 +5,23 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using FluentAssertions;
+using LetsDoIt.Moody.Web;
+using LetsDoIt.Moody.Web.Entities.Requests;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace LetsDoIt.Moody.Application.IntegrationTests.User
+namespace LetsDoIt.Moody.Application.IntegrationTests.Client
 {
-    using Web.Entities.Requests;
-    using Web;
-
-    public class UserRelatedTests : IClassFixture<CustomWebApplicationFactory<Startup>>
+    public class ClientRelatedTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private readonly HttpClient _client;
         private readonly CustomWebApplicationFactory<Startup> _factory;
         private readonly Uri _baseUri;
 
-        public UserRelatedTests(CustomWebApplicationFactory<Startup> factory)
+        public ClientRelatedTests(CustomWebApplicationFactory<Startup> factory)
         {
-            _baseUri = new Uri("http://localhost/api/users");
+            _baseUri = new Uri("http://localhost/api/clients");
             _factory = factory;
             _client = factory.CreateDefaultClient();
             _factory.ResetDbForTests();
@@ -31,9 +30,9 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             _client.DefaultRequestHeaders.Add("Authorization", token);
         }
 
-        private StringContent GetStringContent(SaveUserRequest saveUserRequest)
+        private StringContent GetStringContent(SaveClientRequest saveClientRequest)
         {
-            var httpContent = new StringContent(JsonConvert.SerializeObject(saveUserRequest));
+            var httpContent = new StringContent(JsonConvert.SerializeObject(saveClientRequest));
 
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
@@ -41,11 +40,11 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
         }
 
         [Fact]
-        public async Task SaveUser_ShouldReturnCreatedStatusCodeAndRecordToDatabase()
+        public async Task SaveClient_ShouldReturnCreatedStatusCodeAndRecordToDatabase()
         {
             // Arrange
             var createDate = DateTime.UtcNow;
-            var saveUserRequest = new SaveUserRequest
+            var saveUserRequest = new SaveClientRequest
             {
                 Username = "good.username",
                 Password = "good.password"
@@ -54,7 +53,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             var httpContent = GetStringContent(saveUserRequest);
 
             // Act
-            var response = await _client.PostAsync("/api/users", httpContent);
+            var response = await _client.PostAsync("/api/clients", httpContent);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -66,9 +65,9 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
         }
 
         [Fact]
-        public async Task SaveUser_WhenUserAlreadyExistsShouldReturnBadRequest()
+        public async Task SaveUserClient_WhenClientAlreadyExistsShouldReturnBadRequest()
         {
-            var saveUserRequest = new SaveUserRequest
+            var saveUserRequest = new SaveClientRequest
             {
                 Username = "good.username",
                 Password = "good.password"
@@ -77,8 +76,8 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             var httpContent = GetStringContent(saveUserRequest);
 
             // Act
-            var response1 = await _client.PostAsync("/api/users", httpContent);
-            var response2 = await _client.PostAsync("/api/users", httpContent);
+            var response1 = await _client.PostAsync("/api/clients", httpContent);
+            var response2 = await _client.PostAsync("/api/clients", httpContent);
 
             response1.StatusCode.Should().Be(HttpStatusCode.Created);
             response2.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -101,7 +100,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
             var goodUsername = "good.username";
             var goodPassword = "good.password";
-            var saveUserRequest = new SaveUserRequest
+            var saveUserRequest = new SaveClientRequest
             {
                 Username = goodUsername,
                 Password = goodPassword
@@ -109,7 +108,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
             var httpContentSaveUser = GetStringContent(saveUserRequest);
 
-            var responseSaveUser = await _client.PostAsync("/api/users", httpContentSaveUser);
+            var responseSaveUser = await _client.PostAsync("/api/clients", httpContentSaveUser);
 
             responseSaveUser.StatusCode.Should().Be(HttpStatusCode.Created);
 
@@ -127,7 +126,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
             //Save User to Database
             var goodUsername = "good.username";
 
-            var saveUserRequest = new SaveUserRequest
+            var saveUserRequest = new SaveClientRequest
             {
                 Username = goodUsername,
                 Password = "good.password"
@@ -135,7 +134,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests.User
 
             var httpContentSaveUser = GetStringContent(saveUserRequest);
 
-            var responseSaveUser = await _client.PostAsync("/api/users", httpContentSaveUser);
+            var responseSaveUser = await _client.PostAsync("/api/clients", httpContentSaveUser);
 
             responseSaveUser.StatusCode.Should().Be(HttpStatusCode.Created);
 

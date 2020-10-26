@@ -9,7 +9,6 @@ using System.Security.Authentication;
 using LetsDoIt.MailSender;
 using MockQueryable.Moq;
 using LetsDoIt.Moody.Application.User;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace LetsDoIt.Moody.Application.UnitTests.User
@@ -62,7 +61,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                 {
                     UserName = username,
                     Password = ProtectionHelper.EncryptValue(username + password),
-                    UserToken = token
+                    UserToken = token,
+                    IsActive = true
                 }
             };
 
@@ -105,7 +105,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                     Id = 1,
                     UserName = username,
                     Password = ProtectionHelper.EncryptValue(username + password),
-                    UserToken = null
+                    UserToken = null,
+                    IsActive = true
                 }
             };
 
@@ -157,7 +158,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                     Id = 1,
                     UserName = username,
                     Password =  ProtectionHelper.EncryptValue(username + password),
-                    UserToken = expiredUserToken
+                    UserToken = expiredUserToken,
+                    IsActive = true
                 }
 
             };
@@ -248,7 +250,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
 
             }.AsQueryable();
 
-            _mockUserRepository.Setup(repo=>repo.Get()).Returns(userList);
+            _mockUserRepository.Setup(repo=>repo.Get()).Returns(userList.AsQueryable().BuildMockDbSet().Object);
 
             async Task Test() => await _testing.SaveUserAsync(username, password);
 
@@ -263,6 +265,10 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                 UserName = "asd",
                 Password = "pass"
             };
+
+            var userList = new List<User>();
+
+            _mockUserRepository.Setup(repo => repo.Get()).Returns(userList.AsQueryable().BuildMockDbSet().Object);
 
             await _testing.SaveUserAsync(user.UserName,user.Password);
 
