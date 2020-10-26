@@ -186,6 +186,8 @@ namespace LetsDoIt.Moody.Application.User
            userDb.IsActive = true;
 
            await _userRepository.UpdateAsync(userDb);
+
+           await _emailVerificationTokenRepository.DeleteAsync(emailVerificationToken);
         }
 
         private UserToken GetNewUserToken(UserEntity user)

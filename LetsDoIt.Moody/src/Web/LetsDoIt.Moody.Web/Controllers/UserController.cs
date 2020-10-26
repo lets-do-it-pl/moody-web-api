@@ -111,7 +111,6 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return BadRequest(exception.Message);
             }
-           
         }
     }
 }
