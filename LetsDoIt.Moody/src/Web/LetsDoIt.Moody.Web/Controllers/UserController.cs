@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.CustomExceptions;
 using LetsDoIt.Moody.Application.User;
 using LetsDoIt.Moody.Domain;
+using LetsDoIt.Moody.Infrastructure.ValueTypes;
 using LetsDoIt.Moody.Web.Entities.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -43,7 +44,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                     UserType.Normal,
                     saveUserRequest.Name,
                     saveUserRequest.Surname,
-                    saveUserRequest.Email
+                    Email.Parse(saveUserRequest.Email)
                     );
 
                 _logger.LogInformation($"{nameof(SaveUser)} is finished successfully");
@@ -109,8 +110,10 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 _logger.LogInformation($"{nameof(VerifyUserEmailToken)} is finished with bad request!");
 
+
                 return BadRequest(exception.Message);
             }
+
         }
     }
 }

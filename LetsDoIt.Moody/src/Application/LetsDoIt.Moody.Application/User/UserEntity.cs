@@ -1,4 +1,5 @@
 ﻿using LetsDoIt.Moody.Domain;
+using LetsDoIt.Moody.Infrastructure.ValueTypes;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -6,7 +7,7 @@ namespace LetsDoIt.Moody.Application.User
     {
         public UserEntity(
             string username, 
-            string encryptedPassword, bool isActive, UserType userType, string name , string surname , string email)
+            string encryptedPassword, bool isActive, UserType userType, string name , string surname , Email email)
         {
             Username = username;
             EncryptedPassword = encryptedPassword;
@@ -29,6 +30,6 @@ namespace LetsDoIt.Moody.Application.User
 
         public string Surname { get; }
 
-        public string Email { get; }
+        public Email Email { get; }
     }
 }

@@ -11,12 +11,12 @@ namespace LetsDoIt.Moody.Infrastructure.ValueTypes
         {
             if (value == null)
             {
-                throw new ArgumentNullException(nameof(value));
+                throw new ArgumentNullException(nameof(value),"Email can not be null!");
             }
 
             if (!IsValid(value))
             {
-                throw new ArgumentException("Invalid email address.", nameof(value));
+                throw new ArgumentException("Invalid email address.", value);
             }
 
             _value = value.ToLowerInvariant();
@@ -54,6 +54,16 @@ namespace LetsDoIt.Moody.Infrastructure.ValueTypes
             email = new Email(candidate);
 
             return true;
+        }
+
+        public static Email Parse(string candidate)
+        {
+            if (string.IsNullOrWhiteSpace(candidate))
+            {
+                throw new ArgumentException("Email can not be empty!");
+            }
+
+            return new Email(candidate);
         }
 
         public static explicit operator string(Email email)

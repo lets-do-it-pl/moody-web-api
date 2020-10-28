@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using LetsDoIt.MailSender;
 using LetsDoIt.Moody.Application.CustomExceptions;
+using LetsDoIt.Moody.Infrastructure.ValueTypes;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -52,7 +53,7 @@ namespace LetsDoIt.Moody.Application.User
             UserType userType = UserType.Mobile,
             string name = null,
             string surname = null,
-            string email = null )
+            Email email = new Email())
         {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
@@ -71,7 +72,7 @@ namespace LetsDoIt.Moody.Application.User
                 Password = newUser.EncryptedPassword,
                 Name = newUser.Name,
                 Surname = newUser.Surname,
-                Email = newUser.Email,  
+                Email = newUser.Email.ToString(),  
                 UserType = newUser.UserType,
                 IsActive = newUser.IsActive
             });
@@ -234,7 +235,7 @@ namespace LetsDoIt.Moody.Application.User
             }
         }
 
-        private static UserEntity ToUserEntity(string username, string password, bool isActive = false, UserType userType = UserType.Mobile, string name = null, string surname = null, string email = null) =>
+        private static UserEntity ToUserEntity(string username, string password, bool isActive = false, UserType userType = UserType.Mobile, string name = null, string surname = null, Email email = new Email()) =>
             new UserEntity
             (
                 username,

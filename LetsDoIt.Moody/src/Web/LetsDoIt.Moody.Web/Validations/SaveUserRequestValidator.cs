@@ -7,7 +7,7 @@ namespace LetsDoIt.Moody.Web.Validations
     {
         public SaveUserRequestValidator()
         {
-            //RuleFor(sur => sur.Email).EmailAddress();
+            RuleFor(sur => sur.Email).EmailAddress();
 
             RuleFor(sur => sur.Email).NotEmpty();
 

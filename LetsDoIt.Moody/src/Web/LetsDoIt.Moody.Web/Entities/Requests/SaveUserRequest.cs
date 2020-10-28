@@ -12,6 +12,6 @@
 
         public string Surname { get; set; }
 
-        public Email Email { get; set; }
+        public string Email { get; set; }
     }
 }
