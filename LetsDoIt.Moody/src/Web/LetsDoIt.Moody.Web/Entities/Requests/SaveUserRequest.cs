@@ -1,8 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using LetsDoIt.Moody.Domain;
-
-namespace LetsDoIt.Moody.Web.Entities.Requests
+﻿namespace LetsDoIt.Moody.Web.Entities.Requests
 {
+    using Infrastructure.ValueTypes;
+
     public class SaveUserRequest
     {
         public string Username { get; set; }
@@ -13,6 +12,6 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
 
         public string Surname { get; set; }
 
-        public string Email { get; set; }
+        public Email Email { get; set; }
     }
 }

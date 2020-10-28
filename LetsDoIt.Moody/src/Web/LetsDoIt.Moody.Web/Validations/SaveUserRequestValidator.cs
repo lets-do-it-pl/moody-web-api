@@ -3,11 +3,11 @@ using LetsDoIt.Moody.Web.Entities.Requests;
 
 namespace LetsDoIt.Moody.Web.Validations
 {
-    public class SaveUserRequestValidator:AbstractValidator<SaveUserRequest>
+    public class SaveUserRequestValidator : AbstractValidator<SaveUserRequest>
     {
         public SaveUserRequestValidator()
         {
-            RuleFor(sur => sur.Email).EmailAddress();
+            //RuleFor(sur => sur.Email).EmailAddress();
 
             RuleFor(sur => sur.Email).NotEmpty();
 
