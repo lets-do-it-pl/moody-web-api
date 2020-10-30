@@ -7,13 +7,15 @@ using LetsDoIt.Moody.Application.CustomExceptions;
 using LetsDoIt.Moody.Application.User;
 using LetsDoIt.Moody.Domain;
 using LetsDoIt.Moody.Infrastructure.ValueTypes;
-using LetsDoIt.Moody.Web.Entities.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
+    using Entities.Requests;
+    using Entities.Responses;
+
     [ApiController]
     [Route("api/users")]
     public class UserController : ControllerBase
@@ -115,5 +117,36 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            _logger.LogInformation($"{nameof(GetUsers)} is started");
+
+            var userResult = await _userService.GetSystemUsers();
+            if (userResult == null)
+            {
+                return NoContent();
+            }
+            _logger.LogInformation($"{nameof(GetUsers)} is finished successfully");
+
+            return ToSystemUsersEntity(userResult);
+
+        }
+
+        private static Entities.Responses.SystemUsersEntity ToSystemUsersEntity(User u)
+        {
+            var result = new Entities.Responses.SystemUsersEntity
+            {
+                Name = u.Name,
+                Surname = u.Surname,
+                Email = u.Email,
+                IsActive = u.IsActive,
+                UserType = u.UserType
+            };
+            return result;
+        }
+
+
     }
 }
