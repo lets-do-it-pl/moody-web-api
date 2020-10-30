@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Data;
 using System.Security.Authentication;
+using LetsDoIt.MailSender;
 using MockQueryable.Moq;
 using LetsDoIt.Moody.Application.User;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace LetsDoIt.Moody.Application.UnitTests.User
@@ -22,18 +22,26 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
         private readonly IUserService _testing;
         private readonly Mock<IEntityRepository<UserToken>> _mockUserTokenRepository;
         private readonly Mock<IEntityRepository<User>> _mockUserRepository;
+        private readonly Mock<IEntityRepository<EmailVerificaitonToken>> _mockEmailVerificationTokenRepository;
+        private readonly Mock<IMailSender> _mailSender;
         private readonly string _applicationKey = "d1442e0f-01e0-4074-bdae-28b8f57a6b40";
         private readonly int _tokenExpirationMinutes = 123;
+        private readonly int _emailVerificationTokenExpirationMinutes = 123;
 
         public UserServiceTests()
         {
             _mockUserRepository = new Mock<IEntityRepository<User>>();
             _mockUserTokenRepository = new Mock<IEntityRepository<UserToken>>();
+            _mockEmailVerificationTokenRepository = new Mock<IEntityRepository<EmailVerificaitonToken>>();
+            _mailSender = new Mock<IMailSender>();
             _testing = new UserService
                 (_mockUserRepository.Object,
                 _mockUserTokenRepository.Object,
                 _applicationKey,
-                _tokenExpirationMinutes);
+                _tokenExpirationMinutes,
+                _emailVerificationTokenExpirationMinutes,
+                _mailSender.Object,
+                _mockEmailVerificationTokenRepository.Object);
         }
 
         [Fact]
@@ -55,7 +63,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                 {
                     UserName = username,
                     Password = ProtectionHelper.EncryptValue(username + password),
-                    UserToken = token
+                    UserToken = token,
+                    IsActive = true
                 }
             };
 
@@ -98,7 +107,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                     Id = 1,
                     UserName = username,
                     Password = ProtectionHelper.EncryptValue(username + password),
-                    UserToken = null
+                    UserToken = null,
+                    IsActive = true
                 }
             };
 
@@ -150,7 +160,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                     Id = 1,
                     UserName = username,
                     Password =  ProtectionHelper.EncryptValue(username + password),
-                    UserToken = expiredUserToken
+                    UserToken = expiredUserToken,
+                    IsActive = true
                 }
 
             };
@@ -241,7 +252,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
 
             }.AsQueryable();
 
-            _mockUserRepository.Setup(repo=>repo.Get()).Returns(userList);
+            _mockUserRepository.Setup(repo=>repo.Get()).Returns(userList.AsQueryable().BuildMockDbSet().Object);
 
             async Task Test() => await _testing.SaveUserAsync(username, password);
 
@@ -256,6 +267,10 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
                 UserName = "asd",
                 Password = "pass"
             };
+
+            var userList = new List<User>();
+
+            _mockUserRepository.Setup(repo => repo.Get()).Returns(userList.AsQueryable().BuildMockDbSet().Object);
 
             await _testing.SaveUserAsync(user.UserName,user.Password);
 

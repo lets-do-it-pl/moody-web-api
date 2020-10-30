@@ -7,11 +7,9 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore.Sqlite;
 
 namespace LetsDoIt.Moody.Application.IntegrationTests
 {
-    using Microsoft.Data.Sqlite;
     using Persistance;
     using Persistance.Repositories.Base;
     using Web;
@@ -20,6 +18,7 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
     public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Startup> where TStartup : class
     {
         private readonly InMemoryDatabaseRoot _databaseRoot = new InMemoryDatabaseRoot();
+
         public IEntityRepository<Domain.User> UserRepositoryVar;
         public IEntityRepository<Domain.Category> CategoryRepositoryVar;
         public IEntityRepository<UserToken> UserTokenRepositoryVar;
@@ -48,13 +47,13 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
                 });
 
                 _serviceProvider = services.BuildServiceProvider();
+
                 var scope = _serviceProvider.CreateScope();
                 var scopedServices = scope.ServiceProvider;
                 _dbContext = scopedServices.GetRequiredService<ApplicationContext>();
                 UserRepositoryVar = scopedServices.GetRequiredService<IEntityRepository<Domain.User>>();
                 CategoryRepositoryVar = scopedServices.GetRequiredService<IEntityRepository<Domain.Category>>();
                 UserTokenRepositoryVar = scopedServices.GetRequiredService<IEntityRepository<UserToken>>();
-
 
                 _dbContext.Database.EnsureCreated();
             });
@@ -85,16 +84,15 @@ namespace LetsDoIt.Moody.Application.IntegrationTests
 
             var user = new Domain.User
             {
-                Id = 1,
                 IsDeleted = false,
                 CreateDate = DateTime.UtcNow,
-                UserName = "asd",
-                Password = "dsa"
+                UserName = "default.Username",
+                Password = "default.Password1"
             };
 
             var userToken = new UserToken
             {
-                UserId = 1,
+                UserId = user.Id,
                 User = user,
                 Token = TemporaryToken.GenerateTemporaryToken(),
                 ExpirationDate = DateTime.UtcNow.AddMinutes(1440)

@@ -4,14 +4,16 @@ using LetsDoIt.Moody.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LetsDoIt.Moody.Persistance.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20201025231314_AddEmailVerificatioToken")]
+    partial class AddEmailVerificatioToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,33 +85,6 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("CategoryDetails");
-                });
-
-            modelBuilder.Entity("LetsDoIt.Moody.Domain.EmailVerificaitonToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime?>("ExpirationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(1000)")
-                        .HasMaxLength(1000);
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("EmailVerificaitonTokens");
                 });
 
             modelBuilder.Entity("LetsDoIt.Moody.Domain.User", b =>
@@ -203,15 +178,6 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                     b.HasOne("LetsDoIt.Moody.Domain.Category", "Category")
                         .WithMany("CategoryDetails")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LetsDoIt.Moody.Domain.EmailVerificaitonToken", b =>
-                {
-                    b.HasOne("LetsDoIt.Moody.Domain.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

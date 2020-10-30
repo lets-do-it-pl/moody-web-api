@@ -1,4 +1,8 @@
+using System.Reflection;
+using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
+using LetsDoIt.MailSender;
+using LetsDoIt.MailSender.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +27,7 @@ namespace LetsDoIt.Moody.Web
     public class Startup
     {
         private const string JwtEncryptionKey = "2hN70OoacUi5SDU0rNuIXg==";
+        private const string InMemoryProviderName = "Microsoft.EntityFrameworkCore.InMemory";
 
         public Startup(IConfiguration configuration)
         {
@@ -59,7 +64,11 @@ namespace LetsDoIt.Moody.Web
                         builder.MigrationsAssembly("LetsDoIt.Moody.Persistance");
                     }));
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation(opt =>
+            {
+                opt.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            }); ;
 
             services.AddSwaggerGen(c =>
             {
@@ -91,12 +100,18 @@ namespace LetsDoIt.Moody.Web
             });
 
             var tokenExpirationMinutes = Configuration.GetValue<int>("TokenExpirationMinutes");
+            var emailVerificationTokenMinutes = Configuration.GetValue<int>("EmailVerificationTokenExpirationMinutes");
+
+            services.Configure<SmtpOptions>(Configuration.GetSection(SmtpOptions.SmtpSectionName));
+
+            services.AddMailSender();
 
             services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
             services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
             services.AddTransient<IEntityRepository<User>, UserRepository>();
             services.AddTransient<IEntityRepository<UserToken>, UserTokenRepository>();
             services.AddTransient<IEntityRepository<CategoryDetails>, CategoryDetailsRepository>();
+            services.AddTransient<IEntityRepository<EmailVerificaitonToken>, EmailVerificationTokenRepository>();
 
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
@@ -104,7 +119,10 @@ namespace LetsDoIt.Moody.Web
                     us.GetService<IEntityRepository<User>>(),
                     us.GetService<IEntityRepository<UserToken>>(),
                     JwtEncryptionKey,
-                    tokenExpirationMinutes
+                    emailVerificationTokenMinutes,
+                    tokenExpirationMinutes,
+                    us.GetService<IMailSender>(),
+                    us.GetService<IEntityRepository<EmailVerificaitonToken>>()
                 ));
 
             services.AddMvc(options =>
@@ -127,8 +145,11 @@ namespace LetsDoIt.Moody.Web
             {
                 app.UseApiExceptionHandler();
             }
-
-            context.Database.Migrate();
+            
+            if (context.Database.ProviderName != InMemoryProviderName)
+            {
+                context.Database.Migrate();
+            }
 
             app.UseResponseCompression();
 

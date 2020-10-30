@@ -29,8 +29,7 @@ namespace LetsDoIt.Moody.Web.Filters
                     return;
                 }
 
-                var isValidToken = await _userService.ValidateTokenAsync(tokens[0]);
-                if (!isValidToken)
+                if (await _userService.ValidateTokenAsync(tokens[0]) == false)
                 {
                     context.Result = new UnauthorizedResult();
                     return;

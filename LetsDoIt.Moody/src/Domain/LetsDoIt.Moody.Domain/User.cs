@@ -26,5 +26,23 @@ namespace LetsDoIt.Moody.Domain
         public bool IsDeleted { get; set; } 
 
         public virtual UserToken UserToken { get; set; }
+
+        public string Name { get; set; }
+
+        public string Surname { get; set; }
+
+        public string Email { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public UserType UserType { get; set; }
     }
+
+    public enum UserType
+    {
+        Mobile,
+        Normal,
+        Admin
+    }
+
 }

@@ -28,5 +28,7 @@ namespace LetsDoIt.Moody.Persistance
         public DbSet<VersionHistory> VersionHistories { get; set; }
 
         public DbSet<CategoryDetails> CategoryDetails { get; set; }
+
+        public DbSet<EmailVerificaitonToken> EmailVerificaitonTokens { get; set; }
     }
 }
