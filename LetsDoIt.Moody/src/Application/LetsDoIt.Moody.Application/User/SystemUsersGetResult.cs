@@ -1,4 +1,5 @@
-﻿using LetsDoIt.Moody.Infrastructure.ValueTypes;
+﻿using LetsDoIt.Moody.Domain;
+using LetsDoIt.Moody.Infrastructure.ValueTypes;
 using System;
 using System.Collections.Generic;
 using System.Text;

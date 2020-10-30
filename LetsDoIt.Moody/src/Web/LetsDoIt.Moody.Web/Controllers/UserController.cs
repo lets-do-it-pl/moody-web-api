@@ -15,6 +15,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 {
     using Entities.Requests;
     using Entities.Responses;
+    using System.Collections.Generic;
 
     [ApiController]
     [Route("api/users")]
@@ -118,7 +119,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         }
 
-        [HttpGet]
+        [HttpGet("/Users")]
         public async Task<IActionResult> GetUsers()
         {
             _logger.LogInformation($"{nameof(GetUsers)} is started");
@@ -130,11 +131,11 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
             _logger.LogInformation($"{nameof(GetUsers)} is finished successfully");
 
-            return ToSystemUsersEntity(userResult);
+            return (IActionResult)ToSystemUsersEntity((SystemUsersGetResult)userResult);
 
         }
 
-        private static Entities.Responses.SystemUsersEntity ToSystemUsersEntity(User u)
+        private static Entities.Responses.SystemUsersEntity ToSystemUsersEntity(SystemUsersGetResult u)
         {
             var result = new Entities.Responses.SystemUsersEntity
             {
