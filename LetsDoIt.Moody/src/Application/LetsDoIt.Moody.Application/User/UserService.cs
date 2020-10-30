@@ -18,6 +18,8 @@ namespace LetsDoIt.Moody.Application.User
     using System.Security.Claims;
     using System;
     using Microsoft.EntityFrameworkCore;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class UserService : IUserService
     {
@@ -44,6 +46,13 @@ namespace LetsDoIt.Moody.Application.User
             _tokenExpirationMinutes = tokenExpirationMinutes;
             _mailSender = mailSender;
             _emailVerificationTokenRepository = emailVerificationTokenRepository;
+        }
+
+        public async Task<ICollection<SystemUsersGetResult>> GetSystemUsers()
+        {
+
+           var result = await _userRepository.GetListAsync();
+            return (ICollection<SystemUsersGetResult>)result;
         }
 
         public async Task SaveUserAsync(

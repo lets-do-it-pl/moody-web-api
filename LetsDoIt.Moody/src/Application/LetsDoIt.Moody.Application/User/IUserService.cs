@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LetsDoIt.Moody.Domain;
 using LetsDoIt.Moody.Infrastructure.ValueTypes;
 
@@ -22,6 +23,6 @@ namespace LetsDoIt.Moody.Application.User
         Task SendEmailTokenAsync(string email);
 
         Task VerifyEmailTokenAsync(string token);
-
+        Task<ICollection<SystemUsersGetResult>> GetSystemUsers();
     }
 }
