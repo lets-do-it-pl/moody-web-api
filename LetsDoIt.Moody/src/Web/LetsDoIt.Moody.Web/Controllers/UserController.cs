@@ -79,7 +79,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return Ok();
             }
-            catch (EmailNotRegisteredException exception )
+            catch (EmailNotRegisteredException exception)
             {
                 _logger.LogInformation($"{nameof(SendEmailToken)} is finished with bad request!");
 
@@ -119,35 +119,23 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         }
 
-        [HttpGet("/Users")]
+        [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
             _logger.LogInformation($"{nameof(GetUsers)} is started");
 
             var userResult = await _userService.GetSystemUsers();
+
             if (userResult == null)
             {
                 return NoContent();
             }
+
             _logger.LogInformation($"{nameof(GetUsers)} is finished successfully");
 
-            return (IActionResult)ToSystemUsersEntity((SystemUsersGetResult)userResult);
-
+            return Ok(userResult); //Abla System user get result burada isimizi goruyor. ileride get users 'i baskasi cagirip baska bir deger beklerse
+            // buradan donen degeri baska bir objeye atip doneriz, ancak simdi gerek yok gibi duruyor. tamm. simdi test zamani
         }
-
-        private static Entities.Responses.SystemUsersEntity ToSystemUsersEntity(SystemUsersGetResult u)
-        {
-            var result = new Entities.Responses.SystemUsersEntity
-            {
-                Name = u.Name,
-                Surname = u.Surname,
-                Email = u.Email,
-                IsActive = u.IsActive,
-                UserType = u.UserType
-            };
-            return result;
-        }
-
-
     }
 }
+// Abla anladiniz di mi hatanin nerede oldugunu? tam anlamadim ok

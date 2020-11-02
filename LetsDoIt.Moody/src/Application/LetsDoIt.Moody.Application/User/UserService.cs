@@ -30,7 +30,7 @@ namespace LetsDoIt.Moody.Application.User
         private readonly string _applicationKey;
         private readonly int _tokenExpirationMinutes;
         private readonly int _emailVerificationTokenExpirationMinutes;
-        private const string HtmlFilePath= @"\HtmlTemplates\EmailTokenVerification.html";
+        private const string HtmlFilePath = @"\HtmlTemplates\EmailTokenVerification.html";
 
         public UserService(
             IEntityRepository<User> userRepository,
@@ -50,10 +50,24 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task<ICollection<SystemUsersGetResult>> GetSystemUsers()
         {
+            var result = await _userRepository.GetListAsync();
 
-           var result = await _userRepository.GetListAsync();
-            return (ICollection<SystemUsersGetResult>)result;
+            if (result == null)
+            {
+                throw new ArgumentNullException("result is a null argument!");
+            }
+            
+            return result.Select(ToUser).ToList();
         }
+
+        public SystemUsersGetResult ToUser(User result) => new SystemUsersGetResult
+        {
+            Name = result.Name,
+            Surname = result.Surname,
+            Email = result.Email,
+            IsActive = result.IsActive,
+            UserType = result.UserType
+        };
 
         public async Task SaveUserAsync(
             string username,
@@ -81,14 +95,14 @@ namespace LetsDoIt.Moody.Application.User
                 Password = newUser.EncryptedPassword,
                 Name = newUser.Name,
                 Surname = newUser.Surname,
-                Email = newUser.Email.ToString(),  
+                Email = newUser.Email.ToString(),
                 UserType = newUser.UserType,
                 IsActive = newUser.IsActive
             });
         }
 
         public async Task<UserTokenEntity> AuthenticateAsync(string username, string password)
-            {
+        {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
@@ -108,12 +122,12 @@ namespace LetsDoIt.Moody.Application.User
 
             if (userDb.IsActive == false)
             {
-                throw new UserNotActiveException(userDb.UserName); 
+                throw new UserNotActiveException(userDb.UserName);
             }
 
             UserToken userToken;
 
-            if(userDb.UserToken == null || userDb.UserToken.ExpirationDate < DateTime.UtcNow || userDb.UserToken.Token == null)
+            if (userDb.UserToken == null || userDb.UserToken.ExpirationDate < DateTime.UtcNow || userDb.UserToken.Token == null)
             {
                 var newUserToken = GetNewUserToken(user);
                 newUserToken.UserId = userDb.Id;
@@ -123,7 +137,7 @@ namespace LetsDoIt.Moody.Application.User
             else
             {
                 userToken = userDb.UserToken;
-            }         
+            }
 
             return new UserTokenEntity
             {
@@ -135,15 +149,15 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task<bool> ValidateTokenAsync(string token)
         {
-                if (string.IsNullOrWhiteSpace(token) || token.Split(new char[] { ' ' }).Length != 2)
-                {
-                    return false;
-                }
+            if (string.IsNullOrWhiteSpace(token) || token.Split(new char[] { ' ' }).Length != 2)
+            {
+                return false;
+            }
 
-                return await _userTokenRepository.Get().AnyAsync(ut => ut.Token == token.Split(new char[] { ' ' })[1] &&
-                                                            ut.ExpirationDate > DateTime.UtcNow
-                                                            && !ut.User.IsDeleted
-                                                            && ut.User.IsActive);
+            return await _userTokenRepository.Get().AnyAsync(ut => ut.Token == token.Split(new char[] { ' ' })[1] &&
+                                                        ut.ExpirationDate > DateTime.UtcNow
+                                                        && !ut.User.IsDeleted
+                                                        && ut.User.IsActive);
         }
 
         public async Task SendEmailTokenAsync(string email)
@@ -168,8 +182,8 @@ namespace LetsDoIt.Moody.Application.User
 
             var content = await ReadHtmlContent();
 
-            await _mailSender.SendAsync("Email Verification", 
-                content.Replace("{{action_url}}","front-end/" + emailVerificationToken.Token),
+            await _mailSender.SendAsync("Email Verification",
+                content.Replace("{{action_url}}", "front-end/" + emailVerificationToken.Token),
                 email);
         }
 
@@ -182,26 +196,26 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task VerifyEmailTokenAsync(string token)
         {
-           var emailVerificationToken = await _emailVerificationTokenRepository.GetAsync(evt => evt.Token == token
-                                                                          && !evt.User.IsDeleted);
+            var emailVerificationToken = await _emailVerificationTokenRepository.GetAsync(evt => evt.Token == token
+                                                                           && !evt.User.IsDeleted);
 
-           if (emailVerificationToken == null)
-           {
-               throw new AuthenticationException($"No such token : {token}");
-           }
+            if (emailVerificationToken == null)
+            {
+                throw new AuthenticationException($"No such token : {token}");
+            }
 
-           if (emailVerificationToken.ExpirationDate < DateTime.UtcNow)
-           {
-               throw new TokenExpiredException(emailVerificationToken.User.Email);
-           }
+            if (emailVerificationToken.ExpirationDate < DateTime.UtcNow)
+            {
+                throw new TokenExpiredException(emailVerificationToken.User.Email);
+            }
 
-           var userDb= await _userRepository.GetAsync(u => u.Id == emailVerificationToken.UserId && !u.IsDeleted);
+            var userDb = await _userRepository.GetAsync(u => u.Id == emailVerificationToken.UserId && !u.IsDeleted);
 
-           userDb.IsActive = true;
+            userDb.IsActive = true;
 
-           await _userRepository.UpdateAsync(userDb);
+            await _userRepository.UpdateAsync(userDb);
 
-           await _emailVerificationTokenRepository.DeleteAsync(emailVerificationToken);
+            await _emailVerificationTokenRepository.DeleteAsync(emailVerificationToken);
         }
 
         private UserToken GetNewUserToken(UserEntity user)
@@ -235,7 +249,7 @@ namespace LetsDoIt.Moody.Application.User
         private static async Task<string> ReadHtmlContent()
         {
             await using (FileStream fileStream =
-                new FileStream(AppDomain.CurrentDomain.BaseDirectory 
+                new FileStream(AppDomain.CurrentDomain.BaseDirectory
                                + HtmlFilePath,
                     FileMode.Open))
             {
@@ -256,5 +270,4 @@ namespace LetsDoIt.Moody.Application.User
                 email
             );
     }
-}   
-    
+}

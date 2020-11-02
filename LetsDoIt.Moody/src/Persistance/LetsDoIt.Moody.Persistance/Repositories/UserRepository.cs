@@ -28,5 +28,6 @@ namespace LetsDoIt.Moody.Persistance.Repositories
             return base.AddAsync(entity);
         }
 
+
     }
 }

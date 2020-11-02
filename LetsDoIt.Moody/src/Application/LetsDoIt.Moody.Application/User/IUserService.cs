@@ -23,6 +23,7 @@ namespace LetsDoIt.Moody.Application.User
         Task SendEmailTokenAsync(string email);
 
         Task VerifyEmailTokenAsync(string token);
+
         Task<ICollection<SystemUsersGetResult>> GetSystemUsers();
     }
 }
