@@ -47,8 +47,6 @@ namespace LetsDoIt.Moody.Persistance.Repositories
             return categories;
         }
 
-
-
         public override async Task DeleteAsync(Category entity)
         {
             if (entity.CategoryDetails != null)

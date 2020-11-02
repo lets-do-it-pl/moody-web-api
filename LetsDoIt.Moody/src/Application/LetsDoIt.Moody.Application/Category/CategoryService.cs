@@ -53,6 +53,25 @@ namespace LetsDoIt.Moody.Application.Category
             return result;
         }
 
+        public async Task<CategoryGetResultWeb> GetCategoriesWeb()
+        {
+            var result = new CategoryGetResultWeb();
+
+            result.Categories = await _categoryRepository.GetListAsyncWeb(c => !c.IsDeleted);
+
+            return result;
+        }
+
+        public async Task<CategoryDetailsGetResult> GetCategoryDetailsWeb(int categoryId)
+        {
+            var result = new CategoryDetailsGetResult();
+
+            result.CategoryDetails = await _categoryDetailsRepository.GetListAsyncWeb(
+                c => !c.IsDeleted && c.CategoryId == categoryId);
+
+            return result;
+        }
+
         public async Task InsertAsync(string name, int order, byte[] image)
         {
             await _categoryRepository.AddAsync(new Category
@@ -134,5 +153,6 @@ namespace LetsDoIt.Moody.Application.Category
             await _categoryDetailsRepository.DeleteAsync(entity);
             await _versionHistoryService.CreateNewVersionAsync();
         }
+
     }
 }

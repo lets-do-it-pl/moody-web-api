@@ -61,5 +61,10 @@ namespace LetsDoIt.Moody.Persistance.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public Task<List<VersionHistory>> GetListAsyncWeb(Expression<Func<VersionHistory, bool>> filter = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

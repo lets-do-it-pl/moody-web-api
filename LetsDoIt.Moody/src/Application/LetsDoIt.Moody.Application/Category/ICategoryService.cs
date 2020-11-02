@@ -6,6 +6,10 @@ namespace LetsDoIt.Moody.Application.Category
     {
         Task<CategoryGetResult> GetCategories(string versionNumber);
 
+        Task<CategoryGetResultWeb> GetCategoriesWeb();
+
+        Task<CategoryDetailsGetResult> GetCategoryDetailsWeb(int categoryId);
+
         Task InsertAsync(string name, int order, byte[] image);
 
         Task InsertCategoryDetailsAsync(int categoryId, int order, string image);

@@ -56,6 +56,11 @@
             throw new NotImplementedException();
         }
 
+        public Task<List<UserToken>> GetListAsyncWeb(Expression<Func<UserToken, bool>> filter = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<UserToken> UpdateAsync(UserToken entity)
         {
             var userToken = await _context.UserTokens.SingleOrDefaultAsync( ut => ut.UserId == entity.UserId);

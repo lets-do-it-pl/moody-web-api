@@ -9,8 +9,9 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 
     public interface IEntityRepository<T> where T : class
     {
-
         Task<List<T>> GetListAsync(Expression<Func<T, bool>> filter = null);
+
+        Task<List<T>> GetListAsyncWeb(Expression<Func<T, bool>> filter = null);
 
         Task<T> GetAsync(Expression<Func<T, bool>> filter);
 

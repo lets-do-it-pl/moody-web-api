@@ -85,5 +85,12 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             }
             await _context.BulkUpdateAsync(entities);
         }
+
+        public virtual async Task<List<TEntity>> GetListAsyncWeb(Expression<Func<TEntity, bool>> filter = null)
+        {
+            return filter == null
+                ? await _context.Set<TEntity>().ToListAsync()
+                : await _context.Set<TEntity>().Where(filter).ToListAsync();
+        }
     }
 }

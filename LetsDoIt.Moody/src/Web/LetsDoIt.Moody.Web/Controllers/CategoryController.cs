@@ -48,6 +48,30 @@ namespace LetsDoIt.Moody.Web.Controllers
             return ToCategoryResponse(categoryResult);
         }
 
+        [HttpGet, Route("web/")]
+        public async Task<ActionResult<CategoryResponseWeb>> GetAllCategories()
+        {
+            var categoryResult = await _categoryService.GetCategoriesWeb();
+            if (categoryResult == null)
+            {
+                return NoContent();
+            }
+
+            return ToCategoryResponseWeb(categoryResult);
+        }
+
+        [HttpGet, Route("web/{categoryId}")]
+        public async Task<ActionResult<CategoryDetailsResponseWeb>> GetCategoryDetails(int categoryId)
+        {
+            var categoryResult = await _categoryService.GetCategoryDetailsWeb(categoryId);
+            if (categoryResult == null)
+            {
+                return NoContent();
+            }
+
+            return ToCategoryDetailsResponseWeb(categoryResult);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody] CategoryInsertRequest insertRequest)
         {
@@ -262,5 +286,44 @@ namespace LetsDoIt.Moody.Web.Controllers
             Image = c.Image,
             Order = c.Order
         };
+
+        private CategoryResponseWeb ToCategoryResponseWeb(CategoryGetResultWeb categoryResult)
+        {
+            var result = new CategoryResponseWeb();
+
+            if (categoryResult.Categories != null)
+            {
+                result.Categories = categoryResult
+                                        .Categories
+                                        .Select(c =>
+                                             new CategoryEntityWeb
+                                             {
+                                                 Id = c.Id,
+                                                 Name = c.Name,
+                                                 Order = c.Order,
+                                                 Image = c.Image
+                                             });
+            }
+            return result;
+        }
+
+        private CategoryDetailsResponseWeb ToCategoryDetailsResponseWeb(CategoryDetailsGetResult categoryResult)
+        {
+            var result = new CategoryDetailsResponseWeb();
+
+            if (categoryResult.CategoryDetails != null)
+            {
+                result.CategoryDetails = categoryResult
+                                        .CategoryDetails
+                                        .Select(c =>
+                                             new CategoryDetailsEntity
+                                             {
+                                                 Id = c.Id,
+                                                 Order = c.Order,
+                                                 Image = c.Image
+                                             });
+            }
+            return result;
+        }
     }
 }
