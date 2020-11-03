@@ -316,11 +316,12 @@ namespace LetsDoIt.Moody.Web.Controllers
                 result.CategoryDetails = categoryResult
                                         .CategoryDetails
                                         .Select(c =>
-                                             new CategoryDetailsEntity
+                                             new CategoryDetailsEntityWeb
                                              {
                                                  Id = c.Id,
                                                  Order = c.Order,
-                                                 Image = c.Image
+                                                 Image = c.Image,
+                                                 CategoryId = c.CategoryId
                                              });
             }
             return result;
