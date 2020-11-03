@@ -4,6 +4,6 @@ namespace LetsDoIt.Moody.Web.Entities.Responses
 {
     public class CategoryDetailsResponseWeb
     {
-        public IEnumerable<CategoryDetailsEntityWeb> CategoryDetails { get; set; }
+        public IEnumerable<CategoryDetailsEntity> CategoryDetails { get; set; }
     }
 }
