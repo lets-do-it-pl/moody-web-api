@@ -87,6 +87,25 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
 
         }
+
+        [HttpGet("/Users")]
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            _logger.LogInformation($"{nameof(GetUsers)} is started");
+
+            var result = await _userService.GetUsers();
+
+            if (result == null)
+            {
+                return NoContent();
+            }
+            
+            _logger.LogInformation($"{nameof(GetUsers)} is finished successfully");
+
+            return Ok(result);
+        }
+
     }
 }
 

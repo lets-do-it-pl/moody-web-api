@@ -123,11 +123,15 @@ namespace LetsDoIt.Moody.Application.User
             };
         }
 
-        private static UserEntity GetUser(string username, string password) =>
+        private static UserEntity GetUser(string username, string password, bool isActive = false, string userType = string.Mobile, string name = null, string surname = null, string email = null) =>
             new UserEntity
             (
                 username,
-                ProtectionHelper.EncryptValue(username + password)
+                ProtectionHelper.EncryptValue(username + password),
+                userType,
+                name,
+                surname,
+                email
             );
 
         public async Task<bool> ValidateTokenAsync(string token)
