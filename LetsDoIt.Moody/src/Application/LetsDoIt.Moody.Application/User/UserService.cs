@@ -4,7 +4,7 @@ using System.Data;
 using System.IO;
 using LetsDoIt.MailSender;
 using LetsDoIt.Moody.Application.CustomExceptions;
-using LetsDoIt.Moody.Infrastructure.ValueTypes;
+using LetsDoIt.Moody.Domain.ValueType;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -46,8 +46,7 @@ namespace LetsDoIt.Moody.Application.User
             _emailVerificationTokenRepository = emailVerificationTokenRepository;
         }
 
-        public async Task SaveUserAsync(
-            string username,
+        public async Task SaveUserAsync(string username,
             string password,
             bool isActive = false,
             UserType userType = UserType.Mobile,

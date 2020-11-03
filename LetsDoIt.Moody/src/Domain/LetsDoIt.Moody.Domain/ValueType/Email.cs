@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Mail;
 
-namespace LetsDoIt.Moody.Infrastructure.ValueTypes
+namespace LetsDoIt.Moody.Domain.ValueType
 {
     public readonly struct Email
     {
@@ -11,7 +11,7 @@ namespace LetsDoIt.Moody.Infrastructure.ValueTypes
         {
             if (value == null)
             {
-                throw new ArgumentNullException(nameof(value),"Email can not be null!");
+                throw new ArgumentNullException(nameof(value), "Email can not be null!");
             }
 
             if (!IsValid(value))
@@ -66,7 +66,7 @@ namespace LetsDoIt.Moody.Infrastructure.ValueTypes
             return new Email(candidate);
         }
 
-        public static explicit operator string(Email email)
+        public static implicit operator string(Email email)
         {
             return email._value;
         }

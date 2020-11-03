@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using LetsDoIt.Moody.Domain.ValueType;
 
 namespace LetsDoIt.Moody.Domain
 {
@@ -31,7 +32,7 @@ namespace LetsDoIt.Moody.Domain
 
         public string Surname { get; set; }
 
-        public string Email { get; set; }
+        public Email Email { get; set; }
 
         public bool IsActive { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LetsDoIt.Moody.Domain.ValueType;
+using Microsoft.EntityFrameworkCore;
 
 namespace LetsDoIt.Moody.Persistance
 {
@@ -13,6 +14,12 @@ namespace LetsDoIt.Moody.Persistance
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .Property(u => u.Email)
+                .HasConversion(
+                    e => e.ToString(),
+                    e => Email.Parse(e));
+
             modelBuilder.Entity<CategoryDetails>()
                 .HasOne(c => c.Category)
                 .WithMany(c => c.CategoryDetails)

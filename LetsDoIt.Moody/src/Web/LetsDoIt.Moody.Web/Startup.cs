@@ -119,8 +119,8 @@ namespace LetsDoIt.Moody.Web
                     us.GetService<IEntityRepository<User>>(),
                     us.GetService<IEntityRepository<UserToken>>(),
                     JwtEncryptionKey,
-                    emailVerificationTokenMinutes,
                     tokenExpirationMinutes,
+                    emailVerificationTokenMinutes,
                     us.GetService<IMailSender>(),
                     us.GetService<IEntityRepository<EmailVerificaitonToken>>()
                 ));

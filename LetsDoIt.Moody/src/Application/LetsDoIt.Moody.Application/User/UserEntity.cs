@@ -1,5 +1,5 @@
 ﻿using LetsDoIt.Moody.Domain;
-using LetsDoIt.Moody.Infrastructure.ValueTypes;
+using LetsDoIt.Moody.Domain.ValueType;
 
 namespace LetsDoIt.Moody.Application.User
 {
