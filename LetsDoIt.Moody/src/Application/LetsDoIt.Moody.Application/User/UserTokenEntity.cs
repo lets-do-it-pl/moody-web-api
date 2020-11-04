@@ -9,7 +9,5 @@ namespace LetsDoIt.Moody.Application.User
         public string Token { get; set; }
 
         public DateTime ExpirationDate { get; set; }
-
-        public bool isActive { get; set; }
     }
 }
