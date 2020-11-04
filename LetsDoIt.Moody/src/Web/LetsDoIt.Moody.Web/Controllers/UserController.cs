@@ -20,7 +20,6 @@ namespace LetsDoIt.Moody.Web.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
 
-
         public UserController(IUserService userService,
             ILogger<UserController> logger)
         {
