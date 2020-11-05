@@ -129,10 +129,10 @@ namespace LetsDoIt.Moody.Web
                 app.UseApiExceptionHandler();
             }
             
-            //if (context.Database.ProviderName != InMemoryProviderName)
-            //{
-              //  context.Database.Migrate();
-            //}
+            if (context.Database.ProviderName != InMemoryProviderName)
+            {
+                context.Database.Migrate();
+            }
 
             app.UseResponseCompression();
 
