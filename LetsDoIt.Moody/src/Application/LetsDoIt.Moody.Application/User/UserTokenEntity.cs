@@ -11,5 +11,7 @@ namespace LetsDoIt.Moody.Application.User
         public DateTime ExpirationDate { get; set; }
 
         public bool isActive { get; set; }
+
+        public string userType { get; set; }
     }
 }

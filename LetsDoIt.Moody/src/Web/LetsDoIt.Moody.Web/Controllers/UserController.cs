@@ -89,5 +89,3 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
     }
 }
-
-

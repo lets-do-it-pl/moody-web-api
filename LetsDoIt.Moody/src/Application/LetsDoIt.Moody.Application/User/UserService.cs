@@ -73,6 +73,13 @@ namespace LetsDoIt.Moody.Application.User
                 throw new AuthenticationException();
             }
 
+
+            if (userDb.isActive == false)
+            {
+                throw new Exception($"The user is not active");
+               
+            }
+
             UserToken userToken;
 
             if (userDb.UserToken == null || userDb.UserToken.ExpirationDate < DateTime.UtcNow || userDb.UserToken.Token == null)

@@ -6,6 +6,8 @@ namespace LetsDoIt.Moody.Domain
 {
     public class User:IEntity
     {
+        public bool isActive;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
