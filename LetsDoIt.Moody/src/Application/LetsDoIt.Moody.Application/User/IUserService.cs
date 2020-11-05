@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -9,5 +10,6 @@ namespace LetsDoIt.Moody.Application.User
         Task<UserTokenEntity> AuthenticateAsync(string username, string password);
         
         Task<bool> ValidateTokenAsync(string token);
+       
     }
 }

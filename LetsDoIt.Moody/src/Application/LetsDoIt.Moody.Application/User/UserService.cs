@@ -56,7 +56,7 @@ namespace LetsDoIt.Moody.Application.User
         }
 
         public async Task<UserTokenEntity> AuthenticateAsync(string username, string password)
-            {
+        {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
@@ -64,7 +64,6 @@ namespace LetsDoIt.Moody.Application.User
 
             var userDb = await _userRepository
                                     .Get()
-                                    .Include(u=>u.UserToken)
                                     .FirstOrDefaultAsync(u =>
                                         u.UserName == user.Username &&
                                         u.Password == user.EncryptedPassword &&
@@ -76,7 +75,7 @@ namespace LetsDoIt.Moody.Application.User
 
             UserToken userToken;
 
-            if(userDb.UserToken == null || userDb.UserToken.ExpirationDate < DateTime.UtcNow || userDb.UserToken.Token == null)
+            if (userDb.UserToken == null || userDb.UserToken.ExpirationDate < DateTime.UtcNow || userDb.UserToken.Token == null)
             {
                 var newUserToken = GetNewUserToken(user);
                 newUserToken.UserId = userDb.Id;
@@ -86,7 +85,7 @@ namespace LetsDoIt.Moody.Application.User
             else
             {
                 userToken = userDb.UserToken;
-            }         
+            }
 
             return new UserTokenEntity
             {
@@ -107,7 +106,7 @@ namespace LetsDoIt.Moody.Application.User
                 {
                     new Claim(ClaimTypes.Name, user.EncryptedPassword)
                 }),
-                
+
                 Expires = DateTime.UtcNow.AddMinutes(_tokenExpirationMinutes),
                 SigningCredentials =
                     new SigningCredentials(
@@ -133,15 +132,14 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task<bool> ValidateTokenAsync(string token)
         {
-                if (string.IsNullOrWhiteSpace(token) || token.Split(new char[] { ' ' }).Length != 2)
-                {
-                    return false;
-                }
+            if (string.IsNullOrWhiteSpace(token) || token.Split(new char[] { ' ' }).Length != 2)
+            {
+                return false;
+            }
 
-                return await _userTokenRepository.Get().AnyAsync(ut => ut.Token == token.Split(new char[] { ' ' })[1] &&
-                                                            ut.ExpirationDate > DateTime.UtcNow
-                                                            && !ut.User.IsDeleted);
+            return await _userTokenRepository.Get().AnyAsync(ut => ut.Token == token.Split(new char[] { ' ' })[1] &&
+                                                        ut.ExpirationDate > DateTime.UtcNow
+                                                        && !ut.User.IsDeleted);
         }
     }
-}   
-    
+}
