@@ -56,7 +56,10 @@ namespace LetsDoIt.Moody.Application.User
             {
                 throw new ArgumentNullException("result is a null argument!");
             }
-            
+
+            //aslinda bu atama isi controller'da olsa daha iyi olurdu.
+            // burada sadece logic olur sonra burayi cagiran controller'sa kendine gore bir entty olusturup atama yapar, baska bir class'sa ona gore davranir di. ne dersiniz tasiyalim mi
+            // controller'a? evet. O zaman size kolay gelsin :))) :) saolun. onemli degil gorusmek uzere
             return result.Select(ToUser).ToList();
         }
 
