@@ -2,7 +2,7 @@ using System.Reflection;
 using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using LetsDoIt.MailSender;
-using LetsDoIt.MailSender.Options;
+using LetsDoIt.MailSender.Options;  
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace LetsDoIt.Moody.Web
 {
@@ -39,7 +40,6 @@ namespace LetsDoIt.Moody.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddResponseCompression();
 
             var connectionString = Configuration.GetConnectionString("MoodyDBConnection");
 
@@ -129,6 +129,13 @@ namespace LetsDoIt.Moody.Web
             {
                 options.Filters.Add<TokenAuthorizationFilter>();
             });
+
+            services.AddResponseCompression(options =>
+                {
+                    options.EnableForHttps = true;
+                    options.Providers.Add<GzipCompressionProvider>();
+                });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -151,11 +158,10 @@ namespace LetsDoIt.Moody.Web
                 context.Database.Migrate();
             }
 
-            app.UseResponseCompression();
 
             app.UseHttpsRedirection();
 
-            app.UseStaticFiles();
+            app.UseResponseCompression();
 
             app.UseRouting();
 
