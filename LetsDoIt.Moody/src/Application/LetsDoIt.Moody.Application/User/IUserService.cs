@@ -11,6 +11,6 @@ namespace LetsDoIt.Moody.Application.User
         
         Task<bool> ValidateTokenAsync(string token);
 
-        Task<ICollection<UsersGetResult>> GetUsers();
+        Task<ICollection<SystemUsersGetResult>> GetUsers();
     }
 }

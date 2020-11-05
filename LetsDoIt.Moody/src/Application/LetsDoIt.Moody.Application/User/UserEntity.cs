@@ -1,18 +1,23 @@
-﻿namespace LetsDoIt.Moody.Application.User
+﻿using LetsDoIt.Moody.Domain;
+using LetsDoIt.Moody.Infrastructure.ValueTypes;
+
+namespace LetsDoIt.Moody.Application.User
 {
     public class UserEntity
     {
         public UserEntity(
             string username, 
             string encryptedPassword,
-            string userType,
+            bool isActive,
+            UserType userType,
             string name,
             string surname,
-            string email)
+            Email email)
         {
             Username = username;
             EncryptedPassword = encryptedPassword;
             UserType = userType;
+            IsActive = isActive;
             Name = name;
             Surname = surname;
             Email = email;
@@ -24,12 +29,12 @@
 
         public bool IsActive { get; }
 
-        public string UserType { get; }
+        public UserType UserType { get; }
 
         public string Name { get; }
 
         public string Surname { get; }
 
-        public string Email { get; }
+        public Email Email { get; }
     }
 }

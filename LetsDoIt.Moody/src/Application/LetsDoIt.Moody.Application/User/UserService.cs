@@ -15,6 +15,9 @@ namespace LetsDoIt.Moody.Application.User
     using System.Security.Claims;
     using System;
     using Microsoft.EntityFrameworkCore;
+    using LetsDoIt.Moody.Infrastructure.ValueTypes;
+    using System.Collections.Generic;
+
 
     public class UserService : IUserService
     {
@@ -54,6 +57,7 @@ namespace LetsDoIt.Moody.Application.User
                 Password = newUser.EncryptedPassword
             });
         }
+
 
         public async Task<UserTokenEntity> AuthenticateAsync(string username, string password)
             {
@@ -123,16 +127,38 @@ namespace LetsDoIt.Moody.Application.User
             };
         }
 
-        private static UserEntity GetUser(string username, string password, bool isActive = false, string userType = string.Mobile, string name = null, string surname = null, string email = null) =>
+        private static UserEntity GetUser(string username, string password, bool isActive = false, UserType userType = UserType.Mobile, string name = null,  string surname = null, Email email = new Email()) =>
             new UserEntity
             (
                 username,
                 ProtectionHelper.EncryptValue(username + password),
+                isActive,
                 userType,
                 name,
                 surname,
-                email
+                email                
             );
+
+        public SystemUsersGetResult ToUser(User result) => new SystemUsersGetResult
+        {
+            Name = result.Name,
+            Surname = result.Surname,
+            Email = result.Email,
+            IsActive = result.IsActive,
+            UserType = result.UserType
+        };
+
+        public async Task<ICollection<SystemUsersGetResult>> GetUsers()
+        {
+            var result = await _userRepository.GetListAsync();
+
+            if (result == null)
+            {
+                throw new ArgumentNullException("result is a null argument!");
+            }
+
+            return result.Select(ToUser).ToList();
+        }
 
         public async Task<bool> ValidateTokenAsync(string token)
         {
