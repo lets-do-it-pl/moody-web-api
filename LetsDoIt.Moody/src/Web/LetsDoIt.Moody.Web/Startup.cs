@@ -129,6 +129,17 @@ namespace LetsDoIt.Moody.Web
             {
                 options.Filters.Add<TokenAuthorizationFilter>();
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AnotherPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            }); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -158,6 +169,7 @@ namespace LetsDoIt.Moody.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseCors();
 
             app.UseSwagger();
 

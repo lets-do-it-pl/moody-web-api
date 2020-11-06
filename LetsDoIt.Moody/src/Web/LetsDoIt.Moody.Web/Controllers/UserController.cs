@@ -119,6 +119,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         }
 
+        [Microsoft.AspNetCore.Cors.EnableCors("AnotherPolicy")]
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
