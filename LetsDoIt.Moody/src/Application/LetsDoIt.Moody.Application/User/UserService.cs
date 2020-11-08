@@ -73,6 +73,32 @@ namespace LetsDoIt.Moody.Application.User
             UserType = result.UserType
         };
 
+        public async Task<ICollection<SystemUserDetailsGetResult>> GetSystemUserDetails(int id)
+        {
+            var result = await _userRepository.GetListAsync();
+
+            if (result == null)
+            {
+                throw new ArgumentNullException("result is a null argument!");
+            }
+
+            result = (List<User>)result.Where(result => result.Id.Equals(id));
+
+            return result.Select(ToUserDetails).ToList(); ;
+        }
+
+        
+        public SystemUserDetailsGetResult ToUserDetails(User result) => new SystemUserDetailsGetResult
+        {
+            Id = result.Id,
+            Name = result.Name,
+            Surname = result.Surname,
+            Email = result.Email,
+            IsActive = result.IsActive,
+            UserType = result.UserType,
+            CreateDate = result.CreateDate
+        };
+
         public async Task SaveUserAsync(
             string username,
             string password,
@@ -273,5 +299,7 @@ namespace LetsDoIt.Moody.Application.User
                 surname,
                 email
             );
+
+       
     }
 }

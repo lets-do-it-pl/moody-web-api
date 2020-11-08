@@ -137,6 +137,23 @@ namespace LetsDoIt.Moody.Web.Controllers
             return Ok(userResult); //Abla System user get result burada isimizi goruyor. ileride get users 'i baskasi cagirip baska bir deger beklerse
             // buradan donen degeri baska bir objeye atip doneriz, ancak simdi gerek yok gibi duruyor. tamm. simdi test zamani
         }
+
+        [Microsoft.AspNetCore.Cors.EnableCors("AnotherPolicy")]
+        [HttpGet("{id:int}/details")]
+        public async Task<IActionResult> GetUserDetails(int id)
+        {
+            _logger.LogInformation($"{nameof(GetUserDetails)} is started with user id = {id}");
+
+            var userResult = await _userService.GetSystemUserDetails(id);
+
+            if (userResult == null)
+            {
+                return NoContent();
+            }
+
+            _logger.LogInformation($"{nameof(GetUserDetails)} is finished successfully");
+
+            return Ok(userResult);
+        }
     }
 }
-// Abla anladiniz di mi hatanin nerede oldugunu? tam anlamadim ok

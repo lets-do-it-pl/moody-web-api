@@ -1,10 +1,11 @@
 ﻿using LetsDoIt.Moody.Domain;
 using LetsDoIt.Moody.Infrastructure.ValueTypes;
+using System;
 
 
 namespace LetsDoIt.Moody.Application.User
 {
-    public class SystemUsersGetResult
+    public class SystemUserDetailsGetResult
     {
         public int Id { get; set; }
 
@@ -17,5 +18,6 @@ namespace LetsDoIt.Moody.Application.User
 
         public UserType UserType { get; set; }
 
+        public DateTime CreateDate { get; set; }
     }
 }

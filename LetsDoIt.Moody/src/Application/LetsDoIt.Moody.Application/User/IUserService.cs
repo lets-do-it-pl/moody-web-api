@@ -25,5 +25,6 @@ namespace LetsDoIt.Moody.Application.User
         Task VerifyEmailTokenAsync(string token);
 
         Task<ICollection<SystemUsersGetResult>> GetSystemUsers();
+        Task<ICollection<SystemUserDetailsGetResult>> GetSystemUserDetails(int id);
     }
 }
