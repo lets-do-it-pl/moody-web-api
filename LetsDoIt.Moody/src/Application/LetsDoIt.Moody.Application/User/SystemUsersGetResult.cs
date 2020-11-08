@@ -8,6 +8,8 @@ namespace LetsDoIt.Moody.Application.User
 {
     public class SystemUsersGetResult
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public string Surname { get; set; }
@@ -16,6 +18,5 @@ namespace LetsDoIt.Moody.Application.User
         public bool IsActive { get; set; }
 
         public UserType UserType { get; set; }
-
     }
 }

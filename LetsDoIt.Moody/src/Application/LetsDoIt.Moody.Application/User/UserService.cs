@@ -65,7 +65,7 @@ namespace LetsDoIt.Moody.Application.User
 
         public SystemUsersGetResult ToUser(User result) => new SystemUsersGetResult
         {
-            
+            Id = result.Id,
             Name = result.Name,
             Surname = result.Surname,
             Email = result.Email,
