@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using LetsDoIt.Moody.Domain.ValueType;
 
 namespace LetsDoIt.Moody.Domain
 {
@@ -38,12 +37,4 @@ namespace LetsDoIt.Moody.Domain
 
         public UserType UserType { get; set; }
     }
-
-    public enum UserType
-    {
-        Mobile,
-        Normal,
-        Admin
-    }
-
 }

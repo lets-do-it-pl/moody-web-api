@@ -1,5 +1,4 @@
-﻿using LetsDoIt.Moody.Domain.ValueType;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace LetsDoIt.Moody.Persistance
 {

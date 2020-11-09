@@ -93,7 +93,6 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             {
                 Username = "test",
                 Password = "test",
-                IsActive = true
             };
 
             await _testing.SaveClient(saveUserRequest);
@@ -102,7 +101,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
                     us.SaveUserAsync(
                         saveUserRequest.Username,
                         saveUserRequest.Password,
-                        saveUserRequest.IsActive,
+                        true,
                         UserType.Mobile,
                         null,
                         null,

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Mail;
 
-namespace LetsDoIt.Moody.Domain.ValueType
+namespace LetsDoIt.Moody.Domain
 {
     public readonly struct Email
     {

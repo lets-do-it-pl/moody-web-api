@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using LetsDoIt.Moody.Domain;
-using LetsDoIt.Moody.Domain.ValueType;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -12,14 +11,14 @@ namespace LetsDoIt.Moody.Application.User
             bool isActive = false,
             UserType userType = UserType.Mobile,
             string name = null,
-            string surname = null, 
-            Email email = new Email() );
+            string surname = null,
+            Email email = new Email());
 
         Task<UserTokenEntity> AuthenticateAsync(string username, string password);
-        
+
         Task<bool> ValidateTokenAsync(string token);
 
-        Task SendEmailTokenAsync(string email);
+        Task SendSignUpEmailAsync(string referer, string email);
 
         Task VerifyEmailTokenAsync(string token);
 

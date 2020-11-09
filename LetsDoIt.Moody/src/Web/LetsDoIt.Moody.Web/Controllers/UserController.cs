@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.CustomExceptions;
 using LetsDoIt.Moody.Application.User;
 using LetsDoIt.Moody.Domain;
-using LetsDoIt.Moody.Domain.ValueType;
 using LetsDoIt.Moody.Web.Entities.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -40,7 +39,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                     saveUserRequest.Username,
                     saveUserRequest.Password,
                     false,
-                    UserType.Normal,
+                    UserType.Standard,
                     saveUserRequest.Name,
                     saveUserRequest.Surname,
                     Email.Parse(saveUserRequest.Email)
@@ -67,9 +66,11 @@ namespace LetsDoIt.Moody.Web.Controllers
                 $"{nameof(SendEmailToken)} is started with " +
                 $"email = {email}");
 
+            string referer = Request.Headers["Referer"].ToString();
+
             try
             {
-                await _userService.SendEmailTokenAsync(email);
+                await _userService.SendSignUpEmailAsync(referer,email);
 
                 _logger.LogInformation($"{nameof(SendEmailToken)} is finished successfully");
 
