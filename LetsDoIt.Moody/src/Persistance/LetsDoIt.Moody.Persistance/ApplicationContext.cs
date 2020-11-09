@@ -10,7 +10,15 @@ namespace LetsDoIt.Moody.Persistance
                   : base(options)
         {            
         }
-        
+
+       
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if(!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;database=Moody;Trusted_Connection=True");
+            }
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CategoryDetails>()

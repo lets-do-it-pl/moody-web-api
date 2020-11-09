@@ -44,4 +44,5 @@ namespace LetsDoIt.Moody.Domain
         Normal,
         Admin
     }
+
 }

@@ -1,3 +1,4 @@
+using System.Reflection;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -60,7 +61,7 @@ namespace LetsDoIt.Moody.Web
                         builder.MigrationsAssembly("LetsDoIt.Moody.Persistance");
                     }));
 
-            services.AddControllers();
+            
 
             services.AddSwaggerGen(c =>
             {
@@ -92,6 +93,9 @@ namespace LetsDoIt.Moody.Web
             });
 
             var tokenExpirationMinutes = Configuration.GetValue<int>("TokenExpirationMinutes");
+            var emailVerificationTokenMinutes = Configuration.GetValue<int>("EmailVerificationTokenExpirationMinutes");
+
+            
 
             services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
             services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
@@ -112,6 +116,14 @@ namespace LetsDoIt.Moody.Web
             {
                 options.Filters.Add<TokenAuthorizationFilter>();
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AnotherPolicy",
+                    builder =>{
+                        builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
+                    });
+            }); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -141,6 +153,7 @@ namespace LetsDoIt.Moody.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseCors();
 
             app.UseSwagger();
 

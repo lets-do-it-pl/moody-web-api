@@ -1,17 +1,21 @@
 ﻿using System;
-using System.Net;
-using System.Threading.Tasks;
 using System.Data;
+using System.Net;
 using System.Security.Authentication;
-using LetsDoIt.Moody.Web.Filters;
+using System.Threading.Tasks;
+using LetsDoIt.Moody.Application.CustomExceptions;
+using LetsDoIt.Moody.Application.User;
+using LetsDoIt.Moody.Domain;
+using LetsDoIt.Moody.Infrastructure.ValueTypes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
-    using Application.User;
     using Entities.Requests;
-    using Newtonsoft.Json;
+    using Entities.Responses;
+    using System.Collections.Generic;
 
     [ApiController]
     [Route("api/users")]
@@ -20,27 +24,31 @@ namespace LetsDoIt.Moody.Web.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService,
-            ILogger<UserController> logger)
+        public UserController(IUserService userService, ILogger<UserController> logger)
         {
             _userService = userService;
             _logger = logger;
         }
 
         [HttpPost]
-        [AuthorizationByTempToken]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> SaveUser(SaveUserRequest saveRequest)
+        public async Task<IActionResult> SaveUser(SaveUserRequest saveUserRequest)
         {
             _logger.LogInformation(
                 $"{nameof(SaveUser)} is started with " +
-                $"save request = {JsonConvert.SerializeObject(saveRequest)}");
+                $"save request = {JsonConvert.SerializeObject(saveUserRequest)}");
 
             try
             {
                 await _userService.SaveUserAsync(
-                                saveRequest.Username,
-                                saveRequest.Password);
+                    saveUserRequest.Username,
+                    saveUserRequest.Password,
+                    false,
+                    UserType.Normal,
+                    saveUserRequest.Name,
+                    saveUserRequest.Surname,
+                    Email.Parse(saveUserRequest.Email)
+                    );
 
                 _logger.LogInformation($"{nameof(SaveUser)} is finished successfully");
 
@@ -52,10 +60,6 @@ namespace LetsDoIt.Moody.Web.Controllers
                 _logger.LogInformation($"{nameof(SaveUser)} is finished with bad request!");
 
                 return BadRequest(ex.Message);
-            }
-            catch (Exception)
-            {
-                throw;
             }
         }
 
@@ -81,32 +85,49 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return BadRequest("Username or Password is wrong!");
             }
+
+
             catch (Exception)
             {
                 throw;
             }
-
         }
 
-        [HttpGet("/Users")]
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
+
+        [Microsoft.AspNetCore.Cors.EnableCors("AnotherPolicy")]
+        [HttpGet("getUser")]
+        public async Task<IActionResult> GetAllUsers(/*int id*/)
         {
-            _logger.LogInformation($"{nameof(GetUsers)} is started");
+            _logger.LogInformation($"{nameof(GetAllUsers)} is started");
 
-            var result = await _userService.GetUsers();
+            var userResult = await _userService.GetSystemUsers(/*id*/);
 
-            if (result == null)
+            if (userResult == null)
             {
                 return NoContent();
             }
-            
-            _logger.LogInformation($"{nameof(GetUsers)} is finished successfully");
 
-            return Ok(result);
+            _logger.LogInformation($"{nameof(GetAllUsers)} is finished successfully");
+
+            return Ok(userResult); 
         }
 
+        
+        [HttpGet("getAuthenticatedUser")]
+        public async Task<IActionResult> GetUser(string username, string password)
+        {
+            _logger.LogInformation($"{nameof(GetUser)} is started");
+
+            var userResult = await _userService.GetAuthenticatedUser(username, password);
+
+            if (userResult == null)
+            {
+                return NoContent();
+            }
+
+            _logger.LogInformation($"{nameof(GetUser)} is finished successfully");
+
+            return Ok(userResult);
+        }
     }
 }
-
-

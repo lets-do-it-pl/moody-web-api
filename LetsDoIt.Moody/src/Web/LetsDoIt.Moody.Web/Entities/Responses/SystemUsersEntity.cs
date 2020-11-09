@@ -1,15 +1,15 @@
-﻿using LetsDoIt.Moody.Domain;
-using LetsDoIt.Moody.Infrastructure.ValueTypes;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
+using LetsDoIt.Moody.Domain;
+using LetsDoIt.Moody.Infrastructure.ValueTypes;
 
-namespace LetsDoIt.Moody.Application.User
+
+namespace LetsDoIt.Moody.Web.Entities.Responses
 {
-    public class SystemUsersGetResult
+    public class SystemUsersEntity
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
 
         public string Surname { get; set; }
@@ -19,5 +19,7 @@ namespace LetsDoIt.Moody.Application.User
         public bool IsActive { get; set; }
 
         public UserType UserType { get; set; }
+
+        
     }
 }

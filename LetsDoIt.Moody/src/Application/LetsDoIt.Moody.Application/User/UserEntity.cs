@@ -7,17 +7,17 @@ namespace LetsDoIt.Moody.Application.User
     {
         public UserEntity(
             string username, 
-            string encryptedPassword,
-            bool isActive,
-            UserType userType,
-            string name,
-            string surname,
+            string encryptedPassword, 
+            bool isActive, 
+            UserType userType, 
+            string name , 
+            string surname , 
             Email email)
         {
             Username = username;
             EncryptedPassword = encryptedPassword;
-            UserType = userType;
             IsActive = isActive;
+            UserType = userType;
             Name = name;
             Surname = surname;
             Email = email;

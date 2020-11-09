@@ -11,7 +11,7 @@ namespace LetsDoIt.Moody.Infrastructure.ValueTypes
         {
             if (value == null)
             {
-                throw new ArgumentNullException(nameof(value), "Email can not be null!");
+                throw new ArgumentNullException(nameof(value),"Email can not be null!");
             }
 
             if (!IsValid(value))
