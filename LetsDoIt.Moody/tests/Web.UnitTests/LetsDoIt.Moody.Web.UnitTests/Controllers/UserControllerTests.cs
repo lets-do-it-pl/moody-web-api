@@ -57,7 +57,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         {
             _mockUserService.Setup(x =>
                 x.SaveUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<UserType>(),
-                    It.IsAny<string>(), It.IsAny<string>(),It.IsAny<string>())).Throws(new DuplicateNameException());
+                    It.IsAny<string>(), It.IsAny<string>(),It.IsAny<Email>())).Throws(new DuplicateNameException());
 
             var actual = await _testing.SaveClient(new SaveClientRequest
             {
@@ -92,7 +92,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             var saveUserRequest = new SaveClientRequest()
             {
                 Username = "test",
-                Password = "test",
+                Password = "test"
             };
 
             await _testing.SaveClient(saveUserRequest);
@@ -105,10 +105,10 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
                         UserType.Mobile,
                         null,
                         null,
-                        null
+                        It.IsAny<Email>()
+                        
                     ),
                 Times.Once);
         }
-
     }
 }
