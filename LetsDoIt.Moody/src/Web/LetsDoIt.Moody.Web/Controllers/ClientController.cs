@@ -88,9 +88,6 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 _logger.LogInformation($"{nameof(Authenticate)} is finished with Bad Request!");
 
-
-                //////REDIRECT TO ACTIVATION.
-
                 return BadRequest(exception.Message);
             }
             catch (Exception)
