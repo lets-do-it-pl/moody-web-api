@@ -231,14 +231,12 @@ namespace LetsDoIt.Moody.Application.User
 
         private static async Task<string> ReadHtmlContent(string filePath)
         {
-            await using (FileStream fileStream =
+            await using FileStream fileStream =
                 new FileStream(AppDomain.CurrentDomain.BaseDirectory
                                + filePath,
-                    FileMode.Open))
-            {
-                using StreamReader streamReader = new StreamReader(fileStream, Encoding.Unicode);
-                return await streamReader.ReadToEndAsync();
-            }
+                    FileMode.Open);
+            using StreamReader streamReader = new StreamReader(fileStream, Encoding.Unicode);
+            return await streamReader.ReadToEndAsync();
         }
     }
 }
