@@ -20,8 +20,8 @@ namespace LetsDoIt.Moody.Application.User
         
         Task<bool> ValidateTokenAsync(string token);
 
-        Task<ICollection<SystemUsersGetResult>> GetSystemUsers(/*int id*/);
+        Task<ICollection<SystemUsersGetResult>> GetSystemUsers();
 
-        Task<ICollection<SystemUsersGetResult>> GetAuthenticatedUser(string username, string password);
+        Task<ICollection<SystemUsersGetResult>> GetUserById(int id);
     }
 }

@@ -54,15 +54,11 @@ namespace LetsDoIt.Moody.Application.User
             return result.Select(ToUser).ToList();
         }
 
-        public async Task<ICollection<SystemUsersGetResult>> GetAuthenticatedUser(string username, string password)
+        public async Task<ICollection<SystemUsersGetResult>> GetUserById(int id)
         {
-            Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
-            Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
+            Guard.Requires(id.ToString(), nameof(id)).IsNotNullOrEmptyOrWhiteSpace();
 
-            var user = ToUserEntity(username, password);
-
-            var result = await _userRepository.GetListAsync(u => u.UserName == user.Username &&
-                                                                 u.Password == user.EncryptedPassword);
+            var result = await _userRepository.GetListAsync(u => u.Id == id);
 
             if (result == null)
             {
