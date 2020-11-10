@@ -68,6 +68,7 @@ namespace LetsDoIt.Moody.Application.User
             Id = result.Id,
             Name = result.Name,
             Surname = result.Surname,
+         //  Email = result.Email == null ? string.Empty: result.Email as String,
             Email = result.Email,
             IsActive = result.IsActive,
             UserType = result.UserType
@@ -82,9 +83,9 @@ namespace LetsDoIt.Moody.Application.User
                 throw new ArgumentNullException("result is a null argument!");
             }
 
-            result = (List<User>)result.Where(result => result.Id.Equals(id));
+            result = (List<User>)result.Where(result => result.Id.Equals(id)).ToList();
 
-            return result.Select(ToUserDetails).ToList(); ;
+            return result.Select(ToUserDetails).ToList();
         }
 
         
@@ -93,7 +94,6 @@ namespace LetsDoIt.Moody.Application.User
             Id = result.Id,
             Name = result.Name,
             Surname = result.Surname,
-          //Email = result.Email == null ? string.Empty: result.Email as String,
             Email = result.Email,
             IsActive = result.IsActive,
             UserType = result.UserType,
