@@ -85,7 +85,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             SetupGetCategoriesFromRepository(Enumerable.Empty<Category>().ToList());
 
             // Act
-            var actual = await _testing.GetCategories(versionNumber);
+            var actual = await _testing.GetCategoriesWithDetails(versionNumber);
 
             // Assert
             Assert.True(actual.IsUpdated);
@@ -104,7 +104,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             SetupGetLatestVersionNumber(versionHistory);
 
             //Act
-            Func<Task<CategoryGetResult>> action = async () => await _testing.GetCategories(versionNumber);
+            Func<Task<CategoryGetResult>> action = async () => await _testing.GetCategoriesWithDetails(versionNumber);
 
             //Assert
             Assert.ThrowsAsync<ArgumentException>(action);
@@ -115,7 +115,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         {
             SetupGetLatestVersionNumber(null);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _testing.GetCategories(null));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _testing.GetCategoriesWithDetails(null));
         }
 
         [Theory]
@@ -132,7 +132,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             SetupGetCategoriesFromRepository(categories);
 
             // Act
-            var actual = await _testing.GetCategories(versionNumber);
+            var actual = await _testing.GetCategoriesWithDetails(versionNumber);
 
             // Assert
             Assert.False(actual.IsUpdated);
@@ -153,7 +153,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             SetupGetVersionHistory(versionHistories);
 
             // Act
-            var actual = await _testing.GetCategories(versionNumber);
+            var actual = await _testing.GetCategoriesWithDetails(versionNumber);
 
             // Assert
             Assert.True(actual.IsUpdated);

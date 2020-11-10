@@ -6,6 +6,7 @@ using System.Security.Authentication;
 using LetsDoIt.Moody.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Cors;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -13,6 +14,7 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Entities.Requests;
     using Newtonsoft.Json;
 
+    [EnableCors("Policy")]
     [ApiController]
     [Route("api/users")]
     public class UserController : ControllerBase

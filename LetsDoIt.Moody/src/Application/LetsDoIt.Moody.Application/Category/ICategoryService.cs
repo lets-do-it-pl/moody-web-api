@@ -1,14 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
 
 namespace LetsDoIt.Moody.Application.Category
 {
+    using Domain;
+
     public interface ICategoryService
     {
-        Task<CategoryGetResult> GetCategories(string versionNumber);
+        Task<CategoryGetResult> GetCategoriesWithDetails(string versionNumber);
 
-        Task<CategoryGetResultWeb> GetCategoriesWeb();
+        Task<CategoryGetResult> GetCategories();
 
-        Task<CategoryDetailsGetResult> GetCategoryDetailsWeb(int categoryId);
+        Task<IEnumerable<CategoryDetails>> GetCategoryDetails(int categoryId);
 
         Task InsertAsync(string name, int order, byte[] image);
 

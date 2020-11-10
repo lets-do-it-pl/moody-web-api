@@ -18,6 +18,7 @@ namespace LetsDoIt.Moody.Application.Category
         private readonly IVersionHistoryService _versionHistoryService;
 
 
+
         public CategoryService(
             IEntityRepository<Category> categoryRepository,
             IEntityRepository<CategoryDetails> categoryDetailsRepository,
@@ -30,7 +31,7 @@ namespace LetsDoIt.Moody.Application.Category
             _versionHistoryService = versionHistoryService;
         }
 
-        public async Task<CategoryGetResult> GetCategories(string versionNumber)
+        public async Task<CategoryGetResult> GetCategoriesWithDetails(string versionNumber)
         {
             VersionHistory latestVersion = await _versionHistoryService.GetLatestVersionNumberAsync();
 
@@ -53,23 +54,19 @@ namespace LetsDoIt.Moody.Application.Category
             return result;
         }
 
-        public async Task<CategoryGetResultWeb> GetCategoriesWeb()
+        public async Task<CategoryGetResult> GetCategories()
         {
-            var result = new CategoryGetResultWeb();
+            var result = new CategoryGetResult();
 
-            result.Categories = await _categoryRepository.GetListAsyncWeb(c => !c.IsDeleted);
+            result.Categories = await _categoryRepository.GetListAsync(c => !c.IsDeleted);
 
             return result;
         }
 
-        public async Task<CategoryDetailsGetResult> GetCategoryDetailsWeb(int categoryId)
+        public async Task<IEnumerable<CategoryDetails>> GetCategoryDetails(int categoryId)
         {
-            var result = new CategoryDetailsGetResult();
-
-            result.CategoryDetails = await _categoryDetailsRepository.GetListAsyncWeb(
+            return  await _categoryDetailsRepository.GetListAsync(
                 c => !c.IsDeleted && c.CategoryId == categoryId);
-
-            return result;
         }
 
         public async Task InsertAsync(string name, int order, byte[] image)

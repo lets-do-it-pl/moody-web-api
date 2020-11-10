@@ -11,8 +11,6 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
     {
         Task<List<T>> GetListAsync(Expression<Func<T, bool>> filter = null);
 
-        Task<List<T>> GetListAsyncWeb(Expression<Func<T, bool>> filter = null);
-
         Task<T> GetAsync(Expression<Func<T, bool>> filter);
 
         IQueryable<T> Get();

@@ -4,23 +4,28 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Cors;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
+    using System.Collections.Generic;
     using Application.Category;
     using Application.CustomExceptions;
     using Domain;
     using Entities.Requests;
     using Entities.Responses;    
-    using Filters;    
+    using Filters;
 
     [ApiController]
+    [EnableCors("Policy")]
     [Route("api/categories")]
-    [Authorization]
+    //[Authorization]
     public class CategoryController : ControllerBase
     {
         private readonly ILogger<CategoryController> _logger;
         private readonly ICategoryService _categoryService;
+
+        public IEnumerable<Category> Categories { get; set; }
 
         public CategoryController(ICategoryService categoryService,
             ILogger<CategoryController> logger)
@@ -30,15 +35,31 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpGet, Route("{versionNumber?}")]
-        public async Task<ActionResult<CategoryResponse>> GetCategories(string versionNumber = null)
+        public async Task<ActionResult<CategoryResponse>> GetCategoriesWithDetails(string versionNumber = null)
         {
-            _logger.LogInformation($"{nameof(GetCategories)} is started with version number = {versionNumber}");
+            _logger.LogInformation($"{nameof(GetCategoriesWithDetails)} is started with version number = {versionNumber}");
 
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
 
-            var categoryResult = await _categoryService.GetCategories(versionNumber);
+            var categoryResult = await _categoryService.GetCategoriesWithDetails(versionNumber);
             if (categoryResult == null ||
                 (!categoryResult.IsUpdated && categoryResult.Categories == null))
+            {
+                return NoContent();
+            }
+
+            _logger.LogInformation($"{nameof(GetCategoriesWithDetails)} is finished successfully");
+
+            return ToCategoryResponseWithDetails(categoryResult);
+        }
+
+        [HttpGet, Route("/list")]
+        public async Task<ActionResult<CategoriesResponse>> GetCategories()
+        {
+            _logger.LogInformation($"{nameof(GetCategories)} is started.");
+
+            var categoryResult = await _categoryService.GetCategories();
+            if (categoryResult == null)
             {
                 return NoContent();
             }
@@ -48,28 +69,25 @@ namespace LetsDoIt.Moody.Web.Controllers
             return ToCategoryResponse(categoryResult);
         }
 
-        [HttpGet, Route("web/")]
-        public async Task<ActionResult<CategoryResponseWeb>> GetAllCategories()
+        [HttpGet, Route("/{categoryId}/details")]
+        public async Task<IEnumerable<CategoryDetailsEntity>> GetCategoryDetails(int categoryId)
         {
-            var categoryResult = await _categoryService.GetCategoriesWeb();
+            _logger.LogInformation($"{nameof(GetCategoryDetails)} is started with the category Id = {categoryId}.");
+
+            var categoryResult = await _categoryService.GetCategoryDetails(categoryId);
             if (categoryResult == null)
             {
-                return NoContent();
+                return null;
             }
 
-            return ToCategoryResponseWeb(categoryResult);
-        }
+            _logger.LogInformation($"{nameof(GetCategoryDetails)} is finished successfully");
 
-        [HttpGet, Route("web/{categoryId}")]
-        public async Task<ActionResult<CategoryDetailsResponseWeb>> GetCategoryDetails(int categoryId)
-        {
-            var categoryResult = await _categoryService.GetCategoryDetailsWeb(categoryId);
-            if (categoryResult == null)
-            {
-                return NoContent();
-            }
-
-            return ToCategoryDetailsResponseWeb(categoryResult);
+            return categoryResult.Select(c => new CategoryDetailsEntity
+                                                    {
+                                                      Id = c.Id,
+                                                      Order = c.Order,
+                                                      Image = c.Image
+                                                        });
         }
 
         [HttpPost]
@@ -244,7 +262,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             }            
         }
 
-        private CategoryResponse ToCategoryResponse(CategoryGetResult categoryResult)
+        private CategoryResponse ToCategoryResponseWithDetails(CategoryGetResult categoryResult)
         {
             var result = new CategoryResponse
             {
@@ -287,38 +305,19 @@ namespace LetsDoIt.Moody.Web.Controllers
             Order = c.Order
         };
 
-        private CategoryResponseWeb ToCategoryResponseWeb(CategoryGetResultWeb categoryResult)
+        private CategoriesResponse ToCategoryResponse(CategoryGetResult categoryResult)
         {
-            var result = new CategoryResponseWeb();
+            var result = new CategoriesResponse();
 
             if (categoryResult.Categories != null)
             {
                 result.Categories = categoryResult
                                         .Categories
                                         .Select(c =>
-                                             new CategoryEntityWeb
+                                             new Entities.Responses.CategoryEntity
                                              {
                                                  Id = c.Id,
                                                  Name = c.Name,
-                                                 Order = c.Order,
-                                                 Image = c.Image
-                                             });
-            }
-            return result;
-        }
-
-        private CategoryDetailsResponseWeb ToCategoryDetailsResponseWeb(CategoryDetailsGetResult categoryResult)
-        {
-            var result = new CategoryDetailsResponseWeb();
-
-            if (categoryResult.CategoryDetails != null)
-            {
-                result.CategoryDetails = categoryResult
-                                        .CategoryDetails
-                                        .Select(c =>
-                                             new CategoryDetailsEntity
-                                             {
-                                                 Id = c.Id,
                                                  Order = c.Order,
                                                  Image = c.Image
                                              });

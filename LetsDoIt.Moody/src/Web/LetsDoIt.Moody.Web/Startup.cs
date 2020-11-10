@@ -39,6 +39,17 @@ namespace LetsDoIt.Moody.Web
 
             var connectionString = Configuration.GetConnectionString("MoodyDBConnection");
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AnotherPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            });
+
             services
                 .AddHealthChecks()
                 .AddSqlServer(connectionString, "SELECT 1", name: "SqlServerApplicationDb");
@@ -141,6 +152,8 @@ namespace LetsDoIt.Moody.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseSwagger();
 
