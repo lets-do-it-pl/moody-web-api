@@ -125,6 +125,8 @@ namespace LetsDoIt.Moody.Web
                     us.GetService<IEntityRepository<EmailVerificaitonToken>>()
                 ));
 
+            var FrontendUrl = Configuration.GetValue<string>("FrontendUrl");
+
             services.AddMvc(options =>
             {
                 options.Filters.Add<TokenAuthorizationFilter>();
@@ -135,7 +137,7 @@ namespace LetsDoIt.Moody.Web
                 options.AddPolicy("AnotherPolicy",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3000")
+                        builder.WithOrigins(FrontendUrl)
                                             .AllowAnyHeader()
                                             .AllowAnyMethod();
                     });
