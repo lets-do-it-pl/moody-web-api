@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using LetsDoIt.Moody.Infrastructure.ValueTypes;
 
-namespace LetsDoIt.Moody.Web
+namespace LetsDoIt.Moody.Infrastructure.ValueTypes
 {
     public class EmailJsonConverter : JsonConverter<Email>
     {
