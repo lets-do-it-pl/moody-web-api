@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Net.Mail;
+using System.Text.Json.Serialization;
 
 namespace LetsDoIt.Moody.Infrastructure.ValueTypes
 {
+    [JsonConverter(typeof(EmailJsonConverter))]
     public readonly struct Email
     {
         private readonly string _value;
