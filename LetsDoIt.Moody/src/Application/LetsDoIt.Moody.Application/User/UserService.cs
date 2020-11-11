@@ -68,7 +68,6 @@ namespace LetsDoIt.Moody.Application.User
             Id = result.Id,
             Name = result.Name,
             Surname = result.Surname,
-         //  Email = result.Email == null ? string.Empty: result.Email as String,
             Email = result.Email,
             IsActive = result.IsActive,
             UserType = result.UserType

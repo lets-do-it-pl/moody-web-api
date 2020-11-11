@@ -13,7 +13,7 @@ namespace LetsDoIt.Moody.Application.User
 
         public string Surname { get; set; }
 
-        public Email Email { get; set; }
+        public string Email { get; set; }
         public bool IsActive { get; set; }
 
         public UserType UserType { get; set; }
