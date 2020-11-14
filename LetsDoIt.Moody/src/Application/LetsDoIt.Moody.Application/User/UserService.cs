@@ -17,7 +17,6 @@ namespace LetsDoIt.Moody.Application.User
     using System.Security.Authentication;
     using System.Security.Claims;
     using System.Text;
-
     public class UserService : IUserService
     {
         private const string HtmlFilePath = @"\HtmlTemplates\EmailTokenVerification.html";
