@@ -21,9 +21,7 @@ namespace LetsDoIt.Moody.Persistance
 
         public DbSet<Category> Categories { get; set; }
 
-        public DbSet<User> Users { get; set; }
-
-        public DbSet<UserToken> UserTokens { get; set; }
+        public DbSet<Client> Clients { get; set; }
 
         public DbSet<VersionHistory> VersionHistories { get; set; }
 

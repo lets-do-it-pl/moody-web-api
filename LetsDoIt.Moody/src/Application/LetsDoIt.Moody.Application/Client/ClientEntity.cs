@@ -1,8 +1,8 @@
-﻿namespace LetsDoIt.Moody.Application.User
+﻿namespace LetsDoIt.Moody.Application.Client
 {
-    public class UserEntity
+    public class ClientEntity
     {
-        public UserEntity(
+        public ClientEntity(
             string username, 
             string encryptedPassword)
         {

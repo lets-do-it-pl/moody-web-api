@@ -4,7 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LetsDoIt.Moody.Domain
 {
-    public class User:IEntity
+    [Table("Client")]
+    public class Client : IEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -23,8 +24,6 @@ namespace LetsDoIt.Moody.Domain
 
         public DateTime? ModifiedDate { get; set; }
 
-        public bool IsDeleted { get; set; } 
-
-        public virtual UserToken UserToken { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

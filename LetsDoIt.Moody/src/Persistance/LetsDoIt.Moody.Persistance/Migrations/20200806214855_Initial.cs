@@ -26,7 +26,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "Clients",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -63,7 +63,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                 name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Clients");
 
             migrationBuilder.DropTable(
                 name: "VersionHistories");

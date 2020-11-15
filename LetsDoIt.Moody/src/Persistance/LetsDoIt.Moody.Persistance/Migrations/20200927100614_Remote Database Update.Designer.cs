@@ -87,7 +87,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                     b.ToTable("CategoryDetails");
                 });
 
-            modelBuilder.Entity("LetsDoIt.Moody.Domain.User", b =>
+            modelBuilder.Entity("LetsDoIt.Moody.Domain.Client", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -115,10 +115,10 @@ namespace LetsDoIt.Moody.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("LetsDoIt.Moody.Domain.UserToken", b =>
+            modelBuilder.Entity("LetsDoIt.Moody.Domain.ClientToken", b =>
                 {
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -167,11 +167,11 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LetsDoIt.Moody.Domain.UserToken", b =>
+            modelBuilder.Entity("LetsDoIt.Moody.Domain.ClientToken", b =>
                 {
-                    b.HasOne("LetsDoIt.Moody.Domain.User", "User")
-                        .WithOne("UserToken")
-                        .HasForeignKey("LetsDoIt.Moody.Domain.UserToken", "UserId")
+                    b.HasOne("LetsDoIt.Moody.Domain.Client", "Client")
+                        .WithOne("ClientToken")
+                        .HasForeignKey("LetsDoIt.Moody.Domain.ClientToken", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using LetsDoIt.Moody.Application.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -16,7 +18,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
     [ApiController]
     [Route("api/categories")]
-    [Authorization]
+    // [Authorization]
     public class CategoryController : ControllerBase
     {
         private readonly ILogger<CategoryController> _logger;
@@ -30,6 +32,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpGet, Route("{versionNumber?}")]
+        [Authorize(Roles = UserTypeConstants.Client)]
         public async Task<ActionResult<CategoryResponse>> GetCategories(string versionNumber = null)
         {
             _logger.LogInformation($"{nameof(GetCategories)} is started with version number = {versionNumber}");

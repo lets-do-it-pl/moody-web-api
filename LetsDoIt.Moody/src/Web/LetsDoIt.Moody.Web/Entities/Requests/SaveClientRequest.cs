@@ -2,7 +2,7 @@
 
 namespace LetsDoIt.Moody.Web.Entities.Requests
 {
-    public class SaveUserRequest
+    public class SaveClientRequest
     {
         [Required]
         public string Username { get; set; }

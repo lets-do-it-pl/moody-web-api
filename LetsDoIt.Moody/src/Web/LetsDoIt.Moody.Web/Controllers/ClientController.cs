@@ -3,25 +3,25 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Data;
 using System.Security.Authentication;
-using LetsDoIt.Moody.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
-    using Application.User;
+    using Application.Client;
     using Entities.Requests;
-    using Newtonsoft.Json;
+    using Filters;
 
     [ApiController]
-    [Route("api/users")]
-    public class UserController : ControllerBase
+    [Route("api/client")]
+    public class ClientController : ControllerBase
     {
-        private readonly ILogger<UserController> _logger;
-        private readonly IUserService _userService;
+        private readonly ILogger<ClientController> _logger;
+        private readonly IClientService _userService;
 
-        public UserController(IUserService userService,
-            ILogger<UserController> logger)
+        public ClientController(IClientService userService,
+            ILogger<ClientController> logger)
         {
             _userService = userService;
             _logger = logger;
@@ -30,37 +30,33 @@ namespace LetsDoIt.Moody.Web.Controllers
         [HttpPost]
         [AuthorizationByTempToken]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> SaveUser(SaveUserRequest saveRequest)
+        public async Task<IActionResult> SaveClient(SaveClientRequest saveRequest)
         {
             _logger.LogInformation(
-                $"{nameof(SaveUser)} is started with " +
+                $"{nameof(SaveClient)} is started with " +
                 $"save request = {JsonConvert.SerializeObject(saveRequest)}");
 
             try
             {
-                await _userService.SaveUserAsync(
+                await _userService.SaveClientAsync(
                                 saveRequest.Username,
                                 saveRequest.Password);
 
-                _logger.LogInformation($"{nameof(SaveUser)} is finished successfully");
+                _logger.LogInformation($"{nameof(SaveClient)} is finished successfully");
 
                 return StatusCode((int)HttpStatusCode.Created, "Created");
 
             }
             catch (DuplicateNameException ex)
             {
-                _logger.LogInformation($"{nameof(SaveUser)} is finished with bad request!");
+                _logger.LogInformation($"{nameof(SaveClient)} is finished with bad request!");
 
                 return BadRequest(ex.Message);
-            }
-            catch (Exception)
-            {
-                throw;
             }
         }
 
         [HttpPost("authenticate")]
-        public async Task<ActionResult<UserTokenEntity>> Authenticate(string username, string password)
+        public async Task<ActionResult<ClientTokenEntity>> Authenticate(string username, string password)
         {
             _logger.LogInformation(
                 $"{nameof(Authenticate)} is started with " +
@@ -81,13 +77,6 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return BadRequest("Username or Password is wrong!");
             }
-            catch (Exception)
-            {
-                throw;
-            }
-
         }
     }
 }
-
-

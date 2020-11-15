@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LetsDoIt.Moody.Persistance.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200807014848_AddNullableDatesUserToken")]
-    partial class AddNullableDatesUserToken
+    [Migration("20201113043607_ReplaceUserWithClient")]
+    partial class ReplaceUserWithClient
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.6")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -54,6 +54,39 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("LetsDoIt.Moody.Domain.CategoryDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("CategoryDetails");
+                });
+
             modelBuilder.Entity("LetsDoIt.Moody.Domain.Client", b =>
                 {
                     b.Property<int>("Id")
@@ -82,27 +115,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients");
-                });
-
-            modelBuilder.Entity("LetsDoIt.Moody.Domain.ClientToken", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ExpirationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(1000)")
-                        .HasMaxLength(1000);
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("UserTokens");
+                    b.ToTable("Client");
                 });
 
             modelBuilder.Entity("LetsDoIt.Moody.Domain.VersionHistory", b =>
@@ -125,11 +138,11 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                     b.ToTable("VersionHistories");
                 });
 
-            modelBuilder.Entity("LetsDoIt.Moody.Domain.ClientToken", b =>
+            modelBuilder.Entity("LetsDoIt.Moody.Domain.CategoryDetails", b =>
                 {
-                    b.HasOne("LetsDoIt.Moody.Domain.Client", "Client")
-                        .WithOne("ClientToken")
-                        .HasForeignKey("LetsDoIt.Moody.Domain.ClientToken", "UserId")
+                    b.HasOne("LetsDoIt.Moody.Domain.Category", "Category")
+                        .WithMany("CategoryDetails")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

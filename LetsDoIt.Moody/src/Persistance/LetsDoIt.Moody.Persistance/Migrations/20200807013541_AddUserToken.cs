@@ -9,7 +9,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
         {
             migrationBuilder.AlterColumn<string>(
                 name: "UserName",
-                table: "Users",
+                table: "Clients",
                 maxLength: 100,
                 nullable: false,
                 oldClrType: typeof(string),
@@ -17,7 +17,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Password",
-                table: "Users",
+                table: "Clients",
                 maxLength: 1000,
                 nullable: false,
                 oldClrType: typeof(string),
@@ -46,7 +46,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                     table.ForeignKey(
                         name: "FK_UserTokens_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -59,7 +59,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "UserName",
-                table: "Users",
+                table: "Clients",
                 type: "nvarchar(max)",
                 nullable: false,
                 oldClrType: typeof(string),
@@ -67,7 +67,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Password",
-                table: "Users",
+                table: "Clients",
                 type: "nvarchar(max)",
                 nullable: false,
                 oldClrType: typeof(string),

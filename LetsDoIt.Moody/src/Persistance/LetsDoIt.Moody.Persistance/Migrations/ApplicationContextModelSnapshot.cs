@@ -15,7 +15,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -85,7 +85,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                     b.ToTable("CategoryDetails");
                 });
 
-            modelBuilder.Entity("LetsDoIt.Moody.Domain.User", b =>
+            modelBuilder.Entity("LetsDoIt.Moody.Domain.Client", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -113,27 +113,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("LetsDoIt.Moody.Domain.UserToken", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ExpirationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(1000)")
-                        .HasMaxLength(1000);
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("UserTokens");
+                    b.ToTable("Client");
                 });
 
             modelBuilder.Entity("LetsDoIt.Moody.Domain.VersionHistory", b =>
@@ -161,15 +141,6 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                     b.HasOne("LetsDoIt.Moody.Domain.Category", "Category")
                         .WithMany("CategoryDetails")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LetsDoIt.Moody.Domain.UserToken", b =>
-                {
-                    b.HasOne("LetsDoIt.Moody.Domain.User", "User")
-                        .WithOne("UserToken")
-                        .HasForeignKey("LetsDoIt.Moody.Domain.UserToken", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

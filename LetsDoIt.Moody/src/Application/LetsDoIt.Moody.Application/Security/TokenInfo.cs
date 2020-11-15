@@ -1,11 +1,9 @@
 ﻿using System;
 
-namespace LetsDoIt.Moody.Application.User
+namespace LetsDoIt.Moody.Application.Security
 {
-    public class UserTokenEntity
+    public class TokenInfo
     {
-        public string Username { get; set; }
-
         public string Token { get; set; }
 
         public DateTime ExpirationDate { get; set; }

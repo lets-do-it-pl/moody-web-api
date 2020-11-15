@@ -23,7 +23,7 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 
         public virtual async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter = null)
         {
-            return filter == null 
+            return filter == null
                 ? await _context.Set<TEntity>().ToListAsync()
                 : await _context.Set<TEntity>().Where(filter).ToListAsync();
         }
@@ -31,6 +31,11 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
         public virtual async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter)
         {
             return await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
+        }
+
+        public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> filter)
+        {
+            return await _context.Set<TEntity>().AnyAsync(filter);
         }
 
         public IQueryable<TEntity> Get()
@@ -45,9 +50,9 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             var addedEntity = _context.Entry(entity);
 
             addedEntity.State = EntityState.Added;
-            
+
             await _context.SaveChangesAsync();
-            
+
             return entity;
         }
 
@@ -58,9 +63,9 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             var updatedEntity = _context.Entry(entity);
 
             updatedEntity.State = EntityState.Modified;
-            
+
             await _context.SaveChangesAsync();
-            
+
             return entity;
         }
 
@@ -70,15 +75,15 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             entity.IsDeleted = true;
 
             var deletedEntity = _context.Entry(entity);
-            
+
             deletedEntity.State = EntityState.Modified;
-            
+
             await _context.SaveChangesAsync();
         }
 
         public virtual async Task BulkDeleteAsync(IList<TEntity> entities)
         {
-            foreach(var entity in entities)
+            foreach (var entity in entities)
             {
                 entity.ModifiedDate = DateTime.UtcNow;
                 entity.IsDeleted = true;

@@ -14,6 +14,8 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
 
         Task<T> GetAsync(Expression<Func<T, bool>> filter);
 
+        Task<bool> AnyAsync(Expression<Func<T, bool>> filter);
+
         IQueryable<T> Get();
         
         Task<T> AddAsync(T entity);

@@ -53,7 +53,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("LetsDoIt.Moody.Domain.User", b =>
+            modelBuilder.Entity("LetsDoIt.Moody.Domain.Client", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,7 +79,7 @@ namespace LetsDoIt.Moody.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("LetsDoIt.Moody.Domain.VersionHistory", b =>

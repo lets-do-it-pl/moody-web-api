@@ -29,6 +29,11 @@ namespace LetsDoIt.Moody.Persistance.Repositories
             throw new NotImplementedException();
         }
 
+        public Task<bool> AnyAsync(Expression<Func<VersionHistory, bool>> filter)
+        {
+            throw new NotImplementedException();
+        }
+
         public IQueryable<VersionHistory> Get()
         {
             return _context.Set<VersionHistory>();
