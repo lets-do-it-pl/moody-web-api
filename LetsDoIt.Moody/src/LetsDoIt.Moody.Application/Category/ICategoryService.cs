@@ -4,7 +4,7 @@ namespace LetsDoIt.Moody.Application.Category
 {
     public interface ICategoryService
     {
-        Task<CategoryGetResult> GetCategories(string versionNumber);
+        Task<CategoryGetResult> GetCategoriesWithDetails(string versionNumber);
 
         Task InsertAsync(string name, int order, byte[] image);
 

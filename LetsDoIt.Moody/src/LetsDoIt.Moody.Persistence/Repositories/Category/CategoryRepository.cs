@@ -5,12 +5,12 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace LetsDoIt.Moody.Persistence.Repositories
+namespace LetsDoIt.Moody.Persistence.Repositories.Category
 {
     using Entities;
     using Base;
 
-    public class CategoryRepository : RepositoryBase<Category>
+    public class CategoryRepository : RepositoryBase<Category>, ICategoryRepository
     {
         private readonly IRepository<CategoryDetail> _categoryDetailRepository;
 
@@ -20,26 +20,6 @@ namespace LetsDoIt.Moody.Persistence.Repositories
             : base(context)
         {
             _categoryDetailRepository = categoryDetailRepository;
-        }
-
-        public override async Task<List<Category>> GetListAsync(Expression<Func<Category, bool>> filter = null)
-        {
-            var categories =
-                filter == null
-                ? await Context.Set<Category>().ToListAsync()
-                : await Context.Set<Category>().Where(filter).ToListAsync();
-
-            if (categories == null || categories.Count == 0)
-            {
-                return categories;
-            }
-
-            foreach (var category in categories.Where(category => category.CategoryDetails != null))
-            {
-                category.CategoryDetails = category.CategoryDetails.Where(cd => !cd.IsDeleted).ToList();
-            }
-
-            return categories;
         }
 
         public override Task<Category> AddAsync(Category entity)
@@ -65,6 +45,26 @@ namespace LetsDoIt.Moody.Persistence.Repositories
             }
 
             return base.BulkDeleteAsync(entities);
+        }
+
+        public async Task<List<Category>> GetListWithDetailsAsync(Expression<Func<Category, bool>> filter = null)
+        {
+            var categories =
+                filter == null
+                    ? await Context.Set<Category>().ToListAsync()
+                    : await Context.Set<Category>().Where(filter).ToListAsync();
+
+            if (categories == null || categories.Count == 0)
+            {
+                return categories;
+            }
+
+            foreach (var category in categories.Where(category => category.CategoryDetails != null))
+            {
+                category.CategoryDetails = category.CategoryDetails.Where(cd => !cd.IsDeleted).ToList();
+            }
+
+            return categories;
         }
 
         public override async Task DeleteAsync(Category entity)
