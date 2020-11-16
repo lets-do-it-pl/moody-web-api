@@ -7,19 +7,19 @@ using NGuard;
 namespace LetsDoIt.Moody.Application.Client
 {
     using Constants;
-    using Domain;
     using Infrastructure.Utils;
-    using Persistance.Repositories.Base;
+    using Persistence.Entities;
+    using Persistence.Repositories.Base;
     using Security;
 
     public class ClientService : IClientService
     {
-        private readonly IEntityRepository<Client> _clientRepository;
+        private readonly IRepository<Client> _clientRepository;
         private readonly ISecurityService _securityService;
         private readonly ILogger<ClientService> _logger;
 
         public ClientService(
-            IEntityRepository<Client> clientRepository,
+            IRepository<Client> clientRepository,
             ISecurityService securityService,
             ILogger<ClientService> logger)
         {
@@ -35,20 +35,20 @@ namespace LetsDoIt.Moody.Application.Client
 
             _logger.LogInformation($"{nameof(SaveClientAsync)} executing with username={username}...");
 
-            var isUserExisted = await _clientRepository.AnyAsync(u => u.UserName == username && !u.IsDeleted);
+            var isUserExisted = await _clientRepository.AnyAsync(u => u.UserName == username);
             if (isUserExisted)
             {
                 throw new DuplicateNameException($"The username of the client is already in the database. Username = {username}");
             }
 
-            var client = ToClient(username, password);
+            var client = ToClientEntity(username, password);
 
             await _clientRepository.AddAsync(new Client
             {
                 UserName = client.Username,
                 Password = client.EncryptedPassword
             });
-            
+
             _logger.LogInformation($"{nameof(SaveClientAsync)} executed with username={username}.");
         }
 
@@ -59,31 +59,28 @@ namespace LetsDoIt.Moody.Application.Client
 
             _logger.LogInformation($"{nameof(AuthenticateAsync)} executing with username={username}...");
 
-            var user = ToClient(username, password);
+            var user = ToClientEntity(username, password);
 
             var userDb = await _clientRepository
                                     .GetAsync(u =>
                                         u.UserName == user.Username &&
-                                        u.Password == user.EncryptedPassword &&
-                                        !u.IsDeleted);
+                                        u.Password == user.EncryptedPassword);
             if (userDb == null)
             {
                 throw new AuthenticationException();
             }
 
             var tokenInfo = _securityService.GetNewToken(userDb.Id.ToString(), UserTypeConstants.Client);
-            
+
             _logger.LogInformation($"{nameof(AuthenticateAsync)} executed with username={username}.");
 
-            return new ClientTokenEntity
-            {
-                Username = username,
-                Token = tokenInfo.Token,
-                ExpirationDate = tokenInfo.ExpirationDate
-            };
+            return new ClientTokenEntity(
+                        username,
+                        tokenInfo.Token,
+                        tokenInfo.ExpirationDate);
         }
 
-        private static ClientEntity ToClient(string username, string password) =>
+        private static ClientEntity ToClientEntity(string username, string password) =>
             new ClientEntity
             (
                 username,

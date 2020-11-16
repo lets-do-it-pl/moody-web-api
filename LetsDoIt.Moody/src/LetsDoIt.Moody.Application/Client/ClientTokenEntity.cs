@@ -4,10 +4,20 @@ namespace LetsDoIt.Moody.Application.Client
 {
     public class ClientTokenEntity
     {
-        public string Username { get; set; }
+        public ClientTokenEntity(
+            string username, 
+            string token, 
+            DateTime expirationDate)
+        {
+            Username = username;
+            Token = token;
+            ExpirationDate = expirationDate;
+        }
 
-        public string Token { get; set; }
+        public string Username { get; }
 
-        public DateTime ExpirationDate { get; set; }
+        public string Token { get; }
+
+        public DateTime ExpirationDate { get; }
     }
 }
