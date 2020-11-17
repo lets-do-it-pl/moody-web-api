@@ -37,6 +37,10 @@ namespace LetsDoIt.Moody.Persistence
             {
                 entity.ToTable("Category");
 
+                entity.HasIndex(e => e.Order)
+                    .HasName("UQ__Category__67A3D86C27271819")
+                    .IsUnique();
+
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -49,11 +53,17 @@ namespace LetsDoIt.Moody.Persistence
                     .IsRequired()
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Order).HasColumnType("decimal(18, 5)");
             });
 
             modelBuilder.Entity<CategoryDetail>(entity =>
             {
                 entity.ToTable("CategoryDetail");
+
+                entity.HasIndex(e => e.Order)
+                    .HasName("UQ__Category__67A3D86CE9B2570B")
+                    .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
@@ -62,6 +72,8 @@ namespace LetsDoIt.Moody.Persistence
                 entity.Property(e => e.Image).IsRequired();
 
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Order).HasColumnType("decimal(18, 5)");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.CategoryDetails)
@@ -133,7 +145,8 @@ namespace LetsDoIt.Moody.Persistence
 
                 entity.Property(e => e.VersionNumber)
                     .IsRequired()
-                    .HasMaxLength(100);
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);

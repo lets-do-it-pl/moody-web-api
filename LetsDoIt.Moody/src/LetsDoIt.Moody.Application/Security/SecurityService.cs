@@ -20,7 +20,6 @@ namespace LetsDoIt.Moody.Application.Security
 
         public TokenInfo GenerateJwtToken(string id, string fullName, string role)
         {
-
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 

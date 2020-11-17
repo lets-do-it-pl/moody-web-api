@@ -1,9 +1,6 @@
 using System;
 using System.Text;
 using HealthChecks.UI.Client;
-using LetsDoIt.Moody.Application.Constants;
-using LetsDoIt.Moody.Application.Options;
-using LetsDoIt.Moody.Web.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,9 +16,11 @@ namespace LetsDoIt.Moody.Web
 {
     using Application.Category;
     using Application.Client;
+    using Application.Constants;
+    using Application.Options;
     using Application.Security;
     using Application.VersionHistory;
-    using Filters;
+    using Entities;
     using Middleware;
     using Persistence;
     using Persistence.Entities;
@@ -41,8 +40,6 @@ namespace LetsDoIt.Moody.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var tokenExpirationMinutes = Configuration.GetValue<int>("TokenExpirationMinutes");
-
             services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt));
 
             services.AddAuthentication(x =>

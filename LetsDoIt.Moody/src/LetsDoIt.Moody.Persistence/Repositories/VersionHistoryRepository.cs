@@ -8,12 +8,9 @@ namespace LetsDoIt.Moody.Persistence.Repositories
 
     public class VersionHistoryRepository : RepositoryBase<VersionHistory>
     {
-        private readonly ApplicationContext _context;
-
         public VersionHistoryRepository(ApplicationContext context)
         : base(context, DeleteType.Hard)
         {
-            _context = context;
         }
 
         public override Task<VersionHistory> AddAsync(VersionHistory entity)
