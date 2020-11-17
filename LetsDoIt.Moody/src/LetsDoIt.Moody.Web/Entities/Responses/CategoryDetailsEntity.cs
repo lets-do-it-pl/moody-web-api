@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
 
-        public int Order { get; set; }
+        public decimal Order { get; set; }
 
         public byte[] Image { get; set; }
     }
