@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using System.Data;
 using System.Security.Authentication;
@@ -18,12 +17,12 @@ namespace LetsDoIt.Moody.Web.Controllers
     public class ClientController : ControllerBase
     {
         private readonly ILogger<ClientController> _logger;
-        private readonly IClientService _userService;
+        private readonly IClientService _clientService;
 
-        public ClientController(IClientService userService,
+        public ClientController(IClientService clientService,
             ILogger<ClientController> logger)
         {
-            _userService = userService;
+            _clientService = clientService;
             _logger = logger;
         }
 
@@ -38,14 +37,13 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             try
             {
-                await _userService.SaveClientAsync(
+                await _clientService.SaveClientAsync(
                                 saveRequest.Username,
                                 saveRequest.Password);
 
                 _logger.LogInformation($"{nameof(SaveClient)} is finished successfully");
 
                 return StatusCode((int)HttpStatusCode.Created, "Created");
-
             }
             catch (DuplicateNameException ex)
             {
@@ -65,7 +63,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             try
             {
-                var token = await _userService.AuthenticateAsync(username, password);
+                var token = await _clientService.AuthenticateAsync(username, password);
 
                 _logger.LogInformation($"{nameof(Authenticate)} is finished successfully");
 

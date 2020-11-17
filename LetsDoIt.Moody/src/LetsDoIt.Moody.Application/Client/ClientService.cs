@@ -70,7 +70,7 @@ namespace LetsDoIt.Moody.Application.Client
                 throw new AuthenticationException();
             }
 
-            var tokenInfo = _securityService.GetNewToken(userDb.Id.ToString(), UserTypeConstants.Client);
+            var tokenInfo = _securityService.GenerateJwtToken(userDb.Id.ToString(), userDb.UserName, UserTypeConstants.Client);
 
             _logger.LogInformation($"{nameof(AuthenticateAsync)} executed with username={username}.");
 

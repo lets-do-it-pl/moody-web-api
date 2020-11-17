@@ -1,6 +1,6 @@
 ﻿namespace LetsDoIt.Moody.Application.Constants
 {
-    public class UserTypeConstants
+    public static class UserTypeConstants
     {
         public const string Client= "Client";
         public const string Standard = "Standard";

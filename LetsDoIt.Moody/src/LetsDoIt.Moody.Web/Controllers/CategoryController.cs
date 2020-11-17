@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
-using LetsDoIt.Moody.Application.Constants;
+using System.Security.Claims;
+using LetsDoIt.Moody.Persistence.Entities;
+using LetsDoIt.Moody.Web.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -10,15 +12,15 @@ using Newtonsoft.Json;
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Category;
+    using Application.Constants;
     using Application.CustomExceptions;
-    using Domain;
     using Entities.Requests;
-    using Entities.Responses;    
-    using Filters;    
+    using Entities.Responses;
+    using Filters;
 
     [ApiController]
-    [Route("api/categories")]
-    // [Authorization]
+    [Route("api/category")]
+    [Authorize(Roles = RoleConstants.StandardRole)]
     public class CategoryController : ControllerBase
     {
         private readonly ILogger<CategoryController> _logger;
@@ -31,15 +33,15 @@ namespace LetsDoIt.Moody.Web.Controllers
             _logger = logger;
         }
 
-        [HttpGet, Route("{versionNumber?}")]
-        [Authorize(Roles = UserTypeConstants.Client)]
+        [HttpGet, Route("/list-detail/{versionNumber?}")]
+        [Authorize(Roles = RoleConstants.ClientRole)]
         public async Task<ActionResult<CategoryResponse>> GetCategories(string versionNumber = null)
         {
             _logger.LogInformation($"{nameof(GetCategories)} is started with version number = {versionNumber}");
 
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
 
-            var categoryResult = await _categoryService.GetCategories(versionNumber);
+            var categoryResult = await _categoryService.GetCategoriesWithDetails(versionNumber);
             if (categoryResult == null ||
                 (!categoryResult.IsUpdated && categoryResult.Categories == null))
             {
@@ -66,7 +68,8 @@ namespace LetsDoIt.Moody.Web.Controllers
             await _categoryService.InsertAsync(
                 insertRequest.Name,
                 insertRequest.Order,
-                byteImage);
+                byteImage,
+                GetUserInfo().UserId);
 
             _logger.LogInformation($"{nameof(Insert)} is finished successfully");
 
@@ -74,7 +77,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpPost]
-        [Route("{categoryId}/details")]
+        [Route("{categoryId}/detail")]
         public async Task<IActionResult> InsertCategoryDetails(int categoryId, [FromBody] CategoryDetailsInsertRequest insertRequest)
         {
             _logger.LogInformation(
@@ -90,7 +93,8 @@ namespace LetsDoIt.Moody.Web.Controllers
             await _categoryService.InsertCategoryDetailsAsync(
                 categoryId,
                 insertRequest.Order,
-                insertRequest.Image);
+                insertRequest.Image,
+                GetUserInfo().UserId);
 
             _logger.LogInformation($"{nameof(InsertCategoryDetails)} is finished successfully");
 
@@ -115,7 +119,8 @@ namespace LetsDoIt.Moody.Web.Controllers
                     categoryId,
                     updateRequest.Name,
                     updateRequest.Order,
-                    updateRequest.Image);
+                    updateRequest.Image,
+                    GetUserInfo().UserId);
 
                 _logger.LogInformation($"{nameof(Update)} is finished successfully");
 
@@ -127,13 +132,9 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return NotFound(categoryId);
             }
-            catch (Exception)
-            {
-                throw;
-            }            
         }
 
-        [HttpPut, Route("{categoryId}/details/{categoryDetailsId}")]
+        [HttpPut, Route("{categoryId}/detail/{categoryDetailsId}")]
         public async Task<IActionResult> UpdateCategoryDetails(int categoryDetailsId, CategoryDetailsUpdateRequest updateRequest)
         {
             _logger.LogInformation(
@@ -151,7 +152,8 @@ namespace LetsDoIt.Moody.Web.Controllers
                 await _categoryService.UpdateCategoryDetailsAsync(
                     categoryDetailsId,
                     updateRequest.Order,
-                    updateRequest.Image);
+                    updateRequest.Image,
+                    GetUserInfo().UserId);
 
                 _logger.LogInformation($"{nameof(UpdateCategoryDetails)} is finished successfully");
 
@@ -163,10 +165,6 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return NotFound(categoryDetailsId);
             }
-            catch (Exception)
-            {
-                throw;
-            }            
         }
 
         [HttpDelete, Route("{categoryId}")]
@@ -178,7 +176,9 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             try
             {
-                await _categoryService.DeleteAsync(categoryId);
+                await _categoryService.DeleteAsync(
+                    categoryId,
+                    GetUserInfo().UserId);
 
                 _logger.LogInformation($"{nameof(Delete)} is finished successfully");
 
@@ -190,13 +190,9 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return NotFound(categoryId);
             }
-            catch (Exception)
-            {
-                throw;
-            }            
         }
 
-        [HttpDelete, Route("{categoryId}/details/{categoryDetailsId}")]
+        [HttpDelete, Route("{categoryId}/detail/{categoryDetailsId}")]
         public async Task<IActionResult> DeleteCategoryDetails(int categoryDetailsId)
         {
             _logger.LogInformation(
@@ -205,7 +201,9 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             try
             {
-                await _categoryService.DeleteCategoryDetailsAsync(categoryDetailsId);
+                await _categoryService.DeleteCategoryDetailsAsync(
+                    categoryDetailsId,
+                    GetUserInfo().UserId);
 
                 _logger.LogInformation($"{nameof(DeleteCategoryDetails)} is finished successfully");
 
@@ -217,13 +215,9 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return NotFound(categoryDetailsId);
             }
-            catch (Exception)
-            {
-                throw;
-            }            
         }
 
-        private CategoryResponse ToCategoryResponse(CategoryGetResult categoryResult)
+        private static CategoryResponse ToCategoryResponse(CategoryGetResult categoryResult)
         {
             var result = new CategoryResponse
             {
@@ -235,15 +229,15 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 result.Categories = categoryResult
                     .Categories
-                    .Select(c => ToCategoryEntity(c));
+                    .Select(ToCategoryEntity);
             }
 
             return result;
         }
 
-        private static Entities.Responses.CategoryEntity ToCategoryEntity(Category c)
+        private static CategoryEntity ToCategoryEntity(Category c)
         {
-            var result = new Entities.Responses.CategoryEntity
+            var result = new CategoryEntity
             {
                 Id = c.Id,
                 Name = c.Name,
@@ -253,17 +247,26 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             if (c.CategoryDetails != null)
             {
-                result.CategoryDetails = c.CategoryDetails.Select(c => ToCategoryDetailsEntity(c)).ToList();
+                result.CategoryDetails = c.CategoryDetails.Select(ToCategoryDetailsEntity).ToList();
             }
 
             return result;
         }
 
-        private static CategoryDetailsEntity ToCategoryDetailsEntity(CategoryDetails c) => new CategoryDetailsEntity
+        private static CategoryDetailsEntity ToCategoryDetailsEntity(CategoryDetail c) => new CategoryDetailsEntity
         {
             Id = c.Id,
             Image = c.Image,
             Order = c.Order
         };
+
+        private UserInfo GetUserInfo()
+        {
+            var fullName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+            return new UserInfo(userId, fullName);
+        }
     }
 }

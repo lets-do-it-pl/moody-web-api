@@ -2,7 +2,7 @@
 {
     public interface ISecurityService
     {
-        TokenInfo GetNewToken(string id, string role);
+        TokenInfo GenerateJwtToken(string id, string fullName, string role);
 
         bool ValidateToken(string token);
 

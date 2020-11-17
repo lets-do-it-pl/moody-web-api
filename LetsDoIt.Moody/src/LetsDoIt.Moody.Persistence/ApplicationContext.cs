@@ -37,8 +37,6 @@ namespace LetsDoIt.Moody.Persistence
             {
                 entity.ToTable("Category");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -56,8 +54,6 @@ namespace LetsDoIt.Moody.Persistence
             modelBuilder.Entity<CategoryDetail>(entity =>
             {
                 entity.ToTable("CategoryDetail");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
@@ -78,8 +74,6 @@ namespace LetsDoIt.Moody.Persistence
             {
                 entity.ToTable("Client");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -99,8 +93,6 @@ namespace LetsDoIt.Moody.Persistence
             {
                 entity.ToTable("User");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -110,12 +102,12 @@ namespace LetsDoIt.Moody.Persistence
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.NameSurname)
+                entity.Property(e => e.FullName)
                     .IsRequired()
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Password)
                     .IsRequired()
@@ -124,10 +116,9 @@ namespace LetsDoIt.Moody.Persistence
 
                 entity.Property(e => e.UserType)
                     .IsRequired()
-                    .HasMaxLength(1)
+                    .HasMaxLength(25)
                     .IsUnicode(false)
-                    .IsFixedLength()
-                    .HasDefaultValueSql("('S')");
+                    .HasDefaultValueSql("('Standard')");
 
                 entity.Property(e => e.Username)
                     .IsRequired()
@@ -138,8 +129,6 @@ namespace LetsDoIt.Moody.Persistence
             modelBuilder.Entity<VersionHistory>(entity =>
             {
                 entity.ToTable("VersionHistory");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.VersionNumber)
                     .IsRequired()
