@@ -29,3 +29,20 @@
 /LetsDoIt.Moody/src/LetsDoIt.Moody.TemporaryTokenGenerator/bin
 /LetsDoIt.Moody/src/LetsDoIt.Moody.TemporaryTokenGenerator/obj
 
+/LetsDoIt.Moody/src/LetsDoIt.Moody.Application/bin/Release/netcoreapp3.1
+/LetsDoIt.Moody/src/LetsDoIt.Moody.Application/obj
+/LetsDoIt.Moody/src/LetsDoIt.Moody.Infrastructure/bin
+/LetsDoIt.Moody/src/LetsDoIt.Moody.Infrastructure/obj
+/LetsDoIt.Moody/src/LetsDoIt.Moody.Persistence/bin
+/LetsDoIt.Moody/src/LetsDoIt.Moody.Persistence/obj
+/LetsDoIt.Moody/src/LetsDoIt.Moody.Persistence/LetsDoIt.Moody.Persistence.csproj.user
+/LetsDoIt.Moody/src/LetsDoIt.Moody.Web/.config
+/LetsDoIt.Moody/src/LetsDoIt.Moody.Web/bin
+/LetsDoIt.Moody/src/LetsDoIt.Moody.Web/obj
+/LetsDoIt.Moody/tests/LetsDoIt.Moody.Application.IntegrationTests/bin
+/LetsDoIt.Moody/tests/LetsDoIt.Moody.Application.IntegrationTests/obj
+/LetsDoIt.Moody/tests/LetsDoIt.Moody.Application.UnitTests/obj
+/LetsDoIt.Moody/tests/LetsDoIt.Moody.Web.UnitTests/obj
+/LetsDoIt.Moody/src/LetsDoIt.Moody.Application/bin/Debug/netcoreapp3.1
+/LetsDoIt.Moody/tests/LetsDoIt.Moody.Application.UnitTests/bin/Debug/netcoreapp3.1
+/LetsDoIt.Moody/tests/LetsDoIt.Moody.Web.UnitTests/bin/Debug/netcoreapp3.1
