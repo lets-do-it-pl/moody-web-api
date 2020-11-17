@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Web\LetsDoIt.Moody.Web\LetsDoIt.Moody.Web.csproj" />
+    <ProjectReference Include="..\..\src\LetsDoIt.Moody.Web\LetsDoIt.Moody.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

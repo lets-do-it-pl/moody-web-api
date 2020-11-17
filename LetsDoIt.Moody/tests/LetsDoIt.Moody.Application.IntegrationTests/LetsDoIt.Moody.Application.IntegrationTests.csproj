@@ -31,8 +31,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\src\Application\LetsDoIt.Moody.Application\LetsDoIt.Moody.Application.csproj" />
-		<ProjectReference Include="..\..\..\src\Web\LetsDoIt.Moody.Web\LetsDoIt.Moody.Web.csproj" />
+		<ProjectReference Include="..\..\src\LetsDoIt.Moody.Application\LetsDoIt.Moody.Application.csproj" />
 	</ItemGroup>
 
 </Project>
