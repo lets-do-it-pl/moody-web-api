@@ -3,8 +3,6 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Security.Claims;
-using LetsDoIt.Moody.Persistence.Entities;
-using LetsDoIt.Moody.Web.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -14,9 +12,10 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Application.Category;
     using Application.Constants;
     using Application.CustomExceptions;
+    using Entities;
     using Entities.Requests;
     using Entities.Responses;
-    using Filters;
+    using Persistence.Entities;
 
     [ApiController]
     [Route("api/category")]

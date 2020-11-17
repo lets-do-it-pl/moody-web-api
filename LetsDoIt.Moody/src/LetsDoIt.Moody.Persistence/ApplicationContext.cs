@@ -116,9 +116,10 @@ namespace LetsDoIt.Moody.Persistence
 
                 entity.Property(e => e.UserType)
                     .IsRequired()
-                    .HasMaxLength(25)
+                    .HasMaxLength(1)
                     .IsUnicode(false)
-                    .HasDefaultValueSql("('Standard')");
+                    .IsFixedLength()
+                    .HasDefaultValueSql("('S')");
 
                 entity.Property(e => e.Username)
                     .IsRequired()

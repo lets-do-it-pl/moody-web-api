@@ -28,10 +28,19 @@ namespace LetsDoIt.Moody.Application.VersionHistory
             await _versionHistoryRepository.AddAsync(versionHistory);
         }
 
-        public async Task<VersionHistory> GetLatestVersionNumberAsync() =>
-            await _versionHistoryRepository
+        public async Task<VersionHistory> GetLatestVersionNumberAsync()
+        {
+            var result = await _versionHistoryRepository
                 .Get()
                 .OrderByDescending(vh => vh.CreatedDate)
-                .SingleOrDefaultAsync();
+                .FirstOrDefaultAsync();
+
+            if (result == null)
+            {
+                throw new Exception("Couldn't get latest version history!");
+            }
+
+            return result;
+        }
     }
 }

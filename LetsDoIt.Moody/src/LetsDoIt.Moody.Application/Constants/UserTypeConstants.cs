@@ -2,8 +2,8 @@
 {
     public static class UserTypeConstants
     {
-        public const string Client= "Client";
-        public const string Standard = "Standard";
-        public const string Admin = "Admin";
+        public const string Client= "C";
+        public const string Standard = "S";
+        public const string Admin = "A";
     }
 }

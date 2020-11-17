@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Persistence.Repositories.Category
@@ -9,6 +7,6 @@ namespace LetsDoIt.Moody.Persistence.Repositories.Category
 
     public interface ICategoryRepository : IRepository<Entities.Category>
     {
-        Task<List<Entities.Category>> GetListWithDetailsAsync(Expression<Func<Entities.Category, bool>> filter = null);
+        Task<List<Entities.Category>> GetListWithDetailsAsync();
     }
 }

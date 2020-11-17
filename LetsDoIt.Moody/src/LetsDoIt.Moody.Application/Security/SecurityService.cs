@@ -46,33 +46,5 @@ namespace LetsDoIt.Moody.Application.Security
                 ExpirationDate = token.ValidTo
             };
         }
-
-        public bool ValidateToken(string token)
-        {
-            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtOptions.SecretKey));
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            try
-            {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = mySecurityKey
-                }, out _);
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public string GetClaim(string token, string claimType)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
-
-            return securityToken.Claims.First(claim => claim.Type == claimType).Value;
-        }
     }
 }

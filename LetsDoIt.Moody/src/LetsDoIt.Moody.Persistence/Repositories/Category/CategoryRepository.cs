@@ -21,7 +21,7 @@ namespace LetsDoIt.Moody.Persistence.Repositories.Category
         {
             _categoryDetailRepository = categoryDetailRepository;
         }
-
+        
         public override Task<Category> AddAsync(Category entity)
         {
             entity.CreatedDate = DateTime.UtcNow;
@@ -47,12 +47,9 @@ namespace LetsDoIt.Moody.Persistence.Repositories.Category
             return base.BulkDeleteAsync(entities);
         }
 
-        public async Task<List<Category>> GetListWithDetailsAsync(Expression<Func<Category, bool>> filter = null)
+        public async Task<List<Category>> GetListWithDetailsAsync()
         {
-            var categories =
-                filter == null
-                    ? await Context.Set<Category>().ToListAsync()
-                    : await Context.Set<Category>().Where(filter).ToListAsync();
+            var categories = await Context.Categories.Where(c => !c.IsDeleted).ToListAsync();
 
             if (categories == null || categories.Count == 0)
             {

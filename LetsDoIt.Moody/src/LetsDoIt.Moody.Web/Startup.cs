@@ -139,11 +139,6 @@ namespace LetsDoIt.Moody.Web
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
             services.AddTransient<IClientService, ClientService>();
             services.AddSingleton<ISecurityService, SecurityService>();
-
-            services.AddMvc(options =>
-            {
-                options.Filters.Add<TokenAuthorizationFilter>();
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
