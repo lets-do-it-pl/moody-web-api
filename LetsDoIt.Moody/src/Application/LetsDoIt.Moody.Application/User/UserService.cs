@@ -19,8 +19,8 @@ namespace LetsDoIt.Moody.Application.User
     using System.Text;
     public class UserService : IUserService
     {
-        private const string HtmlFilePath = @"\HtmlTemplates\EmailTokenVerification.html";
-        private const string EmailVerification = "Email Verification";
+        private const string HtmlFilePath = @"\HtmlTemplates\EmailForgotTokenVerification.html";
+        private const string EmailVerification = "Reset Password";
         private readonly IEntityRepository<User> _userRepository;
         private readonly IEntityRepository<UserToken> _userTokenRepository;
         private readonly IEntityRepository<EmailVerificaitonToken> _emailVerificationTokenRepository;
@@ -139,7 +139,7 @@ namespace LetsDoIt.Moody.Application.User
                                                                    && ut.User.IsActive);
         }
 
-        public async Task SendSignUpEmailAsync(string referer, string email)
+        public async Task SendForgotEmailAsync(string application, string email)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Email == email && !u.IsDeleted);
 
@@ -161,7 +161,7 @@ namespace LetsDoIt.Moody.Application.User
 
             var content = await ReadHtmlContent(HtmlFilePath);
 
-            var frontEndUri = new Uri(referer);
+            var frontEndUri = new Uri(application);
 
             await _mailSender.SendAsync(EmailVerification,
                 content.Replace("{{action_url}}", "http://" + frontEndUri.Host
@@ -176,7 +176,7 @@ namespace LetsDoIt.Moody.Application.User
             UserId = id
         };
 
-        public async Task VerifyEmailTokenAsync(string token)
+        public async Task ForgotEmailTokenAsync(string token)
         {
             var emailVerificationToken = await _emailVerificationTokenRepository.GetAsync(evt => evt.Token == token
                 && !evt.User.IsDeleted);

@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="HtmlTemplates\EmailTokenVerification.html">
+    <None Update="HtmlTemplates\EmailForgotTokenVerification.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

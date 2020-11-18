@@ -18,9 +18,9 @@ namespace LetsDoIt.Moody.Application.User
 
         Task<bool> ValidateTokenAsync(string token);
 
-        Task SendSignUpEmailAsync(string referer, string email);
+        Task SendForgotEmailAsync(string referer, string email);
 
-        Task VerifyEmailTokenAsync(string token);
+        Task ForgotEmailTokenAsync(string token);
 
     }
 }

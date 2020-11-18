@@ -95,6 +95,63 @@ namespace LetsDoIt.Moody.Web.Controllers
                 throw;
             }
         }
+        [HttpPost]
+        [Route("email/forgot")]
+        public async Task<IActionResult> SendEmailForgotToken(string email)
+        {
+            _logger.LogInformation(
+                $"{nameof(SendEmailForgotToken)} is started with " +
+                $"email = {email}");
+
+            string referer = Request.Headers["Referer"].ToString();
+
+            try
+            {
+                await _userService.SendForgotEmailAsync(referer, email);
+
+                _logger.LogInformation($"{nameof(SendEmailForgotToken)} is finished successfully");
+
+                return Ok();
+            }
+            catch (EmailNotRegisteredException exception)
+            {
+                _logger.LogInformation($"{nameof(SendEmailForgotToken)} is finished with bad request!");
+
+                return BadRequest(exception.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("email/forgot/verification")]
+        public async Task<IActionResult> ForgotUserEmailToken(string token)
+        {
+            _logger.LogInformation(
+                $"{nameof(ForgotUserEmailToken)} is started with " +
+                $"save request = {token}");
+
+            try
+            {
+                await _userService.ForgotEmailTokenAsync(token);
+
+                _logger.LogInformation($"{nameof(ForgotUserEmailToken)} is finished successfully");
+
+                return Ok();
+            }
+            catch (AuthenticationException exception)
+            {
+                _logger.LogInformation($"{nameof(ForgotUserEmailToken)} is finished with bad request!");
+
+                return BadRequest(exception.Message);
+            }
+            catch (TokenExpiredException exception)
+            {
+                _logger.LogInformation($"{nameof(ForgotUserEmailToken)} is finished with bad request!");
+
+
+                return BadRequest(exception.Message);
+            }
+
+        }
     }
 }
 
