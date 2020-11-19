@@ -33,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Application\LetsDoIt.Moody.Application\LetsDoIt.Moody.Application.csproj" />
     <ProjectReference Include="..\..\Persistance\LetsDoIt.Moody.Persistance\LetsDoIt.Moody.Persistance.csproj" />
     <ProjectReference Include="..\..\Infrastructure\LetsDoIt.Moody.Infrastructure\LetsDoIt.Moody.Infrastructure.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>

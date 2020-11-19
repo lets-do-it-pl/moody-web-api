@@ -26,8 +26,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Domain\LetsDoIt.Moody.Domain\LetsDoIt.Moody.Domain.csproj" />
-  </ItemGroup>
-
 </Project>
