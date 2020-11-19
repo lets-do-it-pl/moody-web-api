@@ -25,9 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Application.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Web.UnitTests", "tests\LetsDoIt.Moody.Web.UnitTests\LetsDoIt.Moody.Web.UnitTests.csproj", "{51377929-4133-4280-811C-A6315915EA64}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.TemporaryTokenGenerator", "src\LetsDoIt.Moody.TemporaryTokenGenerator\LetsDoIt.Moody.TemporaryTokenGenerator.csproj", "{98CC37B2-1C2C-454E-8EEC-E8562091E22F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Persistence", "src\LetsDoIt.Moody.Persistence\LetsDoIt.Moody.Persistence.csproj", "{8E074ED3-69DB-49B2-B5B6-1F2E8A09E0A4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Persistance", "src\LetsDoIt.Moody.Persistance\LetsDoIt.Moody.Persistance.csproj", "{362899E8-237A-455D-BE88-B020BC289ED8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.TemporaryTokenGenerator", "src\LetsDoIt.Moody.TemporaryTokenGenerator\LetsDoIt.Moody.TemporaryTokenGenerator.csproj", "{F089F1BC-D03F-4653-A1F7-4EB14FA9D61C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,14 +59,14 @@ Global
 		{51377929-4133-4280-811C-A6315915EA64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51377929-4133-4280-811C-A6315915EA64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51377929-4133-4280-811C-A6315915EA64}.Release|Any CPU.Build.0 = Release|Any CPU
-		{98CC37B2-1C2C-454E-8EEC-E8562091E22F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{98CC37B2-1C2C-454E-8EEC-E8562091E22F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{98CC37B2-1C2C-454E-8EEC-E8562091E22F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{98CC37B2-1C2C-454E-8EEC-E8562091E22F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{362899E8-237A-455D-BE88-B020BC289ED8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{362899E8-237A-455D-BE88-B020BC289ED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{362899E8-237A-455D-BE88-B020BC289ED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{362899E8-237A-455D-BE88-B020BC289ED8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E074ED3-69DB-49B2-B5B6-1F2E8A09E0A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E074ED3-69DB-49B2-B5B6-1F2E8A09E0A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E074ED3-69DB-49B2-B5B6-1F2E8A09E0A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E074ED3-69DB-49B2-B5B6-1F2E8A09E0A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F089F1BC-D03F-4653-A1F7-4EB14FA9D61C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F089F1BC-D03F-4653-A1F7-4EB14FA9D61C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F089F1BC-D03F-4653-A1F7-4EB14FA9D61C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F089F1BC-D03F-4653-A1F7-4EB14FA9D61C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,8 +78,8 @@ Global
 		{835D3B9C-95F1-4899-BFFB-CA3FDC072048} = {E58C65D5-036D-4070-B42B-2F58E3BD6E34}
 		{5D1F9D3F-2C98-4C65-B31B-ED88AB8218CD} = {E58C65D5-036D-4070-B42B-2F58E3BD6E34}
 		{51377929-4133-4280-811C-A6315915EA64} = {E58C65D5-036D-4070-B42B-2F58E3BD6E34}
-		{98CC37B2-1C2C-454E-8EEC-E8562091E22F} = {79243330-7626-456D-BFB3-8EB4756C616B}
-		{362899E8-237A-455D-BE88-B020BC289ED8} = {79243330-7626-456D-BFB3-8EB4756C616B}
+		{8E074ED3-69DB-49B2-B5B6-1F2E8A09E0A4} = {79243330-7626-456D-BFB3-8EB4756C616B}
+		{F089F1BC-D03F-4653-A1F7-4EB14FA9D61C} = {79243330-7626-456D-BFB3-8EB4756C616B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9A096469-A3CF-4011-AAE1-EF464CB0345B}

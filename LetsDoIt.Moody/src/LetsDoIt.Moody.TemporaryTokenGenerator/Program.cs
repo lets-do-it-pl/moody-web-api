@@ -1,8 +1,9 @@
-﻿using System;
-using McMaster.Extensions.CommandLineUtils;
+﻿using McMaster.Extensions.CommandLineUtils;
+using System;
 
 namespace LetsDoIt.Moody.TemporaryTokenGenerator
 {
+
     using Infrastructure;
 
     class Program

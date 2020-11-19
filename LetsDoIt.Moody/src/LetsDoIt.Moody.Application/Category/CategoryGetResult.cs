@@ -2,7 +2,7 @@
 
 namespace LetsDoIt.Moody.Application.Category
 {
-    using Domain;
+    using Persistence.Entities;
 
     public class CategoryGetResult
     {

@@ -1,0 +1,1 @@
+﻿Scaffold-DbContext -Connection "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Moody;Trusted_Connection=True;" -Provider Microsoft.EntityFrameworkCore.SqlServer -OutputDir ".\Entities" -ContextDir ".\" -Context ApplicationContext -Tables "Category", "CategoryDetail", "Client", "VersionHistory", "User" -Force

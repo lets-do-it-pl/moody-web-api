@@ -29,4 +29,8 @@
     <Folder Include="Controllers\" />
     <Folder Include="Attributes\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\LetsDoIt.Moody.Web\LetsDoIt.Moody.Web.csproj" />
+  </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.VersionHistory
 {
-    using Domain;
+    using Persistence.Entities;
 
     public interface IVersionHistoryService
     {

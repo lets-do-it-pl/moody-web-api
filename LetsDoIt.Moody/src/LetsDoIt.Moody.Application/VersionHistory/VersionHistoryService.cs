@@ -5,29 +5,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LetsDoIt.Moody.Application.VersionHistory
 {
-    using Domain;    
-    using Persistance.Repositories.Base;    
+    using Persistence.Entities;
+    using Persistence.Repositories.Base;
 
     public class VersionHistoryService : IVersionHistoryService
     {
-        private readonly IEntityRepository<VersionHistory> _versionHistoryRepository;
-        private readonly IEntityRepository<Category> _categoryRepository;
-        private readonly IEntityRepository<CategoryDetails> _categoryDetailsRepository;
+        private readonly IRepository<VersionHistory> _versionHistoryRepository;
 
-        public VersionHistoryService(
-            IEntityRepository<Category> categoryRepository,
-            IEntityRepository<VersionHistory> versionHistoryRepository,
-            IEntityRepository<CategoryDetails> categoryDetailsRepository)
+        public VersionHistoryService(IRepository<VersionHistory> versionHistoryRepository)
         {
-            _categoryDetailsRepository = categoryDetailsRepository;
             _versionHistoryRepository = versionHistoryRepository;
-            _categoryRepository = categoryRepository;
         }
 
-        public async Task CreateNewVersionAsync(){
+        public async Task CreateNewVersionAsync()
+        {
+
             var versionHistory = new VersionHistory
             {
-                VersionNumber = Guid.NewGuid().ToString()                
+                VersionNumber = Guid.NewGuid().ToString()
             };
 
             await _versionHistoryRepository.AddAsync(versionHistory);
@@ -35,10 +30,17 @@ namespace LetsDoIt.Moody.Application.VersionHistory
 
         public async Task<VersionHistory> GetLatestVersionNumberAsync()
         {
-            return await _versionHistoryRepository
-                        .Get()
-                        .OrderByDescending(vh => vh.CreateDate)
-                        .FirstOrDefaultAsync();
+            var result = await _versionHistoryRepository
+                .Get()
+                .OrderByDescending(vh => vh.CreatedDate)
+                .FirstOrDefaultAsync();
+
+            if (result == null)
+            {
+                throw new Exception("Couldn't get latest version history!");
+            }
+
+            return result;
         }
     }
 }

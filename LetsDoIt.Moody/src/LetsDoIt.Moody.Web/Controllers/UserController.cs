@@ -1,11 +1,12 @@
 ﻿using System.Data;
+using System.Linq;
 using System.Net;
 using System.Security.Authentication;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.CustomExceptions;
 using LetsDoIt.Moody.Application.User;
-using LetsDoIt.Moody.Domain;
-using LetsDoIt.Moody.Web.Entities.Requests;
+using LetsDoIt.Moody.Web.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -27,23 +28,15 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> SaveUser(SaveUserRequest saveUserRequest)
+        public async Task<IActionResult> SaveUser()
         {
             _logger.LogInformation(
                 $"{nameof(SaveUser)} is started with " +
-                $"save request = {JsonConvert.SerializeObject(saveUserRequest)}");
+                $"save request = JsonConvert.SerializeObject()");
 
             try
             {
-                await _userService.SaveUserAsync(
-                    saveUserRequest.Username,
-                    saveUserRequest.Password,
-                    false,
-                    UserType.Standard,
-                    saveUserRequest.Name,
-                    saveUserRequest.Surname,
-                    Email.Parse(saveUserRequest.Email)
-                    );
+                await _userService.SaveUserAsync();
 
                 _logger.LogInformation($"{nameof(SaveUser)} is finished successfully");
 
@@ -86,34 +79,43 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         [HttpPost]
         [Route("email/verification")]
-        public async Task<IActionResult> VerifyUserEmailToken(string token)
+        public async Task<IActionResult> ActivateUser( )
         {
             _logger.LogInformation(
-                $"{nameof(VerifyUserEmailToken)} is started with " +
-                $"save request = {token}");
+                $"{nameof(ActivateUser)} is started with " +
+                $"save request = ");
 
             try
             {
-                await _userService.VerifyEmailTokenAsync(token);
+                await _userService.ActiveUserAsync(GetUserInfo().UserId);
 
-                _logger.LogInformation($"{nameof(VerifyUserEmailToken)} is finished successfully");
+                _logger.LogInformation($"{nameof(ActivateUser)} is finished successfully");
 
                 return Ok();
             }
             catch (AuthenticationException exception)
             {
-                _logger.LogInformation($"{nameof(VerifyUserEmailToken)} is finished with bad request!");
+                _logger.LogInformation($"{nameof(ActivateUser)} is finished with bad request!");
 
                 return BadRequest(exception.Message);
             }
             catch (TokenExpiredException exception)
             {
-                _logger.LogInformation($"{nameof(VerifyUserEmailToken)} is finished with bad request!");
+                _logger.LogInformation($"{nameof(ActivateUser)} is finished with bad request!");
 
 
                 return BadRequest(exception.Message);
             }
 
+        }
+
+        private UserInfo GetUserInfo()
+        {
+            var fullName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            return new UserInfo(userId, fullName);
         }
     }
 }

@@ -1,8 +1,9 @@
-using System.Reflection;
-using FluentValidation.AspNetCore;
+using System;
+using System.Text;
 using HealthChecks.UI.Client;
-using LetsDoIt.MailSender;
-using LetsDoIt.MailSender.Options;  
+using LetsDoIt.Moody.Application.Client;
+using LetsDoIt.Moody.Web.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,25 +12,24 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LetsDoIt.Moody.Web
 {
-    using Application.User;
     using Application.Category;
+    using Application.Constants;
+    using Application.Options;
+    using Application.Security;
     using Application.VersionHistory;
-    using Domain;
-    using Filters;
     using Middleware;
-    using Persistance;
-    using Persistance.Repositories;
-    using Persistance.Repositories.Base;
+    using Persistence;
+    using Persistence.Entities;
+    using Persistence.Repositories;
+    using Persistence.Repositories.Base;
+    using Persistence.Repositories.Category;
 
     public class Startup
     {
-        private const string JwtEncryptionKey = "2hN70OoacUi5SDU0rNuIXg==";
-        private const string InMemoryProviderName = "Microsoft.EntityFrameworkCore.InMemory";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -40,6 +40,39 @@ namespace LetsDoIt.Moody.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt));
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
+                        ClockSkew = TimeSpan.Zero,
+                        RequireExpirationTime = true
+                    };
+                });
+
+            services.AddAuthorization(config =>
+            {
+                config.AddPolicy(UserTypeConstants.Admin, Policies.AdminPolicy());
+                config.AddPolicy(UserTypeConstants.Standard, Policies.StandardPolicy());
+                config.AddPolicy(UserTypeConstants.Client, Policies.ClientPolicy());
+            });
+
+            services.AddResponseCompression();
 
             var connectionString = Configuration.GetConnectionString("MoodyDBConnection");
 
@@ -56,19 +89,11 @@ namespace LetsDoIt.Moody.Web
             .AddInMemoryStorage();
 
             services.AddDbContext<ApplicationContext>(opt =>
-                opt.UseLazyLoadingProxies()
-                .UseSqlServer(
-                    connectionString,
-                    builder =>
-                    {
-                        builder.MigrationsAssembly("LetsDoIt.Moody.Persistance");
-                    }));
+                opt
+                    .UseLazyLoadingProxies()
+                    .UseSqlServer(connectionString));
 
-            services.AddControllers()
-                .AddFluentValidation(opt =>
-            {
-                opt.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-            }); ;
+            services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
@@ -94,53 +119,28 @@ namespace LetsDoIt.Moody.Web
                 };
                 c.AddSecurityDefinition("Bearer", securitySchema);
 
-                var securityRequirement = new OpenApiSecurityRequirement();
-                securityRequirement.Add(securitySchema, new[] { "Bearer" });
+                var securityRequirement = new OpenApiSecurityRequirement
+                {
+                    {securitySchema, new[] {"Bearer"}}
+                };
                 c.AddSecurityRequirement(securityRequirement);
             });
 
-            var tokenExpirationMinutes = Configuration.GetValue<int>("TokenExpirationMinutes");
-            var emailVerificationTokenMinutes = Configuration.GetValue<int>("EmailVerificationTokenExpirationMinutes");
-
-            services.Configure<SmtpOptions>(Configuration.GetSection(SmtpOptions.SmtpSectionName));
-
-            services.AddMailSender();
-
-            services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
-            services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
-            services.AddTransient<IEntityRepository<User>, UserRepository>();
-            services.AddTransient<IEntityRepository<UserToken>, UserTokenRepository>();
-            services.AddTransient<IEntityRepository<CategoryDetails>, CategoryDetailsRepository>();
-            services.AddTransient<IEntityRepository<EmailVerificaitonToken>, EmailVerificationTokenRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IRepository<VersionHistory>, VersionHistoryRepository>();
+            services.AddTransient<IRepository<Client>, ClientRepository>();
+            services.AddTransient<IRepository<User>, UserRepository>();
+            services.AddTransient<IRepository<CategoryDetail>, CategoryDetailsRepository>();
 
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
-            services.AddTransient<IUserService>(us => new UserService(
-                    us.GetService<IEntityRepository<User>>(),
-                    us.GetService<IEntityRepository<UserToken>>(),
-                    JwtEncryptionKey,
-                    tokenExpirationMinutes,
-                    emailVerificationTokenMinutes,
-                    us.GetService<IMailSender>(),
-                    us.GetService<IEntityRepository<EmailVerificaitonToken>>()
-                ));
-
-            services.AddMvc(options =>
-            {
-                options.Filters.Add<TokenAuthorizationFilter>();
-            });
-
-            services.AddResponseCompression(options =>
-                {
-                    options.EnableForHttps = true;
-                    options.Providers.Add<GzipCompressionProvider>();
-                });
-
+            services.AddTransient<IClientService, ClientService>();
+            services.AddSingleton<ISecurityService, SecurityService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
-            IApplicationBuilder app, 
+            IApplicationBuilder app,
             IWebHostEnvironment env,
             ApplicationContext context)
         {
@@ -152,18 +152,18 @@ namespace LetsDoIt.Moody.Web
             {
                 app.UseApiExceptionHandler();
             }
-            
-            if (context.Database.ProviderName != InMemoryProviderName)
-            {
-                context.Database.Migrate();
-            }
-
-
-            app.UseHttpsRedirection();
 
             app.UseResponseCompression();
 
+            app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
+
             app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseSwagger();
 
@@ -183,9 +183,6 @@ namespace LetsDoIt.Moody.Web
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
             });
-
-
         }
-
     }
 }
