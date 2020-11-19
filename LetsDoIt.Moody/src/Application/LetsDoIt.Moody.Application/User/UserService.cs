@@ -53,9 +53,21 @@ namespace LetsDoIt.Moody.Application.User
             return result.Select(ToUser).ToList();
         }
 
+        /*public async Task<User> GetUser(int id)
+        {
+            var result = await _userRepository.SingleOrDefaultAsync(u => u.Id == id);
+
+            return result;
+        }*/
+
         public async Task<ICollection<ToSystemUsersGetResult>> GetUser(int id)
         {
-            var result = await _userRepository.GetListAsync(u => u.Id == id);
+            var result = await _userRepository.GetListAsync();
+
+            if (result == null)
+            {
+                throw new ArgumentNullException("There is no user!");
+            }
 
             return result.Select(ToUser).ToList();
         }
@@ -69,6 +81,8 @@ namespace LetsDoIt.Moody.Application.User
             IsActive = result.IsActive,
             UserType = result.UserType
         };
+
+         
 
         public async Task SaveUserAsync(
             string username,

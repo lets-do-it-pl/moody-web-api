@@ -94,7 +94,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
 
         [Microsoft.AspNetCore.Cors.EnableCors("AnotherPolicy")]
-        [HttpGet("getUser")]
+        [HttpGet("getAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
             _logger.LogInformation($"{nameof(GetAllUsers)} is started");
@@ -111,7 +111,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             return Ok(userResult); 
         }
 
-        
+        [Microsoft.AspNetCore.Cors.EnableCors("AnotherPolicy")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(int id)
         {

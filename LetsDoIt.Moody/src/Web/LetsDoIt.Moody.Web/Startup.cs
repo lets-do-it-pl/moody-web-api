@@ -45,7 +45,7 @@ namespace LetsDoIt.Moody.Web
                 .AddSqlServer(connectionString, "SELECT 1", name: "SqlServerApplicationDb");
 
             var url = Configuration.GetValue<string>("HealthChecksUri");
-            var webUrl = Configuration.GetValue<string>("WebURL");
+            
 
             services.AddHealthChecksUI(s =>
             {
@@ -117,6 +117,8 @@ namespace LetsDoIt.Moody.Web
             {
                 options.Filters.Add<TokenAuthorizationFilter>();
             });
+
+            var webUrl = Configuration.GetValue<string>("WebUrl");
 
             services.AddCors(options =>
             {

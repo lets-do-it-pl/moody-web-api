@@ -50,6 +50,11 @@
             return await _context.UserTokens.FirstOrDefaultAsync(filter);
         }
 
+        public async Task<UserToken> SingleOrDefaultAsync(Expression<Func<UserToken, bool>> filter)
+        {
+            return await _context.UserTokens.SingleOrDefaultAsync(filter);
+        }
+
         public Task<List<UserToken>> GetListAsync(Expression<Func<UserToken, bool>> filter = null)
         {
             throw new NotImplementedException();

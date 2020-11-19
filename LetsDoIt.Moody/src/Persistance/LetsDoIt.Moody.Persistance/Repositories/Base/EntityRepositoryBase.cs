@@ -33,6 +33,19 @@ namespace LetsDoIt.Moody.Persistance.Repositories.Base
             return await _context.Set<TEntity>().FirstOrDefaultAsync(filter);
         }
 
+        public virtual async Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> filter)
+        {
+            try
+            {
+                return await _context.Set<TEntity>().SingleOrDefaultAsync(filter);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Couldn't retrieve entity or find just one row : {ex.Message}", ex.InnerException);
+            }
+        }
+
+
         public IQueryable<TEntity> Get()
         {
             return _context.Set<TEntity>();

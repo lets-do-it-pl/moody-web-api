@@ -14,7 +14,7 @@ namespace LetsDoIt.Moody.Web.Entities.Responses
 
         public string Surname { get; set; }
 
-        public Email Email { get; set; }
+        public string Email { get; set; }
 
         public bool IsActive { get; set; }
 
