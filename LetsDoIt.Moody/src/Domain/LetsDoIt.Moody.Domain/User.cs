@@ -37,12 +37,4 @@ namespace LetsDoIt.Moody.Domain
 
         public UserType UserType { get; set; }
     }
-
-    public enum UserType
-    {
-        Mobile,
-        Normal,
-        Admin
-    }
-
 }

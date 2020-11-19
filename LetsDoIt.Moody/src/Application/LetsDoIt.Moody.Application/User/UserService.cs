@@ -1,22 +1,22 @@
-﻿using System.Threading.Tasks;
+﻿using LetsDoIt.Moody.Infrastructure.ValueTypes;
 using NGuard;
 using System.Data;
-using LetsDoIt.Moody.Infrastructure.ValueTypes;
+using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.User
 {
-    using Infrastructure.Utils;
-    using Persistance.Repositories.Base;
     using Domain;
-    using System.Security.Authentication;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Text;
-    using Microsoft.IdentityModel.Tokens;
-    using System.Security.Claims;
-    using System;
+    using Infrastructure.Utils;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.IdentityModel.Tokens;
+    using Persistance.Repositories.Base;
+    using System;
     using System.Collections.Generic;
+    using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
+    using System.Security.Authentication;
+    using System.Security.Claims;
+    using System.Text;
 
     public class UserService : IUserService
     {
@@ -40,35 +40,27 @@ namespace LetsDoIt.Moody.Application.User
            
         }
 
-        public async Task<ICollection<SystemUsersGetResult>> GetSystemUsers(/*int id*/)
+        public async Task<ICollection<ToSystemUsersGetResult>> GetSystemUsers()
         {
-            //Guard.Requires(id.ToString(), nameof(id)).IsNotNullOrEmptyOrWhiteSpace();
-
-            var result = await _userRepository.GetListAsync(/*u => u.Id == id*/);
+            
+            var result = await _userRepository.GetListAsync();
 
             if (result == null)
             {
-                throw new ArgumentNullException("result is a null argument!");
+                throw new ArgumentNullException("There is no user!");
             }
 
             return result.Select(ToUser).ToList();
         }
 
-        public async Task<ICollection<SystemUsersGetResult>> GetUserById(int id)
+        public async Task<ICollection<ToSystemUsersGetResult>> GetUser(int id)
         {
-            Guard.Requires(id.ToString(), nameof(id)).IsNotNullOrEmptyOrWhiteSpace();
-
             var result = await _userRepository.GetListAsync(u => u.Id == id);
 
-            if (result == null)
-            {
-                throw new ArgumentNullException("result is a null argument!");
-            }
-
             return result.Select(ToUser).ToList();
         }
 
-        public SystemUsersGetResult ToUser(User result) => new SystemUsersGetResult
+        ToSystemUsersGetResult ToUser(User result) => new ToSystemUsersGetResult
         {
             Id = result.Id,
             Name = result.Name,

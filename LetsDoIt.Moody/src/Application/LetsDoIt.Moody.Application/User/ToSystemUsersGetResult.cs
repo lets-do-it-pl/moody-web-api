@@ -1,12 +1,9 @@
 ﻿using LetsDoIt.Moody.Domain;
 using LetsDoIt.Moody.Infrastructure.ValueTypes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LetsDoIt.Moody.Application.User
 {
-    public class SystemUsersGetResult
+    public class ToSystemUsersGetResult
     {
         public int Id { get; set; }
 

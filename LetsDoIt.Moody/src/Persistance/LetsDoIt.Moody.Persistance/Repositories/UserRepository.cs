@@ -4,8 +4,6 @@ namespace LetsDoIt.Moody.Persistance.Repositories
 {
     using Base;
     using Domain;
-    using Microsoft.EntityFrameworkCore;
-    using System.Collections.Generic;
 
     public class UserRepository : EntityRepositoryBase<User>
     {
@@ -27,7 +25,5 @@ namespace LetsDoIt.Moody.Persistance.Repositories
 
             return base.AddAsync(entity);
         }
-
-
     }
 }

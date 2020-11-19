@@ -1,18 +1,17 @@
-using System.Reflection;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace LetsDoIt.Moody.Web
 {
-    using Application.User;
     using Application.Category;
+    using Application.User;
     using Application.VersionHistory;
     using Domain;
     using Filters;
@@ -39,12 +38,14 @@ namespace LetsDoIt.Moody.Web
             services.AddResponseCompression();
 
             var connectionString = Configuration.GetConnectionString("MoodyDBConnection");
+            
 
             services
                 .AddHealthChecks()
                 .AddSqlServer(connectionString, "SELECT 1", name: "SqlServerApplicationDb");
 
             var url = Configuration.GetValue<string>("HealthChecksUri");
+            var webUrl = Configuration.GetValue<string>("WebURL");
 
             services.AddHealthChecksUI(s =>
             {
@@ -61,7 +62,7 @@ namespace LetsDoIt.Moody.Web
                         builder.MigrationsAssembly("LetsDoIt.Moody.Persistance");
                     }));
 
-            
+            services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
@@ -121,7 +122,7 @@ namespace LetsDoIt.Moody.Web
             {
                 options.AddPolicy("AnotherPolicy",
                     builder =>{
-                        builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
+                        builder.WithOrigins(webUrl).AllowAnyHeader().AllowAnyMethod();
                     });
             }); 
         }

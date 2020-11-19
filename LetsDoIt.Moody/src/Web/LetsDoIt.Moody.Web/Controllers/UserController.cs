@@ -1,21 +1,19 @@
-﻿using System;
-using System.Data;
-using System.Net;
-using System.Security.Authentication;
-using System.Threading.Tasks;
-using LetsDoIt.Moody.Application.CustomExceptions;
-using LetsDoIt.Moody.Application.User;
+﻿using LetsDoIt.Moody.Application.User;
 using LetsDoIt.Moody.Domain;
 using LetsDoIt.Moody.Infrastructure.ValueTypes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
+using System.Data;
+using System.Net;
+using System.Security.Authentication;
+using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Entities.Requests;
-    using Entities.Responses;
-    using System.Collections.Generic;
+    using LetsDoIt.Moody.Web.Filters;
 
     [ApiController]
     [Route("api/users")]
@@ -32,6 +30,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
+        [AuthorizationByTempToken]
         public async Task<IActionResult> SaveUser(SaveUserRequest saveUserRequest)
         {
             _logger.LogInformation(
@@ -100,7 +99,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             _logger.LogInformation($"{nameof(GetAllUsers)} is started");
 
-            var userResult = await _userService.GetSystemUsers(/*id*/);
+            var userResult = await _userService.GetSystemUsers();
 
             if (userResult == null)
             {
@@ -113,19 +112,19 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         
-        [HttpGet("getUserById")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
-            _logger.LogInformation($"{nameof(GetAllUsers)} is started");
+            _logger.LogInformation($"{nameof(GetUser)} is started");
 
-            var userResult = await _userService.GetUserById(id);
+            var userResult = await _userService.GetUser(id);
 
             if (userResult == null)
             {
                 return NoContent();
             }
 
-            _logger.LogInformation($"{nameof(GetAllUsers)} is finished successfully");
+            _logger.LogInformation($"{nameof(GetUser)} is finished successfully");
 
             return Ok(userResult);
         }

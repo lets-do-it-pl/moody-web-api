@@ -1,13 +1,13 @@
 ﻿namespace LetsDoIt.Moody.Persistance.Repositories
 {
-    using Domain;
     using Base;
-    using System.Threading.Tasks;
-    using System.Linq;
-    using System.Linq.Expressions;
+    using Domain;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
-    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     public class UserTokenRepository : IEntityRepository<UserToken>
     {
