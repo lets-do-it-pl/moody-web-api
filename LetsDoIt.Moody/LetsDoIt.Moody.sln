@@ -7,27 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{79243330-762
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E58C65D5-036D-4070-B42B-2F58E3BD6E34}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application.UnitTests", "Application.UnitTests", "{291E9806-65EA-47E2-B52C-891F560B38CF}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application.IntegrationTests", "Application.IntegrationTests", "{831AB126-481E-46E8-A08D-D2BE5E9D5F5A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain.UnitTests", "Domain.UnitTests", "{304BE79B-E4D2-4016-B505-9B464C8427EC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Application.IntegrationTests", "tests\Application.IntegrationTests\LetsDoIt.Moody.Application.IntegrationTests\LetsDoIt.Moody.Application.IntegrationTests.csproj", "{55D91F04-9389-4BEC-AEB6-E3D72008ED84}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Application.UnitTests", "tests\Application.UnitTests\LetsDoIt.Moody.Application.UnitTests\LetsDoIt.Moody.Application.UnitTests.csproj", "{2C785824-6F86-46A4-873A-9707DD9867DC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Domain.UnitTests", "tests\Domain.UnitTests\LetsDoIt.Moody.Domain.UnitTests\LetsDoIt.Moody.Domain.UnitTests.csproj", "{E09F4529-39E9-4768-A9EB-FA1CADC66784}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web.UnitTests", "Web.UnitTests", "{1158B3CC-169B-426A-9B01-CAB5C8DBB150}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB3ABC11-13C0-4506-91FC-910FBBA9C2F1}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		nuget.config = nuget.config
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Web.UnitTests", "tests\Web.UnitTests\LetsDoIt.Moody.Web.UnitTests\LetsDoIt.Moody.Web.UnitTests.csproj", "{7805103C-9EC9-429E-AEA0-D1B937848953}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TemporaryTokenGenerator", "TemporaryTokenGenerator", "{CD56FDFF-92E3-43A2-B758-0C6366D0EEE2}"
 EndProject
@@ -41,28 +25,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Infrastructu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Persistance", "src\LetsDoIt.Moody.Persistance\LetsDoIt.Moody.Persistance.csproj", "{EFF3EC76-33C9-4363-A20A-0C5052739E8B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Application.IntegrationTests", "tests\LetsDoIt.Moody.Application.IntegrationTests\LetsDoIt.Moody.Application.IntegrationTests.csproj", "{835D3B9C-95F1-4899-BFFB-CA3FDC072048}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Application.UnitTests", "tests\LetsDoIt.Moody.Application.UnitTests\LetsDoIt.Moody.Application.UnitTests.csproj", "{5D1F9D3F-2C98-4C65-B31B-ED88AB8218CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsDoIt.Moody.Web.UnitTests", "tests\LetsDoIt.Moody.Web.UnitTests\LetsDoIt.Moody.Web.UnitTests.csproj", "{51377929-4133-4280-811C-A6315915EA64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{55D91F04-9389-4BEC-AEB6-E3D72008ED84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55D91F04-9389-4BEC-AEB6-E3D72008ED84}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55D91F04-9389-4BEC-AEB6-E3D72008ED84}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55D91F04-9389-4BEC-AEB6-E3D72008ED84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2C785824-6F86-46A4-873A-9707DD9867DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C785824-6F86-46A4-873A-9707DD9867DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C785824-6F86-46A4-873A-9707DD9867DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C785824-6F86-46A4-873A-9707DD9867DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E09F4529-39E9-4768-A9EB-FA1CADC66784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E09F4529-39E9-4768-A9EB-FA1CADC66784}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E09F4529-39E9-4768-A9EB-FA1CADC66784}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E09F4529-39E9-4768-A9EB-FA1CADC66784}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7805103C-9EC9-429E-AEA0-D1B937848953}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7805103C-9EC9-429E-AEA0-D1B937848953}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7805103C-9EC9-429E-AEA0-D1B937848953}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7805103C-9EC9-429E-AEA0-D1B937848953}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C5F33DB-2318-4A98-A25D-54782A988BDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C5F33DB-2318-4A98-A25D-54782A988BDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C5F33DB-2318-4A98-A25D-54782A988BDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -83,25 +57,32 @@ Global
 		{EFF3EC76-33C9-4363-A20A-0C5052739E8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFF3EC76-33C9-4363-A20A-0C5052739E8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFF3EC76-33C9-4363-A20A-0C5052739E8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{835D3B9C-95F1-4899-BFFB-CA3FDC072048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{835D3B9C-95F1-4899-BFFB-CA3FDC072048}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{835D3B9C-95F1-4899-BFFB-CA3FDC072048}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{835D3B9C-95F1-4899-BFFB-CA3FDC072048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D1F9D3F-2C98-4C65-B31B-ED88AB8218CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D1F9D3F-2C98-4C65-B31B-ED88AB8218CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D1F9D3F-2C98-4C65-B31B-ED88AB8218CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D1F9D3F-2C98-4C65-B31B-ED88AB8218CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51377929-4133-4280-811C-A6315915EA64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51377929-4133-4280-811C-A6315915EA64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51377929-4133-4280-811C-A6315915EA64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51377929-4133-4280-811C-A6315915EA64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{291E9806-65EA-47E2-B52C-891F560B38CF} = {E58C65D5-036D-4070-B42B-2F58E3BD6E34}
-		{831AB126-481E-46E8-A08D-D2BE5E9D5F5A} = {E58C65D5-036D-4070-B42B-2F58E3BD6E34}
-		{304BE79B-E4D2-4016-B505-9B464C8427EC} = {E58C65D5-036D-4070-B42B-2F58E3BD6E34}
-		{55D91F04-9389-4BEC-AEB6-E3D72008ED84} = {831AB126-481E-46E8-A08D-D2BE5E9D5F5A}
-		{2C785824-6F86-46A4-873A-9707DD9867DC} = {291E9806-65EA-47E2-B52C-891F560B38CF}
-		{E09F4529-39E9-4768-A9EB-FA1CADC66784} = {304BE79B-E4D2-4016-B505-9B464C8427EC}
-		{1158B3CC-169B-426A-9B01-CAB5C8DBB150} = {E58C65D5-036D-4070-B42B-2F58E3BD6E34}
-		{7805103C-9EC9-429E-AEA0-D1B937848953} = {1158B3CC-169B-426A-9B01-CAB5C8DBB150}
 		{CD56FDFF-92E3-43A2-B758-0C6366D0EEE2} = {79243330-7626-456D-BFB3-8EB4756C616B}
 		{3C5F33DB-2318-4A98-A25D-54782A988BDF} = {CD56FDFF-92E3-43A2-B758-0C6366D0EEE2}
 		{53674707-C275-492F-BED7-C5A65B814536} = {79243330-7626-456D-BFB3-8EB4756C616B}
 		{A8987FD9-2C84-4D1F-9C5D-E63088D5942B} = {79243330-7626-456D-BFB3-8EB4756C616B}
 		{8EEC8283-5380-4E45-89B8-BE1EE6B8CD61} = {79243330-7626-456D-BFB3-8EB4756C616B}
 		{EFF3EC76-33C9-4363-A20A-0C5052739E8B} = {79243330-7626-456D-BFB3-8EB4756C616B}
+		{835D3B9C-95F1-4899-BFFB-CA3FDC072048} = {E58C65D5-036D-4070-B42B-2F58E3BD6E34}
+		{5D1F9D3F-2C98-4C65-B31B-ED88AB8218CD} = {E58C65D5-036D-4070-B42B-2F58E3BD6E34}
+		{51377929-4133-4280-811C-A6315915EA64} = {E58C65D5-036D-4070-B42B-2F58E3BD6E34}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9A096469-A3CF-4011-AAE1-EF464CB0345B}
