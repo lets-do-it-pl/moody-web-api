@@ -1,21 +1,13 @@
-﻿namespace LetsDoIt.Moody.Web.Entities.Requests
-{
-<<<<<<<< HEAD:LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/Entities/Requests/SaveUserRequest.cs
-    using Infrastructure.ValueTypes;
+﻿using System.ComponentModel.DataAnnotations;
 
-    public class SaveUserRequest
-========
+namespace LetsDoIt.Moody.Web.Entities.Requests
+{
     public class SaveClientRequest
->>>>>>>> master:LetsDoIt.Moody/src/LetsDoIt.Moody.Web/Entities/Requests/SaveClientRequest.cs
     {
+        [Required]
         public string Username { get; set; }
 
+        [Required]
         public string Password { get; set; }
-
-        public string Name { get; set; }
-
-        public string Surname { get; set; }
-
-        public string Email { get; set; }
     }
 }
