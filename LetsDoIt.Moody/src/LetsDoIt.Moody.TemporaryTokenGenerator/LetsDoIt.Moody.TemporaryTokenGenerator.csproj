@@ -10,6 +10,6 @@
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure\LetsDoIt.Moody.Infrastructure\LetsDoIt.Moody.Infrastructure.csproj" />
+    <ProjectReference Include="..\LetsDoIt.Moody.Infrastructure\LetsDoIt.Moody.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
