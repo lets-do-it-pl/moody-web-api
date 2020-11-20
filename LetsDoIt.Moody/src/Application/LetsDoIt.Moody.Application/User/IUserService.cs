@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using LetsDoIt.Moody.Domain;
 using LetsDoIt.Moody.Infrastructure.ValueTypes;
 
 namespace LetsDoIt.Moody.Application.User
 {
+    using LetsDoIt.Moody.Domain;
+
     public interface IUserService
     {
         Task SaveUserAsync(
@@ -22,6 +23,6 @@ namespace LetsDoIt.Moody.Application.User
 
         Task<ICollection<ToSystemUsersGetResult>> GetSystemUsers();
 
-        Task<ICollection<ToSystemUsersGetResult>> GetUser(int id);
+        Task<User> GetUser(int id);
     }
 }

@@ -53,25 +53,21 @@ namespace LetsDoIt.Moody.Application.User
             return result.Select(ToUser).ToList();
         }
 
-        /*public async Task<User> GetUser(int id)
+        public async Task<User> GetUser(int id)
         {
             var result = await _userRepository.SingleOrDefaultAsync(u => u.Id == id);
 
-            return result;
-        }*/
-
-        public async Task<ICollection<ToSystemUsersGetResult>> GetUser(int id)
-        {
-            var result = await _userRepository.GetListAsync();
-
-            if (result == null)
-            {
-                throw new ArgumentNullException("There is no user!");
-            }
-
-            return result.Select(ToUser).ToList();
+            return new User {
+                            Id = result.Id,
+                            Name = result.Name,
+                            Surname = result.Surname,
+                            Email = result.Email,
+                            IsActive = result.IsActive,
+                            UserType = result.UserType
+                        };
         }
 
+       
         ToSystemUsersGetResult ToUser(User result) => new ToSystemUsersGetResult
         {
             Id = result.Id,
