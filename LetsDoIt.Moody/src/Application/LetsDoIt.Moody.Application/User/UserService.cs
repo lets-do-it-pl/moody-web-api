@@ -76,8 +76,8 @@ namespace LetsDoIt.Moody.Application.User
 
             if (userDb.isActive == false)
             {
-                throw new Exception($"The user is not active");
-               
+                throw new UserNotActiveException(userDb.UserName);
+
             }
 
             UserToken userToken;
