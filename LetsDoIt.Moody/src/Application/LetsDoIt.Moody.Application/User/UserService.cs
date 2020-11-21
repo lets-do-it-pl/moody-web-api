@@ -53,6 +53,7 @@ namespace LetsDoIt.Moody.Application.User
                             UserType = result.UserType
                         };
         }
+
         public async Task SaveUserAsync(
             string username,
             string password,

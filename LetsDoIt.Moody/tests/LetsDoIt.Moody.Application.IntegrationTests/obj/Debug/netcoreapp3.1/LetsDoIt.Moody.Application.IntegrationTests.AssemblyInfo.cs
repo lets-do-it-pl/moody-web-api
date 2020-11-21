@@ -11,6 +11,12 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("LetsDoIt.Moody.Application", "C:\\Users\\Hamidey\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Lets" +
+    "DoIt.Moody.Application", "LetsDoIt.Moody.Application.csproj", "0")]
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("LetsDoIt.Moody.Infrastructure", "C:\\Users\\Hamidey\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Lets" +
+    "DoIt.Moody.Infrastructure", "LetsDoIt.Moody.Infrastructure.csproj", "0")]
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("LetsDoIt.Moody.Persistence", "C:\\Users\\Hamidey\\Source\\Repos\\lets-do-it-pl\\moody-web-api\\LetsDoIt.Moody\\src\\Lets" +
+    "DoIt.Moody.Persistence", "LetsDoIt.Moody.Persistence.csproj", "0")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("LetsDoIt.Moody.Application.IntegrationTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
