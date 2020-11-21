@@ -36,7 +36,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             _logger = logger;
         }
 
-
+        [Microsoft.AspNetCore.Cors.EnableCors("AnotherPolicy")]
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
@@ -54,6 +54,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         }
 
+        [Microsoft.AspNetCore.Cors.EnableCors("AnotherPolicy")]
         [HttpGet("{id:int}/details")]
         public async Task<IActionResult> GetUserDetails(int id)
         {

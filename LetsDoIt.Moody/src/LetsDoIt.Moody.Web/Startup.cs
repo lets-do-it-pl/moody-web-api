@@ -95,6 +95,19 @@ namespace LetsDoIt.Moody.Web
 
             services.AddControllers();
 
+            var FrontendUrl = Configuration.GetValue<string>("FrontendUrl");
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AnotherPolicy",
+                    builder =>
+                    {                       
+                        builder.WithOrigins(FrontendUrl)
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -164,6 +177,8 @@ namespace LetsDoIt.Moody.Web
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseCors();
 
             app.UseSwagger();
 
