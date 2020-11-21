@@ -40,19 +40,6 @@ namespace LetsDoIt.Moody.Application.User
            
         }
 
-        public async Task<ICollection<ToSystemUsersGetResult>> GetSystemUsers()
-        {
-            
-            var result = await _userRepository.GetListAsync();
-
-            if (result == null)
-            {
-                throw new ArgumentNullException("There is no user!");
-            }
-
-            return result.Select(ToUser).ToList();
-        }
-
         public async Task<User> GetUser(int id)
         {
             var result = await _userRepository.SingleOrDefaultAsync(u => u.Id == id);
@@ -66,20 +53,6 @@ namespace LetsDoIt.Moody.Application.User
                             UserType = result.UserType
                         };
         }
-
-       
-        ToSystemUsersGetResult ToUser(User result) => new ToSystemUsersGetResult
-        {
-            Id = result.Id,
-            Name = result.Name,
-            Surname = result.Surname,
-            Email = result.Email,
-            IsActive = result.IsActive,
-            UserType = result.UserType
-        };
-
-         
-
         public async Task SaveUserAsync(
             string username,
             string password,
