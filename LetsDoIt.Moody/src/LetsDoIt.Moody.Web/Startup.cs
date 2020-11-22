@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using HealthChecks.UI.Client;
+using LetsDoIt.MailSender.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
