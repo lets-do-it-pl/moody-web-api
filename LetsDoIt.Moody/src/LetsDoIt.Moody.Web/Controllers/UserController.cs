@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.CustomExceptions;
 using LetsDoIt.Moody.Web.Entities;
 using LetsDoIt.Moody.Web.Entities.Requests;
-using LetsDoIt.Moody.Web.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -66,6 +65,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         [HttpPost]
         [Route("email")]
+        [AllowAnonymous]
         public async Task<IActionResult> SendEmailVerification(string email)
         {
             _logger.LogInformation(
@@ -87,22 +87,19 @@ namespace LetsDoIt.Moody.Web.Controllers
                 _logger.LogInformation($"{nameof(SendEmailVerification)} is finished with bad request!");
 
                 return BadRequest(exception.Message);
-
             }
         }
 
         [HttpPost]
         [Route("email/verification")]
-        public async Task<IActionResult> VerifyUserEmailToken(string token)
+        public async Task<IActionResult> ActivateUser()
         {
             _logger.LogInformation(
-                $"{nameof(VerifyUserEmailToken)} is started with " +
-                $"save request = {token}");
-
+                $"{nameof(ActivateUser)} is started");
 
             await _userService.ActivateUser(GetUserInfo().UserId);
 
-            _logger.LogInformation($"{nameof(VerifyUserEmailToken)} is finished successfully");
+            _logger.LogInformation($"{nameof(ActivateUser)} is finished successfully");
 
             return Ok();
         }

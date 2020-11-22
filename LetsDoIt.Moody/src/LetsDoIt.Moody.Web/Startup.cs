@@ -126,6 +126,10 @@ namespace LetsDoIt.Moody.Web
                 c.AddSecurityRequirement(securityRequirement);
             });
 
+            services.Configure<SmtpOptions>(Configuration.GetSection(SmtpOptions.SmtpSectionName));
+
+            services.AddMailSender();
+
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IRepository<VersionHistory>, VersionHistoryRepository>();
             services.AddTransient<IRepository<Client>, ClientRepository>();
