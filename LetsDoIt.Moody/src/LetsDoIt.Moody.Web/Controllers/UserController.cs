@@ -1,6 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Data;
+using System.Linq;
+using System.Net;
+using System.Security.Authentication;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using LetsDoIt.Moody.Application.CustomExceptions;
+using LetsDoIt.Moody.Web.Entities;
+using LetsDoIt.Moody.Web.Entities.Requests;
+using LetsDoIt.Moody.Web.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -9,18 +21,99 @@ namespace LetsDoIt.Moody.Web.Controllers
 
     [Route("api/user")]
     [ApiController]
-    [Authorize(Roles = RoleConstants.AdminRole)]
+    [Authorize(Roles = RoleConstants.StandardRole)]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly ILogger<UserController> _logger;
 
         public UserController(
-            IUserService userService, 
+            IUserService userService,
             ILogger<UserController> logger)
         {
             _userService = userService;
             _logger = logger;
+        }
+
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> SaveUser(SaveUserRequest saveUserRequest)
+        {
+            _logger.LogInformation(
+                $"{nameof(SaveUser)} is started with " +
+                $"save request = {JsonConvert.SerializeObject(saveUserRequest)}");
+
+            try
+            {
+                await _userService.SaveUserAsync(saveUserRequest.Username,
+                    saveUserRequest.Password,
+                    saveUserRequest.Email,
+                    saveUserRequest.Name,
+                    saveUserRequest.Surname);
+
+                _logger.LogInformation($"{nameof(SaveUser)} is finished successfully");
+
+                return StatusCode((int)HttpStatusCode.Created, "Created");
+            }
+            catch (DuplicateNameException ex)
+            {
+                _logger.LogInformation($"{nameof(SaveUser)} is finished with bad request!");
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("email")]
+        public async Task<IActionResult> SendEmailVerification(string email)
+        {
+            _logger.LogInformation(
+                $"{nameof(SendEmailVerification)} is started with " +
+                $"email = {email}");
+
+            string referer = Request.Headers["Referer"].ToString();
+
+            try
+            {
+                await _userService.SendActivationEmailAsync(referer, email);
+
+                _logger.LogInformation($"{nameof(SendEmailVerification)} is finished successfully");
+
+                return Ok();
+            }
+            catch (EmailNotRegisteredException exception)
+            {
+                _logger.LogInformation($"{nameof(SendEmailVerification)} is finished with bad request!");
+
+                return BadRequest(exception.Message);
+
+            }
+        }
+
+        [HttpPost]
+        [Route("email/verification")]
+        public async Task<IActionResult> VerifyUserEmailToken(string token)
+        {
+            _logger.LogInformation(
+                $"{nameof(VerifyUserEmailToken)} is started with " +
+                $"save request = {token}");
+
+
+            await _userService.ActivateUser(GetUserInfo().UserId);
+
+            _logger.LogInformation($"{nameof(VerifyUserEmailToken)} is finished successfully");
+
+            return Ok();
+        }
+
+        private UserInfo GetUserInfo()
+        {
+            var fullName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            return new UserInfo(userId, fullName);
         }
     }
 }
