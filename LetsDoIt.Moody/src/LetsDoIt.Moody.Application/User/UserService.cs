@@ -4,17 +4,16 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using LetsDoIt.MailSender;
-using LetsDoIt.Moody.Application.Constants;
-using LetsDoIt.Moody.Application.CustomExceptions;
-using LetsDoIt.Moody.Application.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Application.User
 {
+    using Constants;
+    using CustomExceptions;
+    using Security;
     using Persistence.Entities;
     using Persistence.Repositories.Base;
-
 
     public class UserService : IUserService
     {
@@ -87,10 +86,10 @@ namespace LetsDoIt.Moody.Application.User
                 throw new UserNotFoundException(id);
             }
 
-            await _userRepository.UpdateAsync(new User
-            {
-                IsActive = true
-            });
+            dbUser.IsActive = true;
+            dbUser.ModifiedBy = dbUser.Id;
+
+            await _userRepository.UpdateAsync(dbUser);
         }
 
         private static async Task<string> ReadHtmlContent(string filePath)

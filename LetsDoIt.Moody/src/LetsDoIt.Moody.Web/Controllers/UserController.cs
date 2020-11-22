@@ -1,8 +1,6 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Linq;
 using System.Net;
-using System.Security.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.CustomExceptions;
@@ -37,6 +35,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
+        [AllowAnonymous]
         public async Task<IActionResult> SaveUser(SaveUserRequest saveUserRequest)
         {
             _logger.LogInformation(
@@ -97,11 +96,19 @@ namespace LetsDoIt.Moody.Web.Controllers
             _logger.LogInformation(
                 $"{nameof(ActivateUser)} is started");
 
-            await _userService.ActivateUser(GetUserInfo().UserId);
+            try
+            {
+                await _userService.ActivateUser(GetUserInfo().UserId);
+                _logger.LogInformation($"{nameof(ActivateUser)} is finished successfully");
+                return Ok();
+            }
+            catch (UserNotFoundException e)
+            {
+                _logger.LogInformation($"{nameof(ActivateUser)} is finished with bad request!");
 
-            _logger.LogInformation($"{nameof(ActivateUser)} is finished successfully");
+                return BadRequest(e.Message);
+            }
 
-            return Ok();
         }
 
         private UserInfo GetUserInfo()

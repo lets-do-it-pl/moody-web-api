@@ -23,4 +23,10 @@
     <ProjectReference Include="..\LetsDoIt.Moody.Persistence\LetsDoIt.Moody.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="HtmlTemplates\EmailTokenVerification.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

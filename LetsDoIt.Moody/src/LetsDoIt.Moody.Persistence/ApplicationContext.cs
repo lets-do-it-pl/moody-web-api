@@ -38,7 +38,7 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("Category");
 
                 entity.HasIndex(e => e.Order)
-                    .HasName("UQ__Category__67A3D86C27271819")
+                    .HasName("UQ__Category__67A3D86CB44EEA18")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
@@ -62,7 +62,7 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("CategoryDetail");
 
                 entity.HasIndex(e => e.Order)
-                    .HasName("UQ__Category__67A3D86CE9B2570B")
+                    .HasName("UQ__Category__67A3D86C85658765")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
@@ -105,9 +105,7 @@ namespace LetsDoIt.Moody.Persistence
             {
                 entity.ToTable("User");
 
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Email)
                     .IsRequired()
@@ -118,8 +116,6 @@ namespace LetsDoIt.Moody.Persistence
                     .IsRequired()
                     .HasMaxLength(500)
                     .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Password)
                     .IsRequired()
