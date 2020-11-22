@@ -73,6 +73,35 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
 
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> SaveUser(SaveUserRequest saveRequest)
+        {
+            _logger.LogInformation(
+                $"{nameof(SaveUser)} is started with " +
+                $"save request = {JsonConvert.SerializeObject(saveRequest)}");
 
+            try
+            {
+                await _userService.SaveUserAsync(
+                                saveRequest.Username,
+                                saveRequest.Password,
+                                saveRequest.FullName,
+                                saveRequest.Email,
+                                saveRequest.IsActive,
+                                saveRequest.UserType,
+                                saveRequest.CreatedBy);
+
+                _logger.LogInformation($"{nameof(SaveUser)} is finished successfully");
+
+                return StatusCode((int)HttpStatusCode.Created, "Created");
+            }
+            catch (DuplicateNameException ex)
+            {
+                _logger.LogInformation($"{nameof(SaveUser)} is finished with bad request!");
+
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

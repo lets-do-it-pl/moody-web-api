@@ -1,7 +1,9 @@
 ﻿using LetsDoIt.MailSender;
 using System.Threading.Tasks;
 using System.IO;
-
+using System.Data;
+using Microsoft.Extensions.Logging;
+using NGuard;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -11,6 +13,7 @@ namespace LetsDoIt.Moody.Application.User
     using System.Collections.Generic;
     using System.Linq;
     using LetsDoIt.Moody.Persistence.Repositories.Base;
+   
 
     public class UserService : IUserService
     {
@@ -20,12 +23,13 @@ namespace LetsDoIt.Moody.Application.User
         private readonly int _tokenExpirationMinutes;
         private readonly int _emailVerificationTokenExpirationMinutes;
         private const string HtmlFilePath = @"\HtmlTemplates\EmailTokenVerification.html";
+        private readonly ILogger<UserService> _logger;
 
         public UserService(
             IRepository<User> userRepository,
             string applicationKey,
             int tokenExpirationMinutes,
-            int _emailVerificationTokenExpirationMinutes)
+            int _emailVerificationTokenExpirationMinutes, ILogger<UserService> logger)
            
         {
             _userRepository = userRepository;
@@ -86,13 +90,35 @@ namespace LetsDoIt.Moody.Application.User
             CreatedDate = result.CreatedDate
         };
 
-        public async Task SaveUserAsync()
+        public async Task SaveUserAsync(string Username, string Password, string Fullname, string Email, bool IsActive, string UserType, int CreatedBy)
         {
-            throw new NotImplementedException();
+            Guard.Requires(Username, nameof(Username)).IsNotNullOrEmptyOrWhiteSpace();
+            Guard.Requires(Password, nameof(Password)).IsNotNullOrEmptyOrWhiteSpace();
+
+            _logger.LogInformation($"{nameof(SaveUserAsync)} executing with username={Username}...");
+
+            var isUserExisted = await _userRepository.AnyAsync(u => u.Username == Username);
+            if (isUserExisted)
+            {
+                throw new DuplicateNameException($"The username of the user is already in the database. Username = {Username}");
+            }
+
+            var user = ToUserEntity(Username, Password, Fullname, Email, IsActive, UserType, CreatedBy);
+
+            await _userRepository.AddAsync(new User
+            {
+                Username = user.Username,
+                Password = user.Password,
+                FullName = user.Fullname,
+                Email = user.Email,
+                IsActive = user.IsActive,
+                UserType = user.UserType,
+                CreatedBy = user.CreatedBy
+            });
+
+            _logger.LogInformation($"{nameof(SaveUserAsync)} executed with username={Username}.");
         }
 
-        
-      
         private static async Task<string> ReadHtmlContent()
         {
             await using (FileStream fileStream =
@@ -109,5 +135,17 @@ namespace LetsDoIt.Moody.Application.User
         {
             throw new NotImplementedException();
         }
+
+        private static UserEntity ToUserEntity(string username, string password, string fullname, string email, bool isActive, string userType, int createdBy) =>
+           new UserEntity
+           (
+               username,
+               password,
+               fullname,
+               email,
+               isActive,
+               userType,
+               createdBy
+           );
     }
 }
