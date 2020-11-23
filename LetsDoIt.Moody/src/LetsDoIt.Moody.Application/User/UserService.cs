@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using LetsDoIt.MailSender;
+using LetsDoIt.Moody.Infrastructure.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -44,15 +45,7 @@ namespace LetsDoIt.Moody.Application.User
                 throw new DuplicateNameException($"The username is already in the database. Username = {username}");
             }
 
-            var userEntity = new UserEntity(username, password, name, surname, email);
-
-            await _userRepository.AddAsync(new User
-            {
-                Username = userEntity.Username,
-                Password = userEntity.Password,
-                Email = userEntity.Email,
-                FullName = userEntity.FullName
-            });
+            await _userRepository.AddAsync(ToUser(username, password, name, surname, email));
         }
 
         public async Task SendActivationEmailAsync(string referer, string email)
@@ -102,5 +95,12 @@ namespace LetsDoIt.Moody.Application.User
 
             return content;
         }
+        private User ToUser(string username, string password, string name, string surname, string email) => new User
+        {
+            Username = username,
+            Password = ProtectionHelper.EncryptValue(username + password),
+            FullName = name + surname,
+            Email = email
+        };
     }
 }
