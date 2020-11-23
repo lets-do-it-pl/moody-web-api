@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LetsDoIt.MailSender" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="3.1.8" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
@@ -20,6 +21,12 @@
   <ItemGroup>
     <ProjectReference Include="..\LetsDoIt.Moody.Infrastructure\LetsDoIt.Moody.Infrastructure.csproj" />
     <ProjectReference Include="..\LetsDoIt.Moody.Persistence\LetsDoIt.Moody.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="HtmlTemplates\UserVerification.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

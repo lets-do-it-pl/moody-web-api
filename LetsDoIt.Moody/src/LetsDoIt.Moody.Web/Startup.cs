@@ -1,6 +1,8 @@
 using System;
 using System.Text;
 using HealthChecks.UI.Client;
+using LetsDoIt.MailSender.Options;
+using LetsDoIt.Moody.Application.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -126,6 +128,10 @@ namespace LetsDoIt.Moody.Web
                 c.AddSecurityRequirement(securityRequirement);
             });
 
+            services.Configure<SmtpOptions>(Configuration.GetSection(SmtpOptions.SmtpSectionName));
+
+            services.AddMailSender();
+
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IRepository<VersionHistory>, VersionHistoryRepository>();
             services.AddTransient<IRepository<Client>, ClientRepository>();
@@ -136,6 +142,7 @@ namespace LetsDoIt.Moody.Web
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
             services.AddTransient<IClientService, ClientService>();
             services.AddSingleton<ISecurityService, SecurityService>();
+            services.AddTransient<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
