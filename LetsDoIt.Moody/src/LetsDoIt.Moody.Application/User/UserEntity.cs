@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LetsDoIt.Moody.Application.Constants;
-using LetsDoIt.Moody.Infrastructure.Utils;
-
-namespace LetsDoIt.Moody.Application.User
+﻿namespace LetsDoIt.Moody.Application.User
 {
+    using Constants;
+    using Infrastructure.Utils;
+
     public class UserEntity
     {
         public string Username { get; set; }

@@ -37,7 +37,7 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task SaveUserAsync(string username, string password, string email, string name, string surname)
         {
-            var isUserExisted = await _userRepository.Get().AnyAsync(u => u.Username == username && !u.IsDeleted);
+            var isUserExisted = await _userRepository.AnyAsync(u => u.Username == username && !u.IsDeleted);
 
             if (isUserExisted)
             {
@@ -64,17 +64,11 @@ namespace LetsDoIt.Moody.Application.User
                 throw new EmailNotRegisteredException(email);
             }
 
-            var content = await ReadHtmlContent(HtmlFilePath);
-
-            var frontEndUri = new Uri(referer);
-
             var token = _securityService.GenerateJwtToken(dbUser.Id.ToString(), dbUser.FullName, UserTypeConstants.Standard);
 
-            await _mailSender.SendAsync(EmailVerification,
-                content.Replace("{{action_url}}",
-                    "http://" + frontEndUri.Host
-                              + "?token=" + token.Token),
-                email);
+            var content = await ReadHtmlContent(HtmlFilePath, referer, token.Token);
+
+            await _mailSender.SendAsync(EmailVerification, content, email);
         }
 
         public async Task ActivateUser(int id)
@@ -92,13 +86,21 @@ namespace LetsDoIt.Moody.Application.User
             await _userRepository.UpdateAsync(dbUser);
         }
 
-        private static async Task<string> ReadHtmlContent(string filePath)
+        private static async Task<string> ReadHtmlContent(string filePath, string referer, string token)
         {
-            await using FileStream fileStream = new FileStream(AppDomain.CurrentDomain.BaseDirectory + filePath, FileMode.Open);
+            await using FileStream fileStream = new FileStream(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filePath), FileMode.Open);
 
             using StreamReader streamReader = new StreamReader(fileStream, Encoding.Unicode);
 
-            return await streamReader.ReadToEndAsync();
+            var content = await streamReader.ReadToEndAsync();
+
+            var frontEndUri = new Uri(referer);
+
+            content = content.Replace("{{action_url}}",
+                frontEndUri.Scheme + "://" + frontEndUri.Host
+                          + "?token=" + token);
+
+            return content;
         }
     }
 }
