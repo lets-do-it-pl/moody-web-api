@@ -1,5 +1,3 @@
-using System;
-using System.Text;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -9,24 +7,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-<<<<<<< HEAD:LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/Startup.cs
-=======
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
->>>>>>> master:LetsDoIt.Moody/src/LetsDoIt.Moody.Web/Startup.cs
+using Microsoft.OpenApi.Models;
+using System;
+using System.Text;
 
 namespace LetsDoIt.Moody.Web
 {
     using Application.Category;
-<<<<<<< HEAD:LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/Startup.cs
-    using Application.User;
-=======
     using Application.Client;
     using Application.Constants;
     using Application.Options;
     using Application.Security;
->>>>>>> master:LetsDoIt.Moody/src/LetsDoIt.Moody.Web/Startup.cs
     using Application.VersionHistory;
     using Entities;
     using Middleware;
@@ -141,32 +133,6 @@ namespace LetsDoIt.Moody.Web
                 c.AddSecurityRequirement(securityRequirement);
             });
 
-<<<<<<< HEAD:LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/Startup.cs
-            var tokenExpirationMinutes = Configuration.GetValue<int>("TokenExpirationMinutes");
-            var emailVerificationTokenMinutes = Configuration.GetValue<int>("EmailVerificationTokenExpirationMinutes");
-
-            
-
-            services.AddTransient<IEntityRepository<Category>, CategoryRepository>();
-            services.AddTransient<IEntityRepository<VersionHistory>, VersionHistoryRepository>();
-            services.AddTransient<IEntityRepository<User>, UserRepository>();
-            services.AddTransient<IEntityRepository<UserToken>, UserTokenRepository>();
-            services.AddTransient<IEntityRepository<CategoryDetails>, CategoryDetailsRepository>();
-
-            services.AddTransient<ICategoryService, CategoryService>();
-            services.AddTransient<IVersionHistoryService, VersionHistoryService>();
-            services.AddTransient<IUserService>(us => new UserService(
-                    us.GetService<IEntityRepository<User>>(),
-                    us.GetService<IEntityRepository<UserToken>>(),
-                    JwtEncryptionKey,
-                    tokenExpirationMinutes
-                ));
-
-            services.AddMvc(options =>
-            {
-                options.Filters.Add<TokenAuthorizationFilter>();
-            });
-
             var webUrl = Configuration.GetValue<string>("WebUrl");
 
             services.AddCors(options =>
@@ -176,7 +142,6 @@ namespace LetsDoIt.Moody.Web
                         builder.WithOrigins(webUrl).AllowAnyHeader().AllowAnyMethod();
                     });
             }); 
-=======
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IRepository<VersionHistory>, VersionHistoryRepository>();
             services.AddTransient<IRepository<Client>, ClientRepository>();
@@ -187,7 +152,6 @@ namespace LetsDoIt.Moody.Web
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
             services.AddTransient<IClientService, ClientService>();
             services.AddSingleton<ISecurityService, SecurityService>();
->>>>>>> master:LetsDoIt.Moody/src/LetsDoIt.Moody.Web/Startup.cs
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

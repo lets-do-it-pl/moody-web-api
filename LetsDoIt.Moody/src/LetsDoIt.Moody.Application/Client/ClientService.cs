@@ -52,6 +52,17 @@ namespace LetsDoIt.Moody.Application.Client
             _logger.LogInformation($"{nameof(SaveClientAsync)} executed with username={username}.");
         }
 
+        public async Task<Client> GetClient(int id)
+        {
+            var result = await _clientRepository.SingleOrDefaultAsync(c => c.Id == id);
+
+            return new Client
+            {
+                Id = result.Id,
+                UserName = result.UserName
+            };
+        }
+
         public async Task<ClientTokenEntity> AuthenticateAsync(string username, string password)
         {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();

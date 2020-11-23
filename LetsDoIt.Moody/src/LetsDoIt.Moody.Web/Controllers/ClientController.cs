@@ -1,11 +1,9 @@
-﻿using System.Net;
-using System.Threading.Tasks;
-using System.Data;
-using System.Net;
-using System.Security.Authentication;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Data;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -56,18 +54,18 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         [Microsoft.AspNetCore.Cors.EnableCors("AnotherPolicy")]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(int id)
+        public async Task<IActionResult> GetClient(int id)
         {
-            _logger.LogInformation($"{nameof(GetUser)} is started");
+            _logger.LogInformation($"{nameof(GetClient)} is started");
 
-            var userResult = await _clientService.GetUser(id);
+            var userResult = await _clientService.GetClient(id);
 
             if (userResult == null)
             {
                 return NoContent();
             }
 
-            _logger.LogInformation($"{nameof(GetUser)} is finished successfully");
+            _logger.LogInformation($"{nameof(GetClient)} is finished successfully");
 
             return Ok(userResult);
         }
