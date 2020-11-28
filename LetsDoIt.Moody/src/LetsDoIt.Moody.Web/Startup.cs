@@ -20,6 +20,7 @@ namespace LetsDoIt.Moody.Web
     using Application.Options;
     using Application.Security;
     using Application.VersionHistory;
+    using Application.User;
     using Entities;
     using Middleware;
     using Persistence;
@@ -147,6 +148,7 @@ namespace LetsDoIt.Moody.Web
             services.AddTransient<IRepository<Client>, ClientRepository>();
             services.AddTransient<IRepository<User>, UserRepository>();
             services.AddTransient<IRepository<CategoryDetail>, CategoryDetailsRepository>();
+            services.AddTransient<IUserService, UserService>();
 
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();

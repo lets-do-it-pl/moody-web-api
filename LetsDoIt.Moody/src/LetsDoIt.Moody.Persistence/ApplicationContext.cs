@@ -38,7 +38,7 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("Category");
 
                 entity.HasIndex(e => e.Order)
-                    .HasName("UQ__Category__67A3D86C27271819")
+                    .HasName("UQ__Category__67A3D86C3424A9DD")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
@@ -62,7 +62,7 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("CategoryDetail");
 
                 entity.HasIndex(e => e.Order)
-                    .HasName("UQ__Category__67A3D86CE9B2570B")
+                    .HasName("UQ__Category__67A3D86CA12036B7")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)

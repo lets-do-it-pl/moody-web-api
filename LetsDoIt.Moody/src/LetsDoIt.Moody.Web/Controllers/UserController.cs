@@ -30,6 +30,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         [Microsoft.AspNetCore.Cors.EnableCors("AnotherPolicy")]
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetUser(int id)
         {
             _logger.LogInformation($"{nameof(GetUser)} is started");
