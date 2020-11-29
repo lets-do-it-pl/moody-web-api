@@ -19,6 +19,9 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Application.Client;
     using Entities.Requests;
     using Filters;
+    using LetsDoIt.Moody.Web.Entities;
+    using System.Linq;
+    using System.Security.Claims;
 
     [Route("api/user")]
     [ApiController]
@@ -129,6 +132,37 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return BadRequest(exception.Message);
             }
+        }
+
+
+        [HttpPost]
+        [Route("email/verification")]
+        public async Task<IActionResult> ActivateUser()
+        {
+            _logger.LogInformation(
+                $"{nameof(ActivateUser)} is started");
+
+            try
+            {
+                await _userService.ActivateUser(GetUserInfo().UserId);
+                _logger.LogInformation($"{nameof(ActivateUser)} is finished successfully");
+                return Ok();
+            }
+            catch (UserNotFoundException e)
+            {
+                _logger.LogInformation($"{nameof(ActivateUser)} is finished with bad request!");
+
+                return BadRequest(e.Message);
+            }
+
+        }
+        private UserInfo GetUserInfo()
+        {
+            var fullName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            return new UserInfo(userId, fullName);
         }
 
     }

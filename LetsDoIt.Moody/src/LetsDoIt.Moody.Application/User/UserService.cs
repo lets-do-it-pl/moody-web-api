@@ -161,9 +161,19 @@ namespace LetsDoIt.Moody.Application.User
             return content;
         }
 
-        public Task ActiveUserAsync(int userId)
+        public async Task ActivateUser(int id)
         {
-            throw new NotImplementedException();
+            var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
+
+            if (dbUser == null)
+            {
+                throw new UserNotFoundException(id);
+            }
+
+            dbUser.IsActive = true;
+            dbUser.ModifiedBy = dbUser.Id;
+
+            await _userRepository.UpdateAsync(dbUser);
         }
 
         private static UserEntity ToUserEntity(string username, string password, string fullname, string email, bool isActive, string userType, int createdBy) =>
