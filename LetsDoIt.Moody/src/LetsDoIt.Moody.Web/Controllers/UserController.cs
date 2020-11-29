@@ -24,6 +24,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             _logger = logger;
         }
 
+
         [HttpGet("{id}")]
         [Authorize(Roles = RoleConstants.StandardRole)]
         public async Task<IActionResult> GetUser(int id)
