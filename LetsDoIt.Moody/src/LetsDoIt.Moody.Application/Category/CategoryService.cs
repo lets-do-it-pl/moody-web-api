@@ -3,6 +3,7 @@ using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace LetsDoIt.Moody.Application.Category
 {
@@ -53,6 +54,22 @@ namespace LetsDoIt.Moody.Application.Category
 
             return result;
         }
+
+        public async Task<CategoryGetResult> GetCategories()
+        {
+            var result = new CategoryGetResult();
+
+            result.Categories = await _categoryRepository.GetListAsync(c => !c.IsDeleted);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<CategoryDetail>> GetCategoryDetails(int categoryId)
+        {
+            return await _categoryDetailsRepository.GetListAsync(
+                c => !c.IsDeleted && c.CategoryId == categoryId);
+        }
+
 
         public async Task InsertAsync(string name, int order, byte[] image, int userId)
         {

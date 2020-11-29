@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -19,7 +20,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
     [ApiController]
     [Route("api/category")]
-    [Authorize(Roles = RoleConstants.StandardRole)]
+    //[Authorize(Roles = RoleConstants.StandardRole)]
     public class CategoryController : ControllerBase
     {
         private readonly ILogger<CategoryController> _logger;
@@ -50,6 +51,48 @@ namespace LetsDoIt.Moody.Web.Controllers
             _logger.LogInformation($"{nameof(GetCategories)} is finished successfully");
 
             return ToCategoryResponse(categoryResult);
+        }
+
+        [HttpGet, Route("/list")]
+        public async Task<IEnumerable<CategoryEntity>> GetCategories()
+        {
+            _logger.LogInformation($"{nameof(GetCategories)} is started.");
+
+            var categoryResult = await _categoryService.GetCategories();
+            if (categoryResult == null)
+            {
+                return null;
+            }
+
+            _logger.LogInformation($"{nameof(GetCategories)} is finished successfully");
+
+            return categoryResult.Categories.Select(c => new Entities.Responses.CategoryEntity {
+                Id = c.Id,
+                Name = c.Name,
+                Image = c.Image,
+                Order = c.Order
+            });
+        }
+
+        [HttpGet, Route("/{categoryId}/details")]
+        public async Task<IEnumerable<CategoryDetailsEntity>> GetCategoryDetails(int categoryId)
+        {
+            _logger.LogInformation($"{nameof(GetCategoryDetails)} is started with the category Id = {categoryId}.");
+
+            var categoryResult = await _categoryService.GetCategoryDetails(categoryId);
+            if (categoryResult == null)
+            {
+                return null;
+            }
+
+            _logger.LogInformation($"{nameof(GetCategoryDetails)} is finished successfully");
+
+            return categoryResult.Select(c => new CategoryDetailsEntity
+            {
+                Id = c.Id,
+                Order = c.Order,
+                Image = c.Image
+            });
         }
 
         [HttpPost]
