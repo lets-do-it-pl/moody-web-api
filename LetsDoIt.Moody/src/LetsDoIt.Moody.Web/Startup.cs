@@ -140,7 +140,7 @@ namespace LetsDoIt.Moody.Web
             {
                 options.AddPolicy("AnotherPolicy",
                     builder =>{
-                        builder.WithOrigins(webUrl).AllowAnyHeader().AllowAnyMethod();
+                        builder.WithOrigins(webUrl).AllowAnyOrigin();
                     });
             }); 
             services.AddTransient<ICategoryRepository, CategoryRepository>();
@@ -178,7 +178,7 @@ namespace LetsDoIt.Moody.Web
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseCors();
+            app.UseCors(options => options.AllowAnyOrigin());
 
             app.UseAuthentication();
 

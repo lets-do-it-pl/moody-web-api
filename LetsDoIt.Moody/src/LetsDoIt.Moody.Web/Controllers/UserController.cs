@@ -6,10 +6,6 @@ namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Constants;
     using Application.User;
-    using LetsDoIt.Moody.Infrastructure.ValueTypes;
-    using Newtonsoft.Json;
-    using System.Data;
-    using System.Net;
     using System.Threading.Tasks;
 
     [Route("api/user")]
@@ -28,19 +24,13 @@ namespace LetsDoIt.Moody.Web.Controllers
             _logger = logger;
         }
 
-        [Microsoft.AspNetCore.Cors.EnableCors("AnotherPolicy")]
         [HttpGet("{id}")]
-        [AllowAnonymous]
+        [Authorize(Roles = RoleConstants.StandardRole)]
         public async Task<IActionResult> GetUser(int id)
         {
             _logger.LogInformation($"{nameof(GetUser)} is started");
 
             var userResult = await _userService.GetUser(id);
-
-            if (userResult == null)
-            {
-                return NoContent();
-            }
 
             _logger.LogInformation($"{nameof(GetUser)} is finished successfully");
 

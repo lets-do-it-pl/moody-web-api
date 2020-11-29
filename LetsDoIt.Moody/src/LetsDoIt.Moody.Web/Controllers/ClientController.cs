@@ -51,23 +51,5 @@ namespace LetsDoIt.Moody.Web.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        [Microsoft.AspNetCore.Cors.EnableCors("AnotherPolicy")]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetClient(int id)
-        {
-            _logger.LogInformation($"{nameof(GetClient)} is started");
-
-            var userResult = await _clientService.GetClient(id);
-
-            if (userResult == null)
-            {
-                return NoContent();
-            }
-
-            _logger.LogInformation($"{nameof(GetClient)} is finished successfully");
-
-            return Ok(userResult);
-        }
     }
 }

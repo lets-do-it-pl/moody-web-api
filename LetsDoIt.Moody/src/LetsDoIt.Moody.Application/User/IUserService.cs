@@ -1,5 +1,4 @@
-﻿using LetsDoIt.Moody.Infrastructure.ValueTypes;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.User
 {

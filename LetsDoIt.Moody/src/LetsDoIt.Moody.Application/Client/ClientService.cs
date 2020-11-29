@@ -1,8 +1,8 @@
-﻿using System.Data;
+﻿using Microsoft.Extensions.Logging;
+using NGuard;
+using System.Data;
 using System.Security.Authentication;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using NGuard;
 
 namespace LetsDoIt.Moody.Application.Client
 {
@@ -50,18 +50,7 @@ namespace LetsDoIt.Moody.Application.Client
             });
 
             _logger.LogInformation($"{nameof(SaveClientAsync)} executed with username={username}.");
-        }
-
-        public async Task<Client> GetClient(int id)
-        {
-            var result = await _clientRepository.SingleOrDefaultAsync(c => c.Id == id);
-
-            return new Client
-            {
-                Id = result.Id,
-                UserName = result.UserName
-            };
-        }
+        }       
 
         public async Task<ClientTokenEntity> AuthenticateAsync(string username, string password)
         {
