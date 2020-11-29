@@ -103,5 +103,33 @@ namespace LetsDoIt.Moody.Web.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost]
+        [Route("user-verification-email")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SendUserVerificationEmail(string email)
+        {
+            _logger.LogInformation(
+                $"{nameof(SendUserVerificationEmail)} is started with " +
+                $"email = {email}");
+
+            var referer = Request.Headers["Referer"].ToString();
+
+            try
+            {
+                await _userService.SendActivationEmailAsync(referer, email);
+
+                _logger.LogInformation($"{nameof(SendUserVerificationEmail)} is finished successfully");
+
+                return Ok();
+            }
+            catch (EmailNotRegisteredException exception)
+            {
+                _logger.LogInformation($"{nameof(SendUserVerificationEmail)} is finished with bad request!");
+
+                return BadRequest(exception.Message);
+            }
+        }
+
     }
 }

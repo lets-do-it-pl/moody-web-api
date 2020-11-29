@@ -9,7 +9,7 @@ namespace LetsDoIt.Moody.Application.User
         Task ActiveUserAsync(int userId);
         Task<ICollection<SystemUsersGetResult>> GetSystemUsers();
         Task<ICollection<SystemUserDetailsGetResult>> GetSystemUserDetails(int id);
-
+        Task SendActivationEmailAsync(string referer, string email);
         Task SaveUserAsync(string Username, string Password, string Fullname, string Email, bool IsActive, string UserType, int CreatedBy);
 
 

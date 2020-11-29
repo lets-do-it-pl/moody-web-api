@@ -13,10 +13,13 @@ namespace LetsDoIt.Moody.Application.User
     using System.Collections.Generic;
     using System.Linq;
     using LetsDoIt.Moody.Persistence.Repositories.Base;
-   
+    using LetsDoIt.Moody.Application.Security;
+    using LetsDoIt.Moody.Application.CustomExceptions;
+    using LetsDoIt.Moody.Application.Constants;
 
     public class UserService : IUserService
     {
+        private const string EmailVerification = "Email Verification";
         private readonly IRepository<User> _userRepository;
         private readonly IMailSender _mailSender;
         private readonly string _applicationKey;
@@ -24,16 +27,22 @@ namespace LetsDoIt.Moody.Application.User
         private readonly int _emailVerificationTokenExpirationMinutes;
         private const string HtmlFilePath = @"\HtmlTemplates\EmailTokenVerification.html";
         private readonly ILogger<UserService> _logger;
+        private readonly ISecurityService _securityService;
+
 
         public UserService(
             IRepository<User> userRepository,
             string applicationKey,
+            IMailSender mailSender,
             int tokenExpirationMinutes,
-            int _emailVerificationTokenExpirationMinutes, ILogger<UserService> logger)
+            int _emailVerificationTokenExpirationMinutes, 
+            ILogger<UserService> logger,
+            ISecurityService securityService)
            
         {
             _userRepository = userRepository;
-            
+            _mailSender = mailSender;
+            _securityService = securityService;
             _applicationKey = applicationKey;
             _tokenExpirationMinutes = tokenExpirationMinutes;
            
@@ -119,16 +128,37 @@ namespace LetsDoIt.Moody.Application.User
             _logger.LogInformation($"{nameof(SaveUserAsync)} executed with username={Username}.");
         }
 
-        private static async Task<string> ReadHtmlContent()
+        public async Task SendActivationEmailAsync(string referer, string email)
         {
-            await using (FileStream fileStream =
-                new FileStream(AppDomain.CurrentDomain.BaseDirectory
-                               + HtmlFilePath,
-                    FileMode.Open))
+            var dbUser = await _userRepository.GetAsync(u => u.Email == email && !u.IsDeleted);
+
+            if (dbUser == null)
             {
-                using StreamReader streamReader = new StreamReader(fileStream, Encoding.Unicode);
-                return await streamReader.ReadToEndAsync();
+                throw new EmailNotRegisteredException(email);
             }
+
+            var token = _securityService.GenerateJwtToken(dbUser.Id.ToString(), dbUser.FullName, UserTypeConstants.Standard);
+
+            var content = await ReadHtmlContent(HtmlFilePath, referer, token.Token);
+
+            await _mailSender.SendAsync(EmailVerification, content, email);
+        }
+
+        private static async Task<string> ReadHtmlContent(string filePath, string referer, string token)
+        {
+            await using FileStream fileStream = new FileStream(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filePath), FileMode.Open);
+
+            using StreamReader streamReader = new StreamReader(fileStream, Encoding.Unicode);
+
+            var content = await streamReader.ReadToEndAsync();
+
+            var frontEndUri = new Uri(referer);
+
+            content = content.Replace("{{action_url}}",
+                frontEndUri.Scheme + "://" + frontEndUri.Host
+                          + "?token=" + token);
+
+            return content;
         }
 
         public Task ActiveUserAsync(int userId)
