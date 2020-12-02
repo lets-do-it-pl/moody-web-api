@@ -5,6 +5,6 @@ namespace LetsDoIt.Moody.Application.User
     using LetsDoIt.Moody.Persistence.Entities;
     public interface IUserService
     {
-        Task<User> GetUser(int id);
+        Task<User> GetUserAsync(int id);
     }
 }

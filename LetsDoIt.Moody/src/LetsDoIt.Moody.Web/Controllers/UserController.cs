@@ -26,12 +26,13 @@ namespace LetsDoIt.Moody.Web.Controllers
 
 
         [HttpGet("{id}")]
-        [Authorize(Roles = RoleConstants.StandardRole)]
+        //[Authorize(Roles = RoleConstants.StandardRole)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetUser(int id)
         {
             _logger.LogInformation($"{nameof(GetUser)} is started");
 
-            var userResult = await _userService.GetUser(id);
+            var userResult = await _userService.GetUserAsync(id);
 
             _logger.LogInformation($"{nameof(GetUser)} is finished successfully");
 

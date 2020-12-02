@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Data;
 using System.Net;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Web.Controllers
@@ -49,6 +50,30 @@ namespace LetsDoIt.Moody.Web.Controllers
                 _logger.LogInformation($"{nameof(SaveClient)} is finished with bad request!");
 
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("authenticate")]
+        public async Task<ActionResult<ClientTokenEntity>> Authenticate(string username, string password)
+        {
+            _logger.LogInformation(
+                $"{nameof(Authenticate)} is started with " +
+                $"username={username}," +
+                $"password={password}");
+
+            try
+            {
+                var token = await _clientService.AuthenticateAsync(username, password);
+
+                _logger.LogInformation($"{nameof(Authenticate)} is finished successfully");
+
+                return Ok(token);
+            }
+            catch (AuthenticationException)
+            {
+                _logger.LogInformation($"{nameof(Authenticate)} is finished with Bad Request!");
+
+                return BadRequest("Username or Password is wrong!");
             }
         }
     }

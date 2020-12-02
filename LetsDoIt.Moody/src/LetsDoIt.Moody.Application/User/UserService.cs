@@ -16,7 +16,7 @@ namespace LetsDoIt.Moody.Application.User
             _userRepository = userRepository;
         }
 
-        public async Task<User> GetUser(int id)
+        public async Task<User> GetUserAsync(int id)
         {
             var result = await _userRepository.SingleOrDefaultAsync(u => u.Id == id);
 
