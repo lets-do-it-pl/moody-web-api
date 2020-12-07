@@ -8,7 +8,7 @@ namespace LetsDoIt.Moody.Web.Extensions
 
     public static class DbContextConfigurationExtension
     {
-        public static void AddDbContextConfig(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddDbContextConfig(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("MoodyDBConnection");
 
@@ -16,6 +16,8 @@ namespace LetsDoIt.Moody.Web.Extensions
                 opt
                     .UseLazyLoadingProxies()
                     .UseSqlServer(connectionString));
+
+            return services;
         }
     }
 }

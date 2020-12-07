@@ -5,7 +5,7 @@ namespace LetsDoIt.Moody.Web.Extensions
 {
     public static class HealthCheckConfigurationExtension
     {
-        public static void AddHealthCheckConfig(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddHealthCheckConfig(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("MoodyDBConnection");
 
@@ -20,6 +20,8 @@ namespace LetsDoIt.Moody.Web.Extensions
                     s.AddHealthCheckEndpoint("Moody API", url);
                 })
                 .AddInMemoryStorage();
+
+            return services;
         }
     }
 }

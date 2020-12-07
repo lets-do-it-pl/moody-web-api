@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 
 namespace LetsDoIt.Moody.Web
 {
-    using Application.Options;
     using Extensions;
     using Middleware;
 
@@ -22,27 +21,18 @@ namespace LetsDoIt.Moody.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt));
-
-            services.AddAuthenticationConfig(Configuration);
-
-            services.AddAuthorizationConfig();
-
-            services.AddResponseCompression();
-
-            services.AddHealthCheckConfig(Configuration);
-
-            services.AddDbContextConfig(Configuration);
+            services.AddAuthenticationConfig(Configuration)
+                .AddAuthorizationConfig()
+                .AddResponseCompression()
+                .AddHealthCheckConfig(Configuration)
+                .AddDbContextConfig(Configuration)
+                .AddSwaggerConfig()
+                .AddMailSender()
+                .AddCustomClasses();
 
             services.AddControllers();
 
-            services.AddSwaggerConfig();
-
             services.Configure<SmtpOptions>(Configuration.GetSection(SmtpOptions.SmtpSectionName));
-
-            services.AddMailSender();
-
-            services.AddCustomClasses();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -64,9 +54,8 @@ namespace LetsDoIt.Moody.Web
 
             app.UseRouting();
 
-            app.UseAuthentication();
-
-            app.UseAuthorization();
+            app.UseAuthentication()
+                .UseAuthorization();
 
             app.UseCustomSwaggerConfig();
 

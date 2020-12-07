@@ -7,9 +7,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace LetsDoIt.Moody.Web.Extensions
 {
+    using Application.Options;
+
     public static class AuthenticationConfigurationExtension
     {
-        public static void AddAuthenticationConfig(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddAuthenticationConfig(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(x =>
                 {
@@ -33,6 +35,11 @@ namespace LetsDoIt.Moody.Web.Extensions
                         RequireExpirationTime = true
                     };
                 });
+
+            services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.Jwt));
+
+            return services;
+            
         }
     }
 }

@@ -6,7 +6,7 @@ namespace LetsDoIt.Moody.Web.Extensions
     using Entities;
     public static class AuthorizationConfigurationExtension
     {
-        public static void AddAuthorizationConfig(this IServiceCollection services)
+        public static IServiceCollection AddAuthorizationConfig(this IServiceCollection services)
         {
             services.AddAuthorization(config =>
             {
@@ -14,6 +14,8 @@ namespace LetsDoIt.Moody.Web.Extensions
                 config.AddPolicy(UserTypeConstants.Standard, Policies.StandardPolicy());
                 config.AddPolicy(UserTypeConstants.Client, Policies.ClientPolicy());
             });
+
+            return services;
         }
     }
 }

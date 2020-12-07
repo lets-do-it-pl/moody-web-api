@@ -9,7 +9,7 @@ namespace LetsDoIt.Moody.Web.Extensions
 {
     public static class SwaggerConfigurationExtension
     {
-        public static void AddSwaggerConfig(this IServiceCollection services)
+        public static IServiceCollection AddSwaggerConfig(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
@@ -41,9 +41,11 @@ namespace LetsDoIt.Moody.Web.Extensions
                 };
                 c.AddSecurityRequirement(securityRequirement);
             });
+
+            return services;
         }
 
-        public static void UseCustomSwaggerConfig(this IApplicationBuilder app)
+        public static IApplicationBuilder UseCustomSwaggerConfig(this IApplicationBuilder app)
         {
             app.UseSwagger();
 
@@ -51,9 +53,11 @@ namespace LetsDoIt.Moody.Web.Extensions
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Moody API V1");
             });
+
+            return app;
         }
 
-        public static void MapHealthChecksConfig(this IEndpointRouteBuilder endpoints)
+        public static IEndpointRouteBuilder MapHealthChecksConfig(this IEndpointRouteBuilder endpoints)
         {
             endpoints.MapHealthChecksUI();
 
@@ -62,6 +66,8 @@ namespace LetsDoIt.Moody.Web.Extensions
                 Predicate = _ => true,
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
+
+            return endpoints;
         }
     }
 }

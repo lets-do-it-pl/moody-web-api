@@ -13,7 +13,7 @@ namespace LetsDoIt.Moody.Web.Extensions
     using Persistence.Repositories.Category;
     public static class DependencyInjectionConfigurationExtension
     {
-        public static void AddCustomClasses(this IServiceCollection services)
+        public static IServiceCollection AddCustomClasses(this IServiceCollection services)
         {
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IRepository<VersionHistory>, VersionHistoryRepository>();
@@ -26,6 +26,8 @@ namespace LetsDoIt.Moody.Web.Extensions
             services.AddTransient<IClientService, ClientService>();
             services.AddSingleton<ISecurityService, SecurityService>();
             services.AddTransient<IUserService, UserService>();
+
+            return services;
         }
     }
 }
