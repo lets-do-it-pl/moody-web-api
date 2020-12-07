@@ -1,8 +1,6 @@
-using System;
-using System.Text;
+using Castle.DynamicProxy;
 using HealthChecks.UI.Client;
 using LetsDoIt.MailSender.Options;
-using LetsDoIt.Moody.Application.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,9 +11,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using System;
+using System.Text;
 
 namespace LetsDoIt.Moody.Web
 {
+    using Application.Interceptors;
+    using Application.User;
     using Application.Category;
     using Application.Client;
     using Application.Constants;
@@ -23,6 +26,8 @@ namespace LetsDoIt.Moody.Web
     using Application.Security;
     using Application.VersionHistory;
     using Entities;
+    using Extensions;
+    using Filters;
     using Middleware;
     using Persistence;
     using Persistence.Entities;
@@ -97,6 +102,14 @@ namespace LetsDoIt.Moody.Web
 
             services.AddControllers();
 
+            services.AddMvc()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                })
+                .AddMvcOptions(opt =>
+                    opt.Filters.Add<LoggingActionFilter>());
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -128,28 +141,34 @@ namespace LetsDoIt.Moody.Web
                 c.AddSecurityRequirement(securityRequirement);
             });
 
+            services.AddSingleton(new ProxyGenerator());
+            services.AddSingleton<IAsyncInterceptor, LoggingInterceptor>();
+
+            services.AddProxiedTransient<IUserService, UserService>();
+            services.AddProxiedTransient<IRepository<User>, UserRepository>();
+
+            services.AddProxiedTransient<ICategoryService, CategoryService>();
+            services.AddProxiedTransient<ICategoryRepository, CategoryRepository>();
+
+            services.AddProxiedTransient<IVersionHistoryService, VersionHistoryService>();
+            services.AddProxiedTransient<IRepository<VersionHistory>, VersionHistoryRepository>();
+
+            services.AddProxiedTransient<IClientService, ClientService>();
+            services.AddProxiedTransient<IRepository<Client>, ClientRepository>();
+
+            services.AddProxiedTransient<IRepository<CategoryDetail>, CategoryDetailsRepository>();
+
+            services.AddProxiedSingleton<ISecurityService, SecurityService>();
+
             services.Configure<SmtpOptions>(Configuration.GetSection(SmtpOptions.SmtpSectionName));
 
             services.AddMailSender();
-
-            services.AddTransient<ICategoryRepository, CategoryRepository>();
-            services.AddTransient<IRepository<VersionHistory>, VersionHistoryRepository>();
-            services.AddTransient<IRepository<Client>, ClientRepository>();
-            services.AddTransient<IRepository<User>, UserRepository>();
-            services.AddTransient<IRepository<CategoryDetail>, CategoryDetailsRepository>();
-
-            services.AddTransient<ICategoryService, CategoryService>();
-            services.AddTransient<IVersionHistoryService, VersionHistoryService>();
-            services.AddTransient<IClientService, ClientService>();
-            services.AddSingleton<ISecurityService, SecurityService>();
-            services.AddTransient<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
             IApplicationBuilder app,
-            IWebHostEnvironment env,
-            ApplicationContext context)
+            IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LetsDoIt.MailSender;
 using LetsDoIt.Moody.Infrastructure.Utils;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Scaffolding.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Application.User
@@ -18,7 +19,7 @@ namespace LetsDoIt.Moody.Application.User
 
     public class UserService : IUserService
     {
-        private const string HtmlFilePath = @"\HtmlTemplates\EmailTokenVerification.html";
+        private const string HtmlFilePath = @"HtmlTemplates\UserVerification.html";
         private const string EmailVerification = "Email Verification";
         private readonly ILogger<UserService> _logger;
         private readonly IRepository<User> _userRepository;
@@ -38,6 +39,7 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task SaveUserAsync(string username, string password, string email, string name, string surname)
         {
+
             var isUserExisted = await _userRepository.AnyAsync(u => u.Username == username && !u.IsDeleted);
 
             if (isUserExisted)
@@ -81,7 +83,7 @@ namespace LetsDoIt.Moody.Application.User
 
         private static async Task<string> ReadHtmlContent(string filePath, string referer, string token)
         {
-            await using FileStream fileStream = new FileStream(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filePath), FileMode.Open);
+            await using FileStream fileStream = new FileStream(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory , filePath)), FileMode.Open);
 
             using StreamReader streamReader = new StreamReader(fileStream, Encoding.Unicode);
 
