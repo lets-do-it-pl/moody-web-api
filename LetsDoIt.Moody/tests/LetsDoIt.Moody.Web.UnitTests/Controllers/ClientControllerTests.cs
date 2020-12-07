@@ -1,33 +1,60 @@
-﻿using Moq;
-using Xunit;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Authentication;
-using System.Data;
+﻿using System.Data;
 using System.Net;
+using System.Security.Authentication;
+using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.Client;
 using LetsDoIt.Moody.Web.Controllers;
+using LetsDoIt.Moody.Web.Entities.Requests;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Moq;
+using Xunit;
 
 namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 {
-    using Entities.Requests;
-    public class UserControllerTests
+    public class ClientControllerTests
     {
         private readonly Mock<ILogger<ClientController>> _mockLogger;
         private readonly ClientController _testing;
-        private readonly Mock<IClientService> _mockUserService;
-        public UserControllerTests()
+        private readonly Mock<IClientService> _mockClientService;
+
+        public ClientControllerTests()
         {
             _mockLogger = new Mock<ILogger<ClientController>>();
-            _mockUserService = new Mock<IClientService>();
-            _testing = new ClientController(_mockUserService.Object, _mockLogger.Object);
+            _mockClientService = new Mock<IClientService>();
+            _testing = new ClientController(_mockClientService.Object, _mockLogger.Object);
+        }
+
+        [Fact]
+        public async Task AuthenticateAsync_UserDoesNotExistsInTheDatabase_ReturnsBadRequest()
+        {
+            var username = "Test";
+            var userpassword = "12345";
+
+            _mockClientService.Setup(user =>
+                user.AuthenticateAsync(It.IsAny<string>(), It.IsAny<string>())).Throws(new AuthenticationException());
+
+            var actual = await _testing.Authenticate(username, userpassword);
+            Assert.IsType<BadRequestObjectResult>(actual.Result);
+        }
+
+        [Fact]
+        public async Task AuthenticateAsync_UserDoesExistsInTheDatabase_ReturnsOk()
+        {
+            var username = "Test";
+            var userpassword = "12345";
+
+            _mockClientService.Setup(user => user.AuthenticateAsync(username, userpassword));
+
+            var response = await _testing.Authenticate(username, userpassword);
+
+            Assert.IsType<OkObjectResult>(response.Result);
         }
 
         [Fact]
         public async Task SaveUser_WhenDuplicateNameExceptionThrown_ShouldReturnBadRequest()
         {
-            _mockUserService.Setup(x =>
+            _mockClientService.Setup(x =>
                 x.SaveClientAsync(It.IsAny<string>(), It.IsAny<string>())).Throws(new DuplicateNameException());
 
             var actual = await _testing.SaveClient(new SaveClientRequest
@@ -68,7 +95,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 
             await _testing.SaveClient(saveUserRequest);
 
-            _mockUserService.Verify(us =>
+            _mockClientService.Verify(us =>
                     us.SaveClientAsync(
                         saveUserRequest.Username,
                         saveUserRequest.Password
