@@ -1,7 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using Moq;
 using Xunit;
 using System.Threading.Tasks;
+using LetsDoIt.Moody.Application.Security;
+using LetsDoIt.Moody.Infrastructure.Utils;
+using LetsDoIt.Moody.Web.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -24,15 +30,19 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         private readonly CategoryInsertRequest _request;
         private readonly byte[] image = { 12, 45, 65, 34, 78, 89 };
         private readonly Mock<ICategoryService> _mockCategoryService;
+        private readonly Mock<UserInfo> _mockUserInfo;
         private readonly Mock<ILogger<CategoryController>> _mockLogger;
 
         #region SetUp & Helpers
 
-        public CategoryControllerTests()
+        public CategoryControllerTests( )
         {
             _mockCategoryService = new Mock<ICategoryService>();
 
+            _mockUserInfo = new Mock<UserInfo>();
+
             _mockLogger = new Mock<ILogger<CategoryController>>();
+
 
             _testing = new CategoryController(_mockCategoryService.Object, _mockLogger.Object);
 
@@ -96,50 +106,15 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         #endregion
 
         [Fact]
-        public async Task GIVEN_ThereIsAnUpdateRequestWithoutName_WHEN_UpdatingACategory_THEN_ShouldGetBadRequest()
-        {
-            //Arrange         
-            var request = GetCategoryUpdateRequest(name: null);
-
-            //Act
-            var actual = await _testing.Update(default, request);
-
-            //Assert
-            Assert.IsType<BadRequestResult>(actual);
-        }
-
-        [Fact]
-        public async Task GIVEN_ThereIsAnUpdateRequestWithoutImage_WHEN_UpdatingACategory_THEN_ShouldGetBadRequest()
-        {
-            //Arrange
-            var request = GetCategoryUpdateRequest(image: null);
-
-            //Act
-            var actual = await _testing.Update(default, request);
-
-            //Assert
-            Assert.IsType<BadRequestResult>(actual);
-        }
-
-        [Fact]
-        public async Task GIVEN_ThereIsNoUpdateRequest_WHEN_UpdatingACategory_THEN_ShouldGetBadRequest()
-        {
-            //Arrange
-            var request = GetCategoryUpdateRequest(isNull: true);
-
-            //Act
-            var actual = await _testing.Update(default, request);
-
-            //Assert
-            Assert.IsType<BadRequestResult>(actual);
-        }
-
-        [Fact]
         public async Task GIVEN_ThereIsAnUpdateRequest_WHEN_UpdatingACategory_THEN_ShouldReturnOkResultAndCallServiceOnce()
         {
             //Arrange
             var categoryId = 1;
+            var userId = 5;
             var request = GetCategoryUpdateRequest();
+
+            _mockUserInfo.Setup(ui=>ui.)
+            
 
             //Act
             var actual = await _testing.Update(categoryId, request);
@@ -147,83 +122,84 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             //Assert
             Assert.IsType<OkResult>(actual);
 
-            //_mockCategoryService
-            //    .Verify(service =>
-            //        service.UpdateAsync(
-            //            categoryId,
-            //            request.Name,
-            //            request.Order,
-            //            request.Image),
-            //        Times.Once);
+            _mockCategoryService
+                .Verify(service =>
+                    service.UpdateAsync(
+                        categoryId,
+                        request.Name,
+                        request.Order,
+                        request.Image,
+                        userId),
+                    Times.Once);
         }
 
-        [Fact]
-        public async Task GIVEN_ThereIsAnUpdateRequestNotInTheDatabase_WHEN_UpdatingACategory_THEN_ShoudReturnNotFound()
-        {
-            //Arrange
-            var request = GetCategoryUpdateRequest();
-            //_mockCategoryService
-            //    .Setup(service =>
-            //        service.UpdateAsync(
-            //                    It.IsAny<int>(),
-            //                    It.IsAny<string>(),
-            //                    It.IsAny<int>(),
-            //                    It.IsAny<byte[]>()))
-            //    .Throws(new ObjectNotFoundException(""));
+        //[Fact]
+        //public async Task GIVEN_ThereIsAnUpdateRequestNotInTheDatabase_WHEN_UpdatingACategory_THEN_ShoudReturnNotFound()
+        //{
+        //    //Arrange
+        //    var request = GetCategoryUpdateRequest();
+        //    //_mockCategoryService
+        //    //    .Setup(service =>
+        //    //        service.UpdateAsync(
+        //    //                    It.IsAny<int>(),
+        //    //                    It.IsAny<string>(),
+        //    //                    It.IsAny<int>(),
+        //    //                    It.IsAny<byte[]>()))
+        //    //    .Throws(new ObjectNotFoundException(""));
 
-            //Act
-            var actual = await _testing.Update(default, request);
+        //    //Act
+        //    var actual = await _testing.UserHelper.Update(default, request);
 
-            //Assert
-            Assert.IsType<NotFoundObjectResult>(actual);
-        }
+        //    //Assert
+        //    Assert.IsType<NotFoundObjectResult>(actual);
+        //}
 
-        [Fact]
-        public async Task GIVEN_ThereIsAnUpdateRequestAndExceptionInService_WHEN_UpdatingACategory_THEN_ShouldThrowAnException()
-        {
-            //Arrange
-            var request = GetCategoryUpdateRequest();
-            //_mockCategoryService
-            //    .Setup(service =>
-            //        service.UpdateAsync(
-            //                    It.IsAny<int>(),
-            //                    It.IsAny<string>(),
-            //                    It.IsAny<int>(),
-            //                    It.IsAny<byte[]>()))
-            //    .Throws<Exception>();
+        //[Fact]
+        //public async Task GIVEN_ThereIsAnUpdateRequestAndExceptionInService_WHEN_UpdatingACategory_THEN_ShouldThrowAnException()
+        //{
+        //    //Arrange
+        //    var request = GetCategoryUpdateRequest();
+        //    //_mockCategoryService
+        //    //    .Setup(service =>
+        //    //        service.UpdateAsync(
+        //    //                    It.IsAny<int>(),
+        //    //                    It.IsAny<string>(),
+        //    //                    It.IsAny<int>(),
+        //    //                    It.IsAny<byte[]>()))
+        //    //    .Throws<Exception>();
 
-            //Act & Assert
-            await Assert.ThrowsAsync<Exception>(() => _testing.Update(default, request));
-        }
+        //    //Act & Assert
+        //    await Assert.ThrowsAsync<Exception>(() => _testing.UserHelper.Update(default, request));
+        //}
 
-        [Fact]
-        public async Task GIVEN_ThereIsAnEmptyInsertRequest_THEN_ShouldGetBadRequest()
-        {
-            CategoryInsertRequest insertRequest = null;
+        //[Fact]
+        //public async Task GIVEN_ThereIsAnEmptyInsertRequest_THEN_ShouldGetBadRequest()
+        //{
+        //    CategoryInsertRequest insertRequest = null;
 
-            //Act
-            var actual = await _testing.Insert(insertRequest);
+        //    //Act
+        //    var actual = await _testing.UserHelper.Insert(insertRequest);
 
-            //Assert
-            Assert.IsType<BadRequestResult>(actual);
-        }
+        //    //Assert
+        //    Assert.IsType<BadRequestResult>(actual);
+        //}
 
-        [Fact]
-        public async Task GIVEN_ThereIsAnInsertRequest_WHEN_InsertingACategory_THEN_ShouldReturnOkResultAndCallServiceOnce()
-        {
-            //Arrange
-            var actual = await _testing.Insert(_request);
+        //[Fact]
+        //public async Task GIVEN_ThereIsAnInsertRequest_WHEN_InsertingACategory_THEN_ShouldReturnOkResultAndCallServiceOnce()
+        //{
+        //    //Arrange
+        //    var actual = await _testing.UserHelper.Insert(_request);
 
-            //Assert
-            //_mockCategoryService
-            //    .Verify(service =>
-            //            service.InsertAsync(
-            //                _request.Name,
-            //                _request.Order,
-            //                _byteImage)
-            //        );
-            Assert.IsType<OkResult>(actual);
-        }
+        //    //Assert
+        //    //_mockCategoryService
+        //    //    .Verify(service =>
+        //    //            service.InsertAsync(
+        //    //                _request.Name,
+        //    //                _request.Order,
+        //    //                _byteImage)
+        //    //        );
+        //    Assert.IsType<OkResult>(actual);
+        //}
 
         //[Fact]
         //public async Task InsertCategoryDetails_NullInsertRequest_ShouldReturnBadRequest()
