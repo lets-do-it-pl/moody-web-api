@@ -32,10 +32,7 @@ namespace LetsDoIt.Moody.Application.User
 
         public UserService(
             IRepository<User> userRepository,
-            string applicationKey,
             IMailSender mailSender,
-            int tokenExpirationMinutes,
-            int _emailVerificationTokenExpirationMinutes, 
             ILogger<UserService> logger,
             ISecurityService securityService)
            
@@ -43,8 +40,7 @@ namespace LetsDoIt.Moody.Application.User
             _userRepository = userRepository;
             _mailSender = mailSender;
             _securityService = securityService;
-            _applicationKey = applicationKey;
-            _tokenExpirationMinutes = tokenExpirationMinutes;
+            
            
         }
 

@@ -21,6 +21,8 @@ namespace LetsDoIt.Moody.Web
     using Application.Security;
     using Application.VersionHistory;
     using Entities;
+    using LetsDoIt.MailSender.Options;
+    using LetsDoIt.Moody.Application.User;
     using Middleware;
     using Persistence;
     using Persistence.Entities;
@@ -41,6 +43,7 @@ namespace LetsDoIt.Moody.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt));
+            services.Configure<SmtpOptions>(Configuration.GetSection(SmtpOptions.SmtpSectionName));
 
             services.AddAuthentication(x =>
                 {
@@ -73,6 +76,7 @@ namespace LetsDoIt.Moody.Web
             });
 
             services.AddResponseCompression();
+            services.AddMailSender();
 
             var connectionString = Configuration.GetConnectionString("MoodyDBConnection");
 
@@ -92,7 +96,7 @@ namespace LetsDoIt.Moody.Web
                 opt
                     .UseLazyLoadingProxies()
                     .UseSqlServer(connectionString));
-
+            
             services.AddControllers();
 
             var FrontendUrl = Configuration.GetValue<string>("FrontendUrl");
@@ -107,6 +111,7 @@ namespace LetsDoIt.Moody.Web
                                             .AllowAnyMethod();
                     });
             });
+
 
             services.AddSwaggerGen(c =>
             {
@@ -148,6 +153,7 @@ namespace LetsDoIt.Moody.Web
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
             services.AddTransient<IClientService, ClientService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddSingleton<ISecurityService, SecurityService>();
         }
 

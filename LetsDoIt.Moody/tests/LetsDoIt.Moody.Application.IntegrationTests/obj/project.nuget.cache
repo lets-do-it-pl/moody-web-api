@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "9MfeTRYrThYW9KarFQt+VJeKC8HPSEtsB5oyqGnZmv2zzDNL5JCYqJ19taeVMriiBAtFNXAsZQviMTM8NCquAg==",
+  "dgSpecHash": "Of8G0W4WsVoZKszLnB1chUK8NB+6rsn+SiUq6nP6suiNK958H9WDjEJJXpBM0nrY03kStPU+bxQTA1SpLzfPoA==",
   "success": true,
   "projectFilePath": "C:\\Users\\elifd\\source\\repos\\VisualStudioRepo\\MoodyApp\\LetsDoIt.Moody\\tests\\LetsDoIt.Moody.Application.IntegrationTests\\LetsDoIt.Moody.Application.IntegrationTests.csproj",
   "expectedPackageFiles": [

@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[3.2.3, )"
             },
+            "LetsDoIt.MailSender": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
             "Microsoft.AspNetCore.Diagnostics.HealthChecks": {
               "target": "Package",
               "version": "[2.2.0, )"

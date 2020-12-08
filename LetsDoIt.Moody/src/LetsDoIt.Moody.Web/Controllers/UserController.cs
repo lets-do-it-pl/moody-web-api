@@ -25,7 +25,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
     [Route("api/user")]
     [ApiController]
-    [Authorize(Roles = RoleConstants.AdminRole)]
+  //  [Authorize(Roles = RoleConstants.AdminRole)]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;

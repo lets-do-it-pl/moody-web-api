@@ -2943,6 +2943,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
+          "LetsDoIt.MailSender": "1.0.1",
           "Microsoft.AspNetCore.Cryptography.KeyDerivation": "3.1.8",
           "Microsoft.AspNetCore.Diagnostics.HealthChecks": "2.2.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.8"
@@ -2960,6 +2961,7 @@
         "dependencies": {
           "Bricelam.EntityFrameworkCore.Pluralizer": "1.0.0",
           "EFCore.BulkExtensions": "3.2.3",
+          "LetsDoIt.MailSender": "1.0.1",
           "Microsoft.AspNetCore.Diagnostics.HealthChecks": "2.2.0",
           "Microsoft.EntityFrameworkCore": "3.1.8",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.8"
@@ -9284,6 +9286,7 @@
       "AspNetCore.HealthChecks.UI.Client >= 3.1.2",
       "AspNetCore.HealthChecks.UI.Core >= 3.1.3",
       "AspNetCore.HealthChecks.UI.InMemory.Storage >= 3.1.2",
+      "LetsDoIt.MailSender >= 1.0.1",
       "LetsDoIt.Moody.Application >= 1.0.0",
       "LetsDoIt.Moody.Infrastructure >= 1.0.0",
       "LetsDoIt.Moody.Persistence >= 1.0.0",
@@ -9366,6 +9369,10 @@
           "AspNetCore.HealthChecks.UI.InMemory.Storage": {
             "target": "Package",
             "version": "[3.1.2, )"
+          },
+          "LetsDoIt.MailSender": {
+            "target": "Package",
+            "version": "[1.0.1, )"
           },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",

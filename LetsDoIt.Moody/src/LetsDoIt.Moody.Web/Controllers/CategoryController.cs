@@ -234,7 +234,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             return result;
         }
 
-        private static CategoryEntity ToCategoryEntity(Category c)
+        private static CategoryEntity ToCategoryEntity(Persistence.Entities.Category c)
         {
             var result = new CategoryEntity
             {
@@ -252,7 +252,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             return result;
         }
 
-        private static CategoryDetailsEntity ToCategoryDetailsEntity(CategoryDetail c) => new CategoryDetailsEntity
+        private static CategoryDetailsEntity ToCategoryDetailsEntity(Persistence.Entities.CategoryDetail c) => new CategoryDetailsEntity
         {
             Id = c.Id,
             Image = c.Image,

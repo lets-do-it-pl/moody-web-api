@@ -135,6 +135,10 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "LetsDoIt.MailSender": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
             "Microsoft.AspNetCore.Cryptography.KeyDerivation": {
               "target": "Package",
               "version": "[3.1.8, )"
@@ -215,6 +219,10 @@
             "EFCore.BulkExtensions": {
               "target": "Package",
               "version": "[3.2.3, )"
+            },
+            "LetsDoIt.MailSender": {
+              "target": "Package",
+              "version": "[1.0.1, )"
             },
             "Microsoft.AspNetCore.Diagnostics.HealthChecks": {
               "target": "Package",
@@ -318,6 +326,10 @@
             "AspNetCore.HealthChecks.UI.InMemory.Storage": {
               "target": "Package",
               "version": "[3.1.2, )"
+            },
+            "LetsDoIt.MailSender": {
+              "target": "Package",
+              "version": "[1.0.1, )"
             },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",

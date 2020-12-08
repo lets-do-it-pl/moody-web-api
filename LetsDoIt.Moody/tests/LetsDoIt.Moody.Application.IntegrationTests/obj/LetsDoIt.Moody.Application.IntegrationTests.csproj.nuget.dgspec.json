@@ -135,6 +135,10 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "LetsDoIt.MailSender": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
             "Microsoft.AspNetCore.Cryptography.KeyDerivation": {
               "target": "Package",
               "version": "[3.1.8, )"
@@ -216,6 +220,10 @@
               "target": "Package",
               "version": "[3.2.3, )"
             },
+            "LetsDoIt.MailSender": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
             "Microsoft.AspNetCore.Diagnostics.HealthChecks": {
               "target": "Package",
               "version": "[2.2.0, )"
@@ -296,6 +304,10 @@
             "FluentAssertions": {
               "target": "Package",
               "version": "[5.10.3, )"
+            },
+            "LetsDoIt.MailSender": {
+              "target": "Package",
+              "version": "[1.0.1, )"
             },
             "LiquidTestReports.Markdown": {
               "target": "Package",

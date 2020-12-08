@@ -27,7 +27,7 @@ namespace LetsDoIt.Moody.Persistence
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Moody;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=tcp:letsdoit-moody-webdbserver.database.windows.net,1433;Initial Catalog=LetsDoIt.Moody.Web_db;Persist Security Info=False;User ID=moodyAdmin;Password=Polska123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 
@@ -38,7 +38,7 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("Category");
 
                 entity.HasIndex(e => e.Order)
-                    .HasName("UQ__Category__67A3D86C27271819")
+                    .HasName("UQ__Category__67A3D86CFE359D36")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
@@ -62,7 +62,7 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("CategoryDetail");
 
                 entity.HasIndex(e => e.Order)
-                    .HasName("UQ__Category__67A3D86CE9B2570B")
+                    .HasName("UQ__Category__67A3D86CDC487410")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
