@@ -217,7 +217,7 @@
 //        [Fact]
 //        public async Task InsertCategoryDetailsAsync_NoException_ShouldInvokeRepositoryAddAsyncAndInvokeVersion()
 //        {
-//            var categoryId = 1;            
+//            var categoryId = 1;
 //            var order = 5;
 //            var image = "cGxlYXN1cmUu";
 

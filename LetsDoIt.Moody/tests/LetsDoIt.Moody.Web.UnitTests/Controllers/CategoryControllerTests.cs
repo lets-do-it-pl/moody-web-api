@@ -113,7 +113,6 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             var userId = 5;
             var request = GetCategoryUpdateRequest();
 
-            _mockUserInfo.Setup(ui=>ui.)
             
 
             //Act
