@@ -8,8 +8,6 @@ using LetsDoIt.Moody.Web.Entities;
 using LetsDoIt.Moody.Web.Entities.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -22,14 +20,10 @@ namespace LetsDoIt.Moody.Web.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ILogger<UserController> _logger;
 
-        public UserController(
-            IUserService userService,
-            ILogger<UserController> logger)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _logger = logger;
         }
 
         [HttpPost]
@@ -37,9 +31,6 @@ namespace LetsDoIt.Moody.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> SaveUser(SaveUserRequest saveUserRequest)
         {
-            _logger.LogInformation(
-                $"{nameof(SaveUser)} is started with " +
-                $"save request = {JsonConvert.SerializeObject(saveUserRequest)}");
 
             try
             {
@@ -49,13 +40,10 @@ namespace LetsDoIt.Moody.Web.Controllers
                     saveUserRequest.Name,
                     saveUserRequest.Surname);
 
-                _logger.LogInformation($"{nameof(SaveUser)} is finished successfully");
-
                 return StatusCode((int)HttpStatusCode.Created, "Created");
             }
             catch (DuplicateNameException ex)
             {
-                _logger.LogInformation($"{nameof(SaveUser)} is finished with bad request!");
 
                 return BadRequest(ex.Message);
             }
@@ -66,9 +54,6 @@ namespace LetsDoIt.Moody.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> SendUserVerificationEmail(string email)
         {
-            _logger.LogInformation(
-                $"{nameof(SendUserVerificationEmail)} is started with " +
-                $"email = {email}");
 
             var referer = Request.Headers["Referer"].ToString();
 
@@ -76,14 +61,10 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 await _userService.SendActivationEmailAsync(referer, email);
 
-                _logger.LogInformation($"{nameof(SendUserVerificationEmail)} is finished successfully");
-
                 return Ok();
             }
             catch (EmailNotRegisteredException exception)
             {
-                _logger.LogInformation($"{nameof(SendUserVerificationEmail)} is finished with bad request!");
-
                 return BadRequest(exception.Message);
             }
         }
@@ -92,22 +73,16 @@ namespace LetsDoIt.Moody.Web.Controllers
         [Route("email/verification")]
         public async Task<IActionResult> ActivateUser()
         {
-            _logger.LogInformation(
-                $"{nameof(ActivateUser)} is started");
-
             try
             {
                 await _userService.ActivateUserAsync(GetUserInfo().UserId);
-                _logger.LogInformation($"{nameof(ActivateUser)} is finished successfully");
+                
                 return Ok();
             }
             catch (UserNotFoundException e)
             {
-                _logger.LogInformation($"{nameof(ActivateUser)} is finished with bad request!");
-
                 return BadRequest(e.Message);
             }
-
         }
 
         private UserInfo GetUserInfo()

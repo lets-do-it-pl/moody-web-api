@@ -37,6 +37,7 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task SaveUserAsync(string username, string password, string email, string name, string surname)
         {
+
             var isUserExisted = await _userRepository.AnyAsync(u => u.Username == username || u.Email == email
                                                                     && !u.IsDeleted);
 
@@ -81,7 +82,7 @@ namespace LetsDoIt.Moody.Application.User
 
         private static async Task<string> ReadHtmlContent(string filePath, string referer, string token)
         {
-            await using FileStream fileStream = new FileStream(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filePath), FileMode.Open);
+            await using FileStream fileStream = new FileStream(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory , filePath)), FileMode.Open);
 
             using StreamReader streamReader = new StreamReader(fileStream, Encoding.Unicode);
 
