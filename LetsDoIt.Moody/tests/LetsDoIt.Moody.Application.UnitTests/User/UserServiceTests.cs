@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using LetsDoIt.MailSender;
-using LetsDoIt.Moody.Application.CustomExceptions;
-using LetsDoIt.Moody.Application.Options;
+﻿using LetsDoIt.MailSender;
 using LetsDoIt.Moody.Application.Security;
 using LetsDoIt.Moody.Application.User;
-using LetsDoIt.Moody.Infrastructure.Utils;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using MockQueryable.Moq;
 using Moq;
-using Org.BouncyCastle.Asn1.Cms;
+using System.Data;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace LetsDoIt.Moody.Application.UnitTests.User
 {
+    using CustomExceptions;
+    using Infrastructure.Utils;
     using Persistence.Repositories.Base;
     using Persistence.Entities;
 
@@ -37,6 +29,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             _testing = new UserService(_mockUserRepository.Object, _mockMailSender.Object, _mockSecurityService.Object);
         }
 
+        #region SaveUserAsync
+
         [Fact]
         public async Task SaveUserAsync_ShouldCallUserRepositoryWithGivenParameters()
         {
@@ -51,8 +45,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             _mockUserRepository.Verify(ur => ur.AddAsync(It.Is<User>(u => u.Username == username &&
                                                                          u.Password == ProtectionHelper.EncryptValue(username + password) &&
                                                                          u.Email == email &&
-                                                                         u.FullName == name + " " + surname))
-                , Times.Once);
+                                                                         u.FullName == name + " " + surname)), Times.Once);
         }
 
         [Fact]
@@ -72,6 +65,9 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
 
             await Assert.ThrowsAsync<DuplicateNameException>(Test);
         }
+        #endregion
+
+        #region SendActivationEmailAsync
 
         [Fact]
         public async Task SendActivationEmailAsync_ShouldThrowEmailNotRegisteredException_WhenEmailNotRegistered()
@@ -108,6 +104,9 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
 
             _mockMailSender.Verify(ms => ms.SendAsync(It.IsAny<string>(), It.IsAny<string>(), email), Times.Once);
         }
+        #endregion
+
+        #region ActivateUserAsync
 
         [Fact]
         public async Task ActivateUserAsync_ShouldActivateUserAndUpdateUserByCallingUserRepository()
@@ -123,31 +122,20 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             await _testing.ActivateUserAsync(id);
 
 
-            _mockUserRepository.Verify(ur=>ur.UpdateAsync(It.Is<User>(u=>u.Id==id && u.IsActive)),Times.Once);
+            _mockUserRepository.Verify(ur => ur.UpdateAsync(It.Is<User>(u => u.Id == id && u.IsActive)), Times.Once);
         }
 
         [Fact]
         public async Task ActivateUserAsync_ShouldThrowUserNotFoundException_WhenUserNotRegistered()
         {
-            var email = "good.email";
+            var id = 1;
 
-            _mockUserRepository.Setup(ur => ur.GetAsync(u => u.Email == email && !u.IsDeleted)).ReturnsAsync(new User
-            {
-                Id = 1,
-                FullName = "Full Name"
-            });
+            _mockUserRepository.Setup(ur => ur.GetAsync(u => u.Id == id && !u.IsDeleted)).ReturnsAsync((User) null);
 
-            _mockSecurityService.Setup(ss => ss.GenerateJwtToken(It.IsAny<string>(),
-                It.IsAny<string>(), It.IsAny<string>())).Returns(new TokenInfo
-                {
-                    Token = "good.token"
-                });
+             async Task Test() => await _testing.ActivateUserAsync(id);
 
-            await _testing.SendActivationEmailAsync("https://developer.mozilla.org/en-US/docs/Web/JavaScript", email);
-
-            _mockSecurityService.Verify(ss => ss.GenerateJwtToken("1", "Full Name", It.IsAny<string>()), Times.Once);
-
-            _mockMailSender.Verify(ms => ms.SendAsync(It.IsAny<string>(), It.IsAny<string>(), email), Times.Once);
+            await Assert.ThrowsAsync<UserNotFoundException>(Test);
         }
+        #endregion
     }
 }
