@@ -21,6 +21,8 @@ namespace LetsDoIt.Moody.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var webUrl = Configuration.GetValue<string>("WebUrl");
+
             services.AddAuthenticationConfig(Configuration)
                 .AddAuthorizationConfig()
                 .AddResponseCompression()
@@ -33,6 +35,14 @@ namespace LetsDoIt.Moody.Web
             services.AddControllers();
 
             services.Configure<SmtpOptions>(Configuration.GetSection(SmtpOptions.SmtpSectionName));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AnotherPolicy",
+                    builder => {
+                        builder.WithOrigins(webUrl).AllowAnyOrigin();
+                    });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -53,6 +63,8 @@ namespace LetsDoIt.Moody.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors(options => options.AllowAnyOrigin());
 
             app.UseAuthentication()
                 .UseAuthorization();
