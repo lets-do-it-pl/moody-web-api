@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using LetsDoIt.MailSender;
 using LetsDoIt.Moody.Infrastructure.Utils;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Application.User

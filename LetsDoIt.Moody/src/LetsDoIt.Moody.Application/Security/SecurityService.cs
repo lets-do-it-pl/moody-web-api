@@ -3,12 +3,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using LetsDoIt.Moody.Application.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LetsDoIt.Moody.Application.Security
 {
+    using Options;
+
     public class SecurityService : ISecurityService
     {
         private readonly JwtOptions _jwtOptions;
