@@ -97,7 +97,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             try
             {
-                await _userService.ActivateUser(GetUserInfo().UserId);
+                await _userService.ActivateUserAsync(GetUserInfo().UserId);
                 _logger.LogInformation($"{nameof(ActivateUser)} is finished successfully");
                 return Ok();
             }
