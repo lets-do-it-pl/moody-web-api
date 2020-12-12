@@ -1,16 +1,17 @@
-﻿using System;
+﻿using LetsDoIt.Moody.Application.Security;
+using Microsoft.Extensions.Options;
+using Moq;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using LetsDoIt.Moody.Application.Constants;
-using LetsDoIt.Moody.Application.Options;
-using LetsDoIt.Moody.Application.Security;
-using Microsoft.Extensions.Options;
-using Moq;
 using Xunit;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Security
 {
+    using Constants;
+    using Options;
+
     public class SecurityServiceTests
     {
         private readonly ISecurityService _testing;
