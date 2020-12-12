@@ -93,5 +93,14 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             return new UserInfo(userId, fullName);
         }
+
+        [HttpGet("{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetUser(int id)
+        {
+            var userResult = await _userService.GetUserAsync(id);
+
+            return Ok(userResult);
+        }
     }
 }

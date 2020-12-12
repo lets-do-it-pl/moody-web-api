@@ -48,6 +48,13 @@ namespace LetsDoIt.Moody.Application.User
             await _userRepository.AddAsync(ToUser(username, password, name, surname, email));
         }
 
+        public async Task<User> GetUserAsync(int id)
+        {
+            var result = await _userRepository.SingleOrDefaultAsync(u => u.Id == id);
+
+            return result;
+        }
+
         public async Task SendActivationEmailAsync(string referer, string email)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Email == email && !u.IsDeleted);
