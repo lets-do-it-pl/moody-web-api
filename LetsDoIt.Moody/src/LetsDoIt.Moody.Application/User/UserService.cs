@@ -1,21 +1,19 @@
-﻿using System;
+﻿using LetsDoIt.MailSender;
+using LetsDoIt.Moody.Infrastructure.Utils;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Data;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using LetsDoIt.MailSender;
-using LetsDoIt.Moody.Infrastructure.Utils;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Scaffolding.Internal;
-using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Application.User
 {
     using Constants;
     using CustomExceptions;
-    using Security;
     using Persistence.Entities;
     using Persistence.Repositories.Base;
+    using Security;
 
     public class UserService : IUserService
     {
