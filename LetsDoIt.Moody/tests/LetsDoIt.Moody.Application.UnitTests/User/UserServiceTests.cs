@@ -30,12 +30,11 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
 
         public UserServiceTests()
         {
-            var mockLogger = new Mock<ILogger<UserService>>();
             _mockUserRepository = new Mock<IRepository<User>>();
             _mockMailSender = new Mock<IMailSender>();
             _mockSecurityService = new Mock<ISecurityService>();
 
-            _testing = new UserService(mockLogger.Object, _mockUserRepository.Object, _mockMailSender.Object, _mockSecurityService.Object);
+            _testing = new UserService(_mockUserRepository.Object, _mockMailSender.Object, _mockSecurityService.Object);
         }
 
         [Fact]

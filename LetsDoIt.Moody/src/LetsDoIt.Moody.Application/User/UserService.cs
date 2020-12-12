@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using LetsDoIt.MailSender;
 using LetsDoIt.Moody.Infrastructure.Utils;
-using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -19,17 +18,14 @@ namespace LetsDoIt.Moody.Application.User
     {
         private const string HtmlFilePath = @"HtmlTemplates\UserVerification.html";
         private const string EmailVerification = "Email Verification";
-        private readonly ILogger<UserService> _logger;
         private readonly IRepository<User> _userRepository;
         private readonly IMailSender _mailSender;
         private readonly ISecurityService _securityService;
 
-        public UserService(ILogger<UserService> logger,
-            IRepository<User> userRepository,
+        public UserService(IRepository<User> userRepository,
             IMailSender mailSender,
             ISecurityService securityService)
         {
-            _logger = logger;
             _userRepository = userRepository;
             _mailSender = mailSender;
             _securityService = securityService;

@@ -14,14 +14,12 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
     using Entities.Requests;
     public class UserControllerTests
     {
-        private readonly Mock<ILogger<ClientController>> _mockLogger;
         private readonly ClientController _testing;
         private readonly Mock<IClientService> _mockUserService;
         public UserControllerTests()
         {
-            _mockLogger = new Mock<ILogger<ClientController>>();
             _mockUserService = new Mock<IClientService>();
-            _testing = new ClientController(_mockUserService.Object, _mockLogger.Object);
+            _testing = new ClientController(_mockUserService.Object);
         }
 
         [Fact]

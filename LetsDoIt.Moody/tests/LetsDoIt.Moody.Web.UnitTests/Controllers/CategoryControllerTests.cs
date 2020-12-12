@@ -31,7 +31,6 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         private readonly byte[] image = { 12, 45, 65, 34, 78, 89 };
         private readonly Mock<ICategoryService> _mockCategoryService;
         private readonly Mock<UserInfo> _mockUserInfo;
-        private readonly Mock<ILogger<CategoryController>> _mockLogger;
 
         #region SetUp & Helpers
 
@@ -41,10 +40,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 
             _mockUserInfo = new Mock<UserInfo>();
 
-            _mockLogger = new Mock<ILogger<CategoryController>>();
-
-
-            _testing = new CategoryController(_mockCategoryService.Object, _mockLogger.Object);
+            _testing = new CategoryController(_mockCategoryService.Object);
 
             _updateRequstWithoutImage = new CategoryDetailsUpdateRequest
             {
