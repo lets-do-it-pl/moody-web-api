@@ -1,8 +1,10 @@
-﻿using LetsDoIt.MailSender;
+﻿using System;
+using LetsDoIt.MailSender;
 using LetsDoIt.Moody.Application.Security;
 using LetsDoIt.Moody.Application.User;
 using Moq;
 using System.Data;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -57,9 +59,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             var name = "good.name";
             var surname = "good.surname";
 
-            _mockUserRepository.Setup(repo => repo.AnyAsync(u => u.Username == username
-                                                                 || u.Email == email
-                                                                 && !u.IsDeleted)).ReturnsAsync(true);
+            _mockUserRepository.Setup(repo => repo.AnyAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync(true);
 
             async Task Test() => await _testing.SaveUserAsync(username, password, email, name, surname);
 
@@ -74,7 +74,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
         {
             var email = "bad.email";
 
-            _mockUserRepository.Setup(ur => ur.GetAsync(u => u.Email == email && !u.IsDeleted)).ReturnsAsync((User)null);
+            _mockUserRepository.Setup(ur => ur.GetAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync((User)null);
 
             async Task Test() => await _testing.SendActivationEmailAsync("good.referer", email);
 
@@ -86,7 +86,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
         {
             var email = "good.email";
 
-            _mockUserRepository.Setup(ur => ur.GetAsync(u => u.Email == email && !u.IsDeleted)).ReturnsAsync(new User
+            _mockUserRepository.Setup(ur => ur.GetAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync(new User
             {
                 Id = 1,
                 FullName = "Full Name"
@@ -114,7 +114,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             var id = 1;
 
             _mockUserRepository.Setup(ur =>
-                ur.GetAsync(u => u.Id == id && !u.IsDeleted)).ReturnsAsync(new User
+                ur.GetAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync(new User
                 {
                     Id = id
                 });
@@ -130,7 +130,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
         {
             var id = 1;
 
-            _mockUserRepository.Setup(ur => ur.GetAsync(u => u.Id == id && !u.IsDeleted)).ReturnsAsync((User) null);
+            _mockUserRepository.Setup(ur => ur.GetAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync((User) null);
 
              async Task Test() => await _testing.ActivateUserAsync(id);
 
