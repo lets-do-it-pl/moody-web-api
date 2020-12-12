@@ -1,14 +1,14 @@
-﻿using System;
+﻿using LetsDoIt.Moody.Application.VersionHistory;
+using MockQueryable.Moq;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MockQueryable.Moq;
-using Moq;
 using Xunit;
 
 namespace LetsDoIt.Moody.Application.UnitTests.VersionHistory
 {
-    using LetsDoIt.Moody.Application.VersionHistory;
     using Persistence.Repositories.Base;
     using Persistence.Entities;
 
