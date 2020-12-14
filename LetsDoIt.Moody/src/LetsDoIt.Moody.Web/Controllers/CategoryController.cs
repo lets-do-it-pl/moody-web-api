@@ -34,10 +34,10 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpGet, Route("/list-detail/{versionNumber?}")]
-        [Authorize(Roles = RoleConstants.ClientRole)]
-        public async Task<ActionResult<CategoryResponse>> GetCategories(string versionNumber = null)
+        //[Authorize(Roles = RoleConstants.ClientRole)]
+        public async Task<ActionResult<CategoryResponse>> GetCategoriesWithDetails(string versionNumber = null)
         {
-            _logger.LogInformation($"{nameof(GetCategories)} is started with version number = {versionNumber}");
+            _logger.LogInformation($"{nameof(GetCategoriesWithDetails)} is started with version number = {versionNumber}");
 
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
 
@@ -48,7 +48,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 return NoContent();
             }
 
-            _logger.LogInformation($"{nameof(GetCategories)} is finished successfully");
+            _logger.LogInformation($"{nameof(GetCategoriesWithDetails)} is finished successfully");
 
             return ToCategoryResponse(categoryResult);
         }
@@ -66,12 +66,13 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             _logger.LogInformation($"{nameof(GetCategories)} is finished successfully");
 
-            return categoryResult.Categories.Select(c => new Entities.Responses.CategoryEntity {
+            return categoryResult.Categories.Select(c => new Entities.Responses.CategoryEntity
+            {
                 Id = c.Id,
                 Name = c.Name,
                 Image = c.Image,
                 Order = c.Order
-            });
+            }).OrderBy(c => c.Order);
         }
 
         [HttpGet, Route("/{categoryId}/details")]
@@ -110,8 +111,9 @@ namespace LetsDoIt.Moody.Web.Controllers
             await _categoryService.InsertAsync(
                 insertRequest.Name,
                 insertRequest.Order,
-                byteImage,
-                GetUserInfo().UserId);
+                byteImage
+                //,GetUserInfo().UserId
+                );
 
             _logger.LogInformation($"{nameof(Insert)} is finished successfully");
 
@@ -135,8 +137,9 @@ namespace LetsDoIt.Moody.Web.Controllers
             await _categoryService.InsertCategoryDetailsAsync(
                 categoryId,
                 insertRequest.Order,
-                insertRequest.Image,
-                GetUserInfo().UserId);
+                insertRequest.Image
+                //,GetUserInfo().UserId
+                );
 
             _logger.LogInformation($"{nameof(InsertCategoryDetails)} is finished successfully");
 
@@ -161,8 +164,9 @@ namespace LetsDoIt.Moody.Web.Controllers
                     categoryId,
                     updateRequest.Name,
                     updateRequest.Order,
-                    updateRequest.Image,
-                    GetUserInfo().UserId);
+                    updateRequest.Image
+                    //,GetUserInfo().UserId
+                    );
 
                 _logger.LogInformation($"{nameof(Update)} is finished successfully");
 
@@ -194,8 +198,9 @@ namespace LetsDoIt.Moody.Web.Controllers
                 await _categoryService.UpdateCategoryDetailsAsync(
                     categoryDetailsId,
                     updateRequest.Order,
-                    updateRequest.Image,
-                    GetUserInfo().UserId);
+                    updateRequest.Image
+                    //,GetUserInfo().UserId
+                    );
 
                 _logger.LogInformation($"{nameof(UpdateCategoryDetails)} is finished successfully");
 
@@ -219,8 +224,9 @@ namespace LetsDoIt.Moody.Web.Controllers
             try
             {
                 await _categoryService.DeleteAsync(
-                    categoryId,
-                    GetUserInfo().UserId);
+                    categoryId
+                    //,GetUserInfo().UserId
+                    );
 
                 _logger.LogInformation($"{nameof(Delete)} is finished successfully");
 
@@ -244,8 +250,9 @@ namespace LetsDoIt.Moody.Web.Controllers
             try
             {
                 await _categoryService.DeleteCategoryDetailsAsync(
-                    categoryDetailsId,
-                    GetUserInfo().UserId);
+                    categoryDetailsId
+                    //,GetUserInfo().UserId
+                    );
 
                 _logger.LogInformation($"{nameof(DeleteCategoryDetails)} is finished successfully");
 

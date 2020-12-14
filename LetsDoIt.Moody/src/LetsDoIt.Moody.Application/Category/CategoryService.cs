@@ -71,7 +71,8 @@ namespace LetsDoIt.Moody.Application.Category
         }
 
 
-        public async Task InsertAsync(string name, int order, byte[] image, int userId)
+        public async Task InsertAsync(string name, decimal order, byte[] image//, int userId
+            )
         {
             _logger.LogInformation($"{nameof(InsertAsync)} executing with " +
                                    $"name={name};" +
@@ -83,7 +84,7 @@ namespace LetsDoIt.Moody.Application.Category
                 Name = name,
                 Order = order,
                 Image = image,
-                CreatedBy = userId
+                //CreatedBy = userId
             });
 
             await _versionHistoryService.CreateNewVersionAsync();
@@ -91,7 +92,8 @@ namespace LetsDoIt.Moody.Application.Category
             _logger.LogInformation($"{nameof(InsertAsync)} executed");
         }
 
-        public async Task InsertCategoryDetailsAsync(int categoryId, int order, string image, int userId)
+        public async Task InsertCategoryDetailsAsync(int categoryId, decimal order, string image//, int userId
+            )
         {
             _logger.LogInformation($"{nameof(InsertCategoryDetailsAsync)} executing with " +
                                    $"categoryId={categoryId};" +
@@ -103,7 +105,7 @@ namespace LetsDoIt.Moody.Application.Category
                 CategoryId = categoryId,
                 Order = order,
                 Image = Convert.FromBase64String(image),
-                CreatedBy = userId
+                //CreatedBy = userId
             });
 
             await _versionHistoryService.CreateNewVersionAsync();
@@ -111,7 +113,8 @@ namespace LetsDoIt.Moody.Application.Category
             _logger.LogInformation($"{nameof(InsertCategoryDetailsAsync)} executed");
         }
 
-        public async Task UpdateAsync(int id, string name, int order, byte[] image, int userId)
+        public async Task UpdateAsync(int id, string name, decimal order, byte[] image//, int userId
+            )
         {
             _logger.LogInformation($"{nameof(UpdateAsync)} executing with " +
                                    $"id={id};" +
@@ -128,7 +131,7 @@ namespace LetsDoIt.Moody.Application.Category
             entity.Name = name;
             entity.Order = order;
             entity.Image = image;
-            entity.ModifiedBy = userId;
+            //entity.ModifiedBy = userId;
 
             await _categoryRepository.UpdateAsync(entity);
 
@@ -137,7 +140,8 @@ namespace LetsDoIt.Moody.Application.Category
             _logger.LogInformation($"{nameof(UpdateAsync)} executed");
         }
 
-        public async Task UpdateCategoryDetailsAsync(int id, int order, byte[] image, int userId)
+        public async Task UpdateCategoryDetailsAsync(int id, decimal order, byte[] image//, int userId
+            )
         {
             _logger.LogInformation($"{nameof(UpdateCategoryDetailsAsync)} executing with " +
                                    $"id={id};" +
@@ -152,7 +156,7 @@ namespace LetsDoIt.Moody.Application.Category
 
             entity.Order = order;
             entity.Image = image;
-            entity.ModifiedBy = userId;
+            //entity.ModifiedBy = userId;
 
             await _categoryDetailsRepository.UpdateAsync(entity);
 
@@ -161,7 +165,8 @@ namespace LetsDoIt.Moody.Application.Category
             _logger.LogInformation($"{nameof(UpdateCategoryDetailsAsync)} executed");
         }
 
-        public async Task DeleteAsync(int categoryId, int userId)
+        public async Task DeleteAsync(int categoryId//, int userId
+            )
         {
             _logger.LogInformation($"{nameof(DeleteAsync)} executing with id={categoryId}");
 
@@ -171,7 +176,7 @@ namespace LetsDoIt.Moody.Application.Category
                 throw new ObjectNotFoundException("Category", categoryId);
             }
 
-            category.ModifiedBy = userId;
+            //category.ModifiedBy = userId;
 
             await _categoryRepository.DeleteAsync(category);
 
@@ -180,7 +185,8 @@ namespace LetsDoIt.Moody.Application.Category
             _logger.LogInformation($"{nameof(DeleteAsync)} executed");
         }
 
-        public async Task DeleteCategoryDetailsAsync(int id, int userId)
+        public async Task DeleteCategoryDetailsAsync(int id//, int userId
+            )
         {
             _logger.LogInformation($"{nameof(DeleteCategoryDetailsAsync)} executing with id={id}");
 
@@ -190,7 +196,7 @@ namespace LetsDoIt.Moody.Application.Category
                 throw new ObjectNotFoundException("Category Detail", id);
             }
 
-            entity.ModifiedBy = userId;
+            //entity.ModifiedBy = userId;
 
             await _categoryDetailsRepository.DeleteAsync(entity);
 
