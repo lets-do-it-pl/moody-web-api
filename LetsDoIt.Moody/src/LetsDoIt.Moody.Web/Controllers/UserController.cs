@@ -95,7 +95,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
+        [Authorize(Roles = RoleConstants.StandardRole)]
         public async Task<IActionResult> GetUser(int id)
         {
             var userResult = await _userService.GetUserAsync(id);
@@ -104,7 +104,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpPost("id/newpassword")]
-        [AllowAnonymous]
+        [Authorize(Roles = RoleConstants.StandardRole)]
         public async Task<IActionResult> ChangePassword(int id, string newPassword)
         {
             var user = await _userService.GetUserAsync(id);
