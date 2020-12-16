@@ -1,7 +1,4 @@
-﻿using LetsDoIt.Moody.Application.CustomExceptions;
-using LetsDoIt.Moody.Web.Entities;
-using LetsDoIt.Moody.Web.Entities.Requests;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Linq;
@@ -11,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
+    using LetsDoIt.Moody.Application.CustomExceptions;
+    using LetsDoIt.Moody.Web.Entities;
+    using LetsDoIt.Moody.Web.Entities.Requests;
     using Application.Constants;
     using Application.User;
 
@@ -101,6 +101,17 @@ namespace LetsDoIt.Moody.Web.Controllers
             var userResult = await _userService.GetUserAsync(id);
 
             return Ok(userResult);
+        }
+
+        [HttpPost("id/newpassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ChangePassword(int id, string newPassword)
+        {
+            var user = await _userService.GetUserAsync(id);
+
+            await _userService.ChangePasswordAsync(user.Id, newPassword);
+
+            return Ok(user.Username + "'s password is successfully changed");
         }
     }
 }

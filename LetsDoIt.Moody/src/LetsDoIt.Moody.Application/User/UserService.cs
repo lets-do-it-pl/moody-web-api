@@ -1,6 +1,4 @@
-﻿using LetsDoIt.MailSender;
-using LetsDoIt.Moody.Infrastructure.Utils;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.IO;
@@ -9,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.User
 {
+    using LetsDoIt.Moody.Infrastructure.Utils;
+    using LetsDoIt.MailSender;
     using Constants;
     using CustomExceptions;
     using Persistence.Entities;
@@ -50,9 +50,16 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task<User> GetUserAsync(int id)
         {
-            var result = await _userRepository.SingleOrDefaultAsync(u => u.Id == id);
+            return await _userRepository.SingleOrDefaultAsync(u => u.Id == id);
+        }
 
-            return result;
+        public async Task ChangePasswordAsync(int id, string newPassword)
+        {
+            var user = await _userRepository.SingleOrDefaultAsync(u => u.Id == id);
+
+            user.Password = newPassword;
+
+            await _userRepository.UpdateAsync(user);
         }
 
         public async Task SendActivationEmailAsync(string referer, string email)

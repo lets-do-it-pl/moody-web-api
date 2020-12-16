@@ -2,7 +2,7 @@
 
 namespace LetsDoIt.Moody.Application.User
 {
-    using LetsDoIt.Moody.Persistence.Entities;
+    using Persistence.Entities;
     public interface IUserService
     {
         Task SaveUserAsync(string username, string password, string email, string name, string surname);
@@ -12,5 +12,7 @@ namespace LetsDoIt.Moody.Application.User
         Task ActivateUser(int id);
 
         Task<User> GetUserAsync(int id);
+
+        Task ChangePasswordAsync(int id, string newPassword);
     }
 }
