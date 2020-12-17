@@ -16,6 +16,7 @@ namespace LetsDoIt.Moody.Application.User
     using Security;
     using Persistence.Entities;
     using Persistence.Repositories.Base;
+    using NGuard;
 
     public class UserService : IUserService
     {
@@ -81,9 +82,45 @@ namespace LetsDoIt.Moody.Application.User
             await _userRepository.UpdateAsync(dbUser);
         }
 
+        public async Task<string> AuthenticationAsync(string username, string password)
+        {
+            Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
+            Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
+
+            var encryptedPassword = ProtectionHelper.EncryptValue(username + password);
+
+            var user = await _userRepository.GetAsync(u => u.Username == username && u.Password == encryptedPassword);
+
+            if(user == null)
+            {
+                throw new UserNotFoundException(default);
+            }
+
+            if (!user.IsActive)
+            {
+                throw new UserNotActiveException(username);
+            }
+
+            if (!user.CanLogin)
+            {
+                throw new UserNotHaveLoginPermissionException(username);
+            }
+
+            var tokenInfo = _securityService.GenerateJwtToken(user.Id.ToString(), user.FullName, user.UserType);
+            if(tokenInfo == null)
+            {
+                throw new Exception($"Token can not be generated!" +
+                                    $"UserId={user.Id};" +
+                                    $"{nameof(user.FullName)}={user.FullName};" +
+                                    $"{nameof(user.UserType)}={user.UserType}");
+            }
+
+            return tokenInfo.Token;            
+        }
+
         private static async Task<string> ReadHtmlContent(string filePath, string referer, string token)
         {
-            await using FileStream fileStream = new FileStream(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory , filePath)), FileMode.Open);
+            await using FileStream fileStream = new FileStream(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, filePath)), FileMode.Open);
 
             using StreamReader streamReader = new StreamReader(fileStream, Encoding.Unicode);
 
@@ -97,6 +134,7 @@ namespace LetsDoIt.Moody.Application.User
 
             return content;
         }
+
         private User ToUser(string username, string password, string name, string surname, string email) => new User
         {
             Username = username,
@@ -104,5 +142,6 @@ namespace LetsDoIt.Moody.Application.User
             FullName = name + surname,
             Email = email
         };
+
     }
 }

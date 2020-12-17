@@ -13,6 +13,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Constants;
     using Application.User;
+    using System;
 
     [Route("api/user")]
     [ApiController]
@@ -24,6 +25,32 @@ namespace LetsDoIt.Moody.Web.Controllers
         public UserController(IUserService userService)
         {
             _userService = userService;
+        }
+
+        [HttpPost("authenticate")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Authenticate(AuthenticationRequest request)
+        {
+            try
+            {
+                var result = await _userService.AuthenticationAsync(request.Email, request.Password);
+
+                return Ok(result);
+            }
+            catch (UserNotFoundException)
+            {
+                return BadRequest("Username or Password is wrong!");
+            }
+            catch (Exception ex)
+            {
+                if (ex is UserNotActiveException || ex is UserNotHaveLoginPermissionException)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                throw;
+            }
+
         }
 
         [HttpPost]
