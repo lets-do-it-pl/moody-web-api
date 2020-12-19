@@ -9,9 +9,9 @@ namespace LetsDoIt.Moody.Application.Category
     {
         Task<CategoryGetResult> GetCategoriesWithDetails(string versionNumber);
 
-        Task<CategoryGetResult> GetCategories();
+        Task<IEnumerable<Category>> GetCategoriesAsync();
 
-        Task<IEnumerable<CategoryDetail>> GetCategoryDetails(int categoryId);
+        Task<IEnumerable<CategoryDetail>> GetCategoryDetailsAsync(int categoryId);
 
         Task InsertAsync(string name, decimal order, byte[] image//, int userId
             );

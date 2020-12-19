@@ -4,10 +4,14 @@ namespace LetsDoIt.Moody.Web.Entities.Responses
 {
     public class CategoryResponse
     {
-        public string VersionNumber { get; set; }
+        public int Id { get; set; }
 
-        public bool IsUpdated { get; set; }
+        public string Name { get; set; }
 
-        public IEnumerable<CategoryEntity> Categories { get; set; }
+        public decimal Order { get; set; }
+
+        public byte[] Image { get; set; }
+
+        public ICollection<CategoryDetailsResponse> CategoryDetails { get; set; }
     }
 }

@@ -55,16 +55,12 @@ namespace LetsDoIt.Moody.Application.Category
             return result;
         }
 
-        public async Task<CategoryGetResult> GetCategories()
+        public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
-            var result = new CategoryGetResult();
-
-            result.Categories = await _categoryRepository.GetListAsync(c => !c.IsDeleted);
-
-            return result;
+            return await _categoryRepository.GetListAsync(c => !c.IsDeleted);
         }
 
-        public async Task<IEnumerable<CategoryDetail>> GetCategoryDetails(int categoryId)
+        public async Task<IEnumerable<CategoryDetail>> GetCategoryDetailsAsync(int categoryId)
         {
             return await _categoryDetailsRepository.GetListAsync(
                 c => !c.IsDeleted && c.CategoryId == categoryId);

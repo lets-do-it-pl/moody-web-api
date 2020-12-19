@@ -1,6 +1,6 @@
 ﻿namespace LetsDoIt.Moody.Web.Entities.Responses
 {
-    public class CategoryDetailsEntity
+    public class CategoryDetailsResponse
     {
         public int Id { get; set; }
 
