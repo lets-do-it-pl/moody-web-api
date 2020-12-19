@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  letsdoit.moody.web:
+    image: ${DOCKER_REGISTRY-}letsdoitmoodyweb
+    build:
+      context: .
+      dockerfile: src\LetsDoIt.Moody.Web\Dockerfile

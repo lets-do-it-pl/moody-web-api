@@ -13,6 +13,7 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Entities;
     using Entities.Requests;
     using Entities.Responses;
+    using LetsDoIt.Moody.Web.Cache;
     using Persistence.Entities;
 
     [ApiController]
@@ -29,9 +30,10 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         [HttpGet, Route("/list-detail/{versionNumber?}")]
         [Authorize(Roles = RoleConstants.ClientRole)]
+        [Cached(600)]
         public async Task<ActionResult<CategoryResponse>> GetCategories(string versionNumber = null)
         {
-
+            
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
 
             var categoryResult = await _categoryService.GetCategoriesWithDetails(versionNumber);
