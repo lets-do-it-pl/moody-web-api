@@ -3,14 +3,14 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using LetsDoIt.Moody.Application.CustomExceptions;
-using LetsDoIt.Moody.Web.Entities;
-using LetsDoIt.Moody.Web.Entities.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
+    using Application.CustomExceptions;
+    using Entities;
+    using Entities.Requests;
     using Application.Constants;
     using Application.User;
 
