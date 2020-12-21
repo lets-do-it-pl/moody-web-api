@@ -97,7 +97,7 @@ namespace LetsDoIt.Moody.Application.User
         {
             Username = username,
             Password = ProtectionHelper.EncryptValue(username + password),
-            FullName = name + " " + surname,
+            FullName = $"{name} {surname}",
             Email = email
         };
     }

@@ -14,23 +14,24 @@ namespace LetsDoIt.Moody.Application.UnitTests.Security
 
     public class SecurityServiceTests
     {
+        private const int TokenExpirationMinutes = 1440;
         private readonly ISecurityService _testing;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
-        public SecurityServiceTests( )
+        public SecurityServiceTests()
         {
             var mockJwtOptions = new Mock<IOptions<JwtOptions>>();
 
             var jwtOptions = new JwtOptions
             {
-                Audience = "http://moodytest-env.eba-mmzgp9iv.eu-central-1.elasticbeanstalk.com/",
-                Issuer = "http://moodytest-env.eba-mmzgp9iv.eu-central-1.elasticbeanstalk.com/",
+                Audience = "default.audience",
+                Issuer = "default.issuer",
                 SecretKey = "2hN70OoacUi5SDU0rNuIXg==",
-                TokenExpirationMinutes = 1440
+                TokenExpirationMinutes = TokenExpirationMinutes
             };
 
             mockJwtOptions.Setup(x => x.Value).Returns(jwtOptions);
-        
+
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
             _testing = new SecurityService(mockJwtOptions.Object);
         }
@@ -38,11 +39,11 @@ namespace LetsDoIt.Moody.Application.UnitTests.Security
         [Fact]
         public void GenerateJWtToken_ShoudlGenerateJwtTokenBasedOnGivenParameters()
         {
-            var id = "1";
-            var fullName = "random someone";
+            var id = "good.id";
+            var fullName = "good.fullName";
 
-            var tokenInfo = _testing.GenerateJwtToken(id, fullName, UserTypeConstants.Admin);
-            var jwtToken =  _jwtSecurityTokenHandler.ReadJwtToken(tokenInfo.Token);
+            var actual = _testing.GenerateJwtToken(id, fullName, UserTypeConstants.Admin);
+            var jwtToken = _jwtSecurityTokenHandler.ReadJwtToken(actual.Token);
 
             var claimNameIdentifier = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             var claimName = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
@@ -56,13 +57,13 @@ namespace LetsDoIt.Moody.Application.UnitTests.Security
         [Fact]
         public void GenerateJwtToken_GeneratedTokenShouldHaveGivenExpirationDate()
         {
-            var id = "1";
-            var fullName = "random someone";
+            var id = "good.id";
+            var fullName = "good.fullName";
 
-            var tokenInfo = _testing.GenerateJwtToken(id, fullName, UserTypeConstants.Admin);
-            var jwtToken =  _jwtSecurityTokenHandler.ReadJwtToken(tokenInfo.Token);
+            var actual = _testing.GenerateJwtToken(id, fullName, UserTypeConstants.Admin);
+            var jwtToken = _jwtSecurityTokenHandler.ReadJwtToken(actual.Token);
 
-            Assert.InRange(jwtToken.ValidTo, DateTime.UtcNow.AddMinutes(1430), DateTime.UtcNow.AddMinutes(1450));
+            Assert.InRange(jwtToken.ValidTo, DateTime.UtcNow.AddMinutes(TokenExpirationMinutes - 10), DateTime.UtcNow.AddMinutes(TokenExpirationMinutes + 10));
         }
     }
 }
