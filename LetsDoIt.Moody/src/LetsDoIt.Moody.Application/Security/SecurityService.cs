@@ -1,14 +1,14 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using LetsDoIt.Moody.Application.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LetsDoIt.Moody.Application.Security
 {
+    using Options;
+
     public class SecurityService : ISecurityService
     {
         private readonly JwtOptions _jwtOptions;
@@ -32,18 +32,14 @@ namespace LetsDoIt.Moody.Application.Security
             };
 
             var token = new JwtSecurityToken(
-                issuer: _jwtOptions.Issuer,
-                audience: _jwtOptions.Audience,
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(_jwtOptions.TokenExpirationMinutes),
                 signingCredentials: credentials
             );
 
-            return new TokenInfo
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                ExpirationDate = token.ValidTo
-            };
+            var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return new TokenInfo(tokenValue, token.ValidTo);
         }
     }
 }
