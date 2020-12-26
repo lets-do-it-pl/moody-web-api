@@ -8,6 +8,6 @@ namespace LetsDoIt.Moody.Application.User
 
         Task SendActivationEmailAsync(string referer, string email);
 
-        Task ActivateUser(int id);
+        Task ActivateUserAsync(int id);
     }
 }

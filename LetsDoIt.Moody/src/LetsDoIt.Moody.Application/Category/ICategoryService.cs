@@ -8,7 +8,7 @@ namespace LetsDoIt.Moody.Application.Category
 
         Task InsertAsync(string name, int order, byte[] image, int userId);
 
-        Task InsertCategoryDetailsAsync(int categoryId, int order, string image, int userId);
+        Task InsertCategoryDetailAsync(int categoryId, int order, string image, int userId);
 
         Task UpdateAsync(int id, string name, int order, byte[] image, int userId);
 

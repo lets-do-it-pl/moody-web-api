@@ -74,7 +74,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 return BadRequest();
             }
 
-            await _categoryService.InsertCategoryDetailsAsync(
+            await _categoryService.InsertCategoryDetailAsync(
                 categoryId,
                 insertRequest.Order,
                 insertRequest.Image,

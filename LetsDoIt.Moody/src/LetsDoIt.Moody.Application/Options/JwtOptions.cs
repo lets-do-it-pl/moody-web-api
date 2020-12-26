@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Extensions.Options;
-
-namespace LetsDoIt.Moody.Application.Options
+﻿namespace LetsDoIt.Moody.Application.Options
 {
     public class JwtOptions
     {

@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 namespace LetsDoIt.Moody.Persistence.Repositories.Category
 {
     using Base;
+    using Entities;
 
-    public interface ICategoryRepository : IRepository<Entities.Category>
+    public interface ICategoryRepository : IRepository<Category>
     {
-        Task<List<Entities.Category>> GetListWithDetailsAsync();
+        Task<List<Category>> GetListWithDetailsAsync();
     }
 }
