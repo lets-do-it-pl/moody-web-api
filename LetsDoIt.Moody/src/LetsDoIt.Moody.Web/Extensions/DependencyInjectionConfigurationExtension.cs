@@ -4,16 +4,21 @@ namespace LetsDoIt.Moody.Web.Extensions
 {
     using Application.Category;
     using Application.Client;
-    using Application.Security;
-    using Application.User;
-    using Application.VersionHistory;
+    using Application.Dashboard;
     using Persistence.Entities;
     using Persistence.Repositories;
     using Persistence.Repositories.Base;
     using Persistence.Repositories.Category;
+    using Application.Search;
+    using Application.Security;
+    using Application.User;
+    using Application.VersionHistory;
+    using Persistence;
+
     public static class DependencyInjectionConfigurationExtension
     {
         public static IServiceCollection AddCustomClasses(this IServiceCollection services) => services
+            .AddTransient<IApplicationContext, ApplicationContext>()
             .AddTransient<ICategoryRepository, CategoryRepository>()
             .AddTransient<IRepository<VersionHistory>, VersionHistoryRepository>()
             .AddTransient<IRepository<Client>, ClientRepository>()
@@ -24,6 +29,8 @@ namespace LetsDoIt.Moody.Web.Extensions
             .AddTransient<IVersionHistoryService, VersionHistoryService>()
             .AddTransient<IClientService, ClientService>()
             .AddSingleton<ISecurityService, SecurityService>()
-            .AddTransient<IUserService, UserService>();
+            .AddTransient<IUserService, UserService>()
+            .AddTransient<IDashboardService, DashboardService>()
+            .AddTransient<ISearchService, SearchService>();
     }
 }

@@ -6,10 +6,11 @@ namespace LetsDoIt.Moody.Persistence
 
     public interface IApplicationContext
     {
-       DbSet<Category> Categories { get; set; }
-       DbSet<CategoryDetail> CategoryDetails { get; set; }
-       DbSet<Client> Clients { get; set; }
-       DbSet<User> Users { get; set; }
-       DbSet<VersionHistory> VersionHistories { get; set; }
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
+        DbSet<Category> Categories { get; set; }
+        DbSet<CategoryDetail> CategoryDetails { get; set; }
+        DbSet<Client> Clients { get; set; }
+        DbSet<User> Users { get; set; }
+        DbSet<VersionHistory> VersionHistories { get; set; }
     }
 }
