@@ -101,7 +101,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 
         #endregion
 
-        //[Fact]
+        // [Fact]
         //public async Task GIVEN_ThereIsAnUpdateRequest_WHEN_UpdatingACategory_THEN_ShouldReturnOkResultAndCallServiceOnce()
         //{
         //    //Arrange
