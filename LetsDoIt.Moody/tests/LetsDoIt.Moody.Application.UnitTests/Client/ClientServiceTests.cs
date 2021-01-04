@@ -104,11 +104,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Client
                 });
 
             _mockSecurityService.Setup(ss => ss.GenerateJwtToken(id.ToString(), username, UserTypeConstants.Client))
-                .Returns(new TokenInfo
-                {
-                    Token = token,
-                    ExpirationDate = DateTime.UtcNow.AddMinutes(1440)
-                });
+                .Returns(new TokenInfo(token,DateTime.UtcNow.AddMinutes(1440)));
 
 
             var actual = await _testing.AuthenticateAsync(username, password);

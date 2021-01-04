@@ -9,5 +9,7 @@ namespace LetsDoIt.Moody.Application.User
         Task SendActivationEmailAsync(string referer, string email);
 
         Task ActivateUserAsync(int id);
+        
+        Task<(int id, string token)> AuthenticateAsync(string email, string password);
     }
 }

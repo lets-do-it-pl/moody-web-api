@@ -24,8 +24,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.Security
 
             var jwtOptions = new JwtOptions
             {
-                Audience = "default.audience",
-                Issuer = "default.issuer",
                 SecretKey = "2hN70OoacUi5SDU0rNuIXg==",
                 TokenExpirationMinutes = TokenExpirationMinutes
             };

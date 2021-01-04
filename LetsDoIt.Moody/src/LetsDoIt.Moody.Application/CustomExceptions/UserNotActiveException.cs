@@ -4,8 +4,8 @@ namespace LetsDoIt.Moody.Application.CustomExceptions
 {
     public class UserNotActiveException :Exception
     {
-        public UserNotActiveException(string username)
-            : base($"{username} : user is not activated!")
+        public UserNotActiveException()
+            : base($"User is not activated! Please check your mailbox!")
         {
         }
     }

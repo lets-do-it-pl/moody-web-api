@@ -93,10 +93,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             });
 
             _mockSecurityService.Setup(ss => ss.GenerateJwtToken(It.IsAny<string>(),
-                It.IsAny<string>(), It.IsAny<string>())).Returns(new TokenInfo
-                {
-                    Token = "good.token"
-                });
+                It.IsAny<string>(), It.IsAny<string>())).Returns(new TokenInfo("good.token", DateTime.MaxValue));
 
             await _testing.SendActivationEmailAsync("https://developer.mozilla.org/en-US/docs/Web/JavaScript", email);
 
@@ -130,9 +127,9 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
         {
             var id = 1;
 
-            _mockUserRepository.Setup(ur => ur.GetAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync((User) null);
+            _mockUserRepository.Setup(ur => ur.GetAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync((User)null);
 
-             async Task Test() => await _testing.ActivateUserAsync(id);
+            async Task Test() => await _testing.ActivateUserAsync(id);
 
             await Assert.ThrowsAsync<UserNotFoundException>(Test);
         }
