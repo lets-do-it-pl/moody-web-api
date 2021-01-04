@@ -82,7 +82,7 @@ namespace LetsDoIt.Moody.Application.User
             await _userRepository.UpdateAsync(dbUser);
         }
 
-        public async Task<string> AuthenticationAsync(string username, string password)
+        public async Task<(int id, string token)> AuthenticationAsync(string username, string password)
         {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
@@ -91,23 +91,23 @@ namespace LetsDoIt.Moody.Application.User
 
             var user = await _userRepository.GetAsync(u => u.Username == username && u.Password == encryptedPassword);
 
-            if(user == null)
+            if (user == null)
             {
                 throw new UserNotFoundException(default);
             }
 
             if (!user.IsActive)
             {
-                throw new UserNotActiveException(username);
+                throw new UserNotActiveException();
             }
 
             if (!user.CanLogin)
             {
-                throw new UserNotHaveLoginPermissionException(username);
+                throw new UserNotHaveLoginPermissionException();
             }
 
             var tokenInfo = _securityService.GenerateJwtToken(user.Id.ToString(), user.FullName, user.UserType);
-            if(tokenInfo == null)
+            if (tokenInfo == null)
             {
                 throw new Exception($"Token can not be generated!" +
                                     $"UserId={user.Id};" +
@@ -115,7 +115,7 @@ namespace LetsDoIt.Moody.Application.User
                                     $"{nameof(user.UserType)}={user.UserType}");
             }
 
-            return tokenInfo.Token;            
+            return (user.Id, tokenInfo.Token);
         }
 
         private static async Task<string> ReadHtmlContent(string filePath, string referer, string token)

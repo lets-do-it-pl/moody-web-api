@@ -10,6 +10,6 @@ namespace LetsDoIt.Moody.Application.User
 
         Task ActivateUser(int id);
 
-        Task<string> AuthenticationAsync(string email, string password);
+        Task<(int id, string token)> AuthenticationAsync(string email, string password);
     }
 }

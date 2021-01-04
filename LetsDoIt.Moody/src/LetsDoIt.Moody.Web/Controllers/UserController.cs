@@ -13,6 +13,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Constants;
     using Application.User;
+    using Entities.Responses;
     using System;
 
     [Route("api/user")]
@@ -33,7 +34,9 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             try
             {
-                var result = await _userService.AuthenticationAsync(request.Email, request.Password);
+                var value = await _userService.AuthenticationAsync(request.Email, request.Password);
+
+                var result = new AuthenticationResponse(value.id, value.token);
 
                 return Ok(result);
             }
