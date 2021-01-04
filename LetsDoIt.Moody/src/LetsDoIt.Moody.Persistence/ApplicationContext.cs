@@ -95,7 +95,7 @@ namespace LetsDoIt.Moody.Persistence
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UserName)
+                entity.Property(e => e.Username)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);

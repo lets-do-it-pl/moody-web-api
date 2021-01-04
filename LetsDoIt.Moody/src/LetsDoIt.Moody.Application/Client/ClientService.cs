@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using System.Security.Authentication;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using NGuard;
 
 namespace LetsDoIt.Moody.Application.Client
@@ -16,16 +15,13 @@ namespace LetsDoIt.Moody.Application.Client
     {
         private readonly IRepository<Client> _clientRepository;
         private readonly ISecurityService _securityService;
-        private readonly ILogger<ClientService> _logger;
 
         public ClientService(
             IRepository<Client> clientRepository,
-            ISecurityService securityService,
-            ILogger<ClientService> logger)
+            ISecurityService securityService)
         {
             _clientRepository = clientRepository;
             _securityService = securityService;
-            _logger = logger;
         }
 
         public async Task SaveClientAsync(string username, string password)
@@ -33,9 +29,7 @@ namespace LetsDoIt.Moody.Application.Client
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
-            _logger.LogInformation($"{nameof(SaveClientAsync)} executing with username={username}...");
-
-            var isUserExisted = await _clientRepository.AnyAsync(u => u.UserName == username);
+            var isUserExisted = await _clientRepository.AnyAsync(u => u.Username == username);
             if (isUserExisted)
             {
                 throw new DuplicateNameException($"The username of the client is already in the database. Username = {username}");
@@ -45,11 +39,10 @@ namespace LetsDoIt.Moody.Application.Client
 
             await _clientRepository.AddAsync(new Client
             {
-                UserName = client.Username,
+                Username = client.Username,
                 Password = client.EncryptedPassword
             });
 
-            _logger.LogInformation($"{nameof(SaveClientAsync)} executed with username={username}.");
         }
 
         public async Task<ClientTokenEntity> AuthenticateAsync(string username, string password)
@@ -57,22 +50,18 @@ namespace LetsDoIt.Moody.Application.Client
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
-            _logger.LogInformation($"{nameof(AuthenticateAsync)} executing with username={username}...");
+            var clientEntity = ToClientEntity(username, password);
 
-            var user = ToClientEntity(username, password);
-
-            var userDb = await _clientRepository
+            var clientDb = await _clientRepository
                                     .GetAsync(u =>
-                                        u.UserName == user.Username &&
-                                        u.Password == user.EncryptedPassword);
-            if (userDb == null)
+                                        u.Username == clientEntity.Username &&
+                                        u.Password == clientEntity.EncryptedPassword);
+            if (clientDb == null)
             {
                 throw new AuthenticationException();
             }
 
-            var tokenInfo = _securityService.GenerateJwtToken(userDb.Id.ToString(), userDb.UserName, UserTypeConstants.Client);
-
-            _logger.LogInformation($"{nameof(AuthenticateAsync)} executed with username={username}.");
+            var tokenInfo = _securityService.GenerateJwtToken(clientDb.Id.ToString(), clientDb.Username, UserTypeConstants.Client);
 
             return new ClientTokenEntity(
                         username,

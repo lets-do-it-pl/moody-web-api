@@ -5,9 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using LetsDoIt.MailSender;
 using LetsDoIt.Moody.Infrastructure.Utils;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Scaffolding.Internal;
-using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -22,17 +19,14 @@ namespace LetsDoIt.Moody.Application.User
     {
         private const string HtmlFilePath = @"HtmlTemplates\UserVerification.html";
         private const string EmailVerification = "Email Verification";
-        private readonly ILogger<UserService> _logger;
         private readonly IRepository<User> _userRepository;
         private readonly IMailSender _mailSender;
         private readonly ISecurityService _securityService;
 
-        public UserService(ILogger<UserService> logger,
-            IRepository<User> userRepository,
+        public UserService(IRepository<User> userRepository,
             IMailSender mailSender,
             ISecurityService securityService)
         {
-            _logger = logger;
             _userRepository = userRepository;
             _mailSender = mailSender;
             _securityService = securityService;
@@ -41,11 +35,12 @@ namespace LetsDoIt.Moody.Application.User
         public async Task SaveUserAsync(string username, string password, string email, string name, string surname)
         {
 
-            var isUserExisted = await _userRepository.AnyAsync(u => u.Username == username && !u.IsDeleted);
+            var isUserExisted = await _userRepository.AnyAsync(u => u.Username == username || u.Email == email
+                                                                    && !u.IsDeleted);
 
             if (isUserExisted)
             {
-                throw new DuplicateNameException($"The username is already in the database. Username = {username}");
+                throw new DuplicateNameException($"The username or email is already in the database. Username = {username}, Email = {email}");
             }
 
             await _userRepository.AddAsync(ToUser(username, password, name, surname, email));
@@ -67,7 +62,7 @@ namespace LetsDoIt.Moody.Application.User
             await _mailSender.SendAsync(EmailVerification, content, email);
         }
 
-        public async Task ActivateUser(int id)
+        public async Task ActivateUserAsync(int id)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
 
@@ -82,7 +77,7 @@ namespace LetsDoIt.Moody.Application.User
             await _userRepository.UpdateAsync(dbUser);
         }
 
-        public async Task<(int id, string token)> AuthenticationAsync(string username, string password)
+        public async Task<(int id, string token)> AuthenticateAsync(string username, string password)
         {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
@@ -139,7 +134,7 @@ namespace LetsDoIt.Moody.Application.User
         {
             Username = username,
             Password = ProtectionHelper.EncryptValue(username + password),
-            FullName = name + surname,
+            FullName = $"{name} {surname}",
             Email = email
         };
 

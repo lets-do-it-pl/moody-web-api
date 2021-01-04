@@ -3,14 +3,14 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using LetsDoIt.Moody.Application.CustomExceptions;
-using LetsDoIt.Moody.Web.Entities;
-using LetsDoIt.Moody.Web.Entities.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
+    using Application.CustomExceptions;
+    using Entities;
+    using Entities.Requests;
     using Application.Constants;
     using Application.User;
     using Entities.Responses;
@@ -34,7 +34,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             try
             {
-                var value = await _userService.AuthenticationAsync(request.Email, request.Password);
+                var value = await _userService.AuthenticateAsync(request.Email, request.Password);
 
                 var result = new AuthenticationResponse(value.id, value.token);
 
@@ -105,8 +105,8 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             try
             {
-                await _userService.ActivateUser(GetUserInfo().UserId);
-
+                await _userService.ActivateUserAsync(GetUserInfo().UserId);
+                
                 return Ok();
             }
             catch (UserNotFoundException e)
