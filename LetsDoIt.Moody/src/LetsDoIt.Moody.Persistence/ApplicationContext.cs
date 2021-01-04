@@ -5,7 +5,7 @@ using LetsDoIt.Moody.Persistence.Entities;
 
 namespace LetsDoIt.Moody.Persistence
 {
-    public partial class ApplicationContext : DbContext
+    public partial class ApplicationContext : DbContext, IApplicationContext
     {
         public ApplicationContext()
         {
