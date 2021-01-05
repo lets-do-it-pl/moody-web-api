@@ -8,7 +8,7 @@ namespace LetsDoIt.Moody.Web.Controllers
     using System;
     using System.Threading.Tasks;
 
-    [Route("api/[controller]")]
+    [Route("api/search")]
     [ApiController]
     [Authorize(Roles = RoleConstants.StandardRole)]
     public class SearchController : ControllerBase
@@ -20,7 +20,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             _searchService = searchService;
         }
 
-        [HttpGet , Route("?")]//
+        [HttpGet , Route("{searchKey}")]//
         [AllowAnonymous]//herkese izin vermeli mi?
         public async Task<IActionResult> Authenticate(string searchKey)
         {
