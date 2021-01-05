@@ -5,6 +5,8 @@ namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Constants;
     using Application.Search;
+    using System;
+    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -16,6 +18,23 @@ namespace LetsDoIt.Moody.Web.Controllers
         public SearchController(ISearchService searchService)
         {
             _searchService = searchService;
+        }
+
+        [HttpGet , Route("?")]//
+        [AllowAnonymous]//herkese izin vermeli mi?
+        public async Task<IActionResult> Authenticate(string searchKey)
+        {
+            try
+            {
+                var value = await _searchService.AutoCompleteSearch(searchKey);
+
+                return Ok();
+            }
+            catch
+            {
+                throw;
+            }
+
         }
     }
 }
