@@ -20,8 +20,8 @@ namespace LetsDoIt.Moody.Web.Controllers
             _searchService = searchService;
         }
 
-        [HttpGet , Route("{searchKey}")]//
-        [AllowAnonymous]//herkese izin vermeli mi?
+        [HttpGet , Route("{searchKey}")]
+        
         public async Task<IActionResult> Authenticate(string searchKey)
         {
             try

@@ -1,14 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using LetsDoIt.Moody.Application.Data;
+using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.Search
 {
     public class SearchService : ISearchService
     {
+        IDataService _iDataService;
         public async Task<string> AutoCompleteSearch(string searchKey)
         {
-            var search = await ;
-            throw new System.NotImplementedException();
-            return search;
+            var value = await _iDataService.SearchFunction(searchKey);
+            
+            return value;
+            
         }
     }
 }
