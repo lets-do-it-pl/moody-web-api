@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.Data
 {
     public interface IDataService
     {
-        Task<string> SearchFunction(string searchKey);
+        Task<List<string>> SearchFunctionDatabese(string searchKey);
         
     }
 }

@@ -2,6 +2,8 @@
 {
     using Persistence;
     using System.Threading.Tasks;
+    using System.Collections;
+    using System.Collections.Generic;
 
     public class DataService : IDataService
     {
@@ -12,9 +14,19 @@
             _dbContext = dbContext;
         }
 
-        public Task<string> SearchFunction(string searchKey)
+        public async Task<List<string>> SearchFunctionDatabese(string searchKey)
         {
-            throw new System.NotImplementedException();
+            List<string> fakeDatabase = new List<string>();
+            fakeDatabase.Add("adam");
+            fakeDatabase.Add("inek");
+            fakeDatabase.Add("koyun");
+            fakeDatabase.Add("kurbaga");
+            fakeDatabase.Add("at");
+
+            
+
+            return fakeDatabase;
+
         }
     }
 }
