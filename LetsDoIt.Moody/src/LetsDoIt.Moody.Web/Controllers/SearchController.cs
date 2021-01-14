@@ -20,20 +20,14 @@ namespace LetsDoIt.Moody.Web.Controllers
             _searchService = searchService;
         }
 
-        [HttpGet , Route("/{searchKey}")]
+        [HttpGet]
         
         public async Task<IActionResult> GeneralSearch(string searchKey)
         {
 
             searchKey.ToLower();
 
-            if(searchKey == null)
-            {
-                Console.WriteLine("Please write sth!!");
-
-            }
-
-            var value = await _searchService.DataSearchAsync(searchKey);
+            var value = await _searchService.GeneralSearchAsync(searchKey);
 
             return Ok(value);
             
