@@ -50,7 +50,7 @@ namespace LetsDoIt.Moody.Application.User
 
             if (isUserExisted)
             {
-                throw new DuplicateNameException($"The email already exists in the system. Email = {email}");
+                throw new DuplicateNameException($"The email already exists in the system.");
             }
 
             await _userRepository.AddAsync(ToUser(username, password, name, surname, email));
