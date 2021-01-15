@@ -14,50 +14,67 @@ namespace LetsDoIt.Moody.Application.User
     using Persistence.Entities;
     using Persistence.Repositories.Base;
     using NGuard;
+    using Microsoft.Extensions.Options;
+    using LetsDoIt.Moody.Application.Options;
 
     public class UserService : IUserService
     {
         private const string HtmlFilePath = @"HtmlTemplates\UserVerification.html";
         private const string EmailVerification = "Email Verification";
+        private const string ActivateUserApiQuery = "activate-user";
+
         private readonly IRepository<User> _userRepository;
         private readonly IMailSender _mailSender;
         private readonly ISecurityService _securityService;
+        private readonly string _activateUserApiUrl;
 
         public UserService(IRepository<User> userRepository,
             IMailSender mailSender,
-            ISecurityService securityService)
+            ISecurityService securityService,
+            IOptions<WebInfoOptions> webInfoOptions)
         {
             _userRepository = userRepository;
             _mailSender = mailSender;
             _securityService = securityService;
+            _activateUserApiUrl = $"{webInfoOptions.Value.Url}{ActivateUserApiQuery}";
         }
 
-        public async Task SaveUserAsync(string username, string password, string email, string name, string surname)
+        public async Task SaveUserAsync(
+            string username,
+            string password,
+            string email,
+            string name,
+            string surname)
         {
-
-            var isUserExisted = await _userRepository.AnyAsync(u => u.Username == username || u.Email == email
-                                                                    && !u.IsDeleted);
+            var isUserExisted = await _userRepository.AnyAsync(u => u.Email == email && !u.IsDeleted);
 
             if (isUserExisted)
             {
-                throw new DuplicateNameException($"The username or email is already in the database. Username = {username}, Email = {email}");
+                throw new DuplicateNameException($"The email already exists in the system. Email = {email}");
             }
 
             await _userRepository.AddAsync(ToUser(username, password, name, surname, email));
+
+            await SendActivationEmailAsync(email);
         }
 
-        public async Task SendActivationEmailAsync(string referer, string email)
+        public async Task SendActivationEmailAsync(string email)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Email == email && !u.IsDeleted);
 
             if (dbUser == null)
             {
-                throw new EmailNotRegisteredException(email);
+                throw new UserNotRegisteredException(email);
             }
 
-            var token = _securityService.GenerateJwtToken(dbUser.Id.ToString(), dbUser.FullName, UserTypeConstants.Standard);
+            if (dbUser.IsActive)
+            {
+                throw new UserAlreadyActivatedException("Don't need to send activation email!");
+            }
 
-            var content = await ReadHtmlContent(HtmlFilePath, referer, token.Token);
+            var token = _securityService.GenerateJwtToken(dbUser.Id.ToString(), dbUser.FullName, UserTypeConstants.NotActivatedUser);
+
+            var content = await ReadHtmlContent(HtmlFilePath, _activateUserApiUrl, token.Token);
 
             await _mailSender.SendAsync(EmailVerification, content, email);
         }
@@ -71,8 +88,13 @@ namespace LetsDoIt.Moody.Application.User
                 throw new UserNotFoundException(id);
             }
 
+            if (dbUser.IsActive)
+            {
+                throw new UserAlreadyActivatedException("Don't need to activate it again!");
+            }
+
             dbUser.IsActive = true;
-            dbUser.ModifiedBy = dbUser.Id;
+            dbUser.ModifiedBy = dbUser.Id;            
 
             await _userRepository.UpdateAsync(dbUser);
         }
@@ -113,7 +135,7 @@ namespace LetsDoIt.Moody.Application.User
             return (user.Id, tokenInfo.Token);
         }
 
-        private static async Task<string> ReadHtmlContent(string filePath, string referer, string token)
+        private static async Task<string> ReadHtmlContent(string filePath, string url, string token)
         {
             await using FileStream fileStream = new FileStream(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, filePath)), FileMode.Open);
 
@@ -121,11 +143,7 @@ namespace LetsDoIt.Moody.Application.User
 
             var content = await streamReader.ReadToEndAsync();
 
-            var frontEndUri = new Uri(referer);
-
-            content = content.Replace("{{action_url}}",
-                frontEndUri.Scheme + "://" + frontEndUri.Host
-                          + "?token=" + token);
+            content = content.Replace("{{action_url}}", $"{url}?token={token}");
 
             return content;
         }

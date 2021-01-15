@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace LetsDoIt.Moody.Web.Extensions
 {
     using Application.Options;
+    using System.Security.Claims;
 
     public static class AuthenticationConfigurationExtension
     {
@@ -30,11 +31,12 @@ namespace LetsDoIt.Moody.Web.Extensions
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"])),
                         ClockSkew = TimeSpan.Zero,
-                        RequireExpirationTime = true
+                        RequireExpirationTime = true,
+                        RoleClaimType = ClaimTypes.Role
                     };
                 });
 
-            services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.Jwt));
+            services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.JwtSectionName));
 
             return services;
             

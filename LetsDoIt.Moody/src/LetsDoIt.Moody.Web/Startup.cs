@@ -21,16 +21,17 @@ namespace LetsDoIt.Moody.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthenticationConfig(Configuration)
+            services
+                .AddAuthenticationConfig(Configuration)
+                .AddOptionsConfig(Configuration)
                 .AddAuthorizationConfig()
                 .AddResponseCompression()
                 .AddHealthCheckConfig(Configuration)
                 .AddDbContextConfig(Configuration)
-                .AddCorsConfiguration(Configuration)
+                .AddCorsConfig(Configuration)
                 .AddSwaggerConfig()
                 .AddMailSender()
-                .AddCustomClasses()
-                .Configure<SmtpOptions>(Configuration.GetSection(SmtpOptions.SmtpSectionName));
+                .AddCustomClasses();
 
             services.AddControllers();
         }

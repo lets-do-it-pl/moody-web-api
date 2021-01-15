@@ -6,7 +6,7 @@ namespace LetsDoIt.Moody.Application.User
     {
         Task SaveUserAsync(string username, string password, string email, string name, string surname);
 
-        Task SendActivationEmailAsync(string referer, string email);
+        Task SendActivationEmailAsync(string email);
 
         Task ActivateUserAsync(int id);
         
