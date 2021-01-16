@@ -2,13 +2,10 @@
 {
     using Persistence;
     using System.Threading.Tasks;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.EntityFrameworkCore;
-    using System.Threading;
 
-    public class DataService : IDataService, IAsyncEnumerable<string>
+    public class DataService : IDataService
     {
         private readonly IApplicationContext _dbContext;
 
@@ -17,29 +14,23 @@
             _dbContext = dbContext;
         }
 
-        public IAsyncEnumerator<string> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+        public async Task<List<string>> SearchFunctionDatabase(string searchKey)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<List<string>> SearchFunctionDatabese(string searchKey)
-        {
-            List<string> fakeDatabase = new List<string>();
-            fakeDatabase.Add("adam");
-            fakeDatabase.Add("inek");
-            fakeDatabase.Add("koyun");
-            fakeDatabase.Add("kurbaga");
-            fakeDatabase.Add("at");
-            fakeDatabase.Add("salih");
-            fakeDatabase.Add("samed");
-            fakeDatabase.Add("selim");
+            var fakeDatabase = new List<string>
+            {
+                "adam",
+                "inek",
+                "koyun",
+                "kurbaga",
+                "at",
+                "salih",
+                "samed",
+                "selim"
+            };
 
             var linq = fakeDatabase.Where(p => p.Contains(searchKey));
 
-
-
             return await Task.FromResult(linq.ToList());
-
         }
     }
 }

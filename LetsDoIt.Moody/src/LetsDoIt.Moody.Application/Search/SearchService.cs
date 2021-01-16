@@ -1,10 +1,10 @@
-﻿using LetsDoIt.Moody.Application.Data;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.Search
 {
+    using Data;
+
     public class SearchService : ISearchService
     {
         IDataService _dataService;
@@ -16,7 +16,7 @@ namespace LetsDoIt.Moody.Application.Search
         public async Task<IEnumerable> GeneralSearchAsync(string searchKey)
         {
 
-            var value = await _dataService.SearchFunctionDatabese(searchKey);
+            var value = await _dataService.SearchFunctionDatabase(searchKey.ToLower());
 
             return value;
         }

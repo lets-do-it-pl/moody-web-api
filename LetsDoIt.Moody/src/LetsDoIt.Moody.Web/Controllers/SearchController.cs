@@ -5,7 +5,6 @@ namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Constants;
     using Application.Search;
-    using System;
     using System.Threading.Tasks;
 
     [Route("api/search")]
@@ -24,12 +23,10 @@ namespace LetsDoIt.Moody.Web.Controllers
         public async Task<IActionResult> GeneralSearch(string searchKey)
         {
 
-            searchKey.ToLower();
-
             var value = await _searchService.GeneralSearchAsync(searchKey);
 
             return Ok(value);
-            
+
         }
     }
 }

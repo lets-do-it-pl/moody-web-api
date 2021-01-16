@@ -5,7 +5,7 @@ namespace LetsDoIt.Moody.Application.Data
 {
     public interface IDataService
     {
-        Task<List<string>> SearchFunctionDatabese(string searchKey);
+        Task<List<string>> SearchFunctionDatabase(string searchKey);
 
     }
 }
