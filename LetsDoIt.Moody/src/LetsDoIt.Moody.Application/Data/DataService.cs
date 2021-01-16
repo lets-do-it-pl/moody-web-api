@@ -8,7 +8,7 @@
     using Microsoft.EntityFrameworkCore;
     using System.Threading;
 
-    public class DataService : IDataService , IAsyncEnumerable<string> 
+    public class DataService : IDataService, IAsyncEnumerable<string>
     {
         private readonly IApplicationContext _dbContext;
 
@@ -34,7 +34,7 @@
             fakeDatabase.Add("samed");
             fakeDatabase.Add("selim");
 
-            var linq =  fakeDatabase.Where(p => p.Contains(searchKey));
+            var linq = fakeDatabase.Where(p => p.Contains(searchKey));
 
 
 
