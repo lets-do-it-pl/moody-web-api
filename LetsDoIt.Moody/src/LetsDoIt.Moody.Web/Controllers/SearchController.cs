@@ -21,7 +21,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpGet]
-        
+        [AllowAnonymous]
         public async Task<IActionResult> GeneralSearch(string searchKey)
         {
 
