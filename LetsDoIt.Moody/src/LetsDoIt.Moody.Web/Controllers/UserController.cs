@@ -160,9 +160,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 if (ex is UserNotFoundException ||
                     ex is UserNotActiveException ||
-                    ex is UserNotHaveLoginPermissionException ||
-                    ex is ArgumentException ||
-                    ex is ArgumentNullException)
+                    ex is UserNotHaveLoginPermissionException)
                 {
                     return BadRequest(ex.Message);
                 }
