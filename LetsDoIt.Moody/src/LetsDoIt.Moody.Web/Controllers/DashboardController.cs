@@ -5,6 +5,9 @@ namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Constants;
     using Application.Dashboard;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -17,5 +20,20 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             _dashboardService = dashboardService;
         }
+
+       
+        public async Task<ActionResult> GetDashboardItemsAsync(DateTime date)
+        {
+            /// response olmadan get methodunu nasil dondurucez ????
+            var result = await _dashboardService.GetDashboardItemsAsync(date);
+            if (result == null)
+            {
+                return NoContent();
+            }
+
+            return //??? response(result) ;
+        }
+       
+
     }
 }
