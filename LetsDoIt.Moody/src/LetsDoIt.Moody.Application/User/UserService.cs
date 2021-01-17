@@ -3,30 +3,36 @@ using System.Data;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using NGuard;
+using LetsDoIt.CustomValueTypes;
 using LetsDoIt.MailSender;
-using LetsDoIt.Moody.Infrastructure.Utils;
 
 namespace LetsDoIt.Moody.Application.User
 {
     using Constants;
     using CustomExceptions;
-    using Security;
+    using Infrastructure.Utils;
+    using Options;
     using Persistence.Entities;
     using Persistence.Repositories.Base;
-    using NGuard;
-    using Microsoft.Extensions.Options;
-    using LetsDoIt.Moody.Application.Options;
+    using Security;
 
     public class UserService : IUserService
     {
-        private const string HtmlFilePath = @"HtmlTemplates\UserVerification.html";
-        private const string EmailVerification = "Email Verification";
+        private const string UserVerificationHtmlFilePath = @"HtmlTemplates\UserVerification.html";
+        private const string EmailVerificationSubject = "Email Verification";
         private const string ActivateUserApiQuery = "activate-user";
+
+        private const string ResetPasswordHtmlFilePath = @"HtmlTemplates\ResetPassword.html";
+        private const string ResetPasswordSubject = "Reset Password";
+        private const string ResetPasswordApiQuery = "reset-password";
 
         private readonly IRepository<User> _userRepository;
         private readonly IMailSender _mailSender;
         private readonly ISecurityService _securityService;
         private readonly string _activateUserApiUrl;
+        private readonly string _resetPasswordApiUrl;
 
         public UserService(IRepository<User> userRepository,
             IMailSender mailSender,
@@ -37,6 +43,7 @@ namespace LetsDoIt.Moody.Application.User
             _mailSender = mailSender;
             _securityService = securityService;
             _activateUserApiUrl = $"{webInfoOptions.Value.Url}{ActivateUserApiQuery}";
+            _resetPasswordApiUrl = $"{webInfoOptions.Value.Url}{ResetPasswordApiQuery}";
         }
 
         public async Task SaveUserAsync(
@@ -74,9 +81,9 @@ namespace LetsDoIt.Moody.Application.User
 
             var token = _securityService.GenerateJwtToken(dbUser.Id.ToString(), dbUser.FullName, UserTypeConstants.NotActivatedUser);
 
-            var content = await ReadHtmlContent(HtmlFilePath, _activateUserApiUrl, token.Token);
+            var content = await ReadHtmlContentAsync(UserVerificationHtmlFilePath, _activateUserApiUrl, token.Token);
 
-            await _mailSender.SendAsync(EmailVerification, content, email);
+            await _mailSender.SendAsync(EmailVerificationSubject, content, email);
         }
 
         public async Task ActivateUserAsync(int id)
@@ -85,7 +92,7 @@ namespace LetsDoIt.Moody.Application.User
 
             if (dbUser == null)
             {
-                throw new UserNotFoundException(id);
+                throw new UserNotFoundException();
             }
 
             if (dbUser.IsActive)
@@ -94,7 +101,7 @@ namespace LetsDoIt.Moody.Application.User
             }
 
             dbUser.IsActive = true;
-            dbUser.ModifiedBy = dbUser.Id;            
+            dbUser.ModifiedBy = dbUser.Id;
 
             await _userRepository.UpdateAsync(dbUser);
         }
@@ -108,20 +115,7 @@ namespace LetsDoIt.Moody.Application.User
 
             var user = await _userRepository.GetAsync(u => u.Username == username && u.Password == encryptedPassword);
 
-            if (user == null)
-            {
-                throw new UserNotFoundException(default);
-            }
-
-            if (!user.IsActive)
-            {
-                throw new UserNotActiveException();
-            }
-
-            if (!user.CanLogin)
-            {
-                throw new UserNotHaveLoginPermissionException();
-            }
+            ValidateUser(user);
 
             var tokenInfo = _securityService.GenerateJwtToken(user.Id.ToString(), user.FullName, user.UserType);
             if (tokenInfo == null)
@@ -135,7 +129,53 @@ namespace LetsDoIt.Moody.Application.User
             return (user.Id, tokenInfo.Token);
         }
 
-        private static async Task<string> ReadHtmlContent(string filePath, string url, string token)
+        public async Task ForgetPasswordAsync(string email)
+        {
+            Guard.Requires(email, nameof(email)).IsNotNullOrEmptyOrWhiteSpace();
+
+            var user = await _userRepository.GetAsync(u => u.Email == email && !u.IsDeleted);
+
+            ValidateUser(user);
+
+            var token = _securityService.GenerateJwtToken(user.Id.ToString(), user.FullName, UserTypeConstants.ResetPassword);
+
+            var content = await ReadHtmlContentAsync(ResetPasswordHtmlFilePath, _resetPasswordApiUrl, token.Token);
+
+            await _mailSender.SendAsync(ResetPasswordSubject, content, email.ToString());
+        }
+
+        public async Task ResetPasswordAsync(int userId, string password)
+        {
+            Guard.Requires(userId, nameof(userId)).IsLessThanOrEqualTo(0);
+            Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
+
+            var user = await _userRepository.GetAsync(u => u.Id == userId && !u.IsDeleted);
+
+            ValidateUser(user);
+
+            user.Password = ProtectionHelper.EncryptValue(user.Username + password);
+            user.ModifiedBy = userId;
+
+            await _userRepository.UpdateAsync(user);
+        }
+
+        private static void ValidateUser(User user)
+        {
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+            else if (!user.IsActive)
+            {
+                throw new UserNotActiveException();
+            }
+            else if (!user.CanLogin)
+            {
+                throw new UserNotHaveLoginPermissionException();
+            }
+        }
+
+        private static async Task<string> ReadHtmlContentAsync(string filePath, string url, string token)
         {
             await using FileStream fileStream = new FileStream(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, filePath)), FileMode.Open);
 

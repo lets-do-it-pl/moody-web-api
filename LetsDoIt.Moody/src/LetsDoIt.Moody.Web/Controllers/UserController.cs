@@ -15,6 +15,7 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Application.User;
     using Entities.Responses;
     using System;
+    using LetsDoIt.CustomValueTypes;
 
     [Route("api/user")]
     [ApiController]
@@ -85,8 +86,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("user-verification-email")]
+        [HttpPost("user-verification-email")]        
         [AllowAnonymous]
         public async Task<IActionResult> SendUserVerificationEmail(string email)
         {
@@ -116,6 +116,52 @@ namespace LetsDoIt.Moody.Web.Controllers
             catch (Exception ex)
             {
                 if (ex is UserNotFoundException || ex is UserAlreadyActivatedException)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                throw;
+            }
+        }
+
+        [HttpPost("forget-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordRequest request)
+        {
+            try
+            {
+                await _userService.ForgetPasswordAsync(request.Email);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                if (ex is UserNotFoundException || 
+                    ex is UserNotActiveException ||
+                    ex is UserNotHaveLoginPermissionException)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                throw;
+            }
+        }
+
+        [HttpPost("reset-password")]
+        [Authorize(Roles = RoleConstants.ResetPasswordRole)]
+        public async Task<IActionResult> ResetPassword(string password)
+        {
+            try
+            {
+                await _userService.ResetPasswordAsync(GetUserInfo().UserId, password);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                if (ex is UserNotFoundException ||
+                    ex is UserNotActiveException ||
+                    ex is UserNotHaveLoginPermissionException)
                 {
                     return BadRequest(ex.Message);
                 }
