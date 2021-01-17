@@ -4,8 +4,16 @@ namespace LetsDoIt.Moody.Application.Security
 {
     public class TokenInfo
     {
-        public string Token { get; set; }
+        public TokenInfo(
+            string token, 
+            DateTime expirationDate)
+        {
+            Token = token;
+            ExpirationDate = expirationDate;
+        }
 
-        public DateTime ExpirationDate { get; set; }
+        public string Token { get; }
+
+        public DateTime ExpirationDate { get; }
     }
 }

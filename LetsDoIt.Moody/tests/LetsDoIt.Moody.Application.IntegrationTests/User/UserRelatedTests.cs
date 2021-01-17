@@ -59,7 +59,7 @@
 //            // Assert
 //            response.StatusCode.Should().Be(HttpStatusCode.Created);
 
-//            var user = await _factory.UserRepositoryVar.GetAsync(u => u.UserName == "good.username");
+//            var user = await _factory.UserRepositoryVar.GetAsync(u => u.Username == "good.username");
 
 //            Assert.NotNull(user);
 //            Assert.True(createDate < user.CreateDate);
@@ -87,7 +87,7 @@
 //        [Fact]
 //        public async Task Authenticate_WhenUsernameDoesNotExists_ShouldReturnBadRequest()
 //        {
-//            var (newUri, httpContent) = GetUriAndContent("notExist.UserName", "notExist.Password");
+//            var (newUri, httpContent) = GetUriAndContent("notExist.Username", "notExist.Password");
 
 //            var response = await _client.PostAsync(newUri, httpContent);
 

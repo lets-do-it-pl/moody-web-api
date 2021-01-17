@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.Category
@@ -16,8 +16,12 @@ namespace LetsDoIt.Moody.Application.Category
         Task InsertAsync(string name, decimal order, byte[] image//, int userId
             );
 
+<<<<<<< HEAD
         Task InsertCategoryDetailsAsync(int categoryId, decimal order, string image//, int userId
             );
+=======
+        Task InsertCategoryDetailAsync(int categoryId, int order, string image, int userId);
+>>>>>>> master
 
         Task UpdateAsync(int id, string name, decimal order, byte[] image//, int userId
             );

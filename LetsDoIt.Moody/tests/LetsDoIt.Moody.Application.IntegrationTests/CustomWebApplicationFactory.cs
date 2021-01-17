@@ -81,7 +81,7 @@
 //            {
 //                IsDeleted = false,
 //                CreateDate = DateTime.UtcNow,
-//                UserName = "default.Username",
+//                Username = "default.Username",
 //                Password = "default.Password1"
 //            };
 

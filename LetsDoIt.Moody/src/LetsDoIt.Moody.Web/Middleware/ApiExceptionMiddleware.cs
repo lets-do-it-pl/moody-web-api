@@ -38,20 +38,18 @@ namespace LetsDoIt.Moody.Web.Middleware
             var error = new ApiError
             {
                 Status = (short)HttpStatusCode.InternalServerError,
-                Title = "Some kind of error occurred in the API.  Please use the id and contact our " +
+                Title = "Some kind of error occurred in the API.  Please contact our " +
                         "support team if the problem persists."
             };
 
             var innerExMessage = exception.GetExceptionMessages();
 
-            _logger.LogError( exception, "CUSTOM ERROR LOG ::: " + innerExMessage);
+            _logger.LogError( exception, "Custom Error Log : " + innerExMessage);
 
             var result = JsonConvert.SerializeObject(error);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             return context.Response.WriteAsync(result);
         }
-
-       
     }
 }

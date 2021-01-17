@@ -1,9 +1,11 @@
-﻿using NGuard;
+using NGuard;
 using System;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
+<<<<<<< HEAD
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+=======
+>>>>>>> master
 
 namespace LetsDoIt.Moody.Application.Category
 {
@@ -18,31 +20,28 @@ namespace LetsDoIt.Moody.Application.Category
         private readonly ICategoryRepository _categoryRepository;
         private readonly IRepository<CategoryDetail> _categoryDetailsRepository;
         private readonly IVersionHistoryService _versionHistoryService;
-        private readonly ILogger<CategoryService> _logger;
 
         public CategoryService(
             ICategoryRepository categoryRepository,
             IRepository<CategoryDetail> categoryDetailsRepository,
-            IVersionHistoryService versionHistoryService,
-            ILogger<CategoryService> logger)
+            IVersionHistoryService versionHistoryService)
         {
             _categoryRepository = categoryRepository;
             _categoryDetailsRepository = categoryDetailsRepository;
             _versionHistoryService = versionHistoryService;
-            _logger = logger;
         }
 
         public async Task<CategoryGetResult> GetCategoriesWithDetails(string versionNumber)
         {
-            var latestVersion = await _versionHistoryService.GetLatestVersionNumberAsync();
+            var latestVersionHistory = await _versionHistoryService.GetLatestVersionNumberAsync();
 
-            Guard.Requires(latestVersion, nameof(latestVersion)).IsNotNull();
-            Guard.Requires(latestVersion.VersionNumber, nameof(latestVersion.VersionNumber)).IsNotNullOrEmptyOrWhiteSpace();
+            Guard.Requires(latestVersionHistory, nameof(latestVersionHistory)).IsNotNull();
+            Guard.Requires(latestVersionHistory.VersionNumber, nameof(latestVersionHistory.VersionNumber)).IsNotNullOrEmptyOrWhiteSpace();
 
             var result = new CategoryGetResult
             {
-                IsUpdated = latestVersion.VersionNumber == versionNumber,
-                VersionNumber = latestVersion.VersionNumber
+                IsUpdated = latestVersionHistory.VersionNumber == versionNumber,
+                VersionNumber = latestVersionHistory.VersionNumber
             };
 
             if (result.IsUpdated)
@@ -70,11 +69,6 @@ namespace LetsDoIt.Moody.Application.Category
         public async Task InsertAsync(string name, decimal order, byte[] image//, int userId
             )
         {
-            _logger.LogInformation($"{nameof(InsertAsync)} executing with " +
-                                   $"name={name};" +
-                                   $"order={order};" +
-                                   "image");
-
             await _categoryRepository.AddAsync(new Category
             {
                 Name = name,
@@ -84,17 +78,15 @@ namespace LetsDoIt.Moody.Application.Category
             });
 
             await _versionHistoryService.CreateNewVersionAsync();
-
-            _logger.LogInformation($"{nameof(InsertAsync)} executed");
         }
 
+<<<<<<< HEAD
         public async Task InsertCategoryDetailsAsync(int categoryId, decimal order, string image//, int userId
             )
+=======
+        public async Task InsertCategoryDetailAsync(int categoryId, int order, string image, int userId)
+>>>>>>> master
         {
-            _logger.LogInformation($"{nameof(InsertCategoryDetailsAsync)} executing with " +
-                                   $"categoryId={categoryId};" +
-                                   $"order={order};" +
-                                   "image");
 
             await _categoryDetailsRepository.AddAsync(new CategoryDetail
             {
@@ -106,18 +98,12 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _versionHistoryService.CreateNewVersionAsync();
 
-            _logger.LogInformation($"{nameof(InsertCategoryDetailsAsync)} executed");
         }
 
         public async Task UpdateAsync(int id, string name, decimal order, byte[] image//, int userId
             )
         {
-            _logger.LogInformation($"{nameof(UpdateAsync)} executing with " +
-                                   $"id={id};" +
-                                   $"name={name};" +
-                                   $"order={order};" +
-                                   "image");
-
+          
             var entity = await _categoryRepository.GetAsync(c => c.Id == id && !c.IsDeleted);
             if (entity == null)
             {
@@ -133,16 +119,11 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _versionHistoryService.CreateNewVersionAsync();
 
-            _logger.LogInformation($"{nameof(UpdateAsync)} executed");
         }
 
         public async Task UpdateCategoryDetailsAsync(int id, decimal order, byte[] image//, int userId
             )
         {
-            _logger.LogInformation($"{nameof(UpdateCategoryDetailsAsync)} executing with " +
-                                   $"id={id};" +
-                                   $"order={order};" +
-                                   "image");
 
             var entity = await _categoryDetailsRepository.GetAsync(detail => detail.Id == id && !detail.IsDeleted);
             if (entity == null)
@@ -158,15 +139,14 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _versionHistoryService.CreateNewVersionAsync();
 
-            _logger.LogInformation($"{nameof(UpdateCategoryDetailsAsync)} executed");
         }
 
         public async Task DeleteAsync(int categoryId//, int userId
             )
         {
-            _logger.LogInformation($"{nameof(DeleteAsync)} executing with id={categoryId}");
 
             var category = await _categoryRepository.GetAsync(c => c.Id == categoryId && !c.IsDeleted);
+
             if (category == null)
             {
                 throw new ObjectNotFoundException("Category", categoryId);
@@ -178,13 +158,11 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _versionHistoryService.CreateNewVersionAsync();
 
-            _logger.LogInformation($"{nameof(DeleteAsync)} executed");
         }
 
         public async Task DeleteCategoryDetailsAsync(int id//, int userId
             )
         {
-            _logger.LogInformation($"{nameof(DeleteCategoryDetailsAsync)} executing with id={id}");
 
             var entity = await _categoryDetailsRepository.GetAsync(detail => detail.Id == id && !detail.IsDeleted);
             if (entity == null)
@@ -198,7 +176,6 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _versionHistoryService.CreateNewVersionAsync();
 
-            _logger.LogInformation($"{nameof(DeleteCategoryDetailsAsync)} executed");
         }
     }
 }

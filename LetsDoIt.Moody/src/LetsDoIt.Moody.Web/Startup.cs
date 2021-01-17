@@ -1,32 +1,14 @@
-using System;
-using System.Text;
-using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using LetsDoIt.MailSender.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.IdentityModel.Tokens;
 
 namespace LetsDoIt.Moody.Web
 {
-    using Application.Category;
-    using Application.Client;
-    using Application.Constants;
-    using Application.Options;
-    using Application.Security;
-    using Application.VersionHistory;
-    using Entities;
+    using Extensions;
     using Middleware;
-    using Persistence;
-    using Persistence.Entities;
-    using Persistence.Repositories;
-    using Persistence.Repositories.Base;
-    using Persistence.Repositories.Category;
 
     public class Startup
     {
@@ -37,63 +19,21 @@ namespace LetsDoIt.Moody.Web
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<JwtOptions>(Configuration.GetSection(JwtOptions.Jwt));
-
-            services.AddAuthentication(x =>
-                {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
-                        ClockSkew = TimeSpan.Zero,
-                        RequireExpirationTime = true
-                    };
-                });
-
-            services.AddAuthorization(config =>
-            {
-                config.AddPolicy(UserTypeConstants.Admin, Policies.AdminPolicy());
-                config.AddPolicy(UserTypeConstants.Standard, Policies.StandardPolicy());
-                config.AddPolicy(UserTypeConstants.Client, Policies.ClientPolicy());
-            });
-
-            services.AddResponseCompression();
-
-            var connectionString = Configuration.GetConnectionString("MoodyDBConnection");
-
-            services
-                .AddHealthChecks()
-                .AddSqlServer(connectionString, "SELECT 1", name: "SqlServerApplicationDb");
-
-            var url = Configuration.GetValue<string>("HealthChecksUri");
-
-            services.AddHealthChecksUI(s =>
-            {
-                s.AddHealthCheckEndpoint("Moody API", url);
-            })
-            .AddInMemoryStorage();
-
-            services.AddDbContext<ApplicationContext>(opt =>
-                opt
-                    .UseLazyLoadingProxies()
-                    .UseSqlServer(connectionString));
+            services.AddAuthenticationConfig(Configuration)
+                .AddAuthorizationConfig()
+                .AddResponseCompression()
+                .AddHealthCheckConfig(Configuration)
+                .AddDbContextConfig(Configuration)
+                .AddCorsConfiguration(Configuration)
+                .AddSwaggerConfig()
+                .AddMailSender()
+                .AddCustomClasses()
+                .Configure<SmtpOptions>(Configuration.GetSection(SmtpOptions.SmtpSectionName));
 
             services.AddControllers();
+<<<<<<< HEAD
 
             services.AddCors(options =>
             {
@@ -147,13 +87,11 @@ namespace LetsDoIt.Moody.Web
             services.AddTransient<IVersionHistoryService, VersionHistoryService>();
             services.AddTransient<IClientService, ClientService>();
             services.AddSingleton<ISecurityService, SecurityService>();
+=======
+>>>>>>> master
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(
-            IApplicationBuilder app,
-            IWebHostEnvironment env,
-            ApplicationContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -172,10 +110,15 @@ namespace LetsDoIt.Moody.Web
 
             app.UseRouting();
 
-            app.UseAuthentication();
+            app.UseCors(options => options
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin());
 
-            app.UseAuthorization();
+            app.UseAuthentication()
+                .UseAuthorization();
 
+<<<<<<< HEAD
             app.UseCors();
 
             app.UseSwagger();
@@ -184,17 +127,14 @@ namespace LetsDoIt.Moody.Web
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Moody API V1");
             });
+=======
+            app.UseCustomSwaggerConfig();
+>>>>>>> master
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecksUI();
-
-                endpoints.MapHealthChecks("/healthCheck", new HealthCheckOptions()
-                {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
+                endpoints.MapHealthChecksConfig();
             });
         }
     }
