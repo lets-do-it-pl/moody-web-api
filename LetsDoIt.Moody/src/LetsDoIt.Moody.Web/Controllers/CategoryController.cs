@@ -4,12 +4,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-<<<<<<< HEAD
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-=======
->>>>>>> master
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -37,11 +33,6 @@ namespace LetsDoIt.Moody.Web.Controllers
         //[Authorize(Roles = RoleConstants.ClientRole)]
         public async Task<ActionResult<VersionedCategoryWithDetailsResponse>> GetVersionedCategoriesWithDetails(string versionNumber = null)
         {
-<<<<<<< HEAD
-            _logger.LogInformation($"{nameof(GetVersionedCategoriesWithDetails)} is started with version number = {versionNumber}");
-=======
->>>>>>> master
-
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
 
             var categoryResult = await _categoryService.GetCategoriesWithDetails(versionNumber);
@@ -50,9 +41,6 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 return NoContent();
             }
-
-<<<<<<< HEAD
-            _logger.LogInformation($"{nameof(GetVersionedCategoriesWithDetails)} is finished successfully");
 
             return ToCategoryWithDetailsResponse(categoryResult);
         }
@@ -87,9 +75,6 @@ namespace LetsDoIt.Moody.Web.Controllers
                             .OrderByDescending(c => c.Order);
 
             return Ok(result);
-=======
-            return ToCategoryResponse(categoryResult);
->>>>>>> master
         }
 
         [HttpPost]

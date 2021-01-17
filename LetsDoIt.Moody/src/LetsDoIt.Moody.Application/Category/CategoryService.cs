@@ -1,11 +1,7 @@
 using NGuard;
 using System;
 using System.Threading.Tasks;
-<<<<<<< HEAD
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-=======
->>>>>>> master
 
 namespace LetsDoIt.Moody.Application.Category
 {
@@ -80,14 +76,9 @@ namespace LetsDoIt.Moody.Application.Category
             await _versionHistoryService.CreateNewVersionAsync();
         }
 
-<<<<<<< HEAD
-        public async Task InsertCategoryDetailsAsync(int categoryId, decimal order, string image//, int userId
+        public async Task InsertCategoryDetailAsync(int categoryId, decimal order, string image//, int userId
             )
-=======
-        public async Task InsertCategoryDetailAsync(int categoryId, int order, string image, int userId)
->>>>>>> master
         {
-
             await _categoryDetailsRepository.AddAsync(new CategoryDetail
             {
                 CategoryId = categoryId,
