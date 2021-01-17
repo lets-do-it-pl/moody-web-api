@@ -102,8 +102,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("activate")]
+        [HttpPost("activate")]        
         [Authorize(Roles = RoleConstants.NotActivatedUserRole)]
         public async Task<IActionResult> ActivateUser()
         {
@@ -149,11 +148,11 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         [HttpPost("reset-password")]
         [Authorize(Roles = RoleConstants.ResetPasswordRole)]
-        public async Task<IActionResult> ResetPassword(string password)
+        public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
         {
             try
             {
-                await _userService.ResetPasswordAsync(GetUserInfo().UserId, password);
+                await _userService.ResetPasswordAsync(GetUserInfo().UserId, request.Password);
 
                 return Ok();
             }
@@ -161,7 +160,9 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 if (ex is UserNotFoundException ||
                     ex is UserNotActiveException ||
-                    ex is UserNotHaveLoginPermissionException)
+                    ex is UserNotHaveLoginPermissionException ||
+                    ex is ArgumentException ||
+                    ex is ArgumentNullException)
                 {
                     return BadRequest(ex.Message);
                 }

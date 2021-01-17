@@ -146,14 +146,14 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task ResetPasswordAsync(int userId, string password)
         {
-            Guard.Requires(userId, nameof(userId)).IsLessThanOrEqualTo(0);
+            Guard.Requires(userId, nameof(userId)).IsGreaterThan(0);
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
             var user = await _userRepository.GetAsync(u => u.Id == userId && !u.IsDeleted);
 
             ValidateUser(user);
 
-            user.Password = ProtectionHelper.EncryptValue(user.Username + password);
+            user.Password = GetEncryptedPassword(user.Username, password);
             user.ModifiedBy = userId;
 
             await _userRepository.UpdateAsync(user);
@@ -191,10 +191,12 @@ namespace LetsDoIt.Moody.Application.User
         private User ToUser(string username, string password, string name, string surname, string email) => new User
         {
             Username = username,
-            Password = ProtectionHelper.EncryptValue(username + password),
+            Password = GetEncryptedPassword(username, password),
             FullName = $"{name} {surname}",
             Email = email
         };
+
+        private string GetEncryptedPassword(string username, string password) => ProtectionHelper.EncryptValue(username + password);
 
     }
 }
