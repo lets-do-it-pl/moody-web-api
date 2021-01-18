@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace LetsDoIt.Moody.Application.Data
 {
+    using LetsDoIt.Moody.Application.CustomExceptions;
     using Persistence;
 
     public class DataService : IDataService
@@ -36,7 +37,7 @@ namespace LetsDoIt.Moody.Application.Data
             
             if (!isResultExist)
             {
-                throw new Exception("Null Search Result");
+                throw new SearchResultNotFoundException(searchKey);
             }
 
             foreach (var r in results)
