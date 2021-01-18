@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EntityFrameworkExtras.EFCore;
+using LetsDoIt.Moody.Persistence.StoredProcedures;
 
 namespace LetsDoIt.Moody.Application.Data
 {
     using Persistence;
-    using Persistence.StoredProcedures;
+    using Persistence.StoredProcedures.ResultEntities;
 
     public class DataService : IDataService
     {
@@ -19,18 +21,19 @@ namespace LetsDoIt.Moody.Application.Data
         }
 
 
-        public async Task<AutoCompleteSearch> GetAutoCompleteSearchAsync(string search)
+        public async Task<ICollection <SbGeneralSearchResult>> GetGeneralSearchResultAsync(string search)
         {
-            var input = new AutoCompleteSearch { SearchValue = search };
+            var input = new SbGeneralSearch { SearchValue = search };
 
-            var result = await _dbContext.Database.ExecuteStoredProcedureAsync<AutoCompleteSearch>(input);
+            var result = await _dbContext.Database.ExecuteStoredProcedureAsync<SbGeneralSearchResult>(input);
 
             if (result == null)
             {
-                return new AutoCompleteSearch();
+                throw new NullReferenceException("NULL Search Result");
+                
             }
 
-            return result.FirstOrDefault();
+            return result.ToList();
         }
     }
 }
