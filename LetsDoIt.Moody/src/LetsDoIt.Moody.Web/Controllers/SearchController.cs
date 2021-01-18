@@ -7,7 +7,7 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Application.Search;
     using System.Threading.Tasks;
 
-    [Route("api/search")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = RoleConstants.StandardRole)]
     public class SearchController : ControllerBase
@@ -20,10 +20,10 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GeneralSearch(string searchKey)
+        [AllowAnonymous]
+        public async Task<IActionResult> SearchGeneral(string searchKey)
         {
-
-            var value = await _searchService.GeneralSearchAsync(searchKey);
+            var value = await _searchService.GetGeneralSearchResultAsync(searchKey);
 
             return Ok(value);
 
