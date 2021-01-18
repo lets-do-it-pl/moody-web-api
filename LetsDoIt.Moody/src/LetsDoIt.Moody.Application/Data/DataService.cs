@@ -1,13 +1,13 @@
 ﻿using System;
-using LetsDoIt.Moody.Application.Search;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 
 namespace LetsDoIt.Moody.Application.Data
 {
-    using LetsDoIt.Moody.Application.CustomExceptions;
+    using CustomExceptions;
     using Persistence;
+    using Search;
 
     public class DataService : IDataService
     {

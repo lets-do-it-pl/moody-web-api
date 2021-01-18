@@ -20,7 +20,6 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> SearchGeneral(string searchKey)
         {
             var value = await _searchService.GetGeneralSearchResultAsync(searchKey);
