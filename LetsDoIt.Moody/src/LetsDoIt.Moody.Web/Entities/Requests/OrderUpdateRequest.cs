@@ -3,13 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LetsDoIt.Moody.Web.Entities.Requests
 {
-    public class CategoryInsertRequest
+    public class OrderUpdateRequest
     {
         [Required]
-        public string Name { get; set; }
+        public int PreviousId { get; set; }
 
         [Required]
-        public string Image { get; set; }
-
+        public int NextId { get; set; }
     }
 }

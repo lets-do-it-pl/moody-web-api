@@ -3,14 +3,11 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Category;
-    using Application.Constants;
     using Application.CustomExceptions;
     using Entities;
     using Entities.Requests;
@@ -45,7 +42,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             return ToCategoryWithDetailsResponse(categoryResult);
         }
 
-        [HttpGet, Route("/list")]
+        [HttpGet, Route("list")]
         public async Task<ActionResult<IEnumerable<CategoryResponse>>> GetCategories()
         {
             var categoryResult = await _categoryService.GetCategoriesAsync();
@@ -61,7 +58,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             return Ok(result);
         }
 
-        [HttpGet, Route("/{categoryId}/details")]
+        [HttpGet, Route("{categoryId}/details")]
         public async Task<ActionResult<IEnumerable<CategoryDetailsResponse>>> GetCategoryDetails(int categoryId)
         {
             var categoryResult = await _categoryService.GetCategoryDetailsAsync(categoryId);
@@ -90,7 +87,6 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             await _categoryService.InsertAsync(
                 insertRequest.Name,
-                insertRequest.Order,
                 byteImage
                 //,GetUserInfo().UserId
                 );
@@ -110,7 +106,6 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             await _categoryService.InsertCategoryDetailAsync(
                 categoryId,
-                insertRequest.Order,
                 insertRequest.Image
                 //,GetUserInfo().UserId
                 );
@@ -132,7 +127,6 @@ namespace LetsDoIt.Moody.Web.Controllers
                 await _categoryService.UpdateAsync(
                     categoryId,
                     updateRequest.Name,
-                    updateRequest.Order,
                     updateRequest.Image
                     //,GetUserInfo().UserId
                     );
@@ -158,7 +152,6 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 await _categoryService.UpdateCategoryDetailsAsync(
                     categoryDetailsId,
-                    updateRequest.Order,
                     updateRequest.Image
                     //,GetUserInfo().UserId
                     );
@@ -168,6 +161,32 @@ namespace LetsDoIt.Moody.Web.Controllers
             catch (ObjectNotFoundException)
             {
                 return NotFound(categoryDetailsId);
+            }
+        }
+
+        [HttpPut, Route("order/{id}")]
+        public async Task<IActionResult> UpdateOrder(int id, OrderUpdateRequest updateRequest)
+        {
+
+            if (updateRequest == null)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await _categoryService.UpdateOrderAsync(
+                    id,
+                    updateRequest.PreviousId,
+                    updateRequest.NextId
+                    //,GetUserInfo().UserId
+                    );
+
+                return Ok();
+            }
+            catch (ObjectNotFoundException)
+            {
+                return NotFound(id);
             }
         }
 

@@ -7,8 +7,6 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
         [Required]
         public string Name { get; set; }
 
-        public decimal Order { get; set; }
-
         [Required]
         public byte[] Image { get; set; }
     }

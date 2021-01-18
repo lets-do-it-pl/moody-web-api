@@ -62,28 +62,39 @@ namespace LetsDoIt.Moody.Application.Category
         }
 
 
-        public async Task InsertAsync(string name, decimal order, byte[] image//, int userId
+        public async Task InsertAsync(string name, byte[] image//, int userId
             )
         {
+
+           var categoryList = await _categoryRepository.GetListAsync(null,c => c.Order);
+            
+
+            var order = categoryList.Count > 0 ? (categoryList[categoryList.Count - 1].Order - 1) : 100;
+
             await _categoryRepository.AddAsync(new Category
             {
                 Name = name,
-                Order = order,
                 Image = image,
+                Order = order
                 //CreatedBy = userId
             });
 
             await _versionHistoryService.CreateNewVersionAsync();
         }
 
-        public async Task InsertCategoryDetailAsync(int categoryId, decimal order, string image//, int userId
+        public async Task InsertCategoryDetailAsync(int categoryId, string image//, int userId
             )
         {
+            var categoryDetailList = await _categoryDetailsRepository.GetListAsync(null, c => c.Order);
+
+
+            var order = categoryDetailList.Count > 0 ? (categoryDetailList[categoryDetailList.Count - 1].Order - 1) : 100;
+
             await _categoryDetailsRepository.AddAsync(new CategoryDetail
             {
                 CategoryId = categoryId,
-                Order = order,
                 Image = Convert.FromBase64String(image),
+                Order = order
                 //CreatedBy = userId
             });
 
@@ -91,10 +102,9 @@ namespace LetsDoIt.Moody.Application.Category
 
         }
 
-        public async Task UpdateAsync(int id, string name, decimal order, byte[] image//, int userId
+        public async Task UpdateAsync(int id, string name, byte[] image//, int userId
             )
         {
-          
             var entity = await _categoryRepository.GetAsync(c => c.Id == id && !c.IsDeleted);
             if (entity == null)
             {
@@ -102,7 +112,6 @@ namespace LetsDoIt.Moody.Application.Category
             }
 
             entity.Name = name;
-            entity.Order = order;
             entity.Image = image;
             //entity.ModifiedBy = userId;
 
@@ -112,21 +121,52 @@ namespace LetsDoIt.Moody.Application.Category
 
         }
 
-        public async Task UpdateCategoryDetailsAsync(int id, decimal order, byte[] image//, int userId
+        public async Task UpdateCategoryDetailsAsync(int id, byte[] image//, int userId
             )
         {
-
             var entity = await _categoryDetailsRepository.GetAsync(detail => detail.Id == id && !detail.IsDeleted);
             if (entity == null)
             {
                 throw new ObjectNotFoundException("Category Detail", id);
             }
 
-            entity.Order = order;
             entity.Image = image;
             //entity.ModifiedBy = userId;
 
             await _categoryDetailsRepository.UpdateAsync(entity);
+
+            await _versionHistoryService.CreateNewVersionAsync();
+
+        }
+
+        public async Task UpdateOrderAsync(int id, int previousId, int nextId//, int userId
+            )
+        {
+            var entity = await _categoryRepository.GetAsync(c => c.Id == id);
+            var previous = await _categoryRepository.GetAsync(c => c.Id == previousId);
+            var next = await _categoryRepository.GetAsync(c => c.Id == nextId);
+
+            var updatedOrder = (previous.Order + next.Order) / 2;
+            var entityExist =  await _categoryRepository.GetAsync(c => c.Order == updatedOrder);
+
+            if(previous == null)
+            {
+
+            }
+
+            if(next == null)
+            {
+
+            }
+
+            if(entityExist != null)
+            {
+                
+            }
+
+            entity.Order = updatedOrder;
+
+            await _categoryRepository.UpdateAsync(entity);
 
             await _versionHistoryService.CreateNewVersionAsync();
 
