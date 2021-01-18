@@ -5,8 +5,10 @@ namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Constants;
     using Application.Dashboard;
-    using System;
+    using LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities;
+    using LetsDoIt.Moody.Web.Entities.Responses;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     [Route("api/[controller]")]
@@ -21,19 +23,27 @@ namespace LetsDoIt.Moody.Web.Controllers
             _dashboardService = dashboardService;
         }
 
-       
-        public async Task<ActionResult> GetDashboardItemsAsync(DateTime date)
+        public async Task<ActionResult<IEnumerable<DashboardItemsResponse>>> GetDashboardItemsAsync()
         {
-            /// response olmadan get methodunu nasil dondurucez ????
-            var result = await _dashboardService.GetDashboardItemsAsync(date);
+            var result = await _dashboardService.GetDashboardItemsAsync();
             if (result == null)
             {
                 return NoContent();
             }
 
-            return //??? response(result) ;
+           return ToDashboardItemsResponse(result);
         }
-       
 
-    }
+        private static DashboardItemsResponse ToDashboardItemsResponse(SpGetDashboardItemsResult dashboardResult)
+        {  
+            var result = new DashboardItemsResponse
+            {
+                Name = dashboardResult.Name,
+                TotalNumber = dashboardResult.TotalNumber
+            };
+
+            return result.Select(DashboardItemsResponse); 
+        }
+    } 
 }
+

@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities
 {
-   public class SpGetDashboardItemsResult
+    public class SpGetDashboardItemsResult
     {
         public string Name { get; set; }
 
-        public DateTime CurrentDate { get; set; }
+        public int TotalNumber { get; set; }
 
-        public SpGetDashboardItemsResult FirstOrDefault()
-        {
-            throw new NotImplementedException();
-        }
+        public ICollection<SpGetDashboardItemsResult> DashboardItems { get; set; }
     }
 }

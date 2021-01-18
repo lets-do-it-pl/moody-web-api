@@ -1,13 +1,10 @@
-﻿
-using System;
-using System.Threading.Tasks;
-
+﻿using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.Data
 {
     using Persistence.StoredProcedures.ResultEntities;
     public interface IDataService
     {
-    Task<SpGetDashboardItemsResult> GetDashboardItemsAsync(DateTime date);
+    Task<SpGetDashboardItemsResult> GetDashboardItemsAsync();
     }
 }
