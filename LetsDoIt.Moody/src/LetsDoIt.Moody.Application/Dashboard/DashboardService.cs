@@ -17,9 +17,7 @@ namespace LetsDoIt.Moody.Application.Dashboard
 
         public async Task<ICollection<SpGetDashboardItemsResult>> GetDashboardItemsAsync()
         {
-             var result = await _dataService.GetDashboardItemsAsync();
-
-             return result;
+            return await _dataService.GetDashboardItemsAsync();
         }
     }   
 }

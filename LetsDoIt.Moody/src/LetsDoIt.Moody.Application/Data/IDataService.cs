@@ -2,8 +2,10 @@
 namespace LetsDoIt.Moody.Application.Data
 {
     using Persistence.StoredProcedures.ResultEntities;
+    using System.Collections.Generic;
+
     public interface IDataService
     {
-        Task<SpGetDashboardItemsResult[]> GetDashboardItemsAsync();
+        Task<ICollection<SpGetDashboardItemsResult>> GetDashboardItemsAsync();
     }
 }

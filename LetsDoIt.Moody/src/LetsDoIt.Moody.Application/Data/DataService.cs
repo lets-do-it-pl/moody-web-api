@@ -7,6 +7,7 @@ namespace LetsDoIt.Moody.Application.Data
     using Persistence;
     using Persistence.StoredProcedures;
     using Persistence.StoredProcedures.ResultEntities;
+    using System.Collections.Generic;
 
     public class DataService : IDataService
     {
@@ -17,7 +18,7 @@ namespace LetsDoIt.Moody.Application.Data
             _dbContext = dbContext;
         }
 
-        public async Task<SpGetDashboardItemsResult[]> GetDashboardItemsAsync()
+        public async Task<ICollection<SpGetDashboardItemsResult>> GetDashboardItemsAsync()
         {
             var input = new SpGetDashboardItems { };
 

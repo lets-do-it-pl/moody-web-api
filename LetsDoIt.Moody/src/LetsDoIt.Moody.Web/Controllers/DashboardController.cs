@@ -31,9 +31,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 return NoContent();
             }
 
-            var result = dashboardResult.Select(ToDashboardItemsResponse);
-
-            return Ok(result);
+            return Ok(dashboardResult.Select(ToDashboardItemsResponse));
         }
 
         private static DashboardItemsResponse ToDashboardItemsResponse(SpGetDashboardItemsResult dashboardResult)
