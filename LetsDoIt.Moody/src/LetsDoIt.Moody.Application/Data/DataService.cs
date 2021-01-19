@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-
-namespace LetsDoIt.Moody.Application.Data
+﻿namespace LetsDoIt.Moody.Application.Data
 {
     using CustomExceptions;
     using Persistence;
-    using Search;
+    using Persistence.StoredProcedures.ResultEntities;
 
     public class DataService : IDataService
     {
@@ -16,6 +11,23 @@ namespace LetsDoIt.Moody.Application.Data
         public DataService(IApplicationContext dbContext)
         {
             _dbContext = dbContext;
+           
+        }
+
+
+        public async Task<ICollection <SbGeneralSearchResult>> GetGeneralSearchResultAsync(string search)
+        {
+            var input = new SbGeneralSearch { SearchValue = search };
+
+            var result = await _dbContext.Database.ExecuteStoredProcedureAsync<SbGeneralSearchResult>(input);
+
+            if (result == null)
+            {
+                throw new NullReferenceException("NULL Search Result");
+                
+            }
+
+            return result.ToList();
         }
 
         public async Task<ICollection<SearchGetResult>> GetSearchResultDbAsync(string searchKey)
