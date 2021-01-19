@@ -3,6 +3,7 @@
 namespace LetsDoIt.Moody.Persistence
 {
     using Entities;
+    using Microsoft.EntityFrameworkCore.Infrastructure;
 
     public interface IApplicationContext
     {
@@ -12,5 +13,6 @@ namespace LetsDoIt.Moody.Persistence
         DbSet<Client> Clients { get; set; }
         DbSet<User> Users { get; set; }
         DbSet<VersionHistory> VersionHistories { get; set; }
+        DatabaseFacade Database { get; }
     }
 }
