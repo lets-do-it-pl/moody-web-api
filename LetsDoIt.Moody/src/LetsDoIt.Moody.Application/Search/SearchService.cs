@@ -4,28 +4,22 @@ using System.Collections.Generic;
 namespace LetsDoIt.Moody.Application.Search
 {
     using Data;
-    
+    using LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities;
+
     public class SearchService : ISearchService
     {
-        IDataService _dataService;
+        private readonly IDataService _dataService;
         public SearchService(IDataService dataService)
         {
             _dataService = dataService;
         }
 
-        public async Task<ICollection<SearchGetResult>> GetGeneralSearchResultAsync(string searchKey)
+        public async Task<ICollection<SpGetGeneralSearchResult>> GetDataResultAsync(string searchKey)
         {
-            searchKey = TurnToLowerCase(searchKey);
-            return await _dataService.GetSearchResultDbAsync(searchKey);
+            searchKey = searchKey.ToLower();
+            return await _dataService.GetGeneralSearchResultAsync(searchKey);
         }
 
-        public string TurnToLowerCase(string searchKey)
-        {   
-            if(searchKey== null)
-            {
-                throw new System.Exception("Null SearchKey");
-            }
-             return searchKey.ToLower();
-        }
+       
     }
 }

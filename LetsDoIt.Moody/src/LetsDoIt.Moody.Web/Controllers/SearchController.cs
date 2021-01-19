@@ -22,7 +22,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchGeneral(string searchKey)
         {
-            var value = await _searchService.GetGeneralSearchResultAsync(searchKey);
+            var value = await _searchService.GetDataResultAsync(searchKey);
 
             return Ok(value);
 
