@@ -31,7 +31,7 @@ namespace LetsDoIt.Moody.Application.Data
                 throw new NullReferenceException("NULL Search Result");
             }
 
-            return result.ToList();
+            return result.ToArray();
         }
 
        
