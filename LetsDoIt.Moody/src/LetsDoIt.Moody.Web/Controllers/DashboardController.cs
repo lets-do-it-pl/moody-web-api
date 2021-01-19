@@ -25,24 +25,20 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         public async Task<ActionResult<IEnumerable<DashboardItemsResponse>>> GetDashboardItemsAsync()
         {
-            var result = await _dashboardService.GetDashboardItemsAsync();
-            if (result == null)
+            var dashboardResult = await _dashboardService.GetDashboardItemsAsync();
+            if (dashboardResult == null)
             {
                 return NoContent();
             }
 
-           return ToDashboardItemsResponse(result);
+            var result = dashboardResult.Select(ToDashboardItemsResponse);
+
+            return Ok(result);
         }
 
         private static DashboardItemsResponse ToDashboardItemsResponse(SpGetDashboardItemsResult dashboardResult)
         {  
-            var result = new DashboardItemsResponse
-            {
-                Name = dashboardResult.Name,
-                TotalNumber = dashboardResult.TotalNumber
-            };
-
-            return result.Select(DashboardItemsResponse); 
+            return new DashboardItemsResponse { Name = dashboardResult.Name, TotalNumber = dashboardResult.TotalNumber };
         }
     } 
 }

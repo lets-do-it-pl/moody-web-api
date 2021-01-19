@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Linq;
 using EntityFrameworkExtras.EFCore;
 
@@ -8,8 +7,7 @@ namespace LetsDoIt.Moody.Application.Data
     using Persistence;
     using Persistence.StoredProcedures;
     using Persistence.StoredProcedures.ResultEntities;
-  
-   
+
     public class DataService : IDataService
     {
         private readonly IApplicationContext _dbContext;
@@ -19,19 +17,18 @@ namespace LetsDoIt.Moody.Application.Data
             _dbContext = dbContext;
         }
 
-
-        public async Task<SpGetDashboardItemsResult> GetDashboardItemsAsync(DateTime date)
+        public async Task<SpGetDashboardItemsResult[]> GetDashboardItemsAsync()
         {
-            var input = new SpGetDashboardItems { Date = date };
+            var input = new SpGetDashboardItems { };
 
             var result = await _dbContext.Database.ExecuteStoredProcedureAsync<SpGetDashboardItemsResult>(input);
 
             if (result == null)
             {
-                return new SpGetDashboardItemsResult();
+                return null;
             }
 
-            return result.FirstOrDefault();
+            return result.ToArray();
         }
     }
 }
