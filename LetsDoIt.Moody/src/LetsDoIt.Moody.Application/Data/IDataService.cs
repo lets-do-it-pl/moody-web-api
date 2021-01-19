@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using LetsDoIt.Moody.Persistence.StoredProcedures;
-using LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities;
 
 namespace LetsDoIt.Moody.Application.Data
 {
+    using LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities;
     public interface IDataService
     {
-
-        Task<ICollection<SbGeneralSearchResult>> GetGeneralSearchResultAsync(string search);
+        Task<ICollection<SpGetGeneralSearchResult>> GetGeneralSearchResultAsync(string searchKey);
     }
 }

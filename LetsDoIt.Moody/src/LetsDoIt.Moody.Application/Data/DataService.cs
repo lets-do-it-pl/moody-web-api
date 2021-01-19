@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EntityFrameworkExtras.EFCore;
-using LetsDoIt.Moody.Persistence.StoredProcedures;
+
 
 namespace LetsDoIt.Moody.Application.Data
 {
     using Persistence;
+    using Persistence.StoredProcedures;
     using Persistence.StoredProcedures.ResultEntities;
 
     public class DataService : IDataService
@@ -17,23 +18,22 @@ namespace LetsDoIt.Moody.Application.Data
         public DataService(IApplicationContext dbContext)
         {
             _dbContext = dbContext;
-           
         }
 
-
-        public async Task<ICollection <SbGeneralSearchResult>> GetGeneralSearchResultAsync(string search)
+        public async Task<ICollection <SpGetGeneralSearchResult>> GetGeneralSearchResultAsync(string searchKey)
         {
-            var input = new SbGeneralSearch { SearchValue = search };
+            var input = new SpGeneralSearch { SearchValue = searchKey };
 
-            var result = await _dbContext.Database.ExecuteStoredProcedureAsync<SbGeneralSearchResult>(input);
+            var result = await _dbContext.Database.ExecuteStoredProcedureAsync<SpGetGeneralSearchResult>(input);
 
             if (result == null)
             {
                 throw new NullReferenceException("NULL Search Result");
-                
             }
 
             return result.ToList();
         }
+
+       
     }
 }
