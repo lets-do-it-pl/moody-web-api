@@ -3,63 +3,87 @@ using System.Data;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using NGuard;
+using LetsDoIt.CustomValueTypes;
 using LetsDoIt.MailSender;
-using LetsDoIt.Moody.Infrastructure.Utils;
 
 namespace LetsDoIt.Moody.Application.User
 {
     using Constants;
     using CustomExceptions;
-    using Security;
+    using Infrastructure.Utils;
+    using Options;
     using Persistence.Entities;
     using Persistence.Repositories.Base;
-    using NGuard;
+    using Security;
 
     public class UserService : IUserService
     {
-        private const string HtmlFilePath = @"HtmlTemplates\UserVerification.html";
-        private const string EmailVerification = "Email Verification";
+        private const string UserVerificationHtmlFilePath = @"HtmlTemplates\UserVerification.html";
+        private const string EmailVerificationSubject = "Email Verification";
+        private const string ActivateUserApiQuery = "activate-user";
+
+        private const string ResetPasswordHtmlFilePath = @"HtmlTemplates\ResetPassword.html";
+        private const string ResetPasswordSubject = "Reset Password";
+        private const string ResetPasswordApiQuery = "reset-password";
+
         private readonly IRepository<User> _userRepository;
         private readonly IMailSender _mailSender;
         private readonly ISecurityService _securityService;
+        private readonly string _activateUserApiUrl;
+        private readonly string _resetPasswordApiUrl;
 
         public UserService(IRepository<User> userRepository,
             IMailSender mailSender,
-            ISecurityService securityService)
+            ISecurityService securityService,
+            IOptions<WebInfoOptions> webInfoOptions)
         {
             _userRepository = userRepository;
             _mailSender = mailSender;
             _securityService = securityService;
+            _activateUserApiUrl = $"{webInfoOptions.Value.Url}{ActivateUserApiQuery}";
+            _resetPasswordApiUrl = $"{webInfoOptions.Value.Url}{ResetPasswordApiQuery}";
         }
 
-        public async Task SaveUserAsync(string username, string password, string email, string name, string surname)
+        public async Task SaveUserAsync(
+            string username,
+            string password,
+            string email,
+            string name,
+            string surname)
         {
-
-            var isUserExisted = await _userRepository.AnyAsync(u => u.Username == username || u.Email == email
-                                                                    && !u.IsDeleted);
+            var isUserExisted = await _userRepository.AnyAsync(u => u.Email == email && !u.IsDeleted);
 
             if (isUserExisted)
             {
-                throw new DuplicateNameException($"The username or email is already in the database. Username = {username}, Email = {email}");
+                throw new DuplicateNameException($"The email already exists in the system.");
             }
 
             await _userRepository.AddAsync(ToUser(username, password, name, surname, email));
+
+            await SendActivationEmailAsync(email);
         }
 
-        public async Task SendActivationEmailAsync(string referer, string email)
+        public async Task SendActivationEmailAsync(string email)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Email == email && !u.IsDeleted);
 
             if (dbUser == null)
             {
-                throw new EmailNotRegisteredException(email);
+                throw new UserNotRegisteredException(email);
             }
 
-            var token = _securityService.GenerateJwtToken(dbUser.Id.ToString(), dbUser.FullName, UserTypeConstants.Standard);
+            if (dbUser.IsActive)
+            {
+                throw new UserAlreadyActivatedException("Don't need to send activation email!");
+            }
 
-            var content = await ReadHtmlContent(HtmlFilePath, referer, token.Token);
+            var token = _securityService.GenerateJwtToken(dbUser.Id.ToString(), dbUser.FullName, UserTypeConstants.NotActivatedUser);
 
-            await _mailSender.SendAsync(EmailVerification, content, email);
+            var content = await ReadHtmlContentAsync(UserVerificationHtmlFilePath, _activateUserApiUrl, token.Token);
+
+            await _mailSender.SendAsync(EmailVerificationSubject, content, email);
         }
 
         public async Task ActivateUserAsync(int id)
@@ -68,7 +92,12 @@ namespace LetsDoIt.Moody.Application.User
 
             if (dbUser == null)
             {
-                throw new UserNotFoundException(id);
+                throw new UserNotFoundException();
+            }
+
+            if (dbUser.IsActive)
+            {
+                throw new UserAlreadyActivatedException("Don't need to activate it again!");
             }
 
             dbUser.IsActive = true;
@@ -86,20 +115,7 @@ namespace LetsDoIt.Moody.Application.User
               
             var user = await _userRepository.GetAsync(u => u.Username == username && u.Password == encryptedPassword);
 
-            if (user == null)
-            {
-                throw new UserNotFoundException(default);
-            }
-
-            if (!user.IsActive)
-            {
-                throw new UserNotActiveException();
-            }
-
-            if (!user.CanLogin)
-            {
-                throw new UserNotHaveLoginPermissionException();
-            }
+            ValidateUser(user);
 
             var tokenInfo = _securityService.GenerateJwtToken(user.Id.ToString(), user.FullName, user.UserType);
             if (tokenInfo == null)
@@ -113,7 +129,53 @@ namespace LetsDoIt.Moody.Application.User
             return (user.Id, tokenInfo.Token);
         }
 
-        private static async Task<string> ReadHtmlContent(string filePath, string referer, string token)
+        public async Task ForgetPasswordAsync(string email)
+        {
+            Guard.Requires(email, nameof(email)).IsNotNullOrEmptyOrWhiteSpace();
+
+            var user = await _userRepository.GetAsync(u => u.Email == email && !u.IsDeleted);
+
+            ValidateUser(user);
+
+            var token = _securityService.GenerateJwtToken(user.Id.ToString(), user.FullName, UserTypeConstants.ResetPassword);
+
+            var content = await ReadHtmlContentAsync(ResetPasswordHtmlFilePath, _resetPasswordApiUrl, token.Token);
+
+            await _mailSender.SendAsync(ResetPasswordSubject, content, email.ToString());
+        }
+
+        public async Task ResetPasswordAsync(int userId, string password)
+        {
+            Guard.Requires(userId, nameof(userId)).IsGreaterThan(0);
+            Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
+
+            var user = await _userRepository.GetAsync(u => u.Id == userId && !u.IsDeleted);
+
+            ValidateUser(user);
+
+            user.Password = GetEncryptedPassword(user.Username, password);
+            user.ModifiedBy = userId;
+
+            await _userRepository.UpdateAsync(user);
+        }
+
+        private static void ValidateUser(User user)
+        {
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+            else if (!user.IsActive)
+            {
+                throw new UserNotActiveException();
+            }
+            else if (!user.CanLogin)
+            {
+                throw new UserNotHaveLoginPermissionException();
+            }
+        }
+
+        private static async Task<string> ReadHtmlContentAsync(string filePath, string url, string token)
         {
             await using FileStream fileStream = new FileStream(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, filePath)), FileMode.Open);
 
@@ -121,11 +183,7 @@ namespace LetsDoIt.Moody.Application.User
 
             var content = await streamReader.ReadToEndAsync();
 
-            var frontEndUri = new Uri(referer);
-
-            content = content.Replace("{{action_url}}",
-                frontEndUri.Scheme + "://" + frontEndUri.Host
-                          + "?token=" + token);
+            content = content.Replace("{{action_url}}", $"{url}?token={token}");
 
             return content;
         }
@@ -133,10 +191,12 @@ namespace LetsDoIt.Moody.Application.User
         private User ToUser(string username, string password, string name, string surname, string email) => new User
         {
             Username = username,
-            Password = ProtectionHelper.EncryptValue(username + password),
+            Password = GetEncryptedPassword(username, password),
             FullName = $"{name} {surname}",
             Email = email
         };
+
+        private string GetEncryptedPassword(string username, string password) => ProtectionHelper.EncryptValue(username + password);
 
     }
 }

@@ -9,6 +9,7 @@ namespace LetsDoIt.Moody.Application.Data
     
     using LetsDoIt.Moody.Persistence.StoredProcedures;
     using Persistence;
+    using Persistence.StoredProcedures;
     using Persistence.StoredProcedures.ResultEntities;
     
 
@@ -19,7 +20,6 @@ namespace LetsDoIt.Moody.Application.Data
         public DataService(IApplicationContext dbContext)
         {
             _dbContext = dbContext;
-           
         }
 
         public async Task<ICollection <SpGetGeneralSearchResult>> GetGeneralSearchResultAsync(string searchKey)
@@ -31,10 +31,23 @@ namespace LetsDoIt.Moody.Application.Data
             if (result == null)
             {
                 throw new NullReferenceException("NULL Search Result");
-                
             }
 
-            return result.ToList();
+            return result.ToArray();
+        }
+
+        public async Task<ICollection<SpGetDashboardItemsResult>> GetDashboardItemsAsync()
+        {
+            var input = new SpGetDashboardItems { };
+
+            var result = await _dbContext.Database.ExecuteStoredProcedureAsync<SpGetDashboardItemsResult>(input);
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            return result.ToArray();
         }
 
         
