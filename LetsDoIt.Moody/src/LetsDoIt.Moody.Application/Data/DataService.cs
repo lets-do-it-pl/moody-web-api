@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using EntityFrameworkExtras.EFCore;
 
-
 namespace LetsDoIt.Moody.Application.Data
 {
     using Persistence;
@@ -34,6 +33,18 @@ namespace LetsDoIt.Moody.Application.Data
             return result.ToArray();
         }
 
-       
+        public async Task<ICollection<SpGetDashboardItemsResult>> GetDashboardItemsAsync()
+        {
+            var input = new SpGetDashboardItems { };
+
+            var result = await _dbContext.Database.ExecuteStoredProcedureAsync<SpGetDashboardItemsResult>(input);
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            return result.ToArray();
+        }
     }
 }

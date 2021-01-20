@@ -1,7 +1,6 @@
 ﻿using System;
 using LetsDoIt.MailSender;
-using LetsDoIt.Moody.Application.Security;
-using LetsDoIt.Moody.Application.User;
+using Microsoft.Extensions.Options;
 using Moq;
 using System.Data;
 using System.Linq.Expressions;
@@ -10,10 +9,14 @@ using Xunit;
 
 namespace LetsDoIt.Moody.Application.UnitTests.User
 {
+    using Application.Options;
+    using Application.Security;
+    using Application.User;
     using CustomExceptions;
     using Infrastructure.Utils;
     using Persistence.Repositories.Base;
     using Persistence.Entities;
+
 
     public class UserServiceTests
     {
@@ -21,14 +24,20 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
         private readonly Mock<IRepository<User>> _mockUserRepository;
         private readonly Mock<IMailSender> _mockMailSender;
         private readonly Mock<ISecurityService> _mockSecurityService;
+        private readonly Mock<IOptions<WebInfoOptions>> _mockWebInfoOptions;
 
         public UserServiceTests()
         {
             _mockUserRepository = new Mock<IRepository<User>>();
             _mockMailSender = new Mock<IMailSender>();
             _mockSecurityService = new Mock<ISecurityService>();
+            _mockWebInfoOptions = new Mock<IOptions<WebInfoOptions>>();
 
-            _testing = new UserService(_mockUserRepository.Object, _mockMailSender.Object, _mockSecurityService.Object);
+            _testing = new UserService(
+                _mockUserRepository.Object, 
+                _mockMailSender.Object, 
+                _mockSecurityService.Object,
+                _mockWebInfoOptions.Object);
         }
 
         #region SaveUserAsync
@@ -76,9 +85,9 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
 
             _mockUserRepository.Setup(ur => ur.GetAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync((User)null);
 
-            async Task Test() => await _testing.SendActivationEmailAsync("good.referer", email);
+            async Task Test() => await _testing.SendActivationEmailAsync(email);
 
-            await Assert.ThrowsAsync<EmailNotRegisteredException>(Test);
+            await Assert.ThrowsAsync<UserNotRegisteredException>(Test);
         }
 
         [Fact]
@@ -95,7 +104,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.User
             _mockSecurityService.Setup(ss => ss.GenerateJwtToken(It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<string>())).Returns(new TokenInfo("good.token", DateTime.MaxValue));
 
-            await _testing.SendActivationEmailAsync("https://developer.mozilla.org/en-US/docs/Web/JavaScript", email);
+            await _testing.SendActivationEmailAsync(email);
 
             _mockSecurityService.Verify(ss => ss.GenerateJwtToken("1", "Full Name", It.IsAny<string>()), Times.Once);
 

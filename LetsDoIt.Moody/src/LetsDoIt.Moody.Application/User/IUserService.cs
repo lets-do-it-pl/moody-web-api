@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using LetsDoIt.CustomValueTypes;
+using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -6,10 +7,14 @@ namespace LetsDoIt.Moody.Application.User
     {
         Task SaveUserAsync(string username, string password, string email, string name, string surname);
 
-        Task SendActivationEmailAsync(string referer, string email);
+        Task SendActivationEmailAsync(string email);
 
         Task ActivateUserAsync(int id);
         
         Task<(int id, string token)> AuthenticateAsync(string email, string password);
+
+        Task ForgetPasswordAsync(string email);
+
+        Task ResetPasswordAsync(int userId, string password);
     }
 }

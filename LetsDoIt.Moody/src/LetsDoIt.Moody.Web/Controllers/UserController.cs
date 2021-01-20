@@ -15,10 +15,10 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Application.User;
     using Entities.Responses;
     using System;
+    using LetsDoIt.CustomValueTypes;
 
     [Route("api/user")]
     [ApiController]
-    [Authorize(Roles = RoleConstants.StandardRole)]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -61,7 +61,6 @@ namespace LetsDoIt.Moody.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> SaveUser(SaveUserRequest saveUserRequest)
         {
-
             try
             {
                 await _userService.SaveUserAsync(saveUserRequest.Username,
@@ -72,46 +71,101 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return StatusCode((int)HttpStatusCode.Created, "Created");
             }
-            catch (DuplicateNameException ex)
+            catch (Exception ex)
             {
+                if (ex is DuplicateNameException)
+                {
+                    return BadRequest(ex.Message);
+                }
+                else if (ex is UserNotRegisteredException || ex is UserAlreadyActivatedException)
+                {
+                    return BadRequest($"The user has been created! Error on sending activation email: {ex.Message}");
+                }
 
-                return BadRequest(ex.Message);
+                throw;
             }
         }
 
-        [HttpPost]
-        [Route("user-verification-email")]
+        [HttpPost("user-verification-email")]        
         [AllowAnonymous]
         public async Task<IActionResult> SendUserVerificationEmail(string email)
         {
-
-            var referer = Request.Headers["Referer"].ToString();
-
             try
             {
-                await _userService.SendActivationEmailAsync(referer, email);
+                await _userService.SendActivationEmailAsync(email);
 
                 return Ok();
             }
-            catch (EmailNotRegisteredException exception)
+            catch (UserNotRegisteredException exception)
             {
                 return BadRequest(exception.Message);
             }
         }
 
-        [HttpPost]
-        [Route("email/verification")]
+        [HttpPost("activate")]        
+        [Authorize(Roles = RoleConstants.NotActivatedUserRole)]
         public async Task<IActionResult> ActivateUser()
         {
             try
             {
                 await _userService.ActivateUserAsync(GetUserInfo().UserId);
-                
+
                 return Ok();
             }
-            catch (UserNotFoundException e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                if (ex is UserNotFoundException || ex is UserAlreadyActivatedException)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                throw;
+            }
+        }
+
+        [HttpPost("forget-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordRequest request)
+        {
+            try
+            {
+                await _userService.ForgetPasswordAsync(request.Email);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                if (ex is UserNotFoundException || 
+                    ex is UserNotActiveException ||
+                    ex is UserNotHaveLoginPermissionException)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                throw;
+            }
+        }
+
+        [HttpPost("reset-password")]
+        [Authorize(Roles = RoleConstants.ResetPasswordRole)]
+        public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
+        {
+            try
+            {
+                await _userService.ResetPasswordAsync(GetUserInfo().UserId, request.Password);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                if (ex is UserNotFoundException ||
+                    ex is UserNotActiveException ||
+                    ex is UserNotHaveLoginPermissionException)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                throw;
             }
         }
 

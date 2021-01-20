@@ -3,13 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LetsDoIt.Moody.Web.Extensions
 {
+    using Application.Options;
+
     public static class CorsConfigurationExtension
     {
-
-        public static IServiceCollection AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddCorsConfig(
+            this IServiceCollection services, 
+            IConfiguration configuration)
         {
-
-            var webUrl = configuration.GetValue<string>("WebUrl");
+            var url = configuration.GetValue<string>($"{WebInfoOptions.WebInfoSectionName}:Url");
 
             return services
                 .AddCors(options =>
@@ -18,7 +20,7 @@ namespace LetsDoIt.Moody.Web.Extensions
                     builder =>
                     {
                         builder
-                        .WithOrigins(webUrl)
+                        .WithOrigins(url)
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowAnyOrigin();

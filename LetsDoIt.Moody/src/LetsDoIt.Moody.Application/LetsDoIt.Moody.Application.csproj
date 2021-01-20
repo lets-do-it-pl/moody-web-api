@@ -8,6 +8,7 @@
     <PackageReference Include="Castle.Core" Version="4.4.1" />
     <PackageReference Include="Castle.Core.AsyncInterceptor" Version="1.7.0" />
     <PackageReference Include="jose-jwt" Version="3.0.0" />
+    <PackageReference Include="LetsDoIt.CustomValueTypes" Version="1.0.0" />
     <PackageReference Include="LetsDoIt.MailSender" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="3.1.8" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
@@ -27,6 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="HtmlTemplates\ResetPassword.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="HtmlTemplates\UserVerification.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
