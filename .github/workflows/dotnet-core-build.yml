@@ -38,6 +38,8 @@ jobs:
 
       # set report file and title 
     - name: Set Test Title
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: | 
             if ${{ github.event_name == 'pull_request' }}
             then
