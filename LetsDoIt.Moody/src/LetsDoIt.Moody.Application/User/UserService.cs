@@ -112,7 +112,7 @@ namespace LetsDoIt.Moody.Application.User
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
             var encryptedPassword = ProtectionHelper.EncryptValue(username + password);
-
+              
             var user = await _userRepository.GetAsync(u => u.Username == username && u.Password == encryptedPassword);
 
             ValidateUser(user);

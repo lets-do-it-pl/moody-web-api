@@ -6,14 +6,17 @@ using EntityFrameworkExtras.EFCore;
 
 namespace LetsDoIt.Moody.Application.Data
 {
+    
+    using LetsDoIt.Moody.Persistence.StoredProcedures;
     using Persistence;
     using Persistence.StoredProcedures;
     using Persistence.StoredProcedures.ResultEntities;
+    
 
     public class DataService : IDataService
     {
         private readonly IApplicationContext _dbContext;
-
+        
         public DataService(IApplicationContext dbContext)
         {
             _dbContext = dbContext;
@@ -46,5 +49,7 @@ namespace LetsDoIt.Moody.Application.Data
 
             return result.ToArray();
         }
+
+        
     }
 }

@@ -7,6 +7,6 @@ namespace LetsDoIt.Moody.Persistence.StoredProcedures
     public class SpGeneralSearch
     {
         [StoredProcedureParameter(SqlDbType.VarChar, Direction = ParameterDirection.Input, ParameterName = "searchKey")]
-        public string SearchValue {get;set;}
+        public string SearchValue { get; set; }
     }
 }

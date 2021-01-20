@@ -5,6 +5,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Constants;
     using Application.Search;
+    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -16,6 +17,16 @@ namespace LetsDoIt.Moody.Web.Controllers
         public SearchController(ISearchService searchService)
         {
             _searchService = searchService;
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> SearchGeneral(string searchKey)
+        {
+            var value = await _searchService.GetGeneralSearchResultAsync(searchKey);
+
+            return Ok(value);
+
         }
     }
 }
