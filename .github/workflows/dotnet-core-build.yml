@@ -1,6 +1,7 @@
 name: .NET Core Build with Tests
 
-on:
+on:  
+  workflow_dispatch:  
   push:
     branches: [ master ]
   pull_request:
