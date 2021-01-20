@@ -6,11 +6,12 @@ on:
     - cron: '0 2 * * *' # every night at 2 am UTC
 
 jobs:
-  delete-artifacts:
+  remove-old-artifacts:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      - uses: kolpav/purge-artifacts-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: ${{github.workspace}}/${{env.file_name}}
-          expire-in: 10 minutes # Set this to 0 to delete all artifacts
+    - name: Remove old artifacts
+      uses: c-hive/gha-remove-artifacts@v1
+      with:
+        age: '1 month'
