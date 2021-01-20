@@ -1,14 +1,17 @@
-name: 'nightly artifacts cleanup'
+name: Daily cleanup
+
 on:
   workflow_dispatch:  
   schedule:
-    - cron: '0 2 * * *' # every night at 4 am UTC
+    - cron: '0 2 * * *' # every night at 2 am UTC
 
 jobs:
-  delete-artifacts:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: kolpav/purge-artifacts-action@v1
+      - uses: actions/checkout@v1
+      - name: Daily Artifact Cleanup
+        uses: jimschubert/delete-artifacts-action@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          expire-in: 1days # Setting this to 0 will delete all artifacts
+          log_level: 'error'
+          min_bytes: '0'
