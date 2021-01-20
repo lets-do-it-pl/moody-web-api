@@ -5,6 +5,7 @@ namespace LetsDoIt.Moody.Application.Search
 {
     using Data;
     using LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities;
+    using System.Linq;
 
     public class SearchService : ISearchService
     {
@@ -14,12 +15,16 @@ namespace LetsDoIt.Moody.Application.Search
             _dataService = dataService;
         }
 
-        public async Task<ICollection<SpGetGeneralSearchResult>> GetDataResultAsync(string searchKey)
+        public async Task<ICollection<SpGetGeneralSearchResult>> GetGeneralSearchResultAsync(string searchKey)
         {
-            searchKey = searchKey.ToLower();
-            return await _dataService.GetGeneralSearchResultAsync(searchKey);
+            if (string.IsNullOrWhiteSpace(searchKey))
+            {
+                return Enumerable.Empty<SpGetGeneralSearchResult>().ToList();
+            }
+
+            return await _dataService.GetGeneralSearchResultAsync(searchKey.ToLower());
         }
 
-       
+
     }
 }
