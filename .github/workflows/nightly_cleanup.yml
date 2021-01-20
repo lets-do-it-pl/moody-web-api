@@ -6,12 +6,10 @@ on:
     - cron: '0 2 * * *' # every night at 2 am UTC
 
 jobs:
-  build:
+  delete-artifacts:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Daily Artifact Cleanup
-        uses: jimschubert/delete-artifacts-action@v1
+      - uses: kolpav/purge-artifacts-action@v1
         with:
-          log_level: 'error'
-          min_bytes: '0'
+          token: $
+          expire-in: 0 # Set this to 0 to delete all artifacts
