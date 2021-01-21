@@ -8,14 +8,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
+    using Application.Constants;
     using Application.CustomExceptions;
+    using Application.User;
     using Entities;
     using Entities.Requests;
-    using Application.Constants;
-    using Application.User;
+    using Entities.Requests.User;
     using Entities.Responses;
+    using LetsDoIt.Moody.Persistence.Entities;
     using System;
-    using LetsDoIt.CustomValueTypes;
 
     [Route("api/user")]
     [ApiController]
@@ -28,32 +29,24 @@ namespace LetsDoIt.Moody.Web.Controllers
             _userService = userService;
         }
 
-        [HttpPost("authenticate")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Authenticate(AuthenticationRequest request)
+        #region UserCRUD
+
+        [HttpGet]
+        [Authorize(Roles = RoleConstants.StandardRole)]
+        public async Task<IActionResult> GetUsers()
         {
-            try
-            {
-                var value = await _userService.AuthenticateAsync(request.Email, request.Password);
+            var userResult = await _userService.GetUsersAsync();
 
-                var result = new AuthenticationResponse(value.id, value.token);
-
-                return Ok(result);
-            }
-            catch (UserNotFoundException)
+            if (userResult == null)
             {
-                return BadRequest("Username or Password is wrong!");
-            }
-            catch (Exception ex)
-            {
-                if (ex is UserNotActiveException || ex is UserNotHaveLoginPermissionException)
-                {
-                    return BadRequest(ex.Message);
-                }
-
-                throw;
+                return NoContent();
             }
 
+            var result = userResult
+                .Select(ToUserResponse)
+                .OrderBy(u => u.Username);
+
+            return Ok(result);
         }
 
         [HttpPost]
@@ -77,7 +70,8 @@ namespace LetsDoIt.Moody.Web.Controllers
                 {
                     return BadRequest(ex.Message);
                 }
-                else if (ex is UserNotRegisteredException || ex is UserAlreadyActivatedException)
+
+                if (ex is UserNotFoundException || ex is UserAlreadyActivatedException)
                 {
                     return BadRequest($"The user has been created! Error on sending activation email: {ex.Message}");
                 }
@@ -86,7 +80,74 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
         }
 
-        [HttpPost("user-verification-email")]        
+        [HttpPut, Route("{userId}")]
+        [Authorize(Roles = RoleConstants.AdminRole)]
+        public async Task<IActionResult> UpdateUser(int userId, UserUpdateRequest userUpdateRequest)
+        {
+            try
+            {
+                await _userService.UpdateUserAsync(
+                    userId,
+                    userUpdateRequest.Username,
+                    userUpdateRequest.Password,
+                    userUpdateRequest.Email,
+                    userUpdateRequest.Name,
+                    userUpdateRequest.Surname);
+            }
+            catch (UserNotFoundException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok();
+        }
+
+        [HttpDelete, Route("{userId}")]
+        [Authorize(Roles = RoleConstants.AdminRole)]
+        public async Task<IActionResult> DeleteUser(int userId)
+        {
+            try
+            {
+                await _userService.DeleteUserAsync(userId);
+            }
+            catch (UserNotFoundException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok();
+        }
+
+        #endregion
+
+        [HttpPost("authenticate")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Authenticate(UserAuthenticationRequest request)
+        {
+            try
+            {
+                var value = await _userService.AuthenticateAsync(request.Email, request.Password);
+
+                var result = new AuthenticationResponse(value.id, value.token);
+
+                return Ok(result);
+            }
+            catch (UserNotFoundException)
+            {
+                return BadRequest("Username or Password is wrong!");
+            }
+            catch (Exception ex)
+            {
+                if (ex is UserNotActiveException || ex is UserNotHaveLoginPermissionException)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                throw;
+            }
+        }
+
+        [HttpPost("user-verification-email")]
         [AllowAnonymous]
         public async Task<IActionResult> SendUserVerificationEmail(string email)
         {
@@ -96,13 +157,13 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return Ok();
             }
-            catch (UserNotRegisteredException exception)
+            catch (UserNotFoundException exception)
             {
                 return BadRequest(exception.Message);
             }
         }
 
-        [HttpPost("activate")]        
+        [HttpPost("activate")]
         [Authorize(Roles = RoleConstants.NotActivatedUserRole)]
         public async Task<IActionResult> ActivateUser()
         {
@@ -135,7 +196,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
             catch (Exception ex)
             {
-                if (ex is UserNotFoundException || 
+                if (ex is UserNotFoundException ||
                     ex is UserNotActiveException ||
                     ex is UserNotHaveLoginPermissionException)
                 {
@@ -176,6 +237,11 @@ namespace LetsDoIt.Moody.Web.Controllers
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
             return new UserInfo(userId, fullName);
+        }
+
+        private UserResponse ToUserResponse(User user)
+        {
+            throw new NotImplementedException();
         }
     }
 }

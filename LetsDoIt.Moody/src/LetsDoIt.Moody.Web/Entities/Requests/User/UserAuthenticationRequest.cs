@@ -2,7 +2,7 @@
 
 namespace LetsDoIt.Moody.Web.Entities.Requests
 {
-    public class AuthenticationRequest
+    public class UserAuthenticationRequest
     {
         [Required]
         public string Email { get; set; }

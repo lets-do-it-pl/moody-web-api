@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using NGuard;
-using LetsDoIt.CustomValueTypes;
 using LetsDoIt.MailSender;
 
 namespace LetsDoIt.Moody.Application.User
@@ -46,6 +46,39 @@ namespace LetsDoIt.Moody.Application.User
             _resetPasswordApiUrl = $"{webInfoOptions.Value.Url}{ResetPasswordApiQuery}";
         }
 
+        #region UserCRUD
+
+        public async Task<IEnumerable<User>> GetUsersAsync()
+        {
+            return await _userRepository.GetListAsync(u => !u.IsDeleted);
+        }
+
+        public async Task UpdateUserAsync(int id, string username, string password, string email, string name, string surname)
+        {
+            var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
+
+            ValidateUser(dbUser);
+
+            dbUser.Username = username;
+            dbUser.Password = ProtectionHelper.EncryptValue(username + password);
+            dbUser.Email = email;
+            dbUser.FullName = $"{name} {surname}";
+
+            await _userRepository.UpdateAsync(dbUser);
+        }
+
+        public async Task DeleteUserAsync(int id)
+        {
+            var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
+
+            if (dbUser == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            await _userRepository.DeleteAsync(dbUser);
+        }
+
         public async Task SaveUserAsync(
             string username,
             string password,
@@ -65,13 +98,15 @@ namespace LetsDoIt.Moody.Application.User
             await SendActivationEmailAsync(email);
         }
 
+        #endregion
+
         public async Task SendActivationEmailAsync(string email)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Email == email && !u.IsDeleted);
 
             if (dbUser == null)
             {
-                throw new UserNotRegisteredException(email);
+                throw new UserNotFoundException();
             }
 
             if (dbUser.IsActive)

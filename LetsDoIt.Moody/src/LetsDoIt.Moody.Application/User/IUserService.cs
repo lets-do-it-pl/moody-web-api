@@ -1,10 +1,18 @@
-﻿using LetsDoIt.CustomValueTypes;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.User
 {
+    using Persistence.Entities;
+
     public interface IUserService
     {
+        Task<IEnumerable<User>> GetUsersAsync();
+
+        Task UpdateUserAsync(int id, string username, string password, string email, string name, string surname);
+
+        Task DeleteUserAsync(int id);
+
         Task SaveUserAsync(string username, string password, string email, string name, string surname);
 
         Task SendActivationEmailAsync(string email);
