@@ -241,7 +241,20 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         private UserResponse ToUserResponse(User user)
         {
-            throw new NotImplementedException();
+            return new UserResponse
+            {
+                Id = user.Id,
+                CanLogin = user.CanLogin,
+                CreatedBy = user.CreatedBy,
+                CreatedDate = user.CreatedDate,
+                Email = user.Email,
+                ModifiedBy = user.ModifiedBy,
+                ModifiedDate = user.ModifiedDate,
+                Name = user.FullName.Split(" ")[0],
+                Surname = user.FullName.Split(" ")[1],
+                UserType = user.UserType,
+                Username = user.Username
+            };
         }
     }
 }
