@@ -22,7 +22,7 @@ namespace LetsDoIt.Moody.Application.Search
                 return Enumerable.Empty<SpGetGeneralSearchResult>().ToList();
             }
 
-            return await _dataService.GetGeneralSearchResultAsync(searchKey.ToLower());
+            return await _dataService.SpGetGeneralSearchResultAsync(searchKey.ToLower());
         }
 
 

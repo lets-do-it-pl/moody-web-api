@@ -22,7 +22,7 @@ namespace LetsDoIt.Moody.Application.Data
             _dbContext = dbContext;
         }
 
-        public async Task<ICollection <SpGetGeneralSearchResult>> GetGeneralSearchResultAsync(string searchKey)
+        public async Task<ICollection <SpGetGeneralSearchResult>> SpGetGeneralSearchResultAsync(string searchKey)
         {
             var input = new SpGeneralSearch { SearchValue = searchKey };
 

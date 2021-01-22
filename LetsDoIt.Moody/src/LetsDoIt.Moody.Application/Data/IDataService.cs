@@ -7,7 +7,7 @@ namespace LetsDoIt.Moody.Application.Data
   
     public interface IDataService
     {
-        Task<ICollection<SpGetGeneralSearchResult>> GetGeneralSearchResultAsync(string searchKey);
+        Task<ICollection<SpGetGeneralSearchResult>> SpGetGeneralSearchResultAsync(string searchKey);
 
         Task<ICollection<SpGetDashboardItemsResult>> GetDashboardItemsAsync();
     }
