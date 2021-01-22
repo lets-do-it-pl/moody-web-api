@@ -32,7 +32,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
 
-            var categoryResult = await _categoryService.GetCategoriesWithDetails(versionNumber);
+            var categoryResult = await _categoryService.GetCategoriesWithDetailsAsync(versionNumber);
             if (categoryResult == null ||
                 (!categoryResult.IsUpdated && categoryResult.Categories == null))
             {
@@ -167,27 +167,14 @@ namespace LetsDoIt.Moody.Web.Controllers
         [HttpPut, Route("order/{id}")]
         public async Task<IActionResult> UpdateOrder(int id, OrderUpdateRequest updateRequest)
         {
+            await _categoryService.UpdateOrderAsync(
+                id,
+                updateRequest.PreviousId,
+                updateRequest.NextId
+                //,GetUserInfo().UserId
+                );
 
-            if (updateRequest == null)
-            {
-                return BadRequest();
-            }
-
-            try
-            {
-                await _categoryService.UpdateOrderAsync(
-                    id,
-                    updateRequest.PreviousId,
-                    updateRequest.NextId
-                    //,GetUserInfo().UserId
-                    );
-
-                return Ok();
-            }
-            catch (ObjectNotFoundException)
-            {
-                return NotFound(id);
-            }
+            return Ok();
         }
 
         [HttpDelete, Route("{categoryId}")]
@@ -254,12 +241,6 @@ namespace LetsDoIt.Moody.Web.Controllers
                 Order = c.Order,
                 Image = c.Image
             };
-
-            if (c.CategoryDetails != null)
-            {
-                result.CategoryDetails = c.CategoryDetails.Select(ToCategoryDetailsResponse).ToList();
-            }
-
             return result;
         }
 

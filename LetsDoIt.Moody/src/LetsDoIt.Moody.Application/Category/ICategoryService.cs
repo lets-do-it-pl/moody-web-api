@@ -7,7 +7,7 @@ namespace LetsDoIt.Moody.Application.Category
 
     public interface ICategoryService
     {
-        Task<CategoryGetResult> GetCategoriesWithDetails(string versionNumber);
+        Task<CategoryGetResult> GetCategoriesWithDetailsAsync(string versionNumber);
 
         Task<IEnumerable<Category>> GetCategoriesAsync();
 
@@ -25,7 +25,7 @@ namespace LetsDoIt.Moody.Application.Category
         Task UpdateCategoryDetailsAsync(int id, byte[] image//, int userId
             );
 
-        Task UpdateOrderAsync(int id, int previousId, int nextId);
+        Task UpdateOrderAsync(int id, int? previousId, int? nextId);
 
         Task DeleteAsync(int categoryId//, int userId
             );

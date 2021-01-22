@@ -69,14 +69,16 @@ namespace LetsDoIt.Moody.Persistence.Repositories.Category
             entity.ModifiedDate = DateTime.UtcNow;
             entity.IsDeleted = true;
 
-            if (entity.CategoryDetails != null)
-            {
-                var categoryDetails = await _categoryDetailRepository.GetListAsync(c => c.CategoryId == entity.Id && !c.IsDeleted);
+            await base.DeleteAsync(entity);
 
+            var categoryDetails = await _categoryDetailRepository.GetListAsync(c => c.CategoryId == entity.Id && !c.IsDeleted);
+
+            if (categoryDetails.Any())
+            {
+                categoryDetails.ForEach(cd => cd.ModifiedBy = entity.ModifiedBy);
+                categoryDetails.ForEach(cd => cd.Order -= 1000);
                 await _categoryDetailRepository.BulkDeleteAsync(categoryDetails);
             }
-
-            await base.DeleteAsync(entity);
         }
     }
 }
