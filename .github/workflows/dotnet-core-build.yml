@@ -3,9 +3,12 @@ name: .NET Core Build with Tests
 on:  
   workflow_dispatch:  
   push:
-    branches: [ master ]
+    branches: 
+      - master
+      - moody-**
   pull_request:
-    branches: [ master ]
+    branches: 
+      - master
 
 jobs:
   build:
