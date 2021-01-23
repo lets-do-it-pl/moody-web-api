@@ -36,7 +36,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 var value = await _userService.AuthenticateAsync(request.Email, request.Password);
 
-                var result = new AuthenticationResponse(value.id, value.token);
+                var result = new AuthenticationResponse(value.id, value.token, value.fullName);
 
                 return Ok(result);
             }
