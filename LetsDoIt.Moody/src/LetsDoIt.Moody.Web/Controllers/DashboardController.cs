@@ -23,6 +23,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             _dashboardService = dashboardService;
         }
 
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<DashboardItemsResponse>>> GetDashboardItemsAsync()
         {
             var dashboardResult = await _dashboardService.GetDashboardItemsAsync();
