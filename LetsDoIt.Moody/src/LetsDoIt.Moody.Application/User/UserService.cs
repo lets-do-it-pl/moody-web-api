@@ -55,20 +55,19 @@ namespace LetsDoIt.Moody.Application.User
             return await _userRepository.Get().Where(u => !u.IsDeleted).OrderBy(u => u.FullName).ToListAsync();
         }
 
-        public async Task UpdateUserAsync(int modifiedById, int id, string username,  string email, string name, string surname, string password = null)
+        public async Task UpdateUserAsync(int modifiedById, int id, string email, string firstName, string lastName, string password = null)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
 
             ValidateUser(dbUser);
 
-            dbUser.Username = username;
             dbUser.Email = email;
-            dbUser.FullName = $"{name} {surname}";
+            dbUser.FullName = $"{firstName} {lastName}";
             dbUser.ModifiedBy = modifiedById;
 
             if (password !=null)
             {
-                dbUser.Password = ProtectionHelper.EncryptValue(username + password);
+                dbUser.Password = ProtectionHelper.EncryptValue(email + password);
             }
 
             await _userRepository.UpdateAsync(dbUser);
@@ -89,11 +88,10 @@ namespace LetsDoIt.Moody.Application.User
         }
 
         public async Task SaveUserAsync(
-            string username,
-            string password,
             string email,
-            string name,
-            string surname)
+            string password,
+            string firstName,
+            string lastName)
         {
             var isUserExisted = await _userRepository.AnyAsync(u => u.Email == email && !u.IsDeleted);
 
@@ -102,7 +100,7 @@ namespace LetsDoIt.Moody.Application.User
                 throw new DuplicateNameException($"The email already exists in the system.");
             }
 
-            await _userRepository.AddAsync(ToUser(username, password, name, surname, email));
+            await _userRepository.AddAsync(ToUser(email, password, firstName, lastName ));
 
             await SendActivationEmailAsync(email);
         }
@@ -150,14 +148,14 @@ namespace LetsDoIt.Moody.Application.User
             await _userRepository.UpdateAsync(dbUser);
         }
 
-        public async Task<(int id, string token, string fullName)> AuthenticateAsync(string username, string password)
+        public async Task<(int id, string token, string fullName)> AuthenticateAsync(string email, string password)
         {
-            Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
+            Guard.Requires(email, nameof(email)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
-            var encryptedPassword = ProtectionHelper.EncryptValue(username + password);
+            var encryptedPassword = ProtectionHelper.EncryptValue(email + password);
 
-            var user = await _userRepository.GetAsync(u => u.Username == username && u.Password == encryptedPassword);
+            var user = await _userRepository.GetAsync(u => u.Email == email && u.Password == encryptedPassword);
 
             ValidateUser(user);
 
@@ -197,7 +195,7 @@ namespace LetsDoIt.Moody.Application.User
 
             ValidateUser(user);
 
-            user.Password = GetEncryptedPassword(user.Username, password);
+            user.Password = GetEncryptedPassword(user.Email, password);
             user.ModifiedBy = userId;
 
             await _userRepository.UpdateAsync(user);
@@ -232,15 +230,14 @@ namespace LetsDoIt.Moody.Application.User
             return content;
         }
 
-        private User ToUser(string username, string password, string name, string surname, string email) => new User
+        private User ToUser(string email, string password, string firstName, string lastName) => new User
         {
-            Username = username,
-            Password = GetEncryptedPassword(username, password),
-            FullName = $"{name} {surname}",
-            Email = email
+            Email = email,
+            Password = GetEncryptedPassword(email, password),
+            FullName = $"{firstName} {lastName}",
         };
 
-        private string GetEncryptedPassword(string username, string password) => ProtectionHelper.EncryptValue(username + password);
+        private string GetEncryptedPassword(string email, string password) => ProtectionHelper.EncryptValue(email + password);
 
     }
 }
