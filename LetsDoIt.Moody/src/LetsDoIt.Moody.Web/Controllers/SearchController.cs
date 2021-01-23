@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Constants;
     using Application.Search;
-    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -20,7 +20,6 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> SearchGeneral(string searchKey)
         {
             var value = await _searchService.GetGeneralSearchResultAsync(searchKey);
