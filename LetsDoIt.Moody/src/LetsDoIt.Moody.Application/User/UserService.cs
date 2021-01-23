@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using NGuard;
 using LetsDoIt.MailSender;
+using Microsoft.EntityFrameworkCore;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -50,24 +52,29 @@ namespace LetsDoIt.Moody.Application.User
 
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
-            return await _userRepository.GetListAsync(u => !u.IsDeleted);
+            return await _userRepository.Get().Where(u => !u.IsDeleted).OrderBy(u => u.FullName).ToListAsync();
         }
 
-        public async Task UpdateUserAsync(int id, string username, string password, string email, string name, string surname)
+        public async Task UpdateUserAsync(int modifiedById, int id, string username,  string email, string name, string surname, string password = null)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
 
             ValidateUser(dbUser);
 
             dbUser.Username = username;
-            dbUser.Password = ProtectionHelper.EncryptValue(username + password);
             dbUser.Email = email;
             dbUser.FullName = $"{name} {surname}";
+            dbUser.ModifiedBy = modifiedById;
+
+            if (password !=null)
+            {
+                dbUser.Password = ProtectionHelper.EncryptValue(username + password);
+            }
 
             await _userRepository.UpdateAsync(dbUser);
         }
 
-        public async Task DeleteUserAsync(int id)
+        public async Task DeleteUserAsync(int modifiedById, int id)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
 
@@ -75,6 +82,8 @@ namespace LetsDoIt.Moody.Application.User
             {
                 throw new UserNotFoundException();
             }
+
+            dbUser.ModifiedBy = modifiedById;
 
             await _userRepository.DeleteAsync(dbUser);
         }
@@ -147,7 +156,7 @@ namespace LetsDoIt.Moody.Application.User
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
             var encryptedPassword = ProtectionHelper.EncryptValue(username + password);
-              
+
             var user = await _userRepository.GetAsync(u => u.Username == username && u.Password == encryptedPassword);
 
             ValidateUser(user);

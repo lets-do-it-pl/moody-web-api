@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LetsDoIt.Moody.Web.Entities.Requests
+namespace LetsDoIt.Moody.Web.Entities.Requests.User
 {
     public class ResetPasswordRequest
     {

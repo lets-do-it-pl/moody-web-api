@@ -43,8 +43,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
 
             var result = userResult
-                .Select(ToUserResponse)
-                .OrderBy(u => u.Username);
+                .Select(ToUserResponse);
 
             return Ok(result);
         }
@@ -87,12 +86,13 @@ namespace LetsDoIt.Moody.Web.Controllers
             try
             {
                 await _userService.UpdateUserAsync(
+                    GetUserInfo().UserId,
                     userId,
                     userUpdateRequest.Username,
-                    userUpdateRequest.Password,
                     userUpdateRequest.Email,
                     userUpdateRequest.Name,
-                    userUpdateRequest.Surname);
+                    userUpdateRequest.Surname,
+                    userUpdateRequest.Password);
             }
             catch (UserNotFoundException e)
             {
@@ -108,7 +108,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             try
             {
-                await _userService.DeleteUserAsync(userId);
+                await _userService.DeleteUserAsync(GetUserInfo().UserId,userId);
             }
             catch (UserNotFoundException e)
             {
@@ -239,9 +239,8 @@ namespace LetsDoIt.Moody.Web.Controllers
             return new UserInfo(userId, fullName);
         }
 
-        private UserResponse ToUserResponse(User user)
-        {
-            return new UserResponse
+        private UserResponse ToUserResponse(User user) =>
+            new UserResponse
             {
                 Id = user.Id,
                 CanLogin = user.CanLogin,
@@ -255,6 +254,5 @@ namespace LetsDoIt.Moody.Web.Controllers
                 UserType = user.UserType,
                 Username = user.Username
             };
-        }
     }
 }
