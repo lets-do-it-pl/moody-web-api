@@ -11,7 +11,7 @@ namespace LetsDoIt.Moody.Application.User
 
         Task ActivateUserAsync(int id);
         
-        Task<(int id, string token)> AuthenticateAsync(string email, string password);
+        Task<(int id, string token, string fullName)> AuthenticateAsync(string email, string password);
 
         Task ForgetPasswordAsync(string email);
 

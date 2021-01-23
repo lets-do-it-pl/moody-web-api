@@ -106,7 +106,7 @@ namespace LetsDoIt.Moody.Application.User
             await _userRepository.UpdateAsync(dbUser);
         }
 
-        public async Task<(int id, string token)> AuthenticateAsync(string username, string password)
+        public async Task<(int id, string token, string fullName)> AuthenticateAsync(string username, string password)
         {
             Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
@@ -126,7 +126,7 @@ namespace LetsDoIt.Moody.Application.User
                                     $"{nameof(user.UserType)}={user.UserType}");
             }
 
-            return (user.Id, tokenInfo.Token);
+            return (user.Id, tokenInfo.Token, user.FullName);
         }
 
         public async Task ForgetPasswordAsync(string email)
