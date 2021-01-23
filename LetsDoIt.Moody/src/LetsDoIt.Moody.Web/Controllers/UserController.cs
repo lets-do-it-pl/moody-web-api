@@ -54,11 +54,11 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             try
             {
-                await _userService.SaveUserAsync(saveUserRequest.Username,
+                await _userService.SaveUserAsync(
                     saveUserRequest.Password,
                     saveUserRequest.Email,
-                    saveUserRequest.Name,
-                    saveUserRequest.Surname);
+                    saveUserRequest.FirstName,
+                    saveUserRequest.LastName);
 
                 return StatusCode((int)HttpStatusCode.Created, "Created");
             }
@@ -87,7 +87,6 @@ namespace LetsDoIt.Moody.Web.Controllers
                 await _userService.UpdateUserAsync(
                     GetUserInfo().UserId,
                     userId,
-                    userUpdateRequest.Username,
                     userUpdateRequest.Email,
                     userUpdateRequest.Name,
                     userUpdateRequest.Surname,
@@ -133,7 +132,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
             catch (UserNotFoundException)
             {
-                return BadRequest("Username or Password is wrong!");
+                return BadRequest("Email or Password is wrong!");
             }
             catch (Exception ex)
             {

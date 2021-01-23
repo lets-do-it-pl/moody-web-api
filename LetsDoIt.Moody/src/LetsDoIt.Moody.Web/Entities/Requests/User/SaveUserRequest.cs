@@ -5,16 +5,13 @@ namespace LetsDoIt.Moody.Web.Entities.Requests.User
     public class SaveUserRequest
     {
         [Required]
-        public string Username { get; set; }
-
-        [Required]
         public string Password { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string FirstName { get; set; }
 
         [Required]
-        public string Surname { get; set; }
+        public string LastName { get; set; }
 
         [Required]
         public string Email { get; set; }
