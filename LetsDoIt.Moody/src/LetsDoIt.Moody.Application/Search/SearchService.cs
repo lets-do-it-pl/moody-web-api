@@ -10,7 +10,7 @@ namespace LetsDoIt.Moody.Application.Search
 
     public class SearchService : ISearchService
     {
-        private const string CategoryName = "Category";
+        private const string UserEntity = "User";
         private readonly IDataService _dataService;
         public SearchService(IDataService dataService)
         {
@@ -33,7 +33,7 @@ namespace LetsDoIt.Moody.Application.Search
 
             if (userType != UserTypeConstants.Admin)
             {
-                return results.Where(r => r.Name != "User").ToArray();
+                return results.Where(r => r.Name != UserEntity).ToArray();
             }
 
             return results;
