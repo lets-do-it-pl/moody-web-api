@@ -70,7 +70,7 @@ namespace LetsDoIt.Moody.Application.User
 
             if (password !=null)
             {
-                dbUser.Password = ProtectionHelper.EncryptValue(email + password);
+                dbUser.Password = GetEncryptedPassword(email , password);
             }
 
             await _userRepository.UpdateAsync(dbUser);
@@ -155,7 +155,7 @@ namespace LetsDoIt.Moody.Application.User
             Guard.Requires(email, nameof(email)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
-            var encryptedPassword = ProtectionHelper.EncryptValue(email + password);
+            var encryptedPassword = GetEncryptedPassword(email, password);
 
             var user = await _userRepository.GetAsync(u => u.Email == email && u.Password == encryptedPassword);
 
