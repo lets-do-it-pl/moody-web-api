@@ -33,7 +33,7 @@ namespace LetsDoIt.Moody.Application.Search
 
             if (userType != UserTypeConstants.Admin)
             {
-                return results.Where(r => r.Name != UserEntity).ToArray();
+                return results.Where(r => r.Type != UserEntity).ToArray();
             }
 
             return results;
