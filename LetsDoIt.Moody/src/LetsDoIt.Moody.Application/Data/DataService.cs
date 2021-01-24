@@ -49,7 +49,5 @@ namespace LetsDoIt.Moody.Application.Data
 
             return result.ToArray();
         }
-
-        
     }
 }

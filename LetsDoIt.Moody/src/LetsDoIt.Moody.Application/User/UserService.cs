@@ -162,6 +162,7 @@ namespace LetsDoIt.Moody.Application.User
             ValidateUser(user);
 
             var tokenInfo = _securityService.GenerateJwtToken(user.Id.ToString(), user.FullName, user.UserType);
+
             if (tokenInfo == null)
             {
                 throw new Exception($"Token can not be generated!" +
