@@ -27,19 +27,16 @@ namespace LetsDoIt.Moody.Persistence.Repositories.Base
         {
             try
             {
-                var result = Context.Set<TEntity>();
+                var result = Context.Set<TEntity>().AsQueryable();
 
                 if (filter != null)
                 {
-                    return await result.Where(filter).ToListAsync();
+                    result = result.Where(filter);
                 }
 
-                if (order != null)
-                {
-                    return await result.OrderBy(order).ToListAsync();
-                }
-
-                return await result.ToListAsync();
+                return order != null ? 
+                    await result.OrderBy(order).ToListAsync() : 
+                    await result.ToListAsync();
             }
             catch (Exception ex)
             {
