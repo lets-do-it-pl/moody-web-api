@@ -55,8 +55,8 @@ namespace LetsDoIt.Moody.Web.Controllers
             try
             {
                 await _userService.SaveUserAsync(
-                    saveUserRequest.Password,
                     saveUserRequest.Email,
+                    saveUserRequest.Password,
                     saveUserRequest.FullName);
 
                 return StatusCode((int)HttpStatusCode.Created, "Created");
