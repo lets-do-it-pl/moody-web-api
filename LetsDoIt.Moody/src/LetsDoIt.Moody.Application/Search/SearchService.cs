@@ -26,9 +26,14 @@ namespace LetsDoIt.Moody.Application.Search
 
             var results = await _dataService.GetGeneralSearchResultAsync(searchKey.ToLower());
 
-            if (userType == UserTypeConstants.Standard)
+            if (Equals(results, Enumerable.Empty<SpGetGeneralSearchResult>()))
             {
-                return results.Where(sggsr => sggsr.Name == CategoryName).ToArray();
+                return Enumerable.Empty<SpGetGeneralSearchResult>().ToList();
+            }
+
+            if (userType != UserTypeConstants.Admin)
+            {
+                return results.Where(r => r.Name != "User").ToArray();
             }
 
             return results;
