@@ -9,11 +9,11 @@ namespace LetsDoIt.Moody.Application.User
     {
         Task<IEnumerable<User>> GetUsersAsync();
 
-        Task UpdateUserAsync(int modifiedById, int id, string email, string firstName, string lastName, string password = null);
+        Task UpdateUserAsync(int modifiedById, int id, string email, string fullName, string password = null);
 
         Task DeleteUserAsync(int modifiedById, int id);
 
-        Task SaveUserAsync(string email, string password, string firstName, string lastName);
+        Task SaveUserAsync(string email, string password, string fullName);
 
         Task SendActivationEmailAsync(string email);
 

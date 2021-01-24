@@ -57,8 +57,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 await _userService.SaveUserAsync(
                     saveUserRequest.Password,
                     saveUserRequest.Email,
-                    saveUserRequest.FirstName,
-                    saveUserRequest.LastName);
+                    saveUserRequest.FullName);
 
                 return StatusCode((int)HttpStatusCode.Created, "Created");
             }
@@ -88,8 +87,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                     GetUserInfo().UserId,
                     userId,
                     userUpdateRequest.Email,
-                    userUpdateRequest.Name,
-                    userUpdateRequest.Surname,
+                    userUpdateRequest.FullName,
                     userUpdateRequest.Password);
             }
             catch (UserNotFoundException e)
@@ -247,8 +245,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 Email = user.Email,
                 ModifiedBy = user.ModifiedBy,
                 ModifiedDate = user.ModifiedDate,
-                Name = user.FullName.Split(" ")[0],
-                Surname = user.FullName.Split(" ")[1],
+                FullName = user.FullName,
                 UserType = user.UserType,
             };
     }

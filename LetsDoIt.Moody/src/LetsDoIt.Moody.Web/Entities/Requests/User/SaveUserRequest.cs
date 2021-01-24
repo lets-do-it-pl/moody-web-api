@@ -8,10 +8,7 @@ namespace LetsDoIt.Moody.Web.Entities.Requests.User
         public string Password { get; set; }
 
         [Required]
-        public string FirstName { get; set; }
-
-        [Required]
-        public string LastName { get; set; }
+        public string FullName { get; set; }
 
         [Required]
         public string Email { get; set; }

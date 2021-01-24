@@ -50,19 +50,22 @@ namespace LetsDoIt.Moody.Application.User
 
         #region UserCRUD
 
-        public async Task<IEnumerable<User>> GetUsersAsync()
-        {
-            return await _userRepository.Get().Where(u => !u.IsDeleted).OrderBy(u => u.FullName).ToListAsync();
-        }
+        public async Task<IEnumerable<User>> GetUsersAsync() 
+            => await _userRepository.Get().Where(u => !u.IsDeleted).OrderBy(u => u.FullName).ToArrayAsync();
 
-        public async Task UpdateUserAsync(int modifiedById, int id, string email, string firstName, string lastName, string password = null)
+        public async Task UpdateUserAsync(
+            int modifiedById, 
+            int id,
+            string email,
+            string fullName,
+            string password = null)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
 
             ValidateUser(dbUser);
 
             dbUser.Email = email;
-            dbUser.FullName = $"{firstName} {lastName}";
+            dbUser.FullName = fullName;
             dbUser.ModifiedBy = modifiedById;
 
             if (password !=null)
@@ -90,8 +93,7 @@ namespace LetsDoIt.Moody.Application.User
         public async Task SaveUserAsync(
             string email,
             string password,
-            string firstName,
-            string lastName)
+            string fullName)
         {
             var isUserExisted = await _userRepository.AnyAsync(u => u.Email == email && !u.IsDeleted);
 
@@ -100,7 +102,7 @@ namespace LetsDoIt.Moody.Application.User
                 throw new DuplicateNameException($"The email already exists in the system.");
             }
 
-            await _userRepository.AddAsync(ToUser(email, password, firstName, lastName ));
+            await _userRepository.AddAsync(ToUser(email, password, fullName ));
 
             await SendActivationEmailAsync(email);
         }
@@ -230,14 +232,13 @@ namespace LetsDoIt.Moody.Application.User
             return content;
         }
 
-        private User ToUser(string email, string password, string firstName, string lastName) => new User
+        private User ToUser(string email, string password, string fullName) => new User
         {
             Email = email,
             Password = GetEncryptedPassword(email, password),
-            FullName = $"{firstName} {lastName}",
+            FullName = fullName
         };
 
         private string GetEncryptedPassword(string email, string password) => ProtectionHelper.EncryptValue(email + password);
-
     }
 }
