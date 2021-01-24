@@ -13,25 +13,19 @@ namespace LetsDoIt.Moody.Application.Category
 
         Task<IEnumerable<CategoryDetail>> GetCategoryDetailsAsync(int categoryId);
 
-        Task InsertAsync(string name, byte[] image//, int userId
-            );
+        Task InsertAsync(string name, byte[] image, int userId);
 
-        Task InsertCategoryDetailAsync(int categoryId, string image//, int userId
-            );
+        Task InsertCategoryDetailAsync(int categoryId, string image, int userId);
 
-        Task UpdateAsync(int id, string name, byte[] image//, int userId
-            );
+        Task UpdateAsync(int id, string name, byte[] image, int userId);
 
-        Task UpdateCategoryDetailsAsync(int id, byte[] image//, int userId
-            );
+        Task UpdateCategoryDetailsAsync(int id, byte[] image, int userId);
 
-        Task UpdateOrderAsync(int id, int? previousId, int? nextId);
+        Task UpdateOrderAsync(int id, int userId, int? previousId, int? nextId);
 
-        Task DeleteAsync(int categoryId//, int userId
-            );
+        Task DeleteAsync(int categoryId, int userId);
 
-        Task DeleteCategoryDetailsAsync(int id//, int userId
-            );
+        Task DeleteCategoryDetailsAsync(int id, int userId);
 
     }
 }

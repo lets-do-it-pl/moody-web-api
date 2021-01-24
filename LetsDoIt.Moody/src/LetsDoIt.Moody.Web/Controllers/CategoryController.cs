@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Security.Claims;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -12,11 +13,12 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Entities;
     using Entities.Requests;
     using Entities.Responses;
+    using Application.Constants;
     using Persistence.Entities;
 
     [ApiController]
     [Route("api/category")]
-    //[Authorize(Roles = RoleConstants.StandardRole)]
+    [Authorize(Roles = RoleConstants.StandardRole)]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -27,7 +29,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpGet, Route("/list-detail/{versionNumber?}")]
-        //[Authorize(Roles = RoleConstants.ClientRole)]
+        [Authorize(Roles = RoleConstants.ClientRole)]
         public async Task<ActionResult<VersionedCategoryWithDetailsResponse>> GetVersionedCategoriesWithDetails(string versionNumber = null)
         {
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
@@ -88,7 +90,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             await _categoryService.InsertAsync(
                 insertRequest.Name,
                 byteImage
-                //,GetUserInfo().UserId
+                ,GetUserInfo().UserId
                 );
 
             return Ok();
@@ -107,7 +109,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             await _categoryService.InsertCategoryDetailAsync(
                 categoryId,
                 insertRequest.Image
-                //,GetUserInfo().UserId
+                ,GetUserInfo().UserId
                 );
 
             return Ok();
@@ -128,7 +130,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                     categoryId,
                     updateRequest.Name,
                     updateRequest.Image
-                    //,GetUserInfo().UserId
+                    ,GetUserInfo().UserId
                     );
 
                 return Ok();
@@ -153,7 +155,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 await _categoryService.UpdateCategoryDetailsAsync(
                     categoryDetailsId,
                     updateRequest.Image
-                    //,GetUserInfo().UserId
+                    ,GetUserInfo().UserId
                     );
 
                 return Ok();
@@ -169,9 +171,9 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             await _categoryService.UpdateOrderAsync(
                 id,
+                GetUserInfo().UserId,
                 updateRequest.PreviousId,
                 updateRequest.NextId
-                //,GetUserInfo().UserId
                 );
 
             return Ok();
@@ -184,7 +186,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 await _categoryService.DeleteAsync(
                     categoryId
-                    //,GetUserInfo().UserId
+                    ,GetUserInfo().UserId
                     );
 
                 return Ok();
@@ -203,7 +205,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 await _categoryService.DeleteCategoryDetailsAsync(
                     categoryDetailsId
-                    //,GetUserInfo().UserId
+                    ,GetUserInfo().UserId
                     );
 
                 return Ok();
