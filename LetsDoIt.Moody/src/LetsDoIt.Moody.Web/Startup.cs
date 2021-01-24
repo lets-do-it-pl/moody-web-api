@@ -1,4 +1,3 @@
-using LetsDoIt.MailSender.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -31,9 +30,9 @@ namespace LetsDoIt.Moody.Web
                 .AddCorsConfig(Configuration)
                 .AddSwaggerConfig()
                 .AddMailSender()
-                .AddCustomClasses();
-
-            services.AddControllers();
+                .AddCustomClasses()
+                .AddActionFilterAndNewstonSoftJson()
+                .AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
