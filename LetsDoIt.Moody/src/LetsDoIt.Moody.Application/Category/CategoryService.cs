@@ -10,7 +10,7 @@ namespace LetsDoIt.Moody.Application.Category
     using Persistence.Entities;
     using Persistence.Repositories.Base;
     using Persistence.Repositories.Category;
-    using Infrastructure.Utils;
+    using System.Linq;
 
     public class CategoryService : ICategoryService
     {
@@ -67,10 +67,10 @@ namespace LetsDoIt.Moody.Application.Category
         public async Task InsertAsync(string name, byte[] image//, int userId
             )
         {
-            var categoryList = await _categoryRepository.GetListAsync(c => !c.IsDeleted,c => c.Order);
+            var categories = await _categoryRepository.GetListAsync(c => !c.IsDeleted);
 
-            var order = categoryList.Count > 0 ?
-                OrderGenerator.GenerateOrder(categoryList[categoryList.Count - 1].Order)
+            var order = categories.Count > 0 ?
+                GenerateOrder(categories.Min(c => c.Order))
                 : InitialOrder;
 
             await _categoryRepository.AddAsync(new Category
@@ -87,10 +87,10 @@ namespace LetsDoIt.Moody.Application.Category
         public async Task InsertCategoryDetailAsync(int categoryId, string image//, int userId
             )
         {
-            var categoryDetailList = await _categoryDetailsRepository.GetListAsync(c => !c.IsDeleted, c => c.Order);
+            var categoryDetails = await _categoryDetailsRepository.GetListAsync(c => !c.IsDeleted);
 
-            var order = categoryDetailList.Count > 0 ?
-                OrderGenerator.GenerateOrder(categoryDetailList[categoryDetailList.Count - 1].Order)
+            var order = categoryDetails.Count > 0 ?
+                GenerateOrder(categoryDetails.Min(c => c.Order))
                 : InitialOrder;
 
             await _categoryDetailsRepository.AddAsync(new CategoryDetail
@@ -142,31 +142,37 @@ namespace LetsDoIt.Moody.Application.Category
 
         }
 
-        public async Task UpdateOrderAsync(int id, int? previousId, int? nextId//, int userId
+        public async Task UpdateOrderAsync(int id, int? previousId = null, int? nextId = null //, int userId
             )
         {
-            //var entity = await _categoryRepository.GetListAsync(c => c.Id == id ||
-            //                                                c.Id == previousId ||
-            //                                                c.Id == nextId);
+            var entities = await _categoryRepository.GetListAsync(c => c.Id == id ||
+                                                            c.Id == previousId ||
+                                                            c.Id == nextId);
 
-            //if(entity[1] != null && entity[2] != null)
-            //{
-            //    entity[0].Order = (entity[1].Order + entity[2].Order) / 2;
-            //}
+            var previous = entities.FirstOrDefault(c => c.Id == previousId);
+            var next = entities.FirstOrDefault(c => c.Id == nextId);
+            var updated = entities.FirstOrDefault(c => c.Id == id);
 
-            //if (entity[1] == null && entity[2] != null)
-            //{
-            //    entity[0].Order = entity[2].Order - 1;
-            //}
+            if (previous != null && next != null)
+            {
+                updated.Order = (previous.Order + next.Order) / 2;
+            }
 
-            //if(entity[2] == null && entity[1] != null)
-            //{
-            //    entity[0].Order = entity[1].Order + 1;
-            //}
+            if (next == null && previous != null)
+            {
+                updated.Order = previous.Order + 1;
+            }
 
-            //await _categoryRepository.UpdateAsync(entity[0]);
+            if (previous == null && next != null)
+            {
+                updated.Order = next.Order - 1;
+            }
 
-            //await _versionHistoryService.CreateNewVersionAsync();
+            //updated.ModifiedBy = userId;
+
+            await _categoryRepository.UpdateAsync(updated);
+
+            await _versionHistoryService.CreateNewVersionAsync();
 
         }
 
@@ -208,6 +214,11 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _versionHistoryService.CreateNewVersionAsync();
 
+        }
+
+        private static decimal GenerateOrder(decimal leastOrder)
+        {
+            return leastOrder - 1;
         }
     }
 }

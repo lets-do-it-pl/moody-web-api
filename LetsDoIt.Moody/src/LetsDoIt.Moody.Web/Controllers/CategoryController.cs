@@ -52,8 +52,8 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
 
             var result = categoryResult
-                            .Select(ToCategoryResponse)
-                            .OrderByDescending(c => c.Order);
+                            .OrderBy(c => c.Order)
+                            .Select(ToCategoryResponse);
 
             return Ok(result);
         }
@@ -68,8 +68,8 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
 
             var result = categoryResult
-                            .Select(ToCategoryDetailsResponse)
-                            .OrderByDescending(c => c.Order);
+                            .OrderBy(cd => cd.Order)
+                            .Select(ToCategoryDetailsResponse);
 
             return Ok(result);
         }

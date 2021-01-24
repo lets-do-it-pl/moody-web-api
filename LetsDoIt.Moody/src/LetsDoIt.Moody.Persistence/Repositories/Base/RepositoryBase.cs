@@ -36,7 +36,7 @@ namespace LetsDoIt.Moody.Persistence.Repositories.Base
 
                 if (order != null)
                 {
-                    return await result.OrderByDescending(order).ToListAsync();
+                    return await result.OrderBy(order).ToListAsync();
                 }
 
                 return await result.ToListAsync();
