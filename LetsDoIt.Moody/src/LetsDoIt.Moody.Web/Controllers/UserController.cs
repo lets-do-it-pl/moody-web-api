@@ -250,7 +250,6 @@ namespace LetsDoIt.Moody.Web.Controllers
                 Name = user.FullName.Split(" ")[0],
                 Surname = user.FullName.Split(" ")[1],
                 UserType = user.UserType,
-                Username = user.Username
             };
     }
 }
