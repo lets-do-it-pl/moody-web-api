@@ -1,10 +1,14 @@
 name: .NET Core Build with Tests
 
-on:
+on:  
+  workflow_dispatch:  
   push:
-    branches: [ master ]
+    branches: 
+      - master
+      - moody-**
   pull_request:
-    branches: [ master ]
+    branches: 
+      - master
 
 jobs:
   build:
@@ -37,6 +41,8 @@ jobs:
 
       # set report file and title 
     - name: Set Test Title
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: | 
             if ${{ github.event_name == 'pull_request' }}
             then
@@ -59,6 +65,7 @@ jobs:
       with:
         name: 'Test Run'
         path: ${{github.workspace}}/${{env.file_name}}
+        retention-days: 1
         
       # add report as PR comment (if PR)
     - name: comment PR

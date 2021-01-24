@@ -2,7 +2,7 @@
 {
     public class JwtOptions
     {
-        public const string Jwt = "Jwt";
+        public const string JwtSectionName = "Jwt";
 
         public string SecretKey { get; set; }
 
