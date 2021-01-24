@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using NGuard;
-using LetsDoIt.CustomValueTypes;
 using LetsDoIt.MailSender;
+using Microsoft.EntityFrameworkCore;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -46,12 +48,52 @@ namespace LetsDoIt.Moody.Application.User
             _resetPasswordApiUrl = $"{webInfoOptions.Value.Url}{ResetPasswordApiQuery}";
         }
 
-        public async Task SaveUserAsync(
-            string username,
-            string password,
+        #region UserCRUD
+
+        public async Task<IEnumerable<User>> GetUsersAsync() 
+            => await _userRepository.Get().Where(u => !u.IsDeleted).OrderBy(u => u.FullName).ToArrayAsync();
+
+        public async Task UpdateUserAsync(
+            int modifiedById, 
+            int id,
             string email,
-            string name,
-            string surname)
+            string fullName,
+            string password = null)
+        {
+            var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
+
+            ValidateUser(dbUser);
+
+            dbUser.Email = email;
+            dbUser.FullName = fullName;
+            dbUser.ModifiedBy = modifiedById;
+
+            if (password !=null)
+            {
+                dbUser.Password = GetEncryptedPassword(email , password);
+            }
+
+            await _userRepository.UpdateAsync(dbUser);
+        }
+
+        public async Task DeleteUserAsync(int modifiedById, int id)
+        {
+            var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
+
+            if (dbUser == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            dbUser.ModifiedBy = modifiedById;
+
+            await _userRepository.DeleteAsync(dbUser);
+        }
+
+        public async Task SaveUserAsync(
+            string email,
+            string password,
+            string fullName)
         {
             var isUserExisted = await _userRepository.AnyAsync(u => u.Email == email && !u.IsDeleted);
 
@@ -60,10 +102,12 @@ namespace LetsDoIt.Moody.Application.User
                 throw new DuplicateNameException($"The email already exists in the system.");
             }
 
-            await _userRepository.AddAsync(ToUser(username, password, name, surname, email));
+            await _userRepository.AddAsync(ToUser(email, password, fullName ));
 
             await SendActivationEmailAsync(email);
         }
+
+        #endregion
 
         public async Task SendActivationEmailAsync(string email)
         {
@@ -71,7 +115,7 @@ namespace LetsDoIt.Moody.Application.User
 
             if (dbUser == null)
             {
-                throw new UserNotRegisteredException(email);
+                throw new UserNotFoundException();
             }
 
             if (dbUser.IsActive)
@@ -106,14 +150,14 @@ namespace LetsDoIt.Moody.Application.User
             await _userRepository.UpdateAsync(dbUser);
         }
 
-        public async Task<(int id, string token, string fullName)> AuthenticateAsync(string username, string password)
+        public async Task<(int id, string token, string fullName)> AuthenticateAsync(string email, string password)
         {
-            Guard.Requires(username, nameof(username)).IsNotNullOrEmptyOrWhiteSpace();
+            Guard.Requires(email, nameof(email)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
-            var encryptedPassword = ProtectionHelper.EncryptValue(username + password);
-              
-            var user = await _userRepository.GetAsync(u => u.Username == username && u.Password == encryptedPassword);
+            var encryptedPassword = GetEncryptedPassword(email, password);
+
+            var user = await _userRepository.GetAsync(u => u.Email == email && u.Password == encryptedPassword);
 
             ValidateUser(user);
 
@@ -153,7 +197,7 @@ namespace LetsDoIt.Moody.Application.User
 
             ValidateUser(user);
 
-            user.Password = GetEncryptedPassword(user.Username, password);
+            user.Password = GetEncryptedPassword(user.Email, password);
             user.ModifiedBy = userId;
 
             await _userRepository.UpdateAsync(user);
@@ -188,15 +232,13 @@ namespace LetsDoIt.Moody.Application.User
             return content;
         }
 
-        private User ToUser(string username, string password, string name, string surname, string email) => new User
+        private User ToUser(string email, string password, string fullName) => new User
         {
-            Username = username,
-            Password = GetEncryptedPassword(username, password),
-            FullName = $"{name} {surname}",
-            Email = email
+            Email = email,
+            Password = GetEncryptedPassword(email, password),
+            FullName = fullName
         };
 
-        private string GetEncryptedPassword(string username, string password) => ProtectionHelper.EncryptValue(username + password);
-
+        private string GetEncryptedPassword(string email, string password) => ProtectionHelper.EncryptValue(email + password);
     }
 }

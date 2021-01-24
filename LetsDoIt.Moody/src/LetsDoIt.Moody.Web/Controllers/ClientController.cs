@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Data;
 using System.Security.Authentication;
+using LetsDoIt.Moody.Web.Entities.Requests.Client;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.Controllers

@@ -32,6 +32,7 @@ namespace LetsDoIt.Moody.Persistence.Repositories
         {
             entity.ModifiedDate = DateTime.UtcNow;
             entity.IsDeleted = true;
+            entity.Email = Guid.NewGuid().ToString();
 
             return base.DeleteAsync(entity);
         }
@@ -42,6 +43,7 @@ namespace LetsDoIt.Moody.Persistence.Repositories
             {
                 entity.ModifiedDate = DateTime.UtcNow;
                 entity.IsDeleted = true;
+                entity.Email = Guid.NewGuid().ToString();
             }
 
             return base.BulkDeleteAsync(entities);
