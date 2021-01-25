@@ -35,4 +35,4 @@ jobs:
         app-name: 'moody-api'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_7cabdce9974946d1af53fba7cd6bc62c }}
-        package: ././LetsDoIt.Moody/src/Web/LetsDoIt.Moody.Web/${{env.DOTNET_ROOT}}/myapp 
+        package: ././LetsDoIt.Moody/src/LetsDoIt.Moody.Web/${{env.DOTNET_ROOT}}/myapp 
