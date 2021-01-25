@@ -27,7 +27,13 @@ jobs:
     - name: dotnet publish
       working-directory: ././LetsDoIt.Moody/src/LetsDoIt.Moody.Web
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-     
+      
+    - name: App Settings Variable Substitution
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: '${{env.DOTNET_ROOT}}/myapp/appsettings.Development.json'
+      env:
+        ConnectionStrings.MoodyDBConnection: ${{ secrets.MOODY_DB_CONNECTION_STRING }}
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
