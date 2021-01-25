@@ -61,12 +61,6 @@ namespace LetsDoIt.Moody.Web.Extensions
         {
             endpoints.MapHealthChecksUI();
 
-            endpoints.MapHealthChecks("/healthCheck", new HealthCheckOptions()
-            {
-                Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
-
             return endpoints;
         }
     }

@@ -25,7 +25,6 @@ namespace LetsDoIt.Moody.Web
                 .AddOptionsConfig(Configuration)
                 .AddAuthorizationConfig()
                 .AddResponseCompression()
-                .AddHealthCheckConfig(Configuration)
                 .AddDbContextConfig(Configuration)
                 .AddCorsConfig(Configuration)
                 .AddSwaggerConfig()
