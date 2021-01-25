@@ -25,6 +25,7 @@ jobs:
       working-directory: ././LetsDoIt.Moody
 
     - name: dotnet publish
+      working-directory: ././LetsDoIt.Moody/src/LetsDoIt.Moody.Web
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
      
 
