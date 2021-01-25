@@ -22,11 +22,11 @@ namespace LetsDoIt.Moody.Application.User
 
     public class UserService : IUserService
     {
-        private const string UserVerificationHtmlFilePath = @"HtmlTemplates\UserVerification.html";
+        private const string UserVerificationHtmlFilePath = @"HtmlTemplates/UserVerification.html";
         private const string EmailVerificationSubject = "Email Verification";
         private const string ActivateUserApiQuery = "activate-user";
 
-        private const string ResetPasswordHtmlFilePath = @"HtmlTemplates\ResetPassword.html";
+        private const string ResetPasswordHtmlFilePath = @"HtmlTemplates/ResetPassword.html";
         private const string ResetPasswordSubject = "Reset Password";
         private const string ResetPasswordApiQuery = "reset-password";
 
