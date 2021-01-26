@@ -1,13 +1,11 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - moody-api
+name: CI/CD Azure-AppService
 
 on:
-  push:
-    branches:
-      - master
-
+  workflow_dispatch: 
+  
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -35,6 +33,8 @@ jobs:
       env:
         ConnectionStrings.MoodyDBConnection: ${{ secrets.MOODY_DB_CONNECTION_STRING }}
         WebInfo.Url: ${{ secrets.WEB_UI_URL }}
+        Jwt.SecretKey: ${{ secrets.JWT_SECRET_KEY }}
+        Jwt.TokenExpirationMinutes: ${{ secrets.JWT_EXPIRATION_MINUTES }}
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
