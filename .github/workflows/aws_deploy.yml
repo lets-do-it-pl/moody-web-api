@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI-CD-Pipeline-to-AWS-ElasticBeansTalk
+name: CI/CD AWS-ElasticBeansTalk
 env:
   EB_PACKAGE_S3_BUCKET_NAME: "github-actions-moody" 
   EB_APPLICATON_NAME: "MoodyTest"
