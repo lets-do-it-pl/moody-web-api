@@ -33,6 +33,8 @@ jobs:
       env:
         ConnectionStrings.MoodyDBConnection: ${{ secrets.MOODY_DB_CONNECTION_STRING }}
         WebInfo.Url: ${{ secrets.WEB_UI_URL }}
+        Jwt.SecretKey: ${{ secrets.JWT_SECRET_KEY }}
+        Jwt.TokenExpirationMinutes: ${{ secrets.JWT_EXPIRATION_MINUTES }}
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
