@@ -31,9 +31,10 @@ jobs:
     - name: App Settings Variable Substitution
       uses: microsoft/variable-substitution@v1
       with:
-        files: '${{env.DOTNET_ROOT}}/myapp/appsettings.Development.json'
+        files: '${{env.DOTNET_ROOT}}/myapp/appsettings.Azure.json'
       env:
         ConnectionStrings.MoodyDBConnection: ${{ secrets.MOODY_DB_CONNECTION_STRING }}
+        WebInfo.Url: ${{ secrets.WEB_UI_URL }}
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
