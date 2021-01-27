@@ -68,7 +68,7 @@ namespace LetsDoIt.Moody.Application.Category
         {
             var categories = await _categoryRepository.GetListAsync(c => !c.IsDeleted);
 
-            var order = categories.Count > 0 ?
+            var order = categories !=null && categories.Count > 0 ?
                 GenerateOrder(categories.Min(c => c.Order))
                 : InitialOrder;
 
@@ -87,7 +87,7 @@ namespace LetsDoIt.Moody.Application.Category
         {
             var categoryDetails = await _categoryDetailsRepository.GetListAsync(c => !c.IsDeleted);
 
-            var order = categoryDetails.Count > 0 ?
+            var order = categoryDetails != null && categoryDetails.Count > 0 ?
                 GenerateOrder(categoryDetails.Min(c => c.Order))
                 : InitialOrder;
 
