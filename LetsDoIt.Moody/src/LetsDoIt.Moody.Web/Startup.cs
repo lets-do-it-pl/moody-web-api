@@ -36,7 +36,7 @@ namespace LetsDoIt.Moody.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("Azure"))
             {
                 app.UseDeveloperExceptionPage();
             }
