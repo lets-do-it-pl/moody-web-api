@@ -247,6 +247,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 ModifiedDate = user.ModifiedDate,
                 FullName = user.FullName,
                 UserType = user.UserType,
+                IsActive = user.IsActive
             };
     }
 }
