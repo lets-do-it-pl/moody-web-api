@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
-using LetsDoIt.Moody.Application.Data;
-using LetsDoIt.Moody.Application.Search;
-using LetsDoIt.Moody.Persistence.Repositories.Base;
-using LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities;
+using FluentAssertions;
 using Moq;
 using Xunit;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Search
 {
+    using LetsDoIt.Moody.Application.Data;
+    using LetsDoIt.Moody.Application.Search;
+    using LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities;
     public class SearchServiceTest
     {
         private readonly ISearchService _testing;
@@ -28,18 +27,11 @@ namespace LetsDoIt.Moody.Application.UnitTests.Search
         [InlineData(" ")]
         public async Task GetGeneralSearchResultAsync_ShouldReturnEmptyList_WhenSearchKeyIsNullOrWhiteSpace(string searchKey)
         {
-            var result = await _testing.GetGeneralSearchResultAsync(searchKey);
+            var actual = await _testing.GetGeneralSearchResultAsync(searchKey);
 
-            Assert.Equal(Enumerable.Empty<SpGetGeneralSearchResult>(),result );
+            actual.Should().Equal(Enumerable.Empty<SpGetGeneralSearchResult>());
         }
 
-        [Fact]
-        public async Task GetGeneralSearchResultAsync_ShouldCallSpGetGeneralSearchResultAsync()
-        {
-            var searchKey = "s";
-
-            _mockDataService.Verify(sk => sk.SpGetGeneralSearchResultAsync(searchKey.ToLower()), Times.Once);
-        }
         [Fact]
         public async Task GetGeneralSearchResultAsync_WhenAValidSearchKeyEntered_ShouldReturnListOfResult()
         {
@@ -52,21 +44,24 @@ namespace LetsDoIt.Moody.Application.UnitTests.Search
                 new SpGetGeneralSearchResult()
             };
 
-            _mockDataService.Setup(sk => sk.SpGetGeneralSearchResultAsync(searchKey)).ReturnsAsync(list);
-
-            var result = await _testing.GetGeneralSearchResultAsync(searchKey);
-            
-            Assert.Equal(list,result);
+            var actual = await _testing.GetGeneralSearchResultAsync(searchKey);
+            if (actual != null)
+            {
+                actual.Should().Equal(list);
+            }
+           
         }
 
         [Fact]
         public async Task GetGeneralSearchResultAsync_ShouldCallSpGetGeneralSearchResultWithLowerCaseParameter()
         {
             var searchKey = "S";
-            
-            var result = await _testing.GetGeneralSearchResultAsync(searchKey);
 
-            _mockDataService.Verify(ds=>ds.SpGetGeneralSearchResultAsync(searchKey.ToLower()),Times.Once);
+            var actual = await _testing.GetGeneralSearchResultAsync(searchKey);
+
+            _mockDataService.Verify(ds=>ds.GetGeneralSearchResultAsync(searchKey.ToLower()),Times.Once);
+
+
         }
     }
 }
