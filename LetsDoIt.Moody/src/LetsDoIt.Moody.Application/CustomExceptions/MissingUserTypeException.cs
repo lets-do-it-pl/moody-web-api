@@ -2,9 +2,9 @@
 
 namespace LetsDoIt.Moody.Application.CustomExceptions
 {
-    public class WrongUserTypeException : Exception
+    public class MissingUserTypeException : Exception
     {
-        public WrongUserTypeException()
+        public MissingUserTypeException()
             : base($"Wrong user type! Specified type does not exits or not allowed.")
         {
         }

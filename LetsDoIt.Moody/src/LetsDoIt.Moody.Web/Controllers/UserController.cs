@@ -92,15 +92,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             try
             {
-                await _userService.UpdateUserAsync(
-                    GetUserInfo().UserId,
-                    userId,
-                    userUpdateRequest.Email,
-                    userUpdateRequest.FullName,
-                    userUpdateRequest.UserType,
-                    userUpdateRequest.IsActive,
-                    userUpdateRequest.CanLogin,
-                    userUpdateRequest.Password);
+                await _userService.UpdateUserAsync(ToUserUpdateEntity(userId,userUpdateRequest));
             }
             catch (UserNotFoundException e)
             {
@@ -262,12 +254,24 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 Id = user.Id,
                 CanLogin = user.CanLogin,
-                CreatedDate = user.CreatedDate,
                 Email = user.Email,
                 FullName = user.FullName,
                 UserType = user.UserType,
                 IsActive = user.IsActive,
                 Description = user.Description
+            };
+        
+        private UserUpdateEntity ToUserUpdateEntity(int userId, UserUpdateRequest user) =>
+            new UserUpdateEntity()
+            {
+                Id = userId,
+                CanLogin = user.CanLogin,
+                Email = user.Email,
+                FullName = user.FullName,
+                UserType = user.UserType,
+                IsActive = user.IsActive,
+                ModifiedById = GetUserInfo().UserId,
+                Password = user.Password
             };
     }
 }
