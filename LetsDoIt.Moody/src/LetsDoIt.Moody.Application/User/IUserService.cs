@@ -10,6 +10,8 @@ namespace LetsDoIt.Moody.Application.User
     {
         Task<IEnumerable<User>> GetUsersAsync();
 
+        Task<User> GetUserAsync(int id);
+
         Task UpdateUserAsync(int modifiedById, int id, string email, string fullName, string userType, bool isActive,
             bool canLogin, string password = null);
 

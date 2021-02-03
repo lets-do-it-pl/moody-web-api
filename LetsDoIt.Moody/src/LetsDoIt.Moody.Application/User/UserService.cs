@@ -50,11 +50,20 @@ namespace LetsDoIt.Moody.Application.User
 
         #region UserCRUD
 
-        public async Task<IEnumerable<User>> GetUsersAsync() 
+        public async Task<IEnumerable<User>> GetUsersAsync()
             => await _userRepository.Get().Where(u => !u.IsDeleted).OrderBy(u => u.FullName).ToArrayAsync();
 
+        public async Task<User> GetUserAsync(int id)
+        {
+            var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
+
+            ValidateUser(dbUser);
+
+            return dbUser;
+        }
+
         public async Task UpdateUserAsync(
-            int modifiedById, 
+            int modifiedById,
             int id,
             string email,
             string fullName,
@@ -70,13 +79,24 @@ namespace LetsDoIt.Moody.Application.User
             dbUser.Email = email;
             dbUser.FullName = fullName;
             dbUser.ModifiedBy = modifiedById;
-            dbUser.UserType = userType;
             dbUser.IsActive = isActive;
             dbUser.CanLogin = canLogin;
 
-            if (password !=null)
+            var allowedUserTypes = new[]
             {
-                dbUser.Password = GetEncryptedPassword(email , password);
+                UserTypeConstants.Admin, UserTypeConstants.Standard, UserTypeConstants.Client
+            };
+
+            if (!allowedUserTypes.Contains(userType))
+            {
+                throw new WrongUserTypeException();
+            }
+
+            dbUser.UserType = userType;
+
+            if (password != null)
+            {
+                dbUser.Password = GetEncryptedPassword(email, password);
             }
 
             await _userRepository.UpdateAsync(dbUser);
@@ -108,7 +128,7 @@ namespace LetsDoIt.Moody.Application.User
                 throw new DuplicateNameException($"The email already exists in the system.");
             }
 
-            await _userRepository.AddAsync(ToUser(email, password, fullName ));
+            await _userRepository.AddAsync(ToUser(email, password, fullName));
 
             await SendActivationEmailAsync(email);
         }
