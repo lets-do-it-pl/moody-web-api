@@ -1,5 +1,4 @@
-﻿namespace LetsDoIt.Moody.Application.Constants
-{
+﻿{
     public static class UserTypeConstants
     {
         public const string Client= "C";

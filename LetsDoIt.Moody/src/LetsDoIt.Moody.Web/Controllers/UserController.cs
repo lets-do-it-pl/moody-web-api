@@ -88,6 +88,9 @@ namespace LetsDoIt.Moody.Web.Controllers
                     userId,
                     userUpdateRequest.Email,
                     userUpdateRequest.FullName,
+                    userUpdateRequest.UserType,
+                    userUpdateRequest.IsActive,
+                    userUpdateRequest.CanLogin,
                     userUpdateRequest.Password);
             }
             catch (UserNotFoundException e)

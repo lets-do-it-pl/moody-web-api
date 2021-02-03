@@ -58,6 +58,9 @@ namespace LetsDoIt.Moody.Application.User
             int id,
             string email,
             string fullName,
+            string userType,
+            bool isActive,
+            bool canLogin,
             string password = null)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
@@ -67,6 +70,9 @@ namespace LetsDoIt.Moody.Application.User
             dbUser.Email = email;
             dbUser.FullName = fullName;
             dbUser.ModifiedBy = modifiedById;
+            dbUser.UserType = userType;
+            dbUser.IsActive = isActive;
+            dbUser.CanLogin = canLogin;
 
             if (password !=null)
             {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using LetsDoIt.Moody.Application.Constants;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -9,7 +10,8 @@ namespace LetsDoIt.Moody.Application.User
     {
         Task<IEnumerable<User>> GetUsersAsync();
 
-        Task UpdateUserAsync(int modifiedById, int id, string email, string fullName, string password = null);
+        Task UpdateUserAsync(int modifiedById, int id, string email, string fullName, string userType, bool isActive,
+            bool canLogin, string password = null);
 
         Task DeleteUserAsync(int modifiedById, int id);
 
