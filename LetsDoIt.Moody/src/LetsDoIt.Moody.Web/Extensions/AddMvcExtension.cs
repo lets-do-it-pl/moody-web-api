@@ -17,6 +17,11 @@ namespace LetsDoIt.Moody.Web.Extensions
                 .AddMvcOptions(opt =>
                     opt.Filters.Add<LoggingActionFilter>());
 
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
             return services;
         }
     }
