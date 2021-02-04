@@ -58,7 +58,10 @@ namespace LetsDoIt.Moody.Application.User
         {
             var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
 
-            ValidateUser(dbUser);
+            if (dbUser== null)
+            {
+                throw new UserNotFoundException();
+            }
 
             return dbUser;
         }
@@ -80,7 +83,7 @@ namespace LetsDoIt.Moody.Application.User
 
             var contains = typeof(UserUpdateEntity).GetFields(BindingFlags.Public | BindingFlags.Static)
                 .Select(prop => prop.GetRawConstantValue()?.ToString()).Contains(userUpdateEntity.UserType);
-
+                
             if (!contains)
             {
                 throw new MissingUserTypeException();
