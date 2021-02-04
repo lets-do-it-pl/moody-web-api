@@ -81,7 +81,7 @@ namespace LetsDoIt.Moody.Application.User
             dbUser.IsActive = userUpdateEntity.IsActive;
             dbUser.CanLogin = userUpdateEntity.CanLogin;
 
-            var contains = typeof(UserUpdateEntity).GetFields(BindingFlags.Public | BindingFlags.Static)
+            var contains = typeof(UserTypeConstants).GetFields(BindingFlags.Public | BindingFlags.Static)
                 .Select(prop => prop.GetRawConstantValue()?.ToString()).Contains(userUpdateEntity.UserType);
                 
             if (!contains)
