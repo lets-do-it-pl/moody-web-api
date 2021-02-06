@@ -51,9 +51,16 @@ namespace LetsDoIt.Moody.Web.Controllers
         [Authorize(Roles = RoleConstants.AdminRole)]
         public async Task<IActionResult> GetUser(int userId)
         {
-            var result = await _userService.GetUserAsync(userId);
+            try
+            {
+                var result = await _userService.GetUserAsync(userId);
 
-            return Ok(ToUserDetailsResponse(result));
+                return Ok(ToUserDetailsResponse(result));
+            }
+            catch (UserNotFoundException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost]
@@ -95,6 +102,10 @@ namespace LetsDoIt.Moody.Web.Controllers
                 await _userService.UpdateUserAsync(ToUserUpdateEntity(userId,userUpdateRequest));
             }
             catch (UserNotFoundException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (MissingUserTypeException e)
             {
                 return BadRequest(e.Message);
             }
