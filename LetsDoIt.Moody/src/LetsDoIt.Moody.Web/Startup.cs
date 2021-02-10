@@ -31,6 +31,7 @@ namespace LetsDoIt.Moody.Web
                 .AddMailSender()
                 .AddCustomClasses()
                 .AddActionFilterAndNewstonSoftJson()
+                .AddHealthCheckConfig(Configuration)
                 .AddControllers();
         }
 
@@ -53,10 +54,7 @@ namespace LetsDoIt.Moody.Web
 
             app.UseRouting();
 
-            app.UseCors(options => options
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowAnyOrigin());
+            app.UseCors();
 
             app.UseAuthentication()
                 .UseAuthorization();
@@ -66,6 +64,7 @@ namespace LetsDoIt.Moody.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
                 endpoints.MapHealthChecksConfig();
             });
         }

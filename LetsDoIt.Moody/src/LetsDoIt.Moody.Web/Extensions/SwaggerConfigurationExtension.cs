@@ -1,7 +1,4 @@
-﻿using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -55,13 +52,6 @@ namespace LetsDoIt.Moody.Web.Extensions
             });
 
             return app;
-        }
-
-        public static IEndpointRouteBuilder MapHealthChecksConfig(this IEndpointRouteBuilder endpoints)
-        {
-            endpoints.MapHealthChecksUI();
-
-            return endpoints;
         }
     }
 }
