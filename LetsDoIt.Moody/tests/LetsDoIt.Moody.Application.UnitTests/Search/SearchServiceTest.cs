@@ -47,7 +47,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Search
             var actual = await _testing.GetGeneralSearchResultAsync(searchKey);
             if (actual != null)
             {
-                actual.Should().Equal(list);
+                actual.Should().BeEquivalentTo(list);
             }
            
         }
@@ -60,7 +60,6 @@ namespace LetsDoIt.Moody.Application.UnitTests.Search
             var actual = await _testing.GetGeneralSearchResultAsync(searchKey);
 
             _mockDataService.Verify(ds=>ds.GetGeneralSearchResultAsync(searchKey.ToLower()),Times.Once);
-
 
         }
     }
