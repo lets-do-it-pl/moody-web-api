@@ -20,6 +20,6 @@ namespace LetsDoIt.Moody.Persistence
         
         DbSet<User> Users { get; set; }
         
-        DbSet<VersionHistory> VersionHistories { get; set; }
+        DbSet<ParameterItem> ParameterItems { get; set; }
     }
 }

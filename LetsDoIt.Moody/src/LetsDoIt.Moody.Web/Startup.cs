@@ -21,6 +21,7 @@ namespace LetsDoIt.Moody.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddLazyCache()
                 .AddAuthenticationConfig(Configuration)
                 .AddOptionsConfig(Configuration)
                 .AddAuthorizationConfig()

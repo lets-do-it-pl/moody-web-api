@@ -20,7 +20,7 @@ namespace LetsDoIt.Moody.Persistence
         public virtual DbSet<CategoryDetail> CategoryDetails { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<VersionHistory> VersionHistories { get; set; }
+        public virtual DbSet<ParameterItem> ParameterItems { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -138,11 +138,11 @@ namespace LetsDoIt.Moody.Persistence
                     .HasDefaultValueSql("('S')");
             });
 
-            modelBuilder.Entity<VersionHistory>(entity =>
+            modelBuilder.Entity<ParameterItem>(entity =>
             {
-                entity.ToTable("VersionHistory");
+                entity.ToTable("ParameterItem");
 
-                entity.Property(e => e.VersionNumber)
+                entity.Property(e => e.ParameterValue)
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
