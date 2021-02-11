@@ -46,6 +46,7 @@ namespace LetsDoIt.Moody.Web
                 app.UseApiExceptionHandler();
             }
 
+
             app.UseResponseCompression();
 
             app.UseHttpsRedirection();

@@ -17,11 +17,19 @@ namespace LetsDoIt.Moody.Web.Extensions
             return services
                 .AddCors(options =>
                 {
-                    options.AddPolicy("AllowOrigin",
+                    options.AddPolicy("AdminDashboardPolicy",
                         builder =>
                         {
                             builder
-                            .WithOrigins(url);
+                                .WithOrigins(url)
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                        });
+                        options.AddPolicy("MobilePolicy", builder =>
+                        {
+                            builder.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
                         });
                 });
         }
@@ -30,9 +38,8 @@ namespace LetsDoIt.Moody.Web.Extensions
             this IApplicationBuilder app, 
             IConfiguration configuration)
         {
-            var url = GetWebUrl(configuration);
 
-            app.UseCors(options => options.WithOrigins(url));
+            app.UseCors("AdminDashboardPolicy");
             
             return app;
         }

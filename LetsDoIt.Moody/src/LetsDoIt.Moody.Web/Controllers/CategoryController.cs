@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -19,6 +20,7 @@ namespace LetsDoIt.Moody.Web.Controllers
     [ApiController]
     [Route("api/category")]
     [Authorize(Roles = RoleConstants.StandardRole)]
+    [EnableCors("MobilePolicy")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
