@@ -55,7 +55,7 @@ namespace LetsDoIt.Moody.Web
 
             app.UseRouting();
 
-            app.UseCorsConfig(Configuration);
+            app.UseCorsConfig();
 
             app.UseAuthentication()
                 .UseAuthorization();

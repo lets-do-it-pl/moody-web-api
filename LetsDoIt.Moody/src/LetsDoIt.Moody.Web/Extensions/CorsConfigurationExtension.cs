@@ -27,7 +27,8 @@ namespace LetsDoIt.Moody.Web.Extensions
                         });
                         options.AddPolicy("MobilePolicy", builder =>
                         {
-                            builder.AllowAnyOrigin()
+                            builder
+                                .AllowAnyOrigin()
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                         });
@@ -35,8 +36,7 @@ namespace LetsDoIt.Moody.Web.Extensions
         }
 
         public static IApplicationBuilder UseCorsConfig(
-            this IApplicationBuilder app, 
-            IConfiguration configuration)
+            this IApplicationBuilder app)
         {
 
             app.UseCors("AdminDashboardPolicy");
