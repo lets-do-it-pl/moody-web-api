@@ -106,12 +106,16 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("User");
 
                 entity.HasIndex(e => e.Email)
-                    .HasName("UQ__User__A9D10534AF5C5D00")
+                    .HasName("UQ__tmp_ms_x__A9D10534AA256582")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Email)
                     .IsRequired()

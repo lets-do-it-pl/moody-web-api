@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -50,27 +51,43 @@ namespace LetsDoIt.Moody.Application.User
 
         #region UserCRUD
 
-        public async Task<IEnumerable<User>> GetUsersAsync() 
+        public async Task<IEnumerable<User>> GetUsersAsync()
             => await _userRepository.Get().Where(u => !u.IsDeleted).OrderBy(u => u.FullName).ToArrayAsync();
 
-        public async Task UpdateUserAsync(
-            int modifiedById, 
-            int id,
-            string email,
-            string fullName,
-            string password = null)
+        public async Task<User> GetUserAsync(int id)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Id == id && !u.IsDeleted);
 
-            ValidateUser(dbUser);
-
-            dbUser.Email = email;
-            dbUser.FullName = fullName;
-            dbUser.ModifiedBy = modifiedById;
-
-            if (password !=null)
+            if (dbUser == null)
             {
-                dbUser.Password = GetEncryptedPassword(email , password);
+                throw new UserNotFoundException();
+            }
+
+            return dbUser;
+        }
+
+        public async Task UpdateUserAsync(UserUpdateEntity userUpdateEntity)
+        {
+            var dbUser = await _userRepository.GetAsync(u => u.Id == userUpdateEntity.Id && !u.IsDeleted);
+
+            if (dbUser == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            dbUser.Email = userUpdateEntity.Email;
+            dbUser.FullName = userUpdateEntity.FullName;
+            dbUser.ModifiedBy = userUpdateEntity.ModifiedById;
+            dbUser.IsActive = userUpdateEntity.IsActive;
+            dbUser.CanLogin = userUpdateEntity.CanLogin;
+
+            CheckUserType(userUpdateEntity.UserType);
+
+            dbUser.UserType = userUpdateEntity.UserType;
+
+            if (userUpdateEntity.Password != null)
+            {
+                dbUser.Password = GetEncryptedPassword(userUpdateEntity.Email, userUpdateEntity.Password);
             }
 
             await _userRepository.UpdateAsync(dbUser);
@@ -102,7 +119,7 @@ namespace LetsDoIt.Moody.Application.User
                 throw new DuplicateNameException($"The email already exists in the system.");
             }
 
-            await _userRepository.AddAsync(ToUser(email, password, fullName ));
+            await _userRepository.AddAsync(ToUser(email, password, fullName));
 
             await SendActivationEmailAsync(email);
         }
@@ -210,11 +227,13 @@ namespace LetsDoIt.Moody.Application.User
             {
                 throw new UserNotFoundException();
             }
-            else if (!user.IsActive)
+
+            if (!user.IsActive)
             {
                 throw new UserNotActiveException();
             }
-            else if (!user.CanLogin)
+
+            if (!user.CanLogin)
             {
                 throw new UserNotHaveLoginPermissionException();
             }
@@ -241,5 +260,16 @@ namespace LetsDoIt.Moody.Application.User
         };
 
         private string GetEncryptedPassword(string email, string password) => ProtectionHelper.EncryptValue(email + password);
+
+        private static void CheckUserType(string userType)
+        {
+            var contains = typeof(UserTypeConstants).GetFields(BindingFlags.Public | BindingFlags.Static)
+                .Select(prop => prop.GetRawConstantValue()?.ToString()).Contains(userType);
+
+            if (!contains)
+            {
+                throw new MissingUserTypeException();
+            }
+        }
     }
 }

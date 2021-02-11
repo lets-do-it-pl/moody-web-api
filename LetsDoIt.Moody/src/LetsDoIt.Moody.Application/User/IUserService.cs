@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using LetsDoIt.Moody.Application.Constants;
 
 namespace LetsDoIt.Moody.Application.User
 {
     using Persistence.Entities;
 
+
     public interface IUserService
     {
         Task<IEnumerable<User>> GetUsersAsync();
 
-        Task UpdateUserAsync(int modifiedById, int id, string email, string fullName, string password = null);
+        Task<User> GetUserAsync(int id);
+
+        Task UpdateUserAsync(UserUpdateEntity userUpdateEntity);
 
         Task DeleteUserAsync(int modifiedById, int id);
 

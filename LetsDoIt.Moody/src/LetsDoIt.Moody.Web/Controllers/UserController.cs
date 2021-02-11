@@ -1,10 +1,10 @@
-﻿using System.Data;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -31,7 +31,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         #region UserCRUD
 
         [HttpGet]
-        [Authorize(Roles = RoleConstants.StandardRole)]
+        [Authorize(Roles = RoleConstants.AdminRole)]
         public async Task<IActionResult> GetUsers()
         {
             var userResult = await _userService.GetUsersAsync();
@@ -45,6 +45,22 @@ namespace LetsDoIt.Moody.Web.Controllers
                 .Select(ToUserResponse);
 
             return Ok(result);
+        }
+        
+        [HttpGet, Route("{userId}")]
+        [Authorize(Roles = RoleConstants.AdminRole)]
+        public async Task<IActionResult> GetUser(int userId)
+        {
+            try
+            {
+                var result = await _userService.GetUserAsync(userId);
+
+                return Ok(ToUserDetailsResponse(result));
+            }
+            catch (UserNotFoundException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost]
@@ -83,14 +99,13 @@ namespace LetsDoIt.Moody.Web.Controllers
         {
             try
             {
-                await _userService.UpdateUserAsync(
-                    GetUserInfo().UserId,
-                    userId,
-                    userUpdateRequest.Email,
-                    userUpdateRequest.FullName,
-                    userUpdateRequest.Password);
+                await _userService.UpdateUserAsync(ToUserUpdateEntity(userId,userUpdateRequest));
             }
             catch (UserNotFoundException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (MissingUserTypeException e)
             {
                 return BadRequest(e.Message);
             }
@@ -239,14 +254,35 @@ namespace LetsDoIt.Moody.Web.Controllers
             new UserResponse
             {
                 Id = user.Id,
+                FullName = user.FullName,
+                Description = user.Description,
+                UserType = user.UserType,
+                CreateDate = user.CreatedDate
+            };  
+        
+        private UserDetailsResponse ToUserDetailsResponse(User user) =>
+            new UserDetailsResponse()
+            {
+                Id = user.Id,
                 CanLogin = user.CanLogin,
-                CreatedBy = user.CreatedBy,
-                CreatedDate = user.CreatedDate,
                 Email = user.Email,
-                ModifiedBy = user.ModifiedBy,
-                ModifiedDate = user.ModifiedDate,
                 FullName = user.FullName,
                 UserType = user.UserType,
+                IsActive = user.IsActive,
+                Description = user.Description
+            };
+        
+        private UserUpdateEntity ToUserUpdateEntity(int userId, UserUpdateRequest user) =>
+            new UserUpdateEntity()
+            {
+                Id = userId,
+                CanLogin = user.CanLogin,
+                Email = user.Email,
+                FullName = user.FullName,
+                UserType = user.UserType,
+                IsActive = user.IsActive,
+                ModifiedById = GetUserInfo().UserId,
+                Password = user.Password
             };
     }
 }
