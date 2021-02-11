@@ -81,13 +81,7 @@ namespace LetsDoIt.Moody.Application.User
             dbUser.IsActive = userUpdateEntity.IsActive;
             dbUser.CanLogin = userUpdateEntity.CanLogin;
 
-            var contains = typeof(UserTypeConstants).GetFields(BindingFlags.Public | BindingFlags.Static)
-                .Select(prop => prop.GetRawConstantValue()?.ToString()).Contains(userUpdateEntity.UserType);
-
-            if (!contains)
-            {
-                throw new MissingUserTypeException();
-            }
+            CheckUserType(userUpdateEntity.UserType);
 
             dbUser.UserType = userUpdateEntity.UserType;
 
@@ -266,5 +260,16 @@ namespace LetsDoIt.Moody.Application.User
         };
 
         private string GetEncryptedPassword(string email, string password) => ProtectionHelper.EncryptValue(email + password);
+
+        private static void CheckUserType(string userType)
+        {
+            var contains = typeof(UserTypeConstants).GetFields(BindingFlags.Public | BindingFlags.Static)
+                .Select(prop => prop.GetRawConstantValue()?.ToString()).Contains(userType);
+
+            if (!contains)
+            {
+                throw new MissingUserTypeException();
+            }
+        }
     }
 }
