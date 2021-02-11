@@ -46,6 +46,7 @@ namespace LetsDoIt.Moody.Web
                 app.UseApiExceptionHandler();
             }
 
+
             app.UseResponseCompression();
 
             app.UseHttpsRedirection();
@@ -54,7 +55,7 @@ namespace LetsDoIt.Moody.Web
 
             app.UseRouting();
 
-            app.UseCorsConfig(Configuration);
+            app.UseCorsConfig();
 
             app.UseAuthentication()
                 .UseAuthorization();

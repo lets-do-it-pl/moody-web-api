@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -30,6 +31,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         [HttpGet, Route("/list-detail/{versionNumber?}")]
         [Authorize(Roles = RoleConstants.ClientRole)]
+        [EnableCors("MobilePolicy")]
         public async Task<ActionResult<VersionedCategoryWithDetailsResponse>> GetVersionedCategoriesWithDetails(string versionNumber = null)
         {
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
