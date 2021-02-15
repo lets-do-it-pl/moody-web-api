@@ -1,21 +1,21 @@
-﻿using System.Data;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
-    using Application.CustomExceptions;
-    using Entities;
-    using Entities.Requests;
     using Application.Constants;
+    using Application.CustomExceptions;
     using Application.User;
+    using Entities;
+    using Entities.Requests.User;
     using Entities.Responses;
+    using LetsDoIt.Moody.Persistence.Entities;
     using System;
-    using LetsDoIt.CustomValueTypes;
 
     [Route("api/user")]
     [ApiController]
@@ -28,21 +28,124 @@ namespace LetsDoIt.Moody.Web.Controllers
             _userService = userService;
         }
 
+        #region UserCRUD
+
+        [HttpGet]
+        [Authorize(Roles = RoleConstants.AdminRole)]
+        public async Task<IActionResult> GetUsers()
+        {
+            var userResult = await _userService.GetUsersAsync();
+
+            if (userResult == null)
+            {
+                return NoContent();
+            }
+
+            var result = userResult
+                .Select(ToUserResponse);
+
+            return Ok(result);
+        }
+        
+        [HttpGet, Route("{userId}")]
+        [Authorize(Roles = RoleConstants.AdminRole)]
+        public async Task<IActionResult> GetUser(int userId)
+        {
+            try
+            {
+                var result = await _userService.GetUserAsync(userId);
+
+                return Ok(ToUserDetailsResponse(result));
+            }
+            catch (UserNotFoundException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [AllowAnonymous]
+        public async Task<IActionResult> SaveUser(SaveUserRequest saveUserRequest)
+        {
+            try
+            {
+                await _userService.SaveUserAsync(
+                    saveUserRequest.Email,
+                    saveUserRequest.Password,
+                    saveUserRequest.FullName);
+
+                return StatusCode((int)HttpStatusCode.Created, "Created");
+            }
+            catch (Exception ex)
+            {
+                if (ex is DuplicateNameException)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                if (ex is UserNotFoundException || ex is UserAlreadyActivatedException)
+                {
+                    return BadRequest($"The user has been created! Error on sending activation email: {ex.Message}");
+                }
+
+                throw;
+            }
+        }
+
+        [HttpPut, Route("{userId}")]
+        [Authorize(Roles = RoleConstants.AdminRole)]
+        public async Task<IActionResult> UpdateUser(int userId, UserUpdateRequest userUpdateRequest)
+        {
+            try
+            {
+                await _userService.UpdateUserAsync(ToUserUpdateEntity(userId,userUpdateRequest));
+            }
+            catch (UserNotFoundException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (MissingUserTypeException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok();
+        }
+
+        [HttpDelete, Route("{userId}")]
+        [Authorize(Roles = RoleConstants.AdminRole)]
+        public async Task<IActionResult> DeleteUser(int userId)
+        {
+            try
+            {
+                await _userService.DeleteUserAsync(GetUserInfo().UserId,userId);
+            }
+            catch (UserNotFoundException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok();
+        }
+
+        #endregion
+
         [HttpPost("authenticate")]
         [AllowAnonymous]
-        public async Task<IActionResult> Authenticate(AuthenticationRequest request)
+        public async Task<IActionResult> Authenticate(UserAuthenticationRequest request)
         {
             try
             {
                 var value = await _userService.AuthenticateAsync(request.Email, request.Password);
 
-                var result = new AuthenticationResponse(value.id, value.token);
+                var result = new AuthenticationResponse(value.id, value.token, value.fullName);
 
                 return Ok(result);
             }
             catch (UserNotFoundException)
             {
-                return BadRequest("Username or Password is wrong!");
+                return BadRequest("Email or Password is wrong!");
             }
             catch (Exception ex)
             {
@@ -53,40 +156,9 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 throw;
             }
-
         }
 
-        [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
-        [AllowAnonymous]
-        public async Task<IActionResult> SaveUser(SaveUserRequest saveUserRequest)
-        {
-            try
-            {
-                await _userService.SaveUserAsync(saveUserRequest.Username,
-                    saveUserRequest.Password,
-                    saveUserRequest.Email,
-                    saveUserRequest.Name,
-                    saveUserRequest.Surname);
-
-                return StatusCode((int)HttpStatusCode.Created, "Created");
-            }
-            catch (Exception ex)
-            {
-                if (ex is DuplicateNameException)
-                {
-                    return BadRequest(ex.Message);
-                }
-                else if (ex is UserNotRegisteredException || ex is UserAlreadyActivatedException)
-                {
-                    return BadRequest($"The user has been created! Error on sending activation email: {ex.Message}");
-                }
-
-                throw;
-            }
-        }
-
-        [HttpPost("user-verification-email")]        
+        [HttpPost("user-verification-email")]
         [AllowAnonymous]
         public async Task<IActionResult> SendUserVerificationEmail(string email)
         {
@@ -96,13 +168,13 @@ namespace LetsDoIt.Moody.Web.Controllers
 
                 return Ok();
             }
-            catch (UserNotRegisteredException exception)
+            catch (UserNotFoundException exception)
             {
                 return BadRequest(exception.Message);
             }
         }
 
-        [HttpPost("activate")]        
+        [HttpPost("activate")]
         [Authorize(Roles = RoleConstants.NotActivatedUserRole)]
         public async Task<IActionResult> ActivateUser()
         {
@@ -135,7 +207,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             }
             catch (Exception ex)
             {
-                if (ex is UserNotFoundException || 
+                if (ex is UserNotFoundException ||
                     ex is UserNotActiveException ||
                     ex is UserNotHaveLoginPermissionException)
                 {
@@ -177,5 +249,40 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             return new UserInfo(userId, fullName);
         }
+
+        private UserResponse ToUserResponse(User user) =>
+            new UserResponse
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Description = user.Description,
+                UserType = user.UserType,
+                CreateDate = user.CreatedDate
+            };  
+        
+        private UserDetailsResponse ToUserDetailsResponse(User user) =>
+            new UserDetailsResponse()
+            {
+                Id = user.Id,
+                CanLogin = user.CanLogin,
+                Email = user.Email,
+                FullName = user.FullName,
+                UserType = user.UserType,
+                IsActive = user.IsActive,
+                Description = user.Description
+            };
+        
+        private UserUpdateEntity ToUserUpdateEntity(int userId, UserUpdateRequest user) =>
+            new UserUpdateEntity()
+            {
+                Id = userId,
+                CanLogin = user.CanLogin,
+                Email = user.Email,
+                FullName = user.FullName,
+                UserType = user.UserType,
+                IsActive = user.IsActive,
+                ModifiedById = GetUserInfo().UserId,
+                Password = user.Password
+            };
     }
 }

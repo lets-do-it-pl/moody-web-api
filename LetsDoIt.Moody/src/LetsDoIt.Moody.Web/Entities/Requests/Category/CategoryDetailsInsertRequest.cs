@@ -2,9 +2,9 @@
 
 namespace LetsDoIt.Moody.Web.Entities.Requests
 {
-    public class ForgetPasswordRequest
+    public class CategoryDetailsInsertRequest
     {
         [Required]
-        public string Email { get; set; }
+        public string Image { get; set; }
     }
 }

@@ -2,12 +2,12 @@
 
 namespace LetsDoIt.Moody.Web.Entities.Requests
 {
-    public class AuthenticationRequest
+    public class CategoryUpdateRequest
     {
         [Required]
-        public string Email { get; set; }
+        public string Name { get; set; }
 
         [Required]
-        public string Password { get; set; }
+        public byte[] Image { get; set; }
     }
 }

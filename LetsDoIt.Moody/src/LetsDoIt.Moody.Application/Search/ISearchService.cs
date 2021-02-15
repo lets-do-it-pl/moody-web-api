@@ -6,7 +6,7 @@ namespace LetsDoIt.Moody.Application.Search
     using LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities;
     public interface ISearchService
     {
-        Task<ICollection<SpGetGeneralSearchResult>> GetGeneralSearchResultAsync (string searchKey);
-       
+        Task<ICollection<SpGetGeneralSearchResult>> GetGeneralSearchResultAsync(string userType, string searchKey);
+
     }
 }

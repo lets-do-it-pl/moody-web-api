@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.Client;
 using LetsDoIt.Moody.Web.Controllers;
 using LetsDoIt.Moody.Web.Entities.Requests;
+using LetsDoIt.Moody.Web.Entities.Requests.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;

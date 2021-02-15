@@ -48,7 +48,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                     VersionNumber = versionNumber
                 });
 
-            var actual = await _testing.GetCategoriesWithDetails(versionNumber);
+            var actual = await _testing.GetCategoriesWithDetailsAsync(versionNumber);
 
             Assert.True(actual.IsUpdated);
             Assert.Equal(versionNumber, actual.VersionNumber);
@@ -66,7 +66,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                     VersionNumber = versionNumber
                 });
 
-            async Task Test() => await _testing.GetCategoriesWithDetails("filler");
+            async Task Test() => await _testing.GetCategoriesWithDetailsAsync("filler");
 
             await Assert.ThrowsAsync<ArgumentException>(Test);
         }
@@ -79,7 +79,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             _mockVersionHistoryService.Setup(vhs => vhs.GetLatestVersionNumberAsync())
                 .ReturnsAsync((VersionHistory)null);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _testing.GetCategoriesWithDetails(null));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _testing.GetCategoriesWithDetailsAsync(null));
         }
 
         [Theory]
@@ -104,7 +104,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                     VersionNumber = "latest.versionNumber"
                 });
 
-            var actual = await _testing.GetCategoriesWithDetails(versionNumber);
+            var actual = await _testing.GetCategoriesWithDetailsAsync(versionNumber);
 
             Assert.False(actual.IsUpdated);
             Assert.NotNull(actual.Categories);
@@ -160,14 +160,13 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         public async Task InsertAsync_ShouldCallRepositoryAndCallVersionHistoryService()
         {
             var name = "asd";
-            var order = 5;
             byte[] byteImage = { 80, 65, 78, 75, 65, 74 };
             var userId = 1;
 
-            await _testing.InsertAsync(name, order, byteImage, userId);
+            await _testing.InsertAsync(name, byteImage, userId);
 
             _mockCategoryRepository.Verify(ur =>
-                    ur.AddAsync(It.Is<Category>(c => c.Name == name && c.Order == order && c.Image == byteImage && c.CreatedBy == userId))
+                    ur.AddAsync(It.Is<Category>(c => c.Name == name && c.Image == byteImage && c.CreatedBy == userId))
                 , Times.Once);
 
             _mockVersionHistoryService.Verify(ur =>
@@ -182,14 +181,15 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         {
             var userId = 1;
             var categoryId = 1;
-            var order = 5;
             var image = "YTM0NZomIzI2OTsmIzM0NTueYQ==";
 
-            await _testing.InsertCategoryDetailAsync(categoryId, order, image, userId);
+            await _testing.InsertCategoryDetailAsync(categoryId, image, userId);
 
             _mockCategoryDetailsRepository.Verify(cdr =>
-                    cdr.AddAsync(It.Is<CategoryDetail>(cd => cd.CategoryId == categoryId && cd.Order == order
-                    && cd.Image.SequenceEqual(Convert.FromBase64String(image)) && cd.CreatedBy == userId)),
+                    cdr.AddAsync(It.Is<CategoryDetail>(cd => 
+                    cd.CategoryId == categoryId && 
+                    cd.Image.SequenceEqual(Convert.FromBase64String(image)) && 
+                    cd.CreatedBy == userId)),
                 Times.Once);
 
             _mockVersionHistoryService.Verify(v =>
@@ -232,7 +232,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             _mockCategoryDetailsRepository.Setup(repo => repo.GetAsync(c => c.Id == It.IsAny<int>()))
                 .ReturnsAsync((CategoryDetail)null);
 
-            async Task Test() => await _testing.DeleteAsync(categoryDetail.Id,userId);
+            async Task Test() => await _testing.DeleteAsync(categoryDetail.Id, userId);
 
             await Assert.ThrowsAsync<ObjectNotFoundException>(Test);
         }

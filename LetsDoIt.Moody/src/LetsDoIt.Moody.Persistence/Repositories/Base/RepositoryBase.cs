@@ -22,13 +22,21 @@ namespace LetsDoIt.Moody.Persistence.Repositories.Base
             _deleteType = deleteType;
         }
 
-        public virtual async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter = null)
+        public virtual async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter = null,
+                                                              Expression<Func<TEntity, decimal>> order = null)
         {
             try
             {
-                return filter == null
-                    ? await Context.Set<TEntity>().ToListAsync()
-                    : await Context.Set<TEntity>().Where(filter).ToListAsync();
+                var result = Context.Set<TEntity>().AsQueryable();
+
+                if (filter != null)
+                {
+                    result = result.Where(filter);
+                }
+
+                return order != null ? 
+                    await result.OrderBy(order).ToListAsync() : 
+                    await result.ToListAsync();
             }
             catch (Exception ex)
             {

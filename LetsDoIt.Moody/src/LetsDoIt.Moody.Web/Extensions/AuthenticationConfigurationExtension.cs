@@ -39,7 +39,6 @@ namespace LetsDoIt.Moody.Web.Extensions
             services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.JwtSectionName));
 
             return services;
-            
         }
     }
 }
