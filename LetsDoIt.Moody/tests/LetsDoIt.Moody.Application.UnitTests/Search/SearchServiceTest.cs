@@ -7,7 +7,7 @@ using Xunit;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Search
 {
-    using LetsDoIt.Moody.Application.Data;
+    using Data;
     using LetsDoIt.Moody.Application.Search;
     using LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities;
 
