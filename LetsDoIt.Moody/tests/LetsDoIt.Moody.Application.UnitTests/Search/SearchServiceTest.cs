@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -11,9 +10,10 @@ namespace LetsDoIt.Moody.Application.UnitTests.Search
     using LetsDoIt.Moody.Application.Data;
     using LetsDoIt.Moody.Application.Search;
     using LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities;
+
     public class SearchServiceTest
     {
-        private readonly ISearchService _testing;
+        private readonly SearchService _testing;
         private readonly Mock<IDataService> _mockDataService;
 
         public SearchServiceTest()
@@ -29,7 +29,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Search
         {
             var actual = await _testing.GetGeneralSearchResultAsync(searchKey);
 
-            actual.Should().Equal(Enumerable.Empty<SpGetGeneralSearchResult>());
+            actual.Should().BeEmpty();
         }
 
         [Fact]
@@ -44,12 +44,14 @@ namespace LetsDoIt.Moody.Application.UnitTests.Search
                 new SpGetGeneralSearchResult()
             };
 
+            _mockDataService
+                .Setup(ds => ds.GetGeneralSearchResultAsync(searchKey))
+                .ReturnsAsync(list);
+
             var actual = await _testing.GetGeneralSearchResultAsync(searchKey);
-            if (actual != null)
-            {
-                actual.Should().BeEquivalentTo(list);
-            }
-           
+
+            actual.Should().NotBeNullOrEmpty();
+            actual.Should().BeEquivalentTo(list);
         }
 
         [Fact]
@@ -57,10 +59,9 @@ namespace LetsDoIt.Moody.Application.UnitTests.Search
         {
             var searchKey = "S";
 
-            var actual = await _testing.GetGeneralSearchResultAsync(searchKey);
+            await _testing.GetGeneralSearchResultAsync(searchKey);
 
-            _mockDataService.Verify(ds=>ds.GetGeneralSearchResultAsync(searchKey.ToLower()),Times.Once);
-
+            _mockDataService.Verify(ds => ds.GetGeneralSearchResultAsync(searchKey.ToLower()), Times.Once);
         }
     }
 }
