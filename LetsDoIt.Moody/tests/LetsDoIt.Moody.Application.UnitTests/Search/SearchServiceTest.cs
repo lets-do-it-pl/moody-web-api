@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using FluentAssertions;
 using Moq;
 using Xunit;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Search
 {
-    using LetsDoIt.Moody.Application.Data;
+    using Data;
     using LetsDoIt.Moody.Application.Search;
-    using LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities;
+    using Persistence.StoredProcedures.ResultEntities;
     public class SearchServiceTest
     {
         private readonly ISearchService _testing;
