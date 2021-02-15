@@ -40,4 +40,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\LetsDoIt.Moody.Application\LetsDoIt.Moody.Application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ParameterItem\" />
+  </ItemGroup>
 </Project>
