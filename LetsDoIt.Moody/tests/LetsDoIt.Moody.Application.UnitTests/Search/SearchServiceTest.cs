@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using LetsDoIt.Moody.Application.Constants;
 using Moq;
 using Xunit;
 
@@ -23,19 +24,25 @@ namespace LetsDoIt.Moody.Application.UnitTests.Search
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData(" ")]
-        public async Task GetGeneralSearchResultAsync_ShouldReturnEmptyList_WhenSearchKeyIsNullOrWhiteSpace(string searchKey)
+        [InlineData(UserTypeConstants.Admin, null)]
+        [InlineData(UserTypeConstants.Admin, " ")]
+        [InlineData(UserTypeConstants.Standard, null)]
+        [InlineData(UserTypeConstants.Standard, " ")]
+        public async Task GetGeneralSearchResultAsync_ShouldReturnEmptyList_WhenSearchKeyIsNullOrWhiteSpace(string userType,string searchKey)
         {
-            var actual = await _testing.GetGeneralSearchResultAsync(searchKey);
+
+
+            var actual = await _testing.GetGeneralSearchResultAsync(userType, searchKey);
 
             actual.Should().BeEmpty();
         }
 
         [Fact]
-        public async Task GetGeneralSearchResultAsync_WhenAValidSearchKeyEntered_ShouldReturnListOfResult()
+        public async Task GetGeneralSearchResultAsync_WhenAValidSearchKeyEntered_ShouldReturnListOfCategoryAndUser()
         {
             var searchKey = "s";
+
+            var userType = UserTypeConstants.Admin;
 
             var list = new List<SpGetGeneralSearchResult>
             {
@@ -48,18 +55,55 @@ namespace LetsDoIt.Moody.Application.UnitTests.Search
                 .Setup(ds => ds.GetGeneralSearchResultAsync(searchKey))
                 .ReturnsAsync(list);
 
-            var actual = await _testing.GetGeneralSearchResultAsync(searchKey);
+            var actual = await _testing.GetGeneralSearchResultAsync(userType, searchKey);
 
             actual.Should().NotBeNullOrEmpty();
             actual.Should().BeEquivalentTo(list);
         }
 
         [Fact]
-        public async Task GetGeneralSearchResultAsync_ShouldCallSpGetGeneralSearchResultWithLowerCaseParameter()
+        public async Task GetGeneralSearchResultAsync_ShouldCallSpGetGeneralSearchResultWithLowerCaseParameterForAdmins()
         {
             var searchKey = "S";
 
-            await _testing.GetGeneralSearchResultAsync(searchKey);
+            var userType = UserTypeConstants.Admin;
+
+            await _testing.GetGeneralSearchResultAsync(userType, searchKey);
+
+            _mockDataService.Verify(ds => ds.GetGeneralSearchResultAsync(searchKey.ToLower()), Times.Once);
+        }
+        [Fact]
+        public async Task GetGeneralSearchResultAsync_WhenAValidSearchKeyEntered_ShouldReturnListOfCategory()
+        {
+            var searchKey = "s";
+
+            var userType = UserTypeConstants.Standard;
+
+            var list = new List<SpGetGeneralSearchResult>
+            {
+                new SpGetGeneralSearchResult(),
+                new SpGetGeneralSearchResult(),
+                new SpGetGeneralSearchResult()
+            };
+
+            _mockDataService
+                .Setup(ds => ds.GetGeneralSearchResultAsync(searchKey))
+                .ReturnsAsync(list);
+
+            var actual = await _testing.GetGeneralSearchResultAsync(userType, searchKey);
+
+            actual.Should().NotBeNullOrEmpty();
+            actual.Should().BeEquivalentTo(list);
+        }
+
+        [Fact]
+        public async Task GetGeneralSearchResultAsync_ShouldCallSpGetGeneralSearchResultWithLowerCaseParameterForStandartUser()
+        {
+            var searchKey = "S";
+
+            var userType = UserTypeConstants.Admin;
+
+            await _testing.GetGeneralSearchResultAsync(userType, searchKey);
 
             _mockDataService.Verify(ds => ds.GetGeneralSearchResultAsync(searchKey.ToLower()), Times.Once);
         }
