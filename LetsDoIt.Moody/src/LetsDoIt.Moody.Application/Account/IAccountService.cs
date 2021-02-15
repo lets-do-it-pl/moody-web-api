@@ -9,7 +9,6 @@ namespace LetsDoIt.Moody.Application.Account
     {
         Task<Persistence.Entities.User> GetAccount(int userId);
 
-        Task UpdateAccount(int userId);
-
+        Task UpdateAccountDetails(int userId,byte[] image,string fullname,string email);
     }
 }
