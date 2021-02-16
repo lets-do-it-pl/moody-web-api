@@ -49,6 +49,7 @@ namespace LetsDoIt.Moody.Application.Category
                 await _cache.GetOrAddAsync("latestVersion", latestVersion, DateTimeOffset.Now.AddHours(24));
 
             Guard.Requires(cachedLatestVersion, nameof(cachedLatestVersion)).IsNotNull();
+            Guard.Requires(cachedLatestVersion, nameof(cachedLatestVersion)).IsNotNullOrEmptyOrWhiteSpace();
 
             var result = new CategoryGetResult
             {

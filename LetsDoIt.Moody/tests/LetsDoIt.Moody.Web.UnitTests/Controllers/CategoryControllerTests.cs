@@ -103,7 +103,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         //    var userId = 5;
         //    var request = GetCategoryUpdateRequest();
 
-            
+
 
         //    //Act
         //    var actual = await _testing.Update(categoryId, request);
@@ -122,26 +122,29 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         //            Times.Once);
         //}
 
-        //[Fact]
-        //public async Task GIVEN_ThereIsAnUpdateRequestNotInTheDatabase_WHEN_UpdatingACategory_THEN_ShoudReturnNotFound()
-        //{
-        //    //Arrange
-        //    var request = GetCategoryUpdateRequest();
-        //    //_mockCategoryService
-        //    //    .Setup(service =>
-        //    //        service.UpdateAsync(
-        //    //                    It.IsAny<int>(),
-        //    //                    It.IsAny<string>(),
-        //    //                    It.IsAny<int>(),
-        //    //                    It.IsAny<byte[]>()))
-        //    //    .Throws(new ObjectNotFoundException(""));
+        [Fact]
+        public async Task GIVEN_ThereIsAnUpdateRequestNotInTheDatabase_WHEN_UpdatingACategory_THEN_ShoudReturnNotFound()
+        {
+            //Arrange
+            var categoryId = 1;
 
-        //    //Act
-        //    var actual = await _testing.UserHelper.Update(default, request);
+            var request = GetCategoryUpdateRequest();
 
-        //    //Assert
-        //    Assert.IsType<NotFoundObjectResult>(actual);
-        //}
+            _mockCategoryService
+                .Setup(service =>
+                    service.UpdateAsync(
+                                It.IsAny<int>(),
+                                It.IsAny<string>(),
+                                It.IsAny<byte[]>(),
+                                It.IsAny<int>()))
+                .Throws(new ObjectNotFoundException(""));
+
+            //Act
+            var actual = await _testing.Update(categoryId ,request);
+
+            //Assert
+            Assert.IsType<ObjectNotFoundException>(actual);
+        }
 
         //[Fact]
         //public async Task GIVEN_ThereIsAnUpdateRequestAndExceptionInService_WHEN_UpdatingACategory_THEN_ShouldThrowAnException()
