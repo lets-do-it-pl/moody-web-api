@@ -122,29 +122,29 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         //            Times.Once);
         //}
 
-        [Fact]
-        public async Task GIVEN_ThereIsAnUpdateRequestNotInTheDatabase_WHEN_UpdatingACategory_THEN_ShoudReturnNotFound()
-        {
-            //Arrange
-            var categoryId = 1;
+        //[Fact]
+        //public async Task GIVEN_ThereIsAnUpdateRequestNotInTheDatabase_WHEN_UpdatingACategory_THEN_ShoudReturnNotFound()
+        //{
+        //    //Arrange
+        //    var categoryId = 1;
 
-            var request = GetCategoryUpdateRequest();
+        //    var request = GetCategoryUpdateRequest();
 
-            _mockCategoryService
-                .Setup(service =>
-                    service.UpdateAsync(
-                                It.IsAny<int>(),
-                                It.IsAny<string>(),
-                                It.IsAny<byte[]>(),
-                                It.IsAny<int>()))
-                .Throws(new ObjectNotFoundException(""));
+        //    _mockCategoryService
+        //        .Setup(service =>
+        //            service.UpdateAsync(
+        //                        It.IsAny<int>(),
+        //                        It.IsAny<string>(),
+        //                        It.IsAny<byte[]>(),
+        //                        It.IsAny<int>()))
+        //        .Throws(new ObjectNotFoundException(""));
 
-            //Act
-            var actual = await _testing.Update(categoryId ,request);
+        //    //Act
+        //    var actual = await _testing.Update(categoryId ,request);
 
-            //Assert
-            Assert.IsType<ObjectNotFoundException>(actual);
-        }
+        //    //Assert
+        //    Assert.IsType<ObjectNotFoundException>(actual);
+        //}
 
         //[Fact]
         //public async Task GIVEN_ThereIsAnUpdateRequestAndExceptionInService_WHEN_UpdatingACategory_THEN_ShouldThrowAnException()

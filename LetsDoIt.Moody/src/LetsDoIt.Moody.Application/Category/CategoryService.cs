@@ -4,7 +4,6 @@ using System.Linq;
 using LazyCache;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace LetsDoIt.Moody.Application.Category
 {
