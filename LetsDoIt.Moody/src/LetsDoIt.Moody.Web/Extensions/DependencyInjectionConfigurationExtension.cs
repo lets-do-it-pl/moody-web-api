@@ -16,8 +16,10 @@ namespace LetsDoIt.Moody.Web.Extensions
     using Application.Security;
     using Application.User;
     using Application.VersionHistory;
+    using Application.Category.Export;
+    using Application.Resolvers;
     using Persistence;
-    
+    using System.Collections.Generic;
 
     public static class DependencyInjectionConfigurationExtension
     {
@@ -30,7 +32,7 @@ namespace LetsDoIt.Moody.Web.Extensions
             .AddProxiedTransient<IRepository<Client>, ClientRepository>()
             .AddProxiedTransient<IRepository<User>, UserRepository>()
             .AddProxiedTransient<IRepository<CategoryDetail>, CategoryDetailsRepository>()
-
+            .AddProxiedTransient<ICategoryExport, ExcelCategoryExport>()
             .AddProxiedTransient<ICategoryService, CategoryService>()
             .AddProxiedTransient<IVersionHistoryService, VersionHistoryService>()
             .AddProxiedTransient<IClientService, ClientService>()
@@ -38,6 +40,15 @@ namespace LetsDoIt.Moody.Web.Extensions
             .AddProxiedTransient<IUserService, UserService>()
             .AddProxiedTransient<IDashboardService, DashboardService>()
             .AddProxiedTransient<ISearchService, SearchService>()
-            .AddProxiedTransient<IDataService , DataService>();
+            .AddProxiedTransient<IDataService , DataService>()
+            .AddTransient<CategoryExportServiceResolver>(provider => exportType =>
+                {
+                    return exportType switch
+                    {
+                        CategoryExportType.Excel => provider.GetService<ExcelCategoryExport>(),
+                        // CategoryExportType.Pdf => provider.GetService<PdfCategoryExport>(),
+                        _ => throw new KeyNotFoundException()
+                    };
+            });
     }
 }
