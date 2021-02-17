@@ -242,7 +242,6 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 Id = c.Id,
                 Name = c.Name,
-                Description = c.Description,
                 Order = c.Order,
                 Image = c.Image
             };

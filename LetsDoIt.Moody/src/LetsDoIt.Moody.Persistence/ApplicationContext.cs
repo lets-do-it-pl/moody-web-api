@@ -5,7 +5,7 @@ using LetsDoIt.Moody.Persistence.Entities;
 
 namespace LetsDoIt.Moody.Persistence
 {
-    public partial class ApplicationContext : DbContext
+    public partial class ApplicationContext : DbContext, IApplicationContext
     {
         public ApplicationContext()
         {
@@ -38,14 +38,12 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("Category");
 
                 entity.HasIndex(e => e.Order)
-                    .HasName("UQ__Category__67A3D86C0EE7CBCD")
+                    .HasName("UQ__Category__67A3D86CB44EEA18")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.Image).IsRequired();
 
@@ -64,7 +62,7 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("CategoryDetail");
 
                 entity.HasIndex(e => e.Order)
-                    .HasName("UQ__Category__67A3D86C86E7004A")
+                    .HasName("UQ__Category__67A3D86C85658765")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
@@ -108,12 +106,16 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("User");
 
                 entity.HasIndex(e => e.Email)
-                    .HasName("UQ__User__A9D10534F73A0C22")
+                    .HasName("UQ__tmp_ms_x__A9D10534AA256582")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Email)
                     .IsRequired()
