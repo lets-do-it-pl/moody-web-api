@@ -1,5 +1,7 @@
 using NGuard;
 using System;
+using System.Linq;
+using LazyCache;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -10,36 +12,48 @@ namespace LetsDoIt.Moody.Application.Category
     using Persistence.Entities;
     using Persistence.Repositories.Base;
     using Persistence.Repositories.Category;
-    using System.Linq;
 
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IRepository<CategoryDetail> _categoryDetailsRepository;
-        private readonly IVersionHistoryService _versionHistoryService;
+        private readonly IParameterItemService _parameterItemService;
         private const int InitialOrder = 1000;
+        private const string Key = "latestVersion";
+        private readonly IAppCache _cache;
 
         public CategoryService(
             ICategoryRepository categoryRepository,
             IRepository<CategoryDetail> categoryDetailsRepository,
-            IVersionHistoryService versionHistoryService)
+            IParameterItemService versionHistoryService,
+            IAppCache cache
+            )
         {
             _categoryRepository = categoryRepository;
             _categoryDetailsRepository = categoryDetailsRepository;
-            _versionHistoryService = versionHistoryService;
+            _parameterItemService = versionHistoryService;
+            _cache = cache;
+        }
+
+        private async Task<string> GetLatestVersionNumber()
+        {
+            var latestVersion = await _parameterItemService.GetLatestVersionNumberAsync();
+            return latestVersion.ParameterValue;
         }
 
         public async Task<CategoryGetResult> GetCategoriesWithDetailsAsync(string versionNumber)
-        {
-            var latestVersionHistory = await _versionHistoryService.GetLatestVersionNumberAsync();
+        { 
+            Func<Task<string>> latestVersion = () => GetLatestVersionNumber();
 
-            Guard.Requires(latestVersionHistory, nameof(latestVersionHistory)).IsNotNull();
-            Guard.Requires(latestVersionHistory.VersionNumber, nameof(latestVersionHistory.VersionNumber)).IsNotNullOrEmptyOrWhiteSpace();
+            var cachedLatestVersion =
+                await _cache.GetOrAddAsync(Key, latestVersion, DateTimeOffset.Now.AddHours(24));
+
+            Guard.Requires(cachedLatestVersion, nameof(cachedLatestVersion)).IsNotNullOrEmptyOrWhiteSpace();
 
             var result = new CategoryGetResult
             {
-                IsUpdated = latestVersionHistory.VersionNumber == versionNumber,
-                VersionNumber = latestVersionHistory.VersionNumber
+                IsUpdated = cachedLatestVersion == versionNumber,
+                VersionNumber = cachedLatestVersion
             };
 
             if (result.IsUpdated)
@@ -47,7 +61,7 @@ namespace LetsDoIt.Moody.Application.Category
                 return result;
             }
 
-            result.Categories = await _categoryRepository.GetListWithDetailsAsync();
+            result.Categories = await  _categoryRepository.GetListWithDetailsAsync();
 
             return result;
         }
@@ -80,7 +94,7 @@ namespace LetsDoIt.Moody.Application.Category
                 CreatedBy = userId
             });
 
-            await _versionHistoryService.CreateNewVersionAsync();
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
         }
 
         public async Task InsertCategoryDetailAsync(int categoryId, string image, int userId)
@@ -99,7 +113,7 @@ namespace LetsDoIt.Moody.Application.Category
                 CreatedBy = userId
             });
 
-            await _versionHistoryService.CreateNewVersionAsync();
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
 
         }
 
@@ -117,7 +131,7 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _categoryRepository.UpdateAsync(entity);
 
-            await _versionHistoryService.CreateNewVersionAsync();
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
 
         }
 
@@ -134,7 +148,7 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _categoryDetailsRepository.UpdateAsync(entity);
 
-            await _versionHistoryService.CreateNewVersionAsync();
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
 
         }
 
@@ -167,7 +181,7 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _categoryRepository.UpdateAsync(updated);
 
-            await _versionHistoryService.CreateNewVersionAsync();
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
 
         }
 
@@ -186,7 +200,7 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _categoryRepository.DeleteAsync(category);
 
-            await _versionHistoryService.CreateNewVersionAsync();
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
 
         }
 
@@ -205,7 +219,7 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _categoryDetailsRepository.DeleteAsync(entity);
 
-            await _versionHistoryService.CreateNewVersionAsync();
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
 
         }
 
