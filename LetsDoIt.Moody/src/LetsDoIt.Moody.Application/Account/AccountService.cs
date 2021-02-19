@@ -30,7 +30,7 @@ namespace LetsDoIt.Moody.Application.Account
             return dbUser;
         }
 
-        public async Task UpdateAccountDetails(int userId, byte[] image, string fullname, string email)
+        public async Task UpdateAccountDetails(int userId, string fullname, string email, string image = null)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Id == userId && !u.IsDeleted);
             if (dbUser == null)
@@ -39,7 +39,7 @@ namespace LetsDoIt.Moody.Application.Account
             }
 
             dbUser.FullName = fullname;
-            dbUser.Image = image;
+            dbUser.Image = image == null ? dbUser.Image : Convert.FromBase64String(image);
             dbUser.Email = email;
 
             await _userRepository.UpdateAsync(dbUser);

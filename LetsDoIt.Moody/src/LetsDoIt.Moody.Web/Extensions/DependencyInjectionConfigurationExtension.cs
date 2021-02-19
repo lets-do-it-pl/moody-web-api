@@ -8,6 +8,7 @@ namespace LetsDoIt.Moody.Web.Extensions
     using Application.Client;
     using Application.Dashboard;
     using Application.Data;
+    using Application.Account;
     using Persistence.Entities;
     using Persistence.Repositories;
     using Persistence.Repositories.Base;
@@ -31,6 +32,7 @@ namespace LetsDoIt.Moody.Web.Extensions
             .AddProxiedTransient<IRepository<User>, UserRepository>()
             .AddProxiedTransient<IRepository<CategoryDetail>, CategoryDetailsRepository>()
 
+            .AddProxiedTransient<IAccountService, AccountService>()
             .AddProxiedTransient<ICategoryService, CategoryService>()
             .AddProxiedTransient<IVersionHistoryService, VersionHistoryService>()
             .AddProxiedTransient<IClientService, ClientService>()
