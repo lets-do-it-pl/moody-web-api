@@ -5,7 +5,7 @@ using LetsDoIt.Moody.Persistence.Entities;
 
 namespace LetsDoIt.Moody.Persistence
 {
-    public partial class ApplicationContext : DbContext, IApplicationContext
+    public partial class ApplicationContext : DbContext,IApplicationContext
     {
         public ApplicationContext()
         {
@@ -19,7 +19,7 @@ namespace LetsDoIt.Moody.Persistence
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<CategoryDetail> CategoryDetails { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
-        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<VersionHistory> VersionHistories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -124,8 +124,6 @@ namespace LetsDoIt.Moody.Persistence
                     .IsRequired()
                     .HasMaxLength(500)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Image).IsRequired();
 
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
 

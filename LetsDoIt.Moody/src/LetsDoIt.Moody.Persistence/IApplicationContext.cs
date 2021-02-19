@@ -18,7 +18,7 @@ namespace LetsDoIt.Moody.Persistence
         
         DbSet<Client> Clients { get; set; }
         
-        DbSet<User> User { get; set; }
+        DbSet<User> Users { get; set; }
         
         DbSet<VersionHistory> VersionHistories { get; set; }
     }
