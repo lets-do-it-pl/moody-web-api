@@ -94,7 +94,7 @@ namespace LetsDoIt.Moody.Application.Category
                 CreatedBy = userId
             });
 
-            await _parameterItemService.UpdateParameterItemAsync(userId);
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
         }
 
         public async Task InsertCategoryDetailAsync(int categoryId, string image, int userId)
@@ -113,7 +113,7 @@ namespace LetsDoIt.Moody.Application.Category
                 CreatedBy = userId
             });
 
-            await _parameterItemService.UpdateParameterItemAsync(userId);
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
 
         }
 
@@ -131,7 +131,7 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _categoryRepository.UpdateAsync(entity);
 
-            await _parameterItemService.UpdateParameterItemAsync(userId);
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
 
         }
 
@@ -148,7 +148,7 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _categoryDetailsRepository.UpdateAsync(entity);
 
-            await _parameterItemService.UpdateParameterItemAsync(userId);
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
 
         }
 
@@ -181,7 +181,7 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _categoryRepository.UpdateAsync(updated);
 
-            await _parameterItemService.UpdateParameterItemAsync(userId);
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
 
         }
 
@@ -200,7 +200,7 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _categoryRepository.DeleteAsync(category);
 
-            await _parameterItemService.UpdateParameterItemAsync(userId);
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
 
         }
 
@@ -219,7 +219,7 @@ namespace LetsDoIt.Moody.Application.Category
 
             await _categoryDetailsRepository.DeleteAsync(entity);
 
-            await _parameterItemService.UpdateParameterItemAsync(userId);
+            await _parameterItemService.UpdateVersionNumberAsync(userId);
 
         }
 

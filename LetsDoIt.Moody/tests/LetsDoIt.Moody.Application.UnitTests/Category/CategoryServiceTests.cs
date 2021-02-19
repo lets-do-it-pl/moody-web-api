@@ -187,7 +187,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 
             _mockCategoryRepository.Verify(c => c.DeleteAsync(It.Is<Category>(c => c.Id == category.Id && c.ModifiedBy == userId)), Times.Once);
 
-            _mockParameterItemService.Verify(p => p.UpdateParameterItemAsync(It.IsAny<int>()), Times.Once);
+            _mockParameterItemService.Verify(p => p.UpdateVersionNumberAsync(It.IsAny<int>()), Times.Once);
 
         }
 
@@ -225,7 +225,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                 , Times.Once);
 
             _mockParameterItemService.Verify(p =>
-                p.UpdateParameterItemAsync(It.IsAny<int>()), Times.Once);
+                p.UpdateVersionNumberAsync(It.IsAny<int>()), Times.Once);
         }
         #endregion
 
@@ -248,7 +248,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                 Times.Once);
 
             _mockParameterItemService.Verify(p =>
-                p.UpdateParameterItemAsync(It.IsAny<int>()), Times.Once);
+                p.UpdateVersionNumberAsync(It.IsAny<int>()), Times.Once);
         }
         #endregion
 
@@ -273,7 +273,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                 c.DeleteAsync(It.Is<CategoryDetail>(cd => cd.Id == categoryDetail.Id && cd.ModifiedBy == userId)), Times.Once);
 
             _mockParameterItemService.Verify(p =>
-                 p.UpdateParameterItemAsync(It.IsAny<int>()), Times.Once);
+                 p.UpdateVersionNumberAsync(It.IsAny<int>()), Times.Once);
         }
 
         [Fact]
@@ -317,7 +317,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                 c.UpdateAsync(It.Is<CategoryDetail>(cd => cd.Id == categoryDetail.Id && cd.ModifiedBy == userId)), Times.Once);
 
             _mockParameterItemService.Verify(p =>
-                 p.UpdateParameterItemAsync(It.IsAny<int>()), Times.Once);
+                 p.UpdateVersionNumberAsync(It.IsAny<int>()), Times.Once);
         }
 
         [Fact]
@@ -362,7 +362,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 
             _mockCategoryRepository.Verify(c => c.UpdateAsync(It.Is<Category>(c => c.Id == category.Id && c.ModifiedBy == userId)), Times.Once);
 
-            _mockParameterItemService.Verify(p => p.UpdateParameterItemAsync(It.IsAny<int>()), Times.Once);
+            _mockParameterItemService.Verify(p => p.UpdateVersionNumberAsync(It.IsAny<int>()), Times.Once);
 
         }
 

@@ -8,6 +8,6 @@ namespace LetsDoIt.Moody.Application.VersionHistory
     {
         Task<ParameterItem> GetLatestVersionNumberAsync();
 
-        Task UpdateParameterItemAsync(int userId);
+        Task UpdateVersionNumberAsync(int userId);
     }
 }
