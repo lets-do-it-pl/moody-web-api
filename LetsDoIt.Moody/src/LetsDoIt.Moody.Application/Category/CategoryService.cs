@@ -35,7 +35,7 @@ namespace LetsDoIt.Moody.Application.Category
             _cache = cache;
         }
 
-        private async Task<string> GetCachedVersionNumber()
+        private async Task<string> GetLatestVersionNumber()
         {
             var latestVersion = await _parameterItemService.GetLatestVersionNumberAsync();
             return latestVersion.ParameterValue;
@@ -43,7 +43,7 @@ namespace LetsDoIt.Moody.Application.Category
 
         public async Task<CategoryGetResult> GetCategoriesWithDetailsAsync(string versionNumber)
         { 
-            Func<Task<string>> latestVersion = () => GetCachedVersionNumber();
+            Func<Task<string>> latestVersion = () => GetLatestVersionNumber();
 
             var cachedLatestVersion =
                 await _cache.GetOrAddAsync(Key, latestVersion, DateTimeOffset.Now.AddHours(24));
