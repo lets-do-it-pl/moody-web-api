@@ -19,6 +19,7 @@ namespace LetsDoIt.Moody.Application.Category
         private readonly IRepository<CategoryDetail> _categoryDetailsRepository;
         private readonly IParameterItemService _parameterItemService;
         private const int InitialOrder = 1000;
+        private const string Key = "latestVersion";
         private readonly IAppCache _cache;
 
         public CategoryService(
@@ -34,20 +35,19 @@ namespace LetsDoIt.Moody.Application.Category
             _cache = cache;
         }
 
-        private async Task<string> PopulateShowsCache()
+        private async Task<string> GetCachedVersionNumber()
         {
             var latestVersion = await _parameterItemService.GetLatestVersionNumberAsync();
             return latestVersion.ParameterValue;
         }
 
         public async Task<CategoryGetResult> GetCategoriesWithDetailsAsync(string versionNumber)
-        {
-            Func<Task<string>> latestVersion = () => PopulateShowsCache();
+        { 
+            Func<Task<string>> latestVersion = () => GetCachedVersionNumber();
 
             var cachedLatestVersion =
-                await _cache.GetOrAddAsync("latestVersion", latestVersion, DateTimeOffset.Now.AddHours(24));
+                await _cache.GetOrAddAsync(Key, latestVersion, DateTimeOffset.Now.AddHours(24));
 
-            Guard.Requires(cachedLatestVersion, nameof(cachedLatestVersion)).IsNotNull();
             Guard.Requires(cachedLatestVersion, nameof(cachedLatestVersion)).IsNotNullOrEmptyOrWhiteSpace();
 
             var result = new CategoryGetResult

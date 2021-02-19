@@ -31,7 +31,7 @@ namespace LetsDoIt.Moody.Application.VersionHistory
             return result;
         }
 
-        public async Task UpdateParameterItemAsync(int userId)
+        public async Task UpdateVersionNumberAsync(int userId)
         {
             var entity = await _parameterItemRepository
                 .Get()
