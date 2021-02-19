@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Excel = Microsoft.Office.Interop.Excel;
 
 namespace LetsDoIt.Moody.Application.Category.Export
 {
+    using Microsoft.AspNetCore.Mvc;
+    using OfficeOpenXml;
     using Persistence.Repositories.Category;
+    using System.IO;
 
     public class ExcelCategoryExport : ICategoryExport
     {
@@ -15,40 +17,56 @@ namespace LetsDoIt.Moody.Application.Category.Export
             _categoryRepository = categoryRepository;
         }
 
-        public async Task ExportAsync()
+        public async Task<FileStreamResult> ExportAsync()
         {
             var categories = await _categoryRepository.GetListWithDetailsAsync();
 
-            var excel = new Excel.Application();
-            excel.Visible = true;
-            excel.Workbooks.Add();
-            Excel.Worksheet workSheet = (Excel.Worksheet)excel.ActiveSheet;
+            var stream = new MemoryStream();
 
-            workSheet.Cells[1, "A"] = "Category No";
-            workSheet.Cells[1, "B"] = "Category Name";
-            workSheet.Cells[1, "C"] = "Image Count";
-            workSheet.Cells[1, "D"] = "Create Date";
-            workSheet.Cells[1, "E"] = "Created by";
-            workSheet.Cells[1, "F"] = "Modified Date";
-            workSheet.Cells[1, "F"] = "Modified by";
+            // If you are a commercial business and have
+            // purchased commercial licenses use the static property
+            // LicenseContext of the ExcelPackage class :
+            //ExcelPackage.LicenseContext = LicenseContext.Commercial;
 
-            var rows = 1;
-            var index = 1;
-            foreach (var category in categories)
+            // If you use EPPlus in a noncommercial context
+            // according to the Polyform Noncommercial license:
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (ExcelPackage package = new ExcelPackage(stream))
             {
-                rows++;
-                workSheet.Cells[rows, "A"] = index++;
-                workSheet.Cells[rows, "B"] = category.Name;
-                workSheet.Cells[rows, "C"] = categories.Select(c => c.CategoryDetails.Count());
-                workSheet.Cells[rows, "D"] = category.CreatedDate;
-                workSheet.Cells[rows, "E"] = category.CreatedBy;
-                workSheet.Cells[rows, "F"] = category.ModifiedDate;
-                workSheet.Cells[rows, "G"] = category.ModifiedBy;
-            }
+                var workSheet = package.Workbook.Worksheets.Add("Sheet1");
 
-            var numberOfColumns = workSheet.UsedRange.Columns.Count;
-            for (int i = 0; i < numberOfColumns; i++)
-                ((Excel.Range)workSheet.Columns[i]).AutoFit();
+                workSheet.Cells[1, 1].Value = "Category No";
+                workSheet.Cells[1, 2].Value = "Category Name";
+                workSheet.Cells[1, 3].Value = "Image Count";
+                workSheet.Cells[1, 4].Value = "Create Date";
+                workSheet.Cells[1, 5].Value = "Created by";
+                workSheet.Cells[1, 6].Value = "Modified Date";
+                workSheet.Cells[1, 7].Value = "Modified by";
+
+                var rows = 1;
+                var index = 1;
+                foreach (var category in categories)
+                {
+                    rows++;
+                    workSheet.Cells[1, 1].Value = index++;
+                    workSheet.Cells[1, 2].Value = category.Name;
+                    workSheet.Cells[1, 3].Value = category.CategoryDetails.Select(c => !c.IsDeleted).Count();
+                    workSheet.Cells[1, 4].Value = category.CreatedDate;
+                    workSheet.Cells[1, 5].Value = category.CreatedBy;
+                    workSheet.Cells[1, 6].Value = category.ModifiedDate;
+                    workSheet.Cells[1, 7].Value = category.ModifiedBy;
+                }
+
+                var numberOfColumns = workSheet.Dimension.Columns;
+                for (int i = 0; i < numberOfColumns; i++)
+                    workSheet.Column(i).AutoFit();
+
+                package.Save();
+            }
+            stream.Position = 0;
+
+            return new FileStreamResult(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
     }
 }

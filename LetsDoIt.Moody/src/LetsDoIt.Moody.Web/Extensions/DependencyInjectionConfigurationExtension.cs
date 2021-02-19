@@ -41,6 +41,7 @@ namespace LetsDoIt.Moody.Web.Extensions
             .AddProxiedTransient<IDashboardService, DashboardService>()
             .AddProxiedTransient<ISearchService, SearchService>()
             .AddProxiedTransient<IDataService , DataService>()
+            .AddProxiedTransient<ICategoryExportFactory, CategoryExportFactory>()
             .AddTransient<CategoryExportServiceResolver>(provider => exportType =>
                 {
                     return exportType switch

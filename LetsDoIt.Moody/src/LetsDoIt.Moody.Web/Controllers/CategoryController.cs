@@ -78,6 +78,15 @@ namespace LetsDoIt.Moody.Web.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("api/category/export/type")]
+        public Task<FileStreamResult> GetCategoryExport(string type)
+        {
+            var categoryExportResult = _categoryService.GetCategoryExportAsync(type);
+
+            return categoryExportResult;
+        }
+
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody] CategoryInsertRequest insertRequest)
         {

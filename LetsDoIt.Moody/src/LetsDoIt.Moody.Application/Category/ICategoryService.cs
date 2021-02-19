@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.Category
 {
+    using Microsoft.AspNetCore.Mvc;
     using Persistence.Entities;
 
     public interface ICategoryService
@@ -12,6 +13,8 @@ namespace LetsDoIt.Moody.Application.Category
         Task<IEnumerable<Category>> GetCategoriesAsync();
 
         Task<IEnumerable<CategoryDetail>> GetCategoryDetailsAsync(int categoryId);
+
+        Task<FileStreamResult> GetCategoryExportAsync(string type);
 
         Task InsertAsync(string name, byte[] image, int userId);
 

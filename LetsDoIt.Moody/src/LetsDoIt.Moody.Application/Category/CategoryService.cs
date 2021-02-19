@@ -11,22 +11,27 @@ namespace LetsDoIt.Moody.Application.Category
     using Persistence.Repositories.Base;
     using Persistence.Repositories.Category;
     using System.Linq;
+    using Category.Export;
+    using Microsoft.AspNetCore.Mvc;
 
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IRepository<CategoryDetail> _categoryDetailsRepository;
         private readonly IVersionHistoryService _versionHistoryService;
+        private readonly ICategoryExportFactory _categoryExportFactory;
         private const int InitialOrder = 1000;
 
         public CategoryService(
             ICategoryRepository categoryRepository,
             IRepository<CategoryDetail> categoryDetailsRepository,
-            IVersionHistoryService versionHistoryService)
+            IVersionHistoryService versionHistoryService,
+            ICategoryExportFactory categoryExportFactory)
         {
             _categoryRepository = categoryRepository;
             _categoryDetailsRepository = categoryDetailsRepository;
             _versionHistoryService = versionHistoryService;
+            _categoryExportFactory = categoryExportFactory;
         }
 
         public async Task<CategoryGetResult> GetCategoriesWithDetailsAsync(string versionNumber)
@@ -63,6 +68,14 @@ namespace LetsDoIt.Moody.Application.Category
                 c => !c.IsDeleted && c.CategoryId == categoryId);
         }
 
+        public Task<FileStreamResult> GetCategoryExportAsync(string type)
+        {
+            Guard.Requires(type, nameof(type)).IsNotNull();
+
+            var respond = _categoryExportFactory.GetInstance(type);
+
+            return respond.ExportAsync();
+        }
 
         public async Task InsertAsync(string name, byte[] image, int userId)
         {
