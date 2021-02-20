@@ -221,6 +221,22 @@ namespace LetsDoIt.Moody.Application.User
             await _userRepository.UpdateAsync(user);
         }
 
+        public async Task UpdateAccountDetails(int userId, string fullname, string email, string image = null)
+        {
+            var dbUser = await _userRepository.GetAsync(u => u.Id == userId && !u.IsDeleted);
+            if (dbUser == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            dbUser.FullName = fullname;
+            dbUser.Image = image == null ? dbUser.Image : Convert.FromBase64String(image);
+            dbUser.Email = email;
+            dbUser.ModifiedBy = userId;
+
+            await _userRepository.UpdateAsync(dbUser);
+        }
+
         private static void ValidateUser(User user)
         {
             if (user == null)
