@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 namespace LetsDoIt.Moody.Application.Category.Export
 {
     using Microsoft.AspNetCore.Mvc;
-    using OfficeOpenXml.Core.ExcelPackage;
+    using OfficeOpenXml;
     using Persistence.Repositories.Category;
-    using System.ComponentModel;
     using System.IO;
 
     public class ExcelCategoryExport : ICategoryExport
@@ -31,33 +30,37 @@ namespace LetsDoIt.Moody.Application.Category.Export
 
             // If you use EPPlus in a noncommercial context
             // according to the Polyform Noncommercial license:
-            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             using (ExcelPackage package = new ExcelPackage(stream))
             {
                 var workSheet = package.Workbook.Worksheets.Add("Sheet1");
 
-                workSheet.Cell(1, 1).Value = "Category No";
-                workSheet.Cell(1, 2).Value = "Category Name";
-                workSheet.Cell(1, 3).Value = "Image Count";
-                workSheet.Cell(1, 4).Value = "Create Date";
-                workSheet.Cell(1, 5).Value = "Created by";
-                workSheet.Cell(1, 6).Value = "Modified Date";
-                workSheet.Cell(1, 7).Value = "Modified by";
+                workSheet.Cells[1, 1].Value = "Category No";
+                workSheet.Cells[1, 2].Value = "Category Name";
+                workSheet.Cells[1, 3].Value = "Image Count";
+                workSheet.Cells[1, 4].Value = "Create Date";
+                workSheet.Cells[1, 5].Value = "Created by";
+                workSheet.Cells[1, 6].Value = "Modified Date";
+                workSheet.Cells[1, 7].Value = "Modified by";
 
                 var rows = 1;
                 var index = 1;
                 foreach (var category in categories)
                 {
                     rows++;
-                    workSheet.Cell(rows, 1).Value = index++.ToString();
-                    workSheet.Cell(rows, 2).Value = category.Name;
-                    workSheet.Cell(rows, 3).Value = category.CategoryDetails.Select(c => !c.IsDeleted).Count().ToString();
-                    workSheet.Cell(rows, 4).Value = category.CreatedDate.ToString();
-                    workSheet.Cell(rows, 5).Value = category.CreatedBy.ToString();
-                    workSheet.Cell(rows, 6).Value = category.ModifiedDate.ToString();
-                    workSheet.Cell(rows, 7).Value = category.ModifiedBy.ToString();
+                    workSheet.Cells[1, 1].Value = index++;
+                    workSheet.Cells[1, 2].Value = category.Name;
+                    workSheet.Cells[1, 3].Value = category.CategoryDetails.Select(c => !c.IsDeleted).Count();
+                    workSheet.Cells[1, 4].Value = category.CreatedDate;
+                    workSheet.Cells[1, 5].Value = category.CreatedBy;
+                    workSheet.Cells[1, 6].Value = category.ModifiedDate;
+                    workSheet.Cells[1, 7].Value = category.ModifiedBy;
                 }
+
+                var numberOfColumns = workSheet.Dimension.Columns;
+                for (int i = 0; i < numberOfColumns; i++)
+                    workSheet.Column(i).AutoFit();
 
                 package.Save();
             }
