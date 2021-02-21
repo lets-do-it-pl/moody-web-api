@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Application.Category
 {
@@ -12,6 +13,8 @@ namespace LetsDoIt.Moody.Application.Category
         Task<IEnumerable<Category>> GetCategoriesAsync();
 
         Task<IEnumerable<CategoryDetail>> GetCategoryDetailsAsync(int categoryId);
+
+        Task<FileStreamResult> GetCategoryExportAsync(string type);
 
         Task InsertAsync(string name, byte[] image, int userId);
 

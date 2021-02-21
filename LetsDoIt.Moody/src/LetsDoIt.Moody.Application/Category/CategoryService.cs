@@ -4,6 +4,7 @@ using System.Linq;
 using LazyCache;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Application.Category
 {
@@ -12,12 +13,14 @@ namespace LetsDoIt.Moody.Application.Category
     using Persistence.Entities;
     using Persistence.Repositories.Base;
     using Persistence.Repositories.Category;
+    using Category.Export;
 
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IRepository<CategoryDetail> _categoryDetailsRepository;
         private readonly IParameterItemService _parameterItemService;
+        private readonly ICategoryExportFactory _categoryExportFactory;
         private const int InitialOrder = 1000;
         private const string Key = "latestVersion";
         private readonly IAppCache _cache;
@@ -26,13 +29,14 @@ namespace LetsDoIt.Moody.Application.Category
             ICategoryRepository categoryRepository,
             IRepository<CategoryDetail> categoryDetailsRepository,
             IParameterItemService versionHistoryService,
-            IAppCache cache
-            )
+            IAppCache cache,
+            ICategoryExportFactory categoryExportFactory)
         {
             _categoryRepository = categoryRepository;
             _categoryDetailsRepository = categoryDetailsRepository;
             _parameterItemService = versionHistoryService;
             _cache = cache;
+            _categoryExportFactory = categoryExportFactory;
         }
 
         private async Task<string> GetLatestVersionNumber()
@@ -75,6 +79,15 @@ namespace LetsDoIt.Moody.Application.Category
         {
             return await _categoryDetailsRepository.GetListAsync(
                 c => !c.IsDeleted && c.CategoryId == categoryId);
+        }
+
+        public Task<FileStreamResult> GetCategoryExportAsync(string type)
+        {
+            Guard.Requires(type, nameof(type)).IsNotNull();
+
+            var respond = _categoryExportFactory.GetInstance(type);
+
+            return respond.ExportAsync();
         }
 
 
