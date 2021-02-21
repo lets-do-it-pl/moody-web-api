@@ -5,7 +5,7 @@ using LetsDoIt.Moody.Persistence.Entities;
 
 namespace LetsDoIt.Moody.Persistence
 {
-    public partial class ApplicationContext : DbContext, IApplicationContext
+    public partial class ApplicationContext : DbContext,IApplicationContext
     {
         public ApplicationContext()
         {
@@ -38,7 +38,7 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("Category");
 
                 entity.HasIndex(e => e.Order)
-                    .HasName("UQ__Category__67A3D86CB44EEA18")
+                    .HasName("UQ__Category__67A3D86C0E676B33")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
@@ -62,7 +62,7 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("CategoryDetail");
 
                 entity.HasIndex(e => e.Order)
-                    .HasName("UQ__Category__67A3D86C85658765")
+                    .HasName("UQ__Category__67A3D86CA604DF7A")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
@@ -106,16 +106,14 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("User");
 
                 entity.HasIndex(e => e.Email)
-                    .HasName("UQ__tmp_ms_x__A9D10534AA256582")
+                    .HasName("UQ__tmp_ms_x__A9D10534AC163FD9")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.Description)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
+                entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.Email)
                     .IsRequired()

@@ -28,5 +28,7 @@ namespace LetsDoIt.Moody.Application.User
         Task ForgetPasswordAsync(string email);
 
         Task ResetPasswordAsync(int userId, string password);
+
+        Task UpdateAccountDetails(int userId, string fullname, string email, string image = null);
     }
 }
