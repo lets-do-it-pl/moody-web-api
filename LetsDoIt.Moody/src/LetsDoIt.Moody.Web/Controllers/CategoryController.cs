@@ -19,7 +19,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
     [ApiController]
     [Route("api/category")]
-    [Authorize(Roles = RoleConstants.StandardRole)]
+    //[Authorize(Roles = RoleConstants.StandardRole)]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -29,9 +29,9 @@ namespace LetsDoIt.Moody.Web.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpGet, Route("/list-detail/{versionNumber?}")]
-        [Authorize(Roles = RoleConstants.ClientRole)]
-        [EnableCors("MobilePolicy")]
+        [HttpGet, Route("list-detail/{versionNumber?}")]
+        //[Authorize(Roles = RoleConstants.ClientRole)]
+        //[EnableCors("MobilePolicy")]
         public async Task<ActionResult<VersionedCategoryWithDetailsResponse>> GetVersionedCategoriesWithDetails(string versionNumber = null)
         {
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
