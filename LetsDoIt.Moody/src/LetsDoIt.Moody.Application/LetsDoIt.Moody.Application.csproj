@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.4.1" />
     <PackageReference Include="Castle.Core.AsyncInterceptor" Version="1.7.0" />
+    <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="jose-jwt" Version="3.0.0" />
     <PackageReference Include="LetsDoIt.CustomValueTypes" Version="1.0.0" />
     <PackageReference Include="LetsDoIt.MailSender" Version="1.0.1" />
@@ -40,7 +41,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Category\Export\" />
     <Folder Include="Resolvers\" />
   </ItemGroup>
 </Project>

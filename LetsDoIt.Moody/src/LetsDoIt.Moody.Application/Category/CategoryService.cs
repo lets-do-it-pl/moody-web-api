@@ -4,7 +4,6 @@ using System.Linq;
 using LazyCache;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Application.Category
 {
@@ -13,7 +12,7 @@ namespace LetsDoIt.Moody.Application.Category
     using Persistence.Entities;
     using Persistence.Repositories.Base;
     using Persistence.Repositories.Category;
-    using Category.Export;
+    using Export;
 
     public class CategoryService : ICategoryService
     {
@@ -81,7 +80,7 @@ namespace LetsDoIt.Moody.Application.Category
                 c => !c.IsDeleted && c.CategoryId == categoryId);
         }
 
-        public Task<FileStreamResult> GetCategoryExportAsync(string type)
+        public Task<ExportReturnResult> GetCategoryExportAsync(string type)
         {
             Guard.Requires(type, nameof(type)).IsNotNull();
 

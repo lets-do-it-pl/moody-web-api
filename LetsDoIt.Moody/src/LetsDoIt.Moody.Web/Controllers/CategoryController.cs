@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Security.Claims;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -14,7 +12,6 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Entities;
     using Entities.Requests;
     using Entities.Responses;
-    using Application.Constants;
     using Persistence.Entities;
 
     [ApiController]
@@ -80,11 +77,11 @@ namespace LetsDoIt.Moody.Web.Controllers
 
         [HttpGet]
         [Route("export/{type}")]
-        public Task<FileStreamResult> GetCategoryExport(string type)
+        public async Task<IActionResult> GetCategoryExport(string type)
         {
             var categoryExportResult = _categoryService.GetCategoryExportAsync(type);
 
-            return categoryExportResult;
+            return File(categoryExportResult.Result.Content, categoryExportResult.Result.ContentType, categoryExportResult.Result.FileName);
         }
 
         [HttpPost]
