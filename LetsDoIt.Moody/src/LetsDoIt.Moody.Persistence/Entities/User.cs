@@ -18,5 +18,6 @@ namespace LetsDoIt.Moody.Persistence.Entities
         public int? ModifiedBy { get; set; }
         public bool IsDeleted { get; set; }
         public string Description { get; set; }
+        public byte[] Image { get; set; }
     }
 }

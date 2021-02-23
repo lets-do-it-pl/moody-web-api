@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System;
 using System.Linq.Expressions;
 using Xunit;
+using LazyCache.Mocks;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Category
 {
@@ -19,39 +20,43 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
     {
         private readonly CategoryService _testing;
 
+        private readonly MockCachingService _mockCache;
         private readonly Mock<ICategoryRepository> _mockCategoryRepository;
-        private readonly Mock<IVersionHistoryService> _mockVersionHistoryService;
+        private readonly Mock<IParameterItemService> _mockParameterItemService;
         private readonly Mock<IRepository<CategoryDetail>> _mockCategoryDetailsRepository;
 
         public CategoryServiceTests()
         {
             _mockCategoryRepository = new Mock<ICategoryRepository>();
-            _mockVersionHistoryService = new Mock<IVersionHistoryService>();
+            _mockParameterItemService = new Mock<IParameterItemService>();
             _mockCategoryDetailsRepository = new Mock<IRepository<CategoryDetail>>();
+            _mockCache = new MockCachingService();
 
             _testing = new CategoryService(
                     _mockCategoryRepository.Object,
                     _mockCategoryDetailsRepository.Object,
-                    _mockVersionHistoryService.Object);
+                    _mockParameterItemService.Object,
+                    _mockCache);
         }
 
-        #region GetCategoriesWithDetails
+        #region GetCategoriesWithDetail
 
         [Fact]
         public async Task GetCategoriesWithDetails_WhenLatestVersionNumberIsGiven_ShouldReturnIsUpdatedTrueAndEmptyCategories()
         {
-            var versionNumber = "latest.versionNumber";
+            var parameterItem = new ParameterItem
+            {
+                ParameterKey = "CategpryLatestVersion",
+                ParameterValue = "latestVersion"
+            };
 
-            _mockVersionHistoryService.Setup(vhs => vhs.GetLatestVersionNumberAsync())
-                .ReturnsAsync(new VersionHistory
-                {
-                    VersionNumber = versionNumber
-                });
+            _mockParameterItemService.Setup(pi => pi.GetLatestVersionNumberAsync())
+                .ReturnsAsync(parameterItem);
 
-            var actual = await _testing.GetCategoriesWithDetailsAsync(versionNumber);
+            var actual = await _testing.GetCategoriesWithDetailsAsync("latestVersion");
 
             Assert.True(actual.IsUpdated);
-            Assert.Equal(versionNumber, actual.VersionNumber);
+            Assert.Equal("latestVersion", actual.VersionNumber);
             Assert.Null(actual.Categories);
         }
 
@@ -60,10 +65,11 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         [InlineData(" ")]
         public async Task GetCategoriesWithDetails_ShouldThrowAnException_WhenLatestVersionHistoryIsNulEmptyOrWhiteSpace(string versionNumber)
         {
-            _mockVersionHistoryService.Setup(vhs => vhs.GetLatestVersionNumberAsync())
-                .ReturnsAsync(new VersionHistory
+            _mockParameterItemService.Setup(pi => pi.GetLatestVersionNumberAsync())
+                .ReturnsAsync(new ParameterItem
                 {
-                    VersionNumber = versionNumber
+                    ParameterKey = "LatestVersion",
+                    ParameterValue = versionNumber
                 });
 
             async Task Test() => await _testing.GetCategoriesWithDetailsAsync("filler");
@@ -76,8 +82,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         public void GetCategoriesWithDetails_ShouldThrowAnException_WhenLatestVersionHistoryIsNull()
         {
 
-            _mockVersionHistoryService.Setup(vhs => vhs.GetLatestVersionNumberAsync())
-                .ReturnsAsync((VersionHistory)null);
+            _mockParameterItemService.Setup(vhs => vhs.GetLatestVersionNumberAsync())
+                .ReturnsAsync((ParameterItem)null);
 
             Assert.ThrowsAsync<ArgumentNullException>(async () => await _testing.GetCategoriesWithDetailsAsync(null));
         }
@@ -86,7 +92,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        [InlineData("old.versionNumber")]
+        [InlineData("oldVersionNumber")]
         public async Task GetCategoriesWithDetails_ShouldReturnCategoriesList_WhenVersionNumberIsNotLatest(string versionNumber)
         {
             var categories = new List<Category>
@@ -98,10 +104,11 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 
             _mockCategoryRepository.Setup(cp => cp.GetListWithDetailsAsync()).ReturnsAsync(categories);
 
-            _mockVersionHistoryService.Setup(vhs => vhs.GetLatestVersionNumberAsync())
-                .ReturnsAsync(new VersionHistory
+            _mockParameterItemService.Setup(vhs => vhs.GetLatestVersionNumberAsync())
+                .ReturnsAsync(new ParameterItem
                 {
-                    VersionNumber = "latest.versionNumber"
+                    ParameterKey = "CategoryLatestVersion",
+                    ParameterValue = "latestVersionNumber"
                 });
 
             var actual = await _testing.GetCategoriesWithDetailsAsync(versionNumber);
@@ -112,12 +119,60 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         }
         #endregion
 
+        #region GetCategories
+
+        [Fact]
+        public async Task GetCategoriesAsync_ShouldReturnCategoriesList()
+        {
+            var categories = new List<Category>
+            {
+                new Category(),
+                new Category(),
+                new Category()
+            };
+
+            _mockCategoryRepository.Setup(cp => cp.GetListAsync(It.IsNotNull<Expression<Func<Category, bool>>>(), null))
+                .ReturnsAsync(categories);
+
+            var actual = await _testing.GetCategoriesAsync();
+
+            Assert.NotNull(actual);
+            Assert.Equal(categories.Count(), actual.Count());
+        }
+
+        #endregion
+
+        #region GetCategoryDetails
+
+        [Fact]
+        public async Task GetCategoryDetailsAsync_ShouldReturnCategoryDetailsList()
+        {
+            var categoryId = 1;
+
+            var categoryDetails = new List<CategoryDetail>
+            {
+                new CategoryDetail(),
+                new CategoryDetail(),
+                new CategoryDetail()
+            };
+
+            _mockCategoryDetailsRepository.Setup(cp => cp.GetListAsync(
+                It.IsNotNull<Expression<Func<CategoryDetail, bool>>>(), null))
+                .ReturnsAsync(categoryDetails);
+
+            var actual = await _testing.GetCategoryDetailsAsync(categoryId);
+
+            Assert.NotNull(actual);
+            Assert.Equal(categoryDetails.Count(), actual.Count());
+        }
+
+        #endregion
+
         #region DeleteAsync
 
         [Fact]
-        public async Task DeleteAsync_WhenCategoryIdExists_ShouldDeleteCategoryAndCreateNewVersionNumber()
+        public async Task DeleteAsync_WhenCategoryIdExists_ShouldDeleteCategoryAndUpdateTheVersionNumber()
         {
-
             var userId = 1;
             var category = new Category
             {
@@ -132,7 +187,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 
             _mockCategoryRepository.Verify(c => c.DeleteAsync(It.Is<Category>(c => c.Id == category.Id && c.ModifiedBy == userId)), Times.Once);
 
-            _mockVersionHistoryService.Verify(v => v.CreateNewVersionAsync(), Times.Once);
+            _mockParameterItemService.Verify(p => p.UpdateVersionNumberAsync(It.IsAny<int>()), Times.Once);
 
         }
 
@@ -157,7 +212,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         #region InsertAsync
 
         [Fact]
-        public async Task InsertAsync_ShouldCallRepositoryAndCallVersionHistoryService()
+        public async Task InsertAsync_ShouldCallRepositoryAndUpdateTheVersionNumber()
         {
             var name = "asd";
             byte[] byteImage = { 80, 65, 78, 75, 65, 74 };
@@ -169,15 +224,15 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                     ur.AddAsync(It.Is<Category>(c => c.Name == name && c.Image == byteImage && c.CreatedBy == userId))
                 , Times.Once);
 
-            _mockVersionHistoryService.Verify(ur =>
-                ur.CreateNewVersionAsync(), Times.Once);
+            _mockParameterItemService.Verify(p =>
+                p.UpdateVersionNumberAsync(It.IsAny<int>()), Times.Once);
         }
         #endregion
 
         #region InsertCategoryDetailAsync
 
         [Fact]
-        public async Task InsertCategoryDetailAsync_ShouldCallCategoryDetailsRepositoryAndCallVersionHistoryService()
+        public async Task InsertCategoryDetailAsync_ShouldCallCategoryDetailsRepositoryAndUpdateTheVersionNumber()
         {
             var userId = 1;
             var categoryId = 1;
@@ -186,21 +241,21 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             await _testing.InsertCategoryDetailAsync(categoryId, image, userId);
 
             _mockCategoryDetailsRepository.Verify(cdr =>
-                    cdr.AddAsync(It.Is<CategoryDetail>(cd => 
-                    cd.CategoryId == categoryId && 
-                    cd.Image.SequenceEqual(Convert.FromBase64String(image)) && 
+                    cdr.AddAsync(It.Is<CategoryDetail>(cd =>
+                    cd.CategoryId == categoryId &&
+                    cd.Image.SequenceEqual(Convert.FromBase64String(image)) &&
                     cd.CreatedBy == userId)),
                 Times.Once);
 
-            _mockVersionHistoryService.Verify(v =>
-                v.CreateNewVersionAsync(), Times.Once);
+            _mockParameterItemService.Verify(p =>
+                p.UpdateVersionNumberAsync(It.IsAny<int>()), Times.Once);
         }
         #endregion
 
         #region DeleteCategoryDetailsAsync
 
         [Fact]
-        public async Task DeleteCategoryDetailsAsync_WhenIdExists_ShouldDeleteCategoryDetailAndCreateNewVersion()
+        public async Task DeleteCategoryDetailsAsync_WhenIdExists_ShouldDeleteCategoryDetailAndUpdateTheVersion()
         {
             var userId = 1;
             var categoryDetail = new CategoryDetail
@@ -217,7 +272,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             _mockCategoryDetailsRepository.Verify(c =>
                 c.DeleteAsync(It.Is<CategoryDetail>(cd => cd.Id == categoryDetail.Id && cd.ModifiedBy == userId)), Times.Once);
 
-            _mockVersionHistoryService.Verify(v => v.CreateNewVersionAsync(), Times.Once);
+            _mockParameterItemService.Verify(p =>
+                 p.UpdateVersionNumberAsync(It.IsAny<int>()), Times.Once);
         }
 
         [Fact]
@@ -236,6 +292,99 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 
             await Assert.ThrowsAsync<ObjectNotFoundException>(Test);
         }
+        #endregion
+
+        #region UpdateCategoryDetailsAsync
+
+        [Fact]
+        public async Task UpdateCategoryDetailsAsync_WhenIdExists_ShouldUpdateCategoryDetailAndUpdateTheVersion()
+        {
+            var userId = 1;
+            byte[] byteImage = { 80, 65, 78, 75, 65, 74 };
+
+            var categoryDetail = new CategoryDetail
+            {
+                Id = 3
+            };
+
+            _mockCategoryDetailsRepository
+                .Setup(repository => repository.GetAsync(It.IsNotNull<Expression<Func<CategoryDetail, bool>>>()))
+                .ReturnsAsync(categoryDetail);
+
+            await _testing.UpdateCategoryDetailsAsync(categoryDetail.Id, byteImage, userId);
+
+            _mockCategoryDetailsRepository.Verify(c =>
+                c.UpdateAsync(It.Is<CategoryDetail>(cd => cd.Id == categoryDetail.Id && cd.ModifiedBy == userId)), Times.Once);
+
+            _mockParameterItemService.Verify(p =>
+                 p.UpdateVersionNumberAsync(It.IsAny<int>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateCategoryDetailsAsync_WhenCategoryDetailDoesNotExists_ShouldThrowObjectNotFoundException()
+        {
+            var userId = 1;
+            byte[] byteImage = { 80, 65, 78, 75, 65, 74 };
+            var categoryDetail = new CategoryDetail
+            {
+                Id = 3
+            };
+
+            _mockCategoryDetailsRepository.Setup(repo => repo.GetAsync(c => c.Id == It.IsAny<int>()))
+                .ReturnsAsync((CategoryDetail)null);
+
+            async Task Test() => await _testing.UpdateCategoryDetailsAsync(categoryDetail.Id, byteImage,userId);
+
+            await Assert.ThrowsAsync<ObjectNotFoundException>(Test);
+        }
+
+        #endregion
+
+        #region UpdateAsync
+
+        [Fact]
+        public async Task UpdateAsync_WhenCategoryIdExists_ShouldUpdateCategoryAndUpdateTheVersionNumber()
+        {
+            var userId = 1;
+            var name = "Test";
+            byte[] byteImage = { 80, 65, 78, 75, 65, 74 };
+
+            var category = new Category
+            {
+                Id = 3
+            };
+
+            _mockCategoryRepository
+                .Setup(repository => repository.GetAsync(It.IsNotNull<Expression<Func<Category, bool>>>()))
+                .ReturnsAsync(category);
+
+            await _testing.UpdateAsync(category.Id, name, byteImage, userId);
+
+            _mockCategoryRepository.Verify(c => c.UpdateAsync(It.Is<Category>(c => c.Id == category.Id && c.ModifiedBy == userId)), Times.Once);
+
+            _mockParameterItemService.Verify(p => p.UpdateVersionNumberAsync(It.IsAny<int>()), Times.Once);
+
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenCategoryIdDoesNotExists_ShouldThrowObjectNotFoundException()
+        {
+            var userId = 1;
+            var name = "Test";
+            byte[] byteImage = { 80, 65, 78, 75, 65, 74 };
+            var category = new Category
+            {
+                Id = 3
+            };
+
+            _mockCategoryRepository.Setup(repo => repo.GetAsync(It.IsNotNull<Expression<Func<Category, bool>>>()))
+                .ReturnsAsync((Category)null);
+
+            async Task Test() => await _testing.UpdateAsync(category.Id, name, byteImage, userId);
+
+            await Assert.ThrowsAsync<ObjectNotFoundException>(Test);
+        }
+
         #endregion
     }
 }

@@ -6,14 +6,14 @@ namespace LetsDoIt.Moody.Persistence.Repositories
     using Entities;
     using Base;
 
-    public class VersionHistoryRepository : RepositoryBase<VersionHistory>
+    public class ParameterItemRepository : RepositoryBase<ParameterItem>
     {
-        public VersionHistoryRepository(ApplicationContext context)
-        : base(context, DeleteType.Hard)
+        public ParameterItemRepository(ApplicationContext context)
+        : base(context)
         {
         }
 
-        public override Task<VersionHistory> AddAsync(VersionHistory entity)
+        public override Task<ParameterItem> AddAsync(ParameterItem entity)
         {
             entity.CreatedDate = DateTime.UtcNow;
 

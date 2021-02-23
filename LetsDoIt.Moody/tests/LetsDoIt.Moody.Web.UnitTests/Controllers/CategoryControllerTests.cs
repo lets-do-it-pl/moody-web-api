@@ -103,7 +103,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         //    var userId = 5;
         //    var request = GetCategoryUpdateRequest();
 
-            
+
 
         //    //Act
         //    var actual = await _testing.Update(categoryId, request);
@@ -126,21 +126,24 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
         //public async Task GIVEN_ThereIsAnUpdateRequestNotInTheDatabase_WHEN_UpdatingACategory_THEN_ShoudReturnNotFound()
         //{
         //    //Arrange
+        //    var categoryId = 1;
+
         //    var request = GetCategoryUpdateRequest();
-        //    //_mockCategoryService
-        //    //    .Setup(service =>
-        //    //        service.UpdateAsync(
-        //    //                    It.IsAny<int>(),
-        //    //                    It.IsAny<string>(),
-        //    //                    It.IsAny<int>(),
-        //    //                    It.IsAny<byte[]>()))
-        //    //    .Throws(new ObjectNotFoundException(""));
+
+        //    _mockCategoryService
+        //        .Setup(service =>
+        //            service.UpdateAsync(
+        //                        It.IsAny<int>(),
+        //                        It.IsAny<string>(),
+        //                        It.IsAny<byte[]>(),
+        //                        It.IsAny<int>()))
+        //        .Throws(new ObjectNotFoundException(""));
 
         //    //Act
-        //    var actual = await _testing.UserHelper.Update(default, request);
+        //    var actual = await _testing.Update(categoryId ,request);
 
         //    //Assert
-        //    Assert.IsType<NotFoundObjectResult>(actual);
+        //    Assert.IsType<ObjectNotFoundException>(actual);
         //}
 
         //[Fact]

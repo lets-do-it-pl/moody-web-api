@@ -6,8 +6,6 @@ using EntityFrameworkExtras.EFCore;
 
 namespace LetsDoIt.Moody.Application.Data
 {
-    
-    using LetsDoIt.Moody.Persistence.StoredProcedures;
     using Persistence;
     using Persistence.StoredProcedures;
     using Persistence.StoredProcedures.ResultEntities;

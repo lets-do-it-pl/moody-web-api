@@ -5,7 +5,7 @@ using LetsDoIt.Moody.Persistence.Entities;
 
 namespace LetsDoIt.Moody.Persistence
 {
-    public partial class ApplicationContext : DbContext, IApplicationContext
+    public partial class ApplicationContext : DbContext,IApplicationContext
     {
         public ApplicationContext()
         {
@@ -20,7 +20,7 @@ namespace LetsDoIt.Moody.Persistence
         public virtual DbSet<CategoryDetail> CategoryDetails { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<VersionHistory> VersionHistories { get; set; }
+        public virtual DbSet<ParameterItem> ParameterItems { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -39,6 +39,7 @@ namespace LetsDoIt.Moody.Persistence
 
                 entity.HasIndex(e => e.Order)
                     .HasName("UQ__Category__67A3D86C0EE7CBCD")
+                    .HasName("UQ__Category__67A3D86C0E676B33")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
@@ -65,6 +66,7 @@ namespace LetsDoIt.Moody.Persistence
 
                 entity.HasIndex(e => e.Order)
                     .HasName("UQ__Category__67A3D86C86E7004A")
+                    .HasName("UQ__Category__67A3D86CA604DF7A")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
@@ -108,7 +110,7 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("User");
 
                 entity.HasIndex(e => e.Email)
-                    .HasName("UQ__User__A9D10534F73A0C22")
+                    .HasName("UQ__tmp_ms_x__A9D10534AA256582")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
@@ -142,11 +144,11 @@ namespace LetsDoIt.Moody.Persistence
                     .HasDefaultValueSql("('S')");
             });
 
-            modelBuilder.Entity<VersionHistory>(entity =>
+            modelBuilder.Entity<ParameterItem>(entity =>
             {
-                entity.ToTable("VersionHistory");
+                entity.ToTable("ParameterItem");
 
-                entity.Property(e => e.VersionNumber)
+                entity.Property(e => e.ParameterValue)
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);

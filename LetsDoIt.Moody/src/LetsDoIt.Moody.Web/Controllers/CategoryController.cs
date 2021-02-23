@@ -29,7 +29,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpGet, Route("/list-detail/{versionNumber?}")]
+        [HttpGet, Route("list-detail/{versionNumber?}")]
         [Authorize(Roles = RoleConstants.ClientRole)]
         [EnableCors("MobilePolicy")]
         public async Task<ActionResult<VersionedCategoryWithDetailsResponse>> GetVersionedCategoriesWithDetails(string versionNumber = null)
