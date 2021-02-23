@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace LetsDoIt.Moody.Persistence.Entities
 {
@@ -10,6 +11,5 @@ namespace LetsDoIt.Moody.Persistence.Entities
         public DateTime CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public int? ModifiedBy { get; set; }
-
     }
 }
