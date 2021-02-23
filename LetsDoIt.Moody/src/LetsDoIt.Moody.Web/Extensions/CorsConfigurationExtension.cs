@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 
 namespace LetsDoIt.Moody.Web.Extensions
 {
@@ -11,21 +12,39 @@ namespace LetsDoIt.Moody.Web.Extensions
             this IServiceCollection services, 
             IConfiguration configuration)
         {
-            var url = configuration.GetValue<string>($"{WebInfoOptions.WebInfoSectionName}:Url");
+            var url = GetWebUrl(configuration);
 
             return services
                 .AddCors(options =>
-            {
-                options.AddPolicy("AnotherPolicy",
-                    builder =>
-                    {
-                        builder
-                        .WithOrigins(url)
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowAnyOrigin();
-                    });
-            });
+                {
+                    options.AddPolicy("AdminDashboardPolicy",
+                        builder =>
+                        {
+                            builder
+                                .WithOrigins(url)
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                        });
+                        options.AddPolicy("MobilePolicy", builder =>
+                        {
+                            builder
+                                .AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                        });
+                });
         }
+
+        public static IApplicationBuilder UseCorsConfig(
+            this IApplicationBuilder app)
+        {
+
+            app.UseCors("AdminDashboardPolicy");
+            
+            return app;
+        }
+
+        private static string GetWebUrl(IConfiguration configuration) => 
+            configuration.GetValue<string>($"{WebInfoOptions.WebInfoSectionName}:Url");
     }
 }

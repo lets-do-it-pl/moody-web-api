@@ -6,7 +6,7 @@ namespace LetsDoIt.Moody.Web.Extensions
 {
     public static class ServiceExtensions
     {
-        public static void AddProxiedScoped<TInterface, TImplementation>(this IServiceCollection services)
+        public static IServiceCollection AddProxiedScoped<TInterface, TImplementation>(this IServiceCollection services)
             where TInterface : class
             where TImplementation : class, TInterface
         {
@@ -18,9 +18,11 @@ namespace LetsDoIt.Moody.Web.Extensions
                 var interceptors = serviceProvider.GetServices<IAsyncInterceptor>().ToArray();
                 return proxyGenerator.CreateInterfaceProxyWithTarget(typeof(TInterface), actual, interceptors);
             });
+
+            return services;
         }
 
-        public static void AddProxiedTransient<TInterface, TImplementation>(this IServiceCollection services)
+        public static IServiceCollection AddProxiedTransient<TInterface, TImplementation>(this IServiceCollection services)
             where TInterface : class
             where TImplementation : class, TInterface
         {
@@ -32,9 +34,11 @@ namespace LetsDoIt.Moody.Web.Extensions
                 var interceptors = serviceProvider.GetServices<IAsyncInterceptor>().ToArray();
                 return proxyGenerator.CreateInterfaceProxyWithTarget(typeof(TInterface), actual, interceptors);
             });
+
+            return services;
         }
 
-        public static void AddProxiedSingleton<TInterface, TImplementation>(this IServiceCollection services)
+        public static IServiceCollection AddProxiedSingleton<TInterface, TImplementation>(this IServiceCollection services)
             where TInterface : class
             where TImplementation : class, TInterface
         {
@@ -46,6 +50,8 @@ namespace LetsDoIt.Moody.Web.Extensions
                 var interceptors = serviceProvider.GetServices<IAsyncInterceptor>().ToArray();
                 return proxyGenerator.CreateInterfaceProxyWithTarget(typeof(TInterface), actual, interceptors);
             });
+
+            return services;
         }
     }
 }

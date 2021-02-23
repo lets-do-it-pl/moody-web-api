@@ -7,6 +7,7 @@ using System.Data;
 using System.Net;
 using LetsDoIt.Moody.Application.Client;
 using LetsDoIt.Moody.Web.Controllers;
+using LetsDoIt.Moody.Web.Entities.Requests.Client;
 using Microsoft.Extensions.Logging;
 
 namespace LetsDoIt.Moody.Web.UnitTests.Controllers

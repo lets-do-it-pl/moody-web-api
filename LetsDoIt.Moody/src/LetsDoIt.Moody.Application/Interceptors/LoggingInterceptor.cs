@@ -40,7 +40,11 @@ namespace LetsDoIt.Moody.Application.Interceptors
         private async Task InternalInterceptAsynchronous(IInvocation invocation)
         {
 
-            if (invocation.Method.GetParameters()[0].ParameterType.ToString().Contains("Linq"))
+            if (invocation.Arguments == null || invocation.Arguments.Length == 0)
+            {
+                _logger.LogInformation($"Start method {invocation.TargetType}.{invocation.Method.Name}");
+            }
+            else if (invocation.Arguments[0].GetType().ToString().Contains("Linq"))
             {
                 var formattedExpression = Evaluator.PartialEval((Expression)invocation.Arguments[0]);
 
@@ -64,7 +68,11 @@ namespace LetsDoIt.Moody.Application.Interceptors
 
         private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
         {
-            if (invocation.Method.GetParameters()[0].ParameterType.ToString().Contains("Linq"))
+            if (invocation.Arguments == null || invocation.Arguments.Length == 0)
+            {
+                _logger.LogInformation($"Start method {invocation.TargetType}.{invocation.Method.Name}");
+            }
+            else if (invocation.Arguments[0].GetType().ToString().Contains("Linq"))
             {
                 var formattedExpression = Evaluator.PartialEval((Expression)invocation.Arguments[0]);
 

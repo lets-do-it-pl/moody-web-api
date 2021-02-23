@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace LetsDoIt.Moody.Persistence.Entities
 {
-    public class Client
+    public partial class Client
     {
         public long Id { get; set; }
         public string Username { get; set; }

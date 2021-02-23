@@ -1,4 +1,3 @@
-using LetsDoIt.MailSender.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,19 +25,19 @@ namespace LetsDoIt.Moody.Web
                 .AddOptionsConfig(Configuration)
                 .AddAuthorizationConfig()
                 .AddResponseCompression()
-                .AddHealthCheckConfig(Configuration)
                 .AddDbContextConfig(Configuration)
                 .AddCorsConfig(Configuration)
                 .AddSwaggerConfig()
                 .AddMailSender()
-                .AddCustomClasses();
-
-            services.AddControllers();
+                .AddCustomClasses()
+                .AddActionFilterAndNewstonSoftJson()
+                .AddHealthCheckConfig(Configuration)
+                .AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("Azure"))
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -46,6 +45,7 @@ namespace LetsDoIt.Moody.Web
             {
                 app.UseApiExceptionHandler();
             }
+
 
             app.UseResponseCompression();
 
@@ -55,10 +55,7 @@ namespace LetsDoIt.Moody.Web
 
             app.UseRouting();
 
-            app.UseCors(options => options
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowAnyOrigin());
+            app.UseCorsConfig();
 
             app.UseAuthentication()
                 .UseAuthorization();
@@ -68,6 +65,7 @@ namespace LetsDoIt.Moody.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
                 endpoints.MapHealthChecksConfig();
             });
         }

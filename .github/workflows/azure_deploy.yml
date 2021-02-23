@@ -1,0 +1,45 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: CI/CD Azure-AppService
+
+on:
+  workflow_dispatch: 
+  
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.102'
+
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+      working-directory: ././LetsDoIt.Moody
+
+    - name: dotnet publish
+      working-directory: ././LetsDoIt.Moody/src/LetsDoIt.Moody.Web
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      
+    - name: App Settings Variable Substitution
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: '${{env.DOTNET_ROOT}}/myapp/appsettings.Azure.json'
+      env:
+        ConnectionStrings.MoodyDBConnection: ${{ secrets.MOODY_DB_CONNECTION_STRING }}
+        WebInfo.Url: ${{ secrets.WEB_UI_URL }}
+        Jwt.SecretKey: ${{ secrets.JWT_SECRET_KEY }}
+        Jwt.TokenExpirationMinutes: ${{ secrets.JWT_EXPIRATION_MINUTES }}
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'moody-api'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_7cabdce9974946d1af53fba7cd6bc62c }}
+        package: ${{env.DOTNET_ROOT}}/myapp 

@@ -44,28 +44,23 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 
             _updateRequstWithoutImage = new CategoryDetailsUpdateRequest
             {
-                Order = 3
             };
 
             _updateRequestWithoutId = new CategoryDetailsUpdateRequest
             {
-                Order = 5,
                 Image = image
             };
             _updateRequest = new CategoryDetailsUpdateRequest
             {
-                Image = image,
-                Order = 4
+                Image = image
             };
             _insertRequest = new CategoryDetailsInsertRequest
             {
-                Image = "cGxlYXN1cmUu",
-                Order = 4
+                Image = "cGxlYXN1cmUu",                
             };
             _request = new CategoryInsertRequest
             {
                 Name = "adsfasdf",
-                Order = 5,
                 Image = "USrCELxGejBZI4W/Llsvmw==\r\n"
             };
             _byteImage = Convert.FromBase64String(_request.Image);
@@ -86,8 +81,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             return new CategoryUpdateRequest
             {
                 Name = name,
-                Image = image,
-                Order = order
+                Image = image
             };
         }
 

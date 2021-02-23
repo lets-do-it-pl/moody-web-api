@@ -10,7 +10,8 @@ namespace LetsDoIt.Moody.Persistence.Repositories.Base
     public interface IRepository<TEntity> where TEntity : class, new()
     {
 
-        Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter = null);
+        Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter = null,
+                                         Expression<Func<TEntity, decimal>> order = null);
 
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter);
         

@@ -2,16 +2,18 @@
 using System.Threading.Tasks;
 using System.Data;
 using System.Security.Authentication;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
     using Application.Client;
-    using Entities.Requests;
+    using Entities.Requests.Client;
     using Filters;
 
     [ApiController]
     [Route("api/client")]
+    [EnableCors("MobilePolicy")]
     public class ClientController : ControllerBase
     {
         private readonly IClientService _clientService;
