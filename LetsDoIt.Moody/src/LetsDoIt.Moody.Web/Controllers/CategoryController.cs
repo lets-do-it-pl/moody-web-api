@@ -12,6 +12,7 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Entities;
     using Entities.Requests;
     using Entities.Responses;
+    using Application.Category.Export;
     using Persistence.Entities;
 
     [ApiController]
@@ -79,6 +80,11 @@ namespace LetsDoIt.Moody.Web.Controllers
         [Route("export/{type}")]
         public async Task<IActionResult> GetCategoryExport(string type)
         {
+            if( type == null || type == " " || type == "")
+            {
+                return NoContent();
+            }
+
             var categoryExportResult = _categoryService.GetCategoryExportAsync(type);
 
             return File(categoryExportResult.Result.Content, categoryExportResult.Result.ContentType, categoryExportResult.Result.FileName);

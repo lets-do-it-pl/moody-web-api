@@ -82,7 +82,7 @@ namespace LetsDoIt.Moody.Application.Category
 
         public Task<ExportReturnResult> GetCategoryExportAsync(string type)
         {
-            Guard.Requires(type, nameof(type)).IsNotNull();
+            Guard.Requires(type, nameof(type)).IsNotNullOrEmptyOrWhiteSpace();
 
             var respond = _categoryExportFactory.GetInstance(type);
 
