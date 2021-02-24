@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
@@ -19,8 +20,8 @@ namespace LetsDoIt.Moody.Application.Category.Export
         public async Task<ExportReturnResult> ExportAsync()
         {
             var categories = await _categoryRepository.GetListWithDetailsAsync();
-            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            string fileName = "categories.xlsx";
+            const string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            var fileName = $"categories{DateTime.UtcNow.ToShortDateString()}.xlsx";
 
             using (var workbook = new XLWorkbook())
             {
@@ -34,18 +35,15 @@ namespace LetsDoIt.Moody.Application.Category.Export
                 workSheet.Cell(1, 6).Value = "Modified Date";
                 workSheet.Cell(1, 7).Value = "Modified by";
 
-                var rows = 1;
-                var index = 1;
-                foreach (var category in categories)
+                for (var index = 0; index < categories.Count(); index++)
                 {
-                    rows++;
-                    workSheet.Cell(rows, 1).Value = index++;
-                    workSheet.Cell(rows, 2).Value = category.Name;
-                    workSheet.Cell(rows, 3).Value = category.CategoryDetails.Select(c => !c.IsDeleted).Count();
-                    workSheet.Cell(rows, 4).Value = category.CreatedDate;
-                    workSheet.Cell(rows, 5).Value = category.CreatedBy;
-                    workSheet.Cell(rows, 6).Value = category.ModifiedDate;
-                    workSheet.Cell(rows, 7).Value = category.ModifiedBy;
+                    workSheet.Cell(index + 2, 1).Value = index + 1;
+                    workSheet.Cell(index + 2, 2).Value = categories[index].Name;
+                    workSheet.Cell(index + 2, 3).Value = categories[index].CategoryDetails.Select(c => !c.IsDeleted).Count();
+                    workSheet.Cell(index + 2, 4).Value = categories[index].CreatedDate;
+                    workSheet.Cell(index + 2, 5).Value = categories[index].CreatedBy;
+                    workSheet.Cell(index + 2, 6).Value = categories[index].ModifiedDate;
+                    workSheet.Cell(index + 2, 7).Value = categories[index].ModifiedBy;
                 }
 
                 using (var stream = new MemoryStream())
@@ -53,13 +51,12 @@ namespace LetsDoIt.Moody.Application.Category.Export
                     workbook.SaveAs(stream);
                     var content = stream.ToArray();
 
-                    var result = new ExportReturnResult
+                    return new ExportReturnResult
                     {
                         Content = content,
                         FileName = fileName,
                         ContentType = contentType
                     };
-                    return result;
                 }
             }
         }

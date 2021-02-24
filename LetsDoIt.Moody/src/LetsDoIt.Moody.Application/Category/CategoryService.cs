@@ -80,13 +80,13 @@ namespace LetsDoIt.Moody.Application.Category
                 c => !c.IsDeleted && c.CategoryId == categoryId);
         }
 
-        public Task<ExportReturnResult> GetCategoryExportAsync(string type)
+        public async Task<ExportReturnResult> GetCategoryExportAsync(string type)
         {
             Guard.Requires(type, nameof(type)).IsNotNullOrEmptyOrWhiteSpace();
 
             var respond = _categoryExportFactory.GetInstance(type);
 
-            return respond.ExportAsync();
+            return await respond.ExportAsync();
         }
 
 
