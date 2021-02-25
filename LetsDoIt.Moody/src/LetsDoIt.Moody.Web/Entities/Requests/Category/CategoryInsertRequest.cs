@@ -11,5 +11,7 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
         [Required]
         public string Image { get; set; }
 
+        public string Description { get; set; }
+
     }
 }
