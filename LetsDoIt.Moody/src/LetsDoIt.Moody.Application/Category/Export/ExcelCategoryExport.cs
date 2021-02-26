@@ -10,6 +10,7 @@ namespace LetsDoIt.Moody.Application.Category.Export
 
     public class ExcelCategoryExport : ICategoryExport
     {
+        const string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         private readonly ICategoryRepository _categoryRepository;
 
         public ExcelCategoryExport(ICategoryRepository categoryRepository)
@@ -20,8 +21,7 @@ namespace LetsDoIt.Moody.Application.Category.Export
         public async Task<ExportReturnResult> ExportAsync()
         {
             var categories = await _categoryRepository.GetListWithDetailsAsync();
-            const string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            var fileName = $"categories{DateTime.UtcNow.ToShortDateString()}.xlsx";
+            var fileName = $"Categories {DateTime.UtcNow.ToShortDateString()}.xlsx";
 
             using (var workbook = new XLWorkbook())
             {

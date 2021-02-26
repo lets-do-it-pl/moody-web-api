@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Security.Claims;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace LetsDoIt.Moody.Web.Controllers
 {
@@ -12,8 +14,9 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Entities;
     using Entities.Requests;
     using Entities.Responses;
-    using Application.Category.Export;
     using Persistence.Entities;
+    using Application.Constants;
+
 
     [ApiController]
     [Route("api/category")]
