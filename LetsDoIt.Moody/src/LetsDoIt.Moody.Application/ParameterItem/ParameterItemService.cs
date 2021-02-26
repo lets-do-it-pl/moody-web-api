@@ -1,23 +1,21 @@
 using System;
 using System.Threading.Tasks;
-using System.Linq;
+using LetsDoIt.Moody.Application.VersionHistory;
+using LetsDoIt.Moody.Persistence.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 
-namespace LetsDoIt.Moody.Application.VersionHistory
+namespace LetsDoIt.Moody.Application.ParameterItem
 {
-    using Persistence.Entities;
-    using Persistence.Repositories.Base;
-
     public class ParameterItemService : IParameterItemService
     {
-        private readonly IRepository<ParameterItem> _parameterItemRepository;
+        private readonly IRepository<Persistence.Entities.ParameterItem> _parameterItemRepository;
 
-        public ParameterItemService(IRepository<ParameterItem> parameterItemRepository)
+        public ParameterItemService(IRepository<Persistence.Entities.ParameterItem> parameterItemRepository)
         {
             _parameterItemRepository = parameterItemRepository;
         }
 
-        public async Task<ParameterItem> GetLatestVersionNumberAsync()
+        public async Task<Persistence.Entities.ParameterItem> GetLatestVersionNumberAsync()
         {
             var result = await _parameterItemRepository
                 .Get()

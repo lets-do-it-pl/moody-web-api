@@ -1,5 +1,6 @@
 ﻿using Castle.DynamicProxy;
 using LetsDoIt.Moody.Application.Interceptors;
+using LetsDoIt.Moody.Application.ParameterItem;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LetsDoIt.Moody.Web.Extensions
