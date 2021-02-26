@@ -13,6 +13,8 @@ namespace LetsDoIt.Moody.Application.Category
 
         Task<IEnumerable<CategoryDetail>> GetCategoryDetailsAsync(int categoryId);
 
+        void RemoveCache();
+
         Task InsertAsync(string name, byte[] image, int userId);
 
         Task InsertCategoryDetailAsync(int categoryId, string image, int userId);
