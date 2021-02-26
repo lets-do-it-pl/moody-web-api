@@ -97,8 +97,9 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             await _categoryService.InsertAsync(
                 insertRequest.Name,
-                byteImage
-                ,GetUserInfo().UserId
+                byteImage,
+                GetUserInfo().UserId,
+                insertRequest.Description
                 );
 
             return Ok();
@@ -137,8 +138,10 @@ namespace LetsDoIt.Moody.Web.Controllers
                 await _categoryService.UpdateAsync(
                     categoryId,
                     updateRequest.Name,
-                    updateRequest.Image
-                    ,GetUserInfo().UserId
+                    updateRequest.Image,
+                    GetUserInfo().UserId,
+                    updateRequest.Description
+
                     );
 
                 return Ok();
@@ -248,6 +251,7 @@ namespace LetsDoIt.Moody.Web.Controllers
             {
                 Id = c.Id,
                 Name = c.Name,
+                Description = c.Description,
                 Order = c.Order,
                 Image = c.Image
             };

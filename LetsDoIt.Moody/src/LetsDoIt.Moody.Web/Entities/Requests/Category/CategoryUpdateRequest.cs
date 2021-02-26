@@ -9,5 +9,7 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
 
         [Required]
         public byte[] Image { get; set; }
+
+        public string Description { get; set; }
     }
 }
