@@ -77,6 +77,10 @@ namespace LetsDoIt.Moody.Application.Category
                 c => !c.IsDeleted && c.CategoryId == categoryId);
         }
 
+        public void RemoveCache()
+        {
+            _cache.Remove(Key);
+        }
 
         public async Task InsertAsync(string name, byte[] image, int userId)
         {
