@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using EntityFrameworkExtras.EFCore;
+using LetsDoIt.Moody.Persistence.StoredProcedures;
+using LetsDoIt.Moody.Persistence.StoredProcedures.ResultEntities;
+using MockQueryable.Moq;
 using Moq;
 using Xunit;
 
@@ -10,9 +16,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.DataService
 
     public class DataServiceTests
     {
-
+        private readonly DataService _testing;
         private readonly Mock<IApplicationContext> _mockApplicationContext;
-        private readonly IDataService _testing;
 
         public DataServiceTests()
         {
@@ -20,16 +25,28 @@ namespace LetsDoIt.Moody.Application.UnitTests.DataService
             _testing = new DataService(_mockApplicationContext.Object);
         }
 
+
+        
         [Fact]
-
-        public async Task GetGeneralSearchResultAsync_ShouldThrownNullReferenceException_WhenSearchKeyIsNull()
+        public async Task GetGeneralSearchResultAsync_ShouldThrowNullReferenceException_WhenSearchKeyIsNull()
         {
-            string searchKey = null;
 
-            async Task Test() => await _testing.GetGeneralSearchResultAsync(searchKey);
+            Assert.ThrowsAsync<NullReferenceException>(() => _testing.GetGeneralSearchResultAsync(""));
+            
 
-            await Assert.ThrowsAsync<NullReferenceException>(Test);
         }
+
+        //[Fact]
+        //public async Task GetGeneralSearchResultAsync_ShouldReturnSpGetResult_WhenResultExist()
+        //{
+        //    var entity = new SpGetGeneralSearchResult
+        //    {
+        //        Id = 1,
+        //        Name = "slaih",
+        //        Type = "aa"
+        //    };
+        //    _mockApplicationContext.Setup(x=>x.Database.ExecuteStoredProcedureAsync<SpGetGeneralSearchResult>())
+        //}
 
     }
 }
