@@ -78,6 +78,12 @@ namespace LetsDoIt.Moody.Web.Controllers
             return Ok(result);
         }
 
+        [HttpGet, Route("remove/cache")]
+        public void RemoveCache()
+        {
+            _categoryService.RemoveCache();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody] CategoryInsertRequest insertRequest)
         {

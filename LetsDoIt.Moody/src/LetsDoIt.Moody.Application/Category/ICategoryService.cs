@@ -15,6 +15,8 @@ namespace LetsDoIt.Moody.Application.Category
 
         Task InsertAsync(string name, byte[] image, int userId, string description = null);
 
+        void RemoveCache();
+
         Task InsertCategoryDetailAsync(int categoryId, string image, int userId);
 
         Task UpdateAsync(int id, string name, byte[] image, int userId, string description=null);
