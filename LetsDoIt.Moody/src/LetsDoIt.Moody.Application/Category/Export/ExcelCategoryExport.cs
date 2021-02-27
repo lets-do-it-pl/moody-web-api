@@ -6,21 +6,26 @@ using ClosedXML.Excel;
 
 namespace LetsDoIt.Moody.Application.Category.Export
 {
+    using Persistence.Repositories.Base;
     using Persistence.Repositories.Category;
+    using Persistence.Entities;
 
     public class ExcelCategoryExport : ICategoryExport
     {
         const string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IRepository<User> _userRepository;
 
-        public ExcelCategoryExport(ICategoryRepository categoryRepository)
+        public ExcelCategoryExport(ICategoryRepository categoryRepository, IRepository<User> userRepository)
         {
             _categoryRepository = categoryRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<ExportReturnResult> ExportAsync()
         {
             var categories = await _categoryRepository.GetListWithDetailsAsync();
+            var users = await _userRepository.GetListAsync();
             var fileName = $"Categories {DateTime.UtcNow.ToShortDateString()}.xlsx";
 
             using (var workbook = new XLWorkbook())
@@ -39,7 +44,7 @@ namespace LetsDoIt.Moody.Application.Category.Export
                 {
                     workSheet.Cell(index + 2, 1).Value = index + 1;
                     workSheet.Cell(index + 2, 2).Value = categories[index].Name;
-                    workSheet.Cell(index + 2, 3).Value = categories[index].CategoryDetails.Select(c => !c.IsDeleted).Count();
+                    workSheet.Cell(index + 2, 3).Value = categories[index].CategoryDetails.Count();
                     workSheet.Cell(index + 2, 4).Value = categories[index].CreatedDate;
                     workSheet.Cell(index + 2, 5).Value = categories[index].CreatedBy;
                     workSheet.Cell(index + 2, 6).Value = categories[index].ModifiedDate;

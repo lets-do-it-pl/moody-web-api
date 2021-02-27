@@ -88,9 +88,12 @@ namespace LetsDoIt.Moody.Application.Category
 
             return await respond.ExportAsync();
         }
+        public void RemoveCache()
+        {
+            _cache.Remove(Key);
+        }
 
-
-        public async Task InsertAsync(string name, byte[] image, int userId)
+        public async Task InsertAsync(string name, byte[] image, int userId, string description = null)
         {
             var categories = await _categoryRepository.GetListAsync(c => !c.IsDeleted);
 
@@ -103,7 +106,8 @@ namespace LetsDoIt.Moody.Application.Category
                 Name = name,
                 Image = image,
                 Order = order,
-                CreatedBy = userId
+                CreatedBy = userId,
+                Description = description
             });
 
             await _parameterItemService.UpdateVersionNumberAsync(userId);
@@ -129,7 +133,7 @@ namespace LetsDoIt.Moody.Application.Category
 
         }
 
-        public async Task UpdateAsync(int id, string name, byte[] image, int userId)
+        public async Task UpdateAsync(int id, string name, byte[] image, int userId, string description= null)
         {
             var entity = await _categoryRepository.GetAsync(c => c.Id == id && !c.IsDeleted);
             if (entity == null)
@@ -140,6 +144,7 @@ namespace LetsDoIt.Moody.Application.Category
             entity.Name = name;
             entity.Image = image;
             entity.ModifiedBy = userId;
+            entity.Description = description;
 
             await _categoryRepository.UpdateAsync(entity);
 

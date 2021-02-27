@@ -16,11 +16,13 @@ namespace LetsDoIt.Moody.Application.Category
 
         Task<ExportReturnResult> GetCategoryExportAsync(string type);
 
-        Task InsertAsync(string name, byte[] image, int userId);
+        void RemoveCache();
+
+        Task InsertAsync(string name, byte[] image, int userId, string description = null);
 
         Task InsertCategoryDetailAsync(int categoryId, string image, int userId);
 
-        Task UpdateAsync(int id, string name, byte[] image, int userId);
+        Task UpdateAsync(int id, string name, byte[] image, int userId, string description=null);
 
         Task UpdateCategoryDetailsAsync(int id, byte[] image, int userId);
 

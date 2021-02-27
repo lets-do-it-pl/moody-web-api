@@ -5,7 +5,7 @@ using LetsDoIt.Moody.Persistence.Entities;
 
 namespace LetsDoIt.Moody.Persistence
 {
-    public partial class ApplicationContext : DbContext,IApplicationContext
+    public partial class ApplicationContext : DbContext, IApplicationContext
     {
         public ApplicationContext()
         {
@@ -19,8 +19,8 @@ namespace LetsDoIt.Moody.Persistence
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<CategoryDetail> CategoryDetails { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<ParameterItem> ParameterItems { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,12 +38,14 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("Category");
 
                 entity.HasIndex(e => e.Order)
-                    .HasName("UQ__Category__67A3D86C0E676B33")
+                    .HasName("UQ__Category__67A3D86C0EE7CBCD")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.Image).IsRequired();
 
@@ -62,7 +64,7 @@ namespace LetsDoIt.Moody.Persistence
                 entity.ToTable("CategoryDetail");
 
                 entity.HasIndex(e => e.Order)
-                    .HasName("UQ__Category__67A3D86CA604DF7A")
+                    .HasName("UQ__Category__67A3D86C86E7004A")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
@@ -101,12 +103,36 @@ namespace LetsDoIt.Moody.Persistence
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<ParameterItem>(entity =>
+            {
+                entity.ToTable("ParameterItem");
+
+                entity.HasIndex(e => e.ParameterKey)
+                    .HasName("UQ__Paramete__5A1AEBF5CDD20C89")
+                    .IsUnique();
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.ParameterKey)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ParameterValue)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("User");
 
                 entity.HasIndex(e => e.Email)
-                    .HasName("UQ__tmp_ms_x__A9D10534AC163FD9")
+                    .HasName("UQ__tmp_ms_x__A9D10534407E831D")
                     .IsUnique();
 
                 entity.Property(e => e.CreatedDate)
@@ -138,16 +164,6 @@ namespace LetsDoIt.Moody.Persistence
                     .IsUnicode(false)
                     .IsFixedLength()
                     .HasDefaultValueSql("('S')");
-            });
-
-            modelBuilder.Entity<ParameterItem>(entity =>
-            {
-                entity.ToTable("ParameterItem");
-
-                entity.Property(e => e.ParameterValue)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);
