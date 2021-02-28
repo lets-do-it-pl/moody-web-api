@@ -9,6 +9,7 @@ namespace LetsDoIt.Moody.Application.Category.Export
     using Persistence.Repositories.Base;
     using Persistence.Repositories.Category;
     using Persistence.Entities;
+    using Microsoft.EntityFrameworkCore;
 
     public class ExcelCategoryExport : ICategoryExport
     {
@@ -25,7 +26,7 @@ namespace LetsDoIt.Moody.Application.Category.Export
         public async Task<ExportReturnResult> ExportAsync()
         {
             var categories = await _categoryRepository.GetListWithDetailsAsync();
-            var users = await _userRepository.GetListAsync();
+            var users = await _userRepository.Get().OrderBy(u => u.FullName).ToArrayAsync();
             var fileName = $"Categories {DateTime.UtcNow.ToShortDateString()}.xlsx";
 
             using (var workbook = new XLWorkbook())
@@ -45,10 +46,10 @@ namespace LetsDoIt.Moody.Application.Category.Export
                     workSheet.Cell(index + 2, 1).Value = index + 1;
                     workSheet.Cell(index + 2, 2).Value = categories[index].Name;
                     workSheet.Cell(index + 2, 3).Value = categories[index].CategoryDetails.Count();
-                    workSheet.Cell(index + 2, 4).Value = categories[index].CreatedDate;
-                    workSheet.Cell(index + 2, 5).Value = categories[index].CreatedBy;
-                    workSheet.Cell(index + 2, 6).Value = categories[index].ModifiedDate;
-                    workSheet.Cell(index + 2, 7).Value = categories[index].ModifiedBy;
+                    workSheet.Cell(index + 2, 4).Value = categories[index].CreatedDate.ToShortDateString();
+                    workSheet.Cell(index + 2, 5).Value = users.Where(u => u.Id == categories[index].CreatedBy).Select(u => u.FullName);
+                    workSheet.Cell(index + 2, 6).Value = categories[index].ModifiedDate.ToString();
+                    workSheet.Cell(index + 2, 7).Value = users.Where(u => u.Id == categories[index].ModifiedBy).Select(u => u.FullName);
                 }
 
                 using (var stream = new MemoryStream())

@@ -88,6 +88,7 @@ namespace LetsDoIt.Moody.Application.Category
 
             return await respond.ExportAsync();
         }
+
         public void RemoveCache()
         {
             _cache.Remove(Key);
