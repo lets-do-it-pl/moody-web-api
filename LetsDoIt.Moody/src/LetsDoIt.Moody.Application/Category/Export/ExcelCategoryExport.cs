@@ -13,7 +13,8 @@ namespace LetsDoIt.Moody.Application.Category.Export
 
     public class ExcelCategoryExport : ICategoryExport
     {
-        const string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        private const string ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        
         private readonly ICategoryRepository _categoryRepository;
         private readonly IRepository<User> _userRepository;
 
@@ -61,7 +62,7 @@ namespace LetsDoIt.Moody.Application.Category.Export
                     {
                         Content = content,
                         FileName = fileName,
-                        ContentType = contentType
+                        ContentType = ContentType
                     };
                 }
             }
