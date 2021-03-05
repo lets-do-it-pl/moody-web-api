@@ -1,6 +1,7 @@
 ﻿using Castle.DynamicProxy;
 using LetsDoIt.Moody.Application.Interceptors;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 
 namespace LetsDoIt.Moody.Web.Extensions
 {
@@ -17,7 +18,10 @@ namespace LetsDoIt.Moody.Web.Extensions
     using Application.User;
     using Application.VersionHistory;
     using Persistence;
-    
+    using Application.Category.Export;
+    using Application.Resolvers;
+    using DinkToPdf;
+    using DinkToPdf.Contracts;
 
     public static class DependencyInjectionConfigurationExtension
     {
@@ -30,7 +34,7 @@ namespace LetsDoIt.Moody.Web.Extensions
             .AddProxiedTransient<IRepository<Client>, ClientRepository>()
             .AddProxiedTransient<IRepository<User>, UserRepository>()
             .AddProxiedTransient<IRepository<CategoryDetail>, CategoryDetailsRepository>()
-
+            .AddProxiedTransient<ICategoryExport, PdfCategoryExport>()
             .AddProxiedTransient<ICategoryService, CategoryService>()
             .AddProxiedTransient<IParameterItemService, ParameterItemService>()
             .AddProxiedTransient<IClientService, ClientService>()
@@ -38,6 +42,18 @@ namespace LetsDoIt.Moody.Web.Extensions
             .AddProxiedTransient<IUserService, UserService>()
             .AddProxiedTransient<IDashboardService, DashboardService>()
             .AddProxiedTransient<ISearchService, SearchService>()
-            .AddProxiedTransient<IDataService , DataService>();
+            .AddProxiedTransient<IDataService , DataService>()
+            .AddProxiedTransient<IPdfTemplateGenerator, PdfTemplateGenerator>()
+            .AddProxiedTransient<ICategoryExportFactory, CategoryExportFactory>()
+            .AddSingleton( typeof(IConverter),new SynchronizedConverter(new PdfTools()))
+            .AddTransient<CategoryExportServiceResolver>(provider => exportType =>
+                {
+                    return exportType switch
+                    {
+                        //CategoryExportType.Excel => provider.GetService<ExcelCategoryExport>(),
+                        CategoryExportType.Pdf => provider.GetService<PdfCategoryExport>(),
+                        _ => throw new KeyNotFoundException()
+                    };
+});
     }
 }

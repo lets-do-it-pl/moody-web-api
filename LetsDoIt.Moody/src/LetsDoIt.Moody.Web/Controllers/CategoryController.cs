@@ -19,7 +19,7 @@ namespace LetsDoIt.Moody.Web.Controllers
 
     [ApiController]
     [Route("api/category")]
-    [Authorize(Roles = RoleConstants.StandardRole)]
+  //  [Authorize(Roles = RoleConstants.StandardRole)]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -30,8 +30,8 @@ namespace LetsDoIt.Moody.Web.Controllers
         }
 
         [HttpGet, Route("list-detail/{versionNumber?}")]
-        [Authorize(Roles = RoleConstants.ClientRole)]
-        [EnableCors("MobilePolicy")]
+   //     [Authorize(Roles = RoleConstants.ClientRole)]
+  //      [EnableCors("MobilePolicy")]
         public async Task<ActionResult<VersionedCategoryWithDetailsResponse>> GetVersionedCategoriesWithDetails(string versionNumber = null)
         {
             versionNumber = !string.IsNullOrWhiteSpace(versionNumber) ? versionNumber.Trim() : string.Empty;
@@ -77,6 +77,21 @@ namespace LetsDoIt.Moody.Web.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("export/{type}")]
+        public async Task<IActionResult> GetCategoryExport(string type)
+        {
+            if (type == null || type == " " || type == "")
+            {
+                return NoContent();
+            }
+
+            var categoryExportResult = _categoryService.GetCategoryExportAsync(type);
+
+            return File(categoryExportResult.Result.Content, categoryExportResult.Result.ContentType, categoryExportResult.Result.FileName);
+        }
+
 
         [HttpGet, Route("remove/cache")]
         public void RemoveCache()

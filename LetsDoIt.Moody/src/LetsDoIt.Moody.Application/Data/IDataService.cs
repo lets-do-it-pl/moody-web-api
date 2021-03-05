@@ -10,5 +10,7 @@ namespace LetsDoIt.Moody.Application.Data
         Task<ICollection<SpGetGeneralSearchResult>> GetGeneralSearchResultAsync(string searchKey);
 
         Task<ICollection<SpGetDashboardItemsResult>> GetDashboardItemsAsync();
+
+        IEnumerable<CategoryUserReturnResult> GetUsers();
     }
 }

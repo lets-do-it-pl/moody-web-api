@@ -4,8 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+
 namespace LetsDoIt.Moody.Web
 {
+    using DinkToPdf;
+    using DinkToPdf.Contracts;
     using Extensions;
     using Middleware;
 
@@ -20,7 +23,7 @@ namespace LetsDoIt.Moody.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services
+            services                
                 .AddLazyCache()
                 .AddAuthenticationConfig(Configuration)
                 .AddOptionsConfig(Configuration)

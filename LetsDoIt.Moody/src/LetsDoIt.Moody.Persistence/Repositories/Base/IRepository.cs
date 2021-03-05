@@ -28,5 +28,7 @@ namespace LetsDoIt.Moody.Persistence.Repositories.Base
         Task DeleteAsync(TEntity entity);
 
         Task BulkDeleteAsync(IList<TEntity> entities);
+
+        
     }
 }
