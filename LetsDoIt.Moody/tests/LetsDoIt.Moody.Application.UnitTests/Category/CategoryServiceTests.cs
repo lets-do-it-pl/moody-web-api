@@ -175,7 +175,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         #region GetCategoryExport
 
         [Fact]
-        public async Task GetCategoryExportAsync_ShouldReturnExportReturnResultObject_WhenTypeExists()
+        public async Task GetCategoryExportAsync_ShouldReturnExportReturnResultObject_WhenTypeExistsForExcel()
         {
             byte[] byteContent = { 11, 13, 32, 33, 48, 58 };
 
