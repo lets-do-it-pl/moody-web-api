@@ -9,9 +9,6 @@ namespace LetsDoIt.Moody.Application.Data
     using Persistence;
     using Persistence.StoredProcedures;
     using Persistence.StoredProcedures.ResultEntities;
-    using System.Collections;
-    using User;
-    
 
     public class DataService : IDataService
     {

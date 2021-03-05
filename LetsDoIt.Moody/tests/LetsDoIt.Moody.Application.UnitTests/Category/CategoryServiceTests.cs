@@ -199,7 +199,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         {
             async Task Test() => await _testing.GetCategoryExportAsync("anything");
 
-            await Assert.ThrowsAsync<KeyNotFoundException>(Test);
+            await Assert.ThrowsAsync<NullReferenceException>(Test);
         }
 
         [Theory]
