@@ -9,7 +9,6 @@ namespace LetsDoIt.Moody.Application.Data
     using Persistence;
     using Persistence.StoredProcedures;
     using Persistence.StoredProcedures.ResultEntities;
-    
 
     public class DataService : IDataService
     {
@@ -46,6 +45,32 @@ namespace LetsDoIt.Moody.Application.Data
             }
 
             return result.ToArray();
+        }
+
+        public IEnumerable<CategoryUserReturnResult> GetUsers()
+        {
+            var result = from category in _dbContext.Categories
+                         join createdBy in _dbContext.Users
+                         on category.CreatedBy equals createdBy.Id
+                         join modifiedBy in _dbContext.Users
+                         on category.ModifiedBy equals modifiedBy.Id into modifiedByUsers
+                         from modifiedByUser in modifiedByUsers.DefaultIfEmpty()
+                         select new
+                         {
+                             CategoryId = category.Id,
+                             CreatedBy = createdBy.FullName,
+                             ModifiedBy = modifiedByUser.FullName
+                         };
+
+            foreach(var user in result)
+            {
+                yield return new CategoryUserReturnResult
+                {
+                    Id = user.CategoryId,
+                    CreatedBy = user.CreatedBy,
+                    ModifiedBy = user.ModifiedBy
+                };
+            }
         }
     }
 }

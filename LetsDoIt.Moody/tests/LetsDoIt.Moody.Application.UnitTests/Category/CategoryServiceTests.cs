@@ -1,6 +1,4 @@
-﻿using LetsDoIt.Moody.Application.VersionHistory;
-using LetsDoIt.Moody.Persistence.Repositories.Category;
-using Moq;
+﻿using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,8 +9,11 @@ using LazyCache.Mocks;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Category
 {
+    using Application.VersionHistory;
+    using Persistence.Repositories.Category;
     using Application.Category;
     using CustomExceptions;
+    using Application.Category.Export;
     using Persistence.Entities;
     using Persistence.Repositories.Base;
 
@@ -24,6 +25,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         private readonly Mock<ICategoryRepository> _mockCategoryRepository;
         private readonly Mock<IParameterItemService> _mockParameterItemService;
         private readonly Mock<IRepository<CategoryDetail>> _mockCategoryDetailsRepository;
+        private readonly Mock<ICategoryExportFactory> _mockCategoryExportFactory;
 
         public CategoryServiceTests()
         {
@@ -31,12 +33,14 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             _mockParameterItemService = new Mock<IParameterItemService>();
             _mockCategoryDetailsRepository = new Mock<IRepository<CategoryDetail>>();
             _mockCache = new MockCachingService();
+            _mockCategoryExportFactory = new Mock<ICategoryExportFactory>();
 
             _testing = new CategoryService(
                     _mockCategoryRepository.Object,
                     _mockCategoryDetailsRepository.Object,
                     _mockParameterItemService.Object,
-                    _mockCache);
+                    _mockCache,
+                    _mockCategoryExportFactory.Object);
         }
 
         #region GetCategoriesWithDetail
@@ -164,6 +168,57 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
 
             Assert.NotNull(actual);
             Assert.Equal(categoryDetails.Count(), actual.Count());
+        }
+
+        #endregion
+
+        #region GetCategoryExport
+
+        [Fact]
+        public async Task GetCategoryExportAsync_ShouldReturnExportReturnResultObject_WhenTypeExistsForExcel()
+        {
+            byte[] byteContent = { 11, 13, 32, 33, 48, 58 };
+
+            _mockCategoryExportFactory.Setup(pi => pi.GetInstance("excel").ExportAsync())
+                .ReturnsAsync(new ExportReturnResult
+                {
+                    ContentType = "contentType",
+                    FileName = "fileName",
+                    Content = byteContent
+                });
+
+            var actual = await _testing.GetCategoryExportAsync("excel");
+
+            Assert.Equal("contentType", actual.ContentType);
+            Assert.Equal("fileName", actual.FileName);
+            Assert.Equal(byteContent, actual.Content);
+        }
+
+        [Fact]
+        public async Task GetCategoryExportAsync_ShouldThrowKeyNotFoundException_WhenTypeDoesNotExist()
+        {
+            async Task Test() => await _testing.GetCategoryExportAsync("anything");
+
+            await Assert.ThrowsAsync<NullReferenceException>(Test);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task GetCategoryExportAsync_ShouldThrowAnException_WhenTypeIsEmptyOrWhiteSpace(string type)
+        {
+            async Task Test() => await _testing.GetCategoryExportAsync(type);
+
+            await Assert.ThrowsAsync<ArgumentException>(Test);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        public async Task GetCategoryExportAsync_ShouldThrowAnException_WhenTypeIsNull(string type)
+        {
+            async Task Test() => await _testing.GetCategoryExportAsync(type);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(Test);
         }
 
         #endregion

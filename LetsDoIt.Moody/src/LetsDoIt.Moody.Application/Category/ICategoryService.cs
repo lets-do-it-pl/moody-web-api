@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.Category
 {
+    using Export;
     using Persistence.Entities;
 
     public interface ICategoryService
@@ -13,9 +14,11 @@ namespace LetsDoIt.Moody.Application.Category
 
         Task<IEnumerable<CategoryDetail>> GetCategoryDetailsAsync(int categoryId);
 
-        Task InsertAsync(string name, byte[] image, int userId, string description = null);
+        Task<ExportReturnResult> GetCategoryExportAsync(string type);
 
         void RemoveCache();
+
+        Task InsertAsync(string name, byte[] image, int userId, string description = null);
 
         Task InsertCategoryDetailAsync(int categoryId, string image, int userId);
 

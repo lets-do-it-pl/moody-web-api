@@ -14,8 +14,9 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Entities;
     using Entities.Requests;
     using Entities.Responses;
-    using Application.Constants;
     using Persistence.Entities;
+    using Application.Constants;
+
 
     [ApiController]
     [Route("api/category")]
@@ -76,6 +77,20 @@ namespace LetsDoIt.Moody.Web.Controllers
                             .Select(ToCategoryDetailsResponse);
 
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("export/{type}")]
+        public async Task<IActionResult> GetCategoryExport(string type)
+        {
+            if( type == null || type == " " || type == "")
+            {
+                return NoContent();
+            }
+
+            var categoryExportResult = _categoryService.GetCategoryExportAsync(type);
+
+            return File(categoryExportResult.Result.Content, categoryExportResult.Result.ContentType, categoryExportResult.Result.FileName);
         }
 
         [HttpGet, Route("remove/cache")]

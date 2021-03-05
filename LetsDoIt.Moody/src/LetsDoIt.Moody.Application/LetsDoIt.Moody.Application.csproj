@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.4.1" />
     <PackageReference Include="Castle.Core.AsyncInterceptor" Version="1.7.0" />
+    <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="jose-jwt" Version="3.0.0" />
     <PackageReference Include="LetsDoIt.CustomValueTypes" Version="1.0.0" />
     <PackageReference Include="LetsDoIt.MailSender" Version="1.0.1" />
@@ -21,6 +22,8 @@
     <PackageReference Include="NGuard" Version="3.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
     <PackageReference Include="LazyCache.AspNetCore" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="OfficeOpenXml.Core.ExcelPackage" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,4 +40,7 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resolvers\" />
+  </ItemGroup>
 </Project>

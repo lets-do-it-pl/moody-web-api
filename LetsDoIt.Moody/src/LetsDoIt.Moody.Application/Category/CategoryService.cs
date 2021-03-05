@@ -12,12 +12,14 @@ namespace LetsDoIt.Moody.Application.Category
     using Persistence.Entities;
     using Persistence.Repositories.Base;
     using Persistence.Repositories.Category;
+    using Export;
 
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IRepository<CategoryDetail> _categoryDetailsRepository;
         private readonly IParameterItemService _parameterItemService;
+        private readonly ICategoryExportFactory _categoryExportFactory;
         private const int InitialOrder = 1000;
         private const string Key = "latestVersion";
         private readonly IAppCache _cache;
@@ -26,13 +28,14 @@ namespace LetsDoIt.Moody.Application.Category
             ICategoryRepository categoryRepository,
             IRepository<CategoryDetail> categoryDetailsRepository,
             IParameterItemService versionHistoryService,
-            IAppCache cache
-            )
+            IAppCache cache,
+            ICategoryExportFactory categoryExportFactory)
         {
             _categoryRepository = categoryRepository;
             _categoryDetailsRepository = categoryDetailsRepository;
             _parameterItemService = versionHistoryService;
             _cache = cache;
+            _categoryExportFactory = categoryExportFactory;
         }
 
         private async Task<string> GetLatestVersionNumber()
@@ -75,6 +78,15 @@ namespace LetsDoIt.Moody.Application.Category
         {
             return await _categoryDetailsRepository.GetListAsync(
                 c => !c.IsDeleted && c.CategoryId == categoryId);
+        }
+
+        public async Task<ExportReturnResult> GetCategoryExportAsync(string type)
+        {
+            Guard.Requires(type, nameof(type)).IsNotNullOrEmptyOrWhiteSpace();
+
+            var respond = _categoryExportFactory.GetInstance(type);
+
+            return await respond.ExportAsync();
         }
 
         public void RemoveCache()
