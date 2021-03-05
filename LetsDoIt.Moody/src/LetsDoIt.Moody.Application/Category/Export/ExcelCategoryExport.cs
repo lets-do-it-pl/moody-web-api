@@ -6,27 +6,26 @@ using ClosedXML.Excel;
 
 namespace LetsDoIt.Moody.Application.Category.Export
 {
-    using Persistence.Repositories.Base;
     using Persistence.Repositories.Category;
-    using Persistence.Entities;
-    using Microsoft.EntityFrameworkCore;
+    using Data;
 
     public class ExcelCategoryExport : ICategoryExport
     {
-        const string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        private const string ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IRepository<User> _userRepository;
+        private readonly IDataService _dataService;
 
-        public ExcelCategoryExport(ICategoryRepository categoryRepository, IRepository<User> userRepository)
+        public ExcelCategoryExport(ICategoryRepository categoryRepository, IDataService dataService)
         {
             _categoryRepository = categoryRepository;
-            _userRepository = userRepository;
+            _dataService = dataService;
         }
 
         public async Task<ExportReturnResult> ExportAsync()
         {
             var categories = await _categoryRepository.GetListWithDetailsAsync();
-            var users = await _userRepository.Get().OrderBy(u => u.FullName).ToArrayAsync();
+            var users = _dataService.GetUsers();
+
             var fileName = $"Categories {DateTime.UtcNow.ToShortDateString()}.xlsx";
 
             using (var workbook = new XLWorkbook())
@@ -41,15 +40,17 @@ namespace LetsDoIt.Moody.Application.Category.Export
                 workSheet.Cell(1, 6).Value = "Modified Date";
                 workSheet.Cell(1, 7).Value = "Modified by";
 
-                for (var index = 0; index < categories.Count(); index++)
+                for (var index = 2; index < categories.Count() + 2; index++)
                 {
-                    workSheet.Cell(index + 2, 1).Value = index + 1;
-                    workSheet.Cell(index + 2, 2).Value = categories[index].Name;
-                    workSheet.Cell(index + 2, 3).Value = categories[index].CategoryDetails.Count();
-                    workSheet.Cell(index + 2, 4).Value = categories[index].CreatedDate.ToShortDateString();
-                    workSheet.Cell(index + 2, 5).Value = users.Where(u => u.Id == categories[index].CreatedBy).Select(u => u.FullName);
-                    workSheet.Cell(index + 2, 6).Value = categories[index].ModifiedDate.ToString();
-                    workSheet.Cell(index + 2, 7).Value = users.Where(u => u.Id == categories[index].ModifiedBy).Select(u => u.FullName);
+                    var category = categories[index - 2];
+
+                    workSheet.Cell(index, 1).Value = index + 1;
+                    workSheet.Cell(index, 2).Value = category.Name;
+                    workSheet.Cell(index, 3).Value = category.CategoryDetails.Count();
+                    workSheet.Cell(index, 4).Value = category.CreatedDate.ToShortDateString();
+                    workSheet.Cell(index, 5).Value = users.FirstOrDefault(u => u.Id == category.Id).CreatedBy;
+                    workSheet.Cell(index, 6).Value = category.ModifiedDate.ToString();
+                    workSheet.Cell(index, 7).Value = users.FirstOrDefault(u => u.Id == category.Id).ModifiedBy;
                 }
 
                 using (var stream = new MemoryStream())
@@ -61,7 +62,7 @@ namespace LetsDoIt.Moody.Application.Category.Export
                     {
                         Content = content,
                         FileName = fileName,
-                        ContentType = contentType
+                        ContentType = ContentType
                     };
                 }
             }

@@ -1,6 +1,4 @@
-﻿using LetsDoIt.Moody.Application.VersionHistory;
-using LetsDoIt.Moody.Persistence.Repositories.Category;
-using Moq;
+﻿using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,9 +9,11 @@ using LazyCache.Mocks;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Category
 {
+    using Application.VersionHistory;
+    using Persistence.Repositories.Category;
     using Application.Category;
     using CustomExceptions;
-    using LetsDoIt.Moody.Application.Category.Export;
+    using Application.Category.Export;
     using Persistence.Entities;
     using Persistence.Repositories.Base;
 
@@ -175,11 +175,11 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         #region GetCategoryExport
 
         [Fact]
-        public async Task GetCategoryExportAsync_ShouldExportReturnResultObject_WhenTypeIsGiven()
+        public async Task GetCategoryExportAsync_ShouldReturnExportReturnResultObject_WhenTypeExists()
         {
             byte[] byteContent = { 11, 13, 32, 33, 48, 58 };
 
-            _mockCategoryExportFactory.Setup(pi => pi.GetInstance("type").ExportAsync())
+            _mockCategoryExportFactory.Setup(pi => pi.GetInstance("excel").ExportAsync())
                 .ReturnsAsync(new ExportReturnResult
                 {
                     ContentType = "contentType",
@@ -187,11 +187,19 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                     Content = byteContent
                 });
 
-            var actual = await _testing.GetCategoryExportAsync("type");
+            var actual = await _testing.GetCategoryExportAsync("excel");
 
             Assert.Equal("contentType", actual.ContentType);
             Assert.Equal("fileName", actual.FileName);
             Assert.Equal(byteContent, actual.Content);
+        }
+
+        [Fact]
+        public async Task GetCategoryExportAsync_ShouldThrowKeyNotFoundException_WhenTypeDoesNotExist()
+        {
+            async Task Test() => await _testing.GetCategoryExportAsync("anything");
+
+            await Assert.ThrowsAsync<KeyNotFoundException>(Test);
         }
 
         [Theory]
