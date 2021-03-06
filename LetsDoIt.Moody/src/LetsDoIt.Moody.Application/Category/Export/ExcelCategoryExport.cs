@@ -32,25 +32,23 @@ namespace LetsDoIt.Moody.Application.Category.Export
             {
                 IXLWorksheet workSheet = workbook.Worksheets.Add("Categories");
 
-                workSheet.Cell(1, 1).Value = "Category No";
-                workSheet.Cell(1, 2).Value = "Category Name";
-                workSheet.Cell(1, 3).Value = "Image Count";
-                workSheet.Cell(1, 4).Value = "Create Date";
-                workSheet.Cell(1, 5).Value = "Created by";
-                workSheet.Cell(1, 6).Value = "Modified Date";
-                workSheet.Cell(1, 7).Value = "Modified by";
+                workSheet.Cell(1, 1).Value = "Category Name";
+                workSheet.Cell(1, 2).Value = "Image Count";
+                workSheet.Cell(1, 3).Value = "Create Date";
+                workSheet.Cell(1, 4).Value = "Created by";
+                workSheet.Cell(1, 5).Value = "Modified Date";
+                workSheet.Cell(1, 6).Value = "Modified by";
 
                 for (var index = 2; index < categories.Count() + 2; index++)
                 {
                     var category = categories[index - 2];
 
-                    workSheet.Cell(index, 1).Value = index + 1;
-                    workSheet.Cell(index, 2).Value = category.Name;
-                    workSheet.Cell(index, 3).Value = category.CategoryDetails.Count();
-                    workSheet.Cell(index, 4).Value = category.CreatedDate.ToShortDateString();
-                    workSheet.Cell(index, 5).Value = users.FirstOrDefault(u => u.Id == category.Id).CreatedBy;
-                    workSheet.Cell(index, 6).Value = category.ModifiedDate.ToString();
-                    workSheet.Cell(index, 7).Value = users.FirstOrDefault(u => u.Id == category.Id).ModifiedBy;
+                    workSheet.Cell(index, 1).Value = category.Name;
+                    workSheet.Cell(index, 2).Value = category.CategoryDetails.Count();
+                    workSheet.Cell(index, 3).Value = category.CreatedDate.ToShortDateString();
+                    workSheet.Cell(index, 4).Value = users.FirstOrDefault(u => u.Id == category.Id).CreatedBy;
+                    workSheet.Cell(index, 5).Value = category.ModifiedDate.ToString();
+                    workSheet.Cell(index, 6).Value = users.FirstOrDefault(u => u.Id == category.Id).ModifiedBy;
                 }
 
                 using (var stream = new MemoryStream())
