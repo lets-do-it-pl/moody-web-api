@@ -195,6 +195,25 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         }
 
         [Fact]
+        public async Task GetCategoryExportAsync_ShouldReturnExportReturnResultObject_WhenTypeExistsForPdf()
+        {
+            byte[] byteContent = { 11, 13, 32, 33, 48, 58 };
+
+            _mockCategoryExportFactory.Setup(pi => pi.GetInstance("pdf").ExportAsync())
+                .ReturnsAsync(new ExportReturnResult
+                {
+                    ContentType = "contentType",
+                    FileName = "fileName",
+                    Content = byteContent
+                });
+
+            var actual = await _testing.GetCategoryExportAsync("pdf");
+
+            Assert.Equal("contentType", actual.ContentType);
+            Assert.Equal("fileName", actual.FileName);
+            Assert.Equal(byteContent, actual.Content);
+        }
+        [Fact]
         public async Task GetCategoryExportAsync_ShouldThrowKeyNotFoundException_WhenTypeDoesNotExist()
         {
             async Task Test() => await _testing.GetCategoryExportAsync("anything");
