@@ -1,15 +1,11 @@
-﻿using LetsDoIt.Moody.Persistence.Repositories.Base;
-using LetsDoIt.Moody.Persistence.Repositories.Category;
+﻿using LetsDoIt.Moody.Persistence.Repositories.Category;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.Category.Export
 {
     using DinkToPdf;
     using DinkToPdf.Contracts;
-    using Persistence.Entities;
     using System.IO;
     using Data;
     using System.Collections;
@@ -19,20 +15,17 @@ namespace LetsDoIt.Moody.Application.Category.Export
         private const string ContentType = "application/pdf";
 
         private readonly ICategoryRepository _categoryRepository;
-        
         private readonly IConverter _converter;
         private readonly IPdfTemplateGenerator _pdfTemplateGenerator;
         private readonly IDataService _dataService;
 
         public PdfCategoryExport(
             ICategoryRepository categoryRepository,
-           
             IConverter converter,
             IPdfTemplateGenerator pdfTemplateGenerator,
             IDataService dataService)
         {
             _categoryRepository = categoryRepository;
-           
             _converter = converter;
             _pdfTemplateGenerator = pdfTemplateGenerator;
             _dataService = dataService;
@@ -40,9 +33,6 @@ namespace LetsDoIt.Moody.Application.Category.Export
      
         public async Task<ExportReturnResult> ExportAsync()
         {
-            // Abla hem burada hem de diger tarafta category cagirmissiniz. Bu yuk getirir uygulamaya
-            // Ayrica DRY'a aykiri
-
             var categories = await _categoryRepository.GetListWithDetailsAsync();
             var users = _dataService.GetUsers();
 
@@ -50,7 +40,6 @@ namespace LetsDoIt.Moody.Application.Category.Export
 
             var htmlContent = await _pdfTemplateGenerator.GetHTMLStringAsync(categories, users);
             
-   
             var globalSettings = GetGlobalSettings();
             var objectSettings = GetObjectSettings(htmlContent);
 

@@ -10,4 +10,6 @@ namespace LetsDoIt.Moody.Application.Data
 
         public string ModifiedBy { get; set; }
     }
+
 }
+

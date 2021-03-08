@@ -4,4 +4,5 @@
     {
         public ICategoryExport GetInstance(string type);
     }
+
 }

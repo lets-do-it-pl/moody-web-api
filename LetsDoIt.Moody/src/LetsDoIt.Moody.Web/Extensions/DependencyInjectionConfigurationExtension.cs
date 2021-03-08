@@ -1,7 +1,10 @@
 ﻿using Castle.DynamicProxy;
 using LetsDoIt.Moody.Application.Interceptors;
+using LetsDoIt.Moody.Application.ParameterItem;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 
 namespace LetsDoIt.Moody.Web.Extensions
 {
@@ -20,14 +23,12 @@ namespace LetsDoIt.Moody.Web.Extensions
     using Persistence;
     using Application.Category.Export;
     using Application.Resolvers;
-    using DinkToPdf;
-    using DinkToPdf.Contracts;
-
+ 
     public static class DependencyInjectionConfigurationExtension
     {
         public static IServiceCollection AddCustomClasses(this IServiceCollection services) => services
             .AddSingleton(new ProxyGenerator())
-            .AddSingleton<IAsyncInterceptor, LoggingInterceptor>()  
+            .AddSingleton<IAsyncInterceptor, LoggingInterceptor>()
             .AddTransient<IApplicationContext, ApplicationContext>()
             .AddProxiedTransient<ICategoryRepository, CategoryRepository>()
             .AddProxiedTransient<IRepository<ParameterItem>, ParameterItemRepository>()
@@ -35,6 +36,7 @@ namespace LetsDoIt.Moody.Web.Extensions
             .AddProxiedTransient<IRepository<User>, UserRepository>()
             .AddProxiedTransient<IRepository<CategoryDetail>, CategoryDetailsRepository>()
             .AddProxiedTransient<ICategoryExport, PdfCategoryExport>()
+            .AddProxiedTransient<ICategoryExport, ExcelCategoryExport>()
             .AddProxiedTransient<ICategoryService, CategoryService>()
             .AddProxiedTransient<IParameterItemService, ParameterItemService>()
             .AddProxiedTransient<IClientService, ClientService>()
@@ -54,6 +56,6 @@ namespace LetsDoIt.Moody.Web.Extensions
                         CategoryExportType.Pdf => provider.GetService<PdfCategoryExport>(),
                         _ => throw new KeyNotFoundException()
                     };
-});
+            });
     }
 }

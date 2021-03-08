@@ -32,7 +32,6 @@ namespace LetsDoIt.Moody.Application.Data
 
             return result.ToArray();
         }
-
         public async Task<ICollection<SpGetDashboardItemsResult>> GetDashboardItemsAsync()
         {
             var input = new SpGetDashboardItems { };
@@ -62,7 +61,7 @@ namespace LetsDoIt.Moody.Application.Data
                              ModifiedBy = modifiedByUser.FullName
                          };
 
-            foreach (var user in result)
+            foreach(var user in result)
             {
                 yield return new CategoryUserReturnResult
                 {

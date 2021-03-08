@@ -1,7 +1,4 @@
-﻿using LetsDoIt.Moody.Persistence.Repositories.Base;
-using LetsDoIt.Moody.Persistence.Repositories.Category;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace LetsDoIt.Moody.Application.Category.Export
@@ -13,19 +10,14 @@ namespace LetsDoIt.Moody.Application.Category.Export
 
     public class PdfTemplateGenerator : IPdfTemplateGenerator
     {
-
         public async Task<string> GetHTMLStringAsync(ICollection<Category> categories, IEnumerable<CategoryUserReturnResult> users)
         {
-           
-
             var sb = new StringBuilder();
 
             sb.Append(@"
                  <html>
-                    <head>
-                    </head>
-                    <body>
-                        <table align='center'>
+                    <thead>
+                        <table border='5' width= '80%' cellpanding= '4' cellspacing= '3' align='center'>
                             <tr>
                                 <th>Id</th>
                                 <th>Name</th>
@@ -35,10 +27,10 @@ namespace LetsDoIt.Moody.Application.Category.Export
                                 <th>Modified Date</th>
                                 <th>Modified By</th>
                             </tr>");
+
             var index = 1;
             foreach (var category in categories)
             {
-                // String Interpolation kullanabilirsiniz burada var asd = $"asd {variable}" gibi 0, 1,2 yerine
                 sb.AppendFormat(@"<tr>
                                     <td>{0}</td>
                                     <td>{1}</td>
@@ -51,10 +43,9 @@ namespace LetsDoIt.Moody.Application.Category.Export
                                    category.CategoryDetails.Select(c => !c.IsDeleted).Count(), category.CreatedDate,
                                   users.FirstOrDefault(u => u.Id == category.Id).CreatedBy, users.FirstOrDefault(u => u.Id == category.Id).ModifiedBy, category.ModifiedDate, category.ModifiedBy);
             }
-
             sb.Append(@"
                         </table>
-                    </body>
+                    </thead>
                 </html>");
 
             return sb.ToString();

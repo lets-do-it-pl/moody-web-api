@@ -8,4 +8,5 @@
 
         public byte[] Content { get; set; }
     }
+
 }
