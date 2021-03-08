@@ -57,17 +57,26 @@ namespace LetsDoIt.Moody.Application.Data
                          select new
                          {
                              CategoryId = category.Id,
+                             CategoryName = category.Name,
+                             CategoryDetailsImageCount = category.CategoryDetails.Count,
+                             CreatedDate = category.CreatedDate,
+                             ModifiedDate = category.ModifiedDate,
                              CreatedBy = createdBy.FullName,
                              ModifiedBy = modifiedByUser.FullName
+
                          };
 
-            foreach(var user in result)
+            foreach(var category in result)
             {
                 yield return new CategoryUserReturnResult
                 {
-                    Id = user.CategoryId,
-                    CreatedBy = user.CreatedBy,
-                    ModifiedBy = user.ModifiedBy
+                    Id = category.CategoryId,
+                    Name = category.CategoryName,
+                    Image = category.CategoryDetailsImageCount,
+                    CreatedDate = category.CreatedDate,
+                    ModifiedDate = category.ModifiedDate,
+                    CreatedBy = category.CreatedBy,
+                    ModifiedBy = category.ModifiedBy
                 };
             }
         }

@@ -1,5 +1,4 @@
-﻿using LetsDoIt.Moody.Persistence.Repositories.Category;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace LetsDoIt.Moody.Application.Category.Export
@@ -8,24 +7,21 @@ namespace LetsDoIt.Moody.Application.Category.Export
     using DinkToPdf.Contracts;
     using System.IO;
     using Data;
-    using System.Collections;
 
     public class PdfCategoryExport : ICategoryExport
     {
         private const string ContentType = "application/pdf";
 
-        private readonly ICategoryRepository _categoryRepository;
         private readonly IConverter _converter;
         private readonly IPdfTemplateGenerator _pdfTemplateGenerator;
         private readonly IDataService _dataService;
 
         public PdfCategoryExport(
-            ICategoryRepository categoryRepository,
+
             IConverter converter,
             IPdfTemplateGenerator pdfTemplateGenerator,
             IDataService dataService)
         {
-            _categoryRepository = categoryRepository;
             _converter = converter;
             _pdfTemplateGenerator = pdfTemplateGenerator;
             _dataService = dataService;
@@ -33,13 +29,13 @@ namespace LetsDoIt.Moody.Application.Category.Export
      
         public async Task<ExportReturnResult> ExportAsync()
         {
-            var categories = await _categoryRepository.GetListWithDetailsAsync();
-            var users = _dataService.GetUsers();
+            var categories = _dataService.GetUsers();
 
             var fileName = $"Categories {DateTime.UtcNow.ToShortDateString()}.pdf";
 
-            var htmlContent = await _pdfTemplateGenerator.GetHTMLStringAsync(categories, users);
+            var htmlContent = await _pdfTemplateGenerator.GetHTMLString(categories);
             
+   
             var globalSettings = GetGlobalSettings();
             var objectSettings = GetObjectSettings(htmlContent);
 
@@ -64,7 +60,7 @@ namespace LetsDoIt.Moody.Application.Category.Export
         {
             PagesCount = true,
             HtmlContent = content,
-            WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory()) },
+            WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory())},
             HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
             FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Report Footer" }
         };

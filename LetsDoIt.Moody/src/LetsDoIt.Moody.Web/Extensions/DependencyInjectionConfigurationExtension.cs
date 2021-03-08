@@ -52,7 +52,7 @@ namespace LetsDoIt.Moody.Web.Extensions
                 {
                     return exportType switch
                     {
-                        //CategoryExportType.Excel => provider.GetService<ExcelCategoryExport>(),
+                        CategoryExportType.Excel => provider.GetService<ExcelCategoryExport>(),
                         CategoryExportType.Pdf => provider.GetService<PdfCategoryExport>(),
                         _ => throw new KeyNotFoundException()
                     };
