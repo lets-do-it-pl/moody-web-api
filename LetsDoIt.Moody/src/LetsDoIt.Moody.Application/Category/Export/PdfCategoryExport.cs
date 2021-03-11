@@ -29,11 +29,11 @@ namespace LetsDoIt.Moody.Application.Category.Export
      
         public async Task<ExportReturnResult> ExportAsync()
         {
-            var categories = _dataService.GetUsers();
+            var categories = _dataService.GetCategoriesWithUsers();
 
             var fileName = $"Categories {DateTime.UtcNow.ToShortDateString()}.pdf";
 
-            var htmlContent = await _pdfTemplateGenerator.GetHTMLString(categories);
+            var htmlContent =  _pdfTemplateGenerator.GetHTMLString(categories);
             
    
             var globalSettings = GetGlobalSettings();

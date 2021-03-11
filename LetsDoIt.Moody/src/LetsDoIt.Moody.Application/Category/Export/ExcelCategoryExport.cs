@@ -24,7 +24,7 @@ namespace LetsDoIt.Moody.Application.Category.Export
         public async Task<ExportReturnResult> ExportAsync()
         {
             var categories = await _categoryRepository.GetListWithDetailsAsync();
-            var users = _dataService.GetUsers();
+            var users = _dataService.GetCategoriesWithUsers();
 
             var fileName = $"Categories {DateTime.UtcNow.ToShortDateString()}.xlsx";
 

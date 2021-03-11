@@ -46,7 +46,7 @@ namespace LetsDoIt.Moody.Application.Data
             return result.ToArray();
         }
 
-        public IEnumerable<CategoryUserReturnResult> GetUsers()
+        public IEnumerable<CategoryUserReturnResult> GetCategoriesWithUsers()
         {
             var result = from category in _dbContext.Categories
                          join createdBy in _dbContext.Users

@@ -11,6 +11,6 @@ namespace LetsDoIt.Moody.Application.Data
 
         Task<ICollection<SpGetDashboardItemsResult>> GetDashboardItemsAsync();
 
-        IEnumerable<CategoryUserReturnResult> GetUsers();
+        IEnumerable<CategoryUserReturnResult> GetCategoriesWithUsers();
     }
 }

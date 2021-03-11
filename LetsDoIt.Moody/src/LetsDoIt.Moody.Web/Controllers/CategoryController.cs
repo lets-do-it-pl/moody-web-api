@@ -83,7 +83,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         public async Task<IActionResult> GetCategoryExport(string type)
         {
 
-            if (string.IsNullOrWhiteSpace(type) || string.IsNullOrEmpty(type))
+            if (string.IsNullOrWhiteSpace(type))
             {
                 return NoContent();
             }

@@ -6,6 +6,6 @@ namespace LetsDoIt.Moody.Application.Category.Export
     using LetsDoIt.Moody.Application.Data;
     public interface IPdfTemplateGenerator
     {
-         Task<string> GetHTMLString(IEnumerable<CategoryUserReturnResult> categories);
+         string GetHTMLString(IEnumerable<CategoryUserReturnResult> categories);
     }
 }

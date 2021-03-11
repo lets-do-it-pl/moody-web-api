@@ -8,7 +8,7 @@ namespace LetsDoIt.Moody.Application.Category.Export
 
     public class PdfTemplateGenerator : IPdfTemplateGenerator
     {
-        public Task<string> GetHTMLString(IEnumerable<CategoryUserReturnResult> categories)
+        public string GetHTMLString(IEnumerable<CategoryUserReturnResult> categories)
         {
             var sb = new StringBuilder();
 
@@ -49,7 +49,7 @@ namespace LetsDoIt.Moody.Application.Category.Export
                     </thead>
                 </html>");
 
-            return Task.FromResult(sb.ToString());
+            return (sb.ToString());
         }
     }
 }
