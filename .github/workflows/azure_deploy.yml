@@ -35,6 +35,7 @@ jobs:
         WebInfo.Url: ${{ secrets.WEB_UI_URL }}
         Jwt.SecretKey: ${{ secrets.JWT_SECRET_KEY }}
         Jwt.TokenExpirationMinutes: ${{ secrets.JWT_EXPIRATION_MINUTES }}
+        Smtp.Password: ${{ secrets.MAIL_PASSWORD }}
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
