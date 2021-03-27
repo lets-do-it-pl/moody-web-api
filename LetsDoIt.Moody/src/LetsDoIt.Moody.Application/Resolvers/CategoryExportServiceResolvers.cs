@@ -3,4 +3,6 @@
     using Category.Export;
 
     public delegate ICategoryExport CategoryExportServiceResolver(string key);
+
 }
+

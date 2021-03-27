@@ -17,7 +17,6 @@ namespace LetsDoIt.Moody.Web.Controllers
     using Persistence.Entities;
     using Application.Constants;
 
-
     [ApiController]
     [Route("api/category")]
     [Authorize(Roles = RoleConstants.StandardRole)]
@@ -83,7 +82,8 @@ namespace LetsDoIt.Moody.Web.Controllers
         [Route("export/{type}")]
         public async Task<IActionResult> GetCategoryExport(string type)
         {
-            if( type == null || type == " " || type == "")
+
+            if (string.IsNullOrWhiteSpace(type))
             {
                 return NoContent();
             }

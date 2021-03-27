@@ -13,13 +13,13 @@ namespace LetsDoIt.Moody.Application.Data
     public class DataService : IDataService
     {
         private readonly IApplicationContext _dbContext;
-        
+
         public DataService(IApplicationContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<ICollection <SpGetGeneralSearchResult>> GetGeneralSearchResultAsync(string searchKey)
+        public async Task<ICollection<SpGetGeneralSearchResult>> GetGeneralSearchResultAsync(string searchKey)
         {
             var input = new SpGeneralSearch { SearchValue = searchKey };
 
@@ -32,7 +32,6 @@ namespace LetsDoIt.Moody.Application.Data
 
             return result.ToArray();
         }
-
         public async Task<ICollection<SpGetDashboardItemsResult>> GetDashboardItemsAsync()
         {
             var input = new SpGetDashboardItems { };
@@ -47,7 +46,7 @@ namespace LetsDoIt.Moody.Application.Data
             return result.ToArray();
         }
 
-        public IEnumerable<CategoryUserReturnResult> GetUsers()
+        public IEnumerable<CategoryUserReturnResult> GetCategoriesWithUsers()
         {
             var result = from category in _dbContext.Categories
                          join createdBy in _dbContext.Users
@@ -58,17 +57,26 @@ namespace LetsDoIt.Moody.Application.Data
                          select new
                          {
                              CategoryId = category.Id,
+                             CategoryName = category.Name,
+                             CategoryDetailsImageCount = category.CategoryDetails.Count,
+                             CreatedDate = category.CreatedDate,
+                             ModifiedDate = category.ModifiedDate,
                              CreatedBy = createdBy.FullName,
                              ModifiedBy = modifiedByUser.FullName
+
                          };
 
-            foreach(var user in result)
+            foreach(var category in result)
             {
                 yield return new CategoryUserReturnResult
                 {
-                    Id = user.CategoryId,
-                    CreatedBy = user.CreatedBy,
-                    ModifiedBy = user.ModifiedBy
+                    Id = category.CategoryId,
+                    Name = category.CategoryName,
+                    Image = category.CategoryDetailsImageCount,
+                    CreatedDate = category.CreatedDate,
+                    ModifiedDate = category.ModifiedDate,
+                    CreatedBy = category.CreatedBy,
+                    ModifiedBy = category.ModifiedBy
                 };
             }
         }

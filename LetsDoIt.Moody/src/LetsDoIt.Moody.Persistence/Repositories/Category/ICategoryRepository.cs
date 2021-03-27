@@ -9,5 +9,6 @@ namespace LetsDoIt.Moody.Persistence.Repositories.Category
     public interface ICategoryRepository : IRepository<Category>
     {
         Task<List<Category>> GetListWithDetailsAsync();
+        
     }
 }

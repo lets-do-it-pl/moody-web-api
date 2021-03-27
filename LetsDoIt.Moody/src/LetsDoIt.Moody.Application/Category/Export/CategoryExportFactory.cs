@@ -10,7 +10,10 @@
         {
             _serviceResolver = serviceResolver;
         }
-
         public ICategoryExport GetInstance(string type) => _serviceResolver(type);
     }
+
 }
+
+
+
