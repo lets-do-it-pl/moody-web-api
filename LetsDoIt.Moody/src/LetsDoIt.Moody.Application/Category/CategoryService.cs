@@ -4,6 +4,7 @@ using System.Linq;
 using LazyCache;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using LetsDoIt.CustomValueTypes.Image;
 
 namespace LetsDoIt.Moody.Application.Category
 {
@@ -114,7 +115,7 @@ namespace LetsDoIt.Moody.Application.Category
             await _parameterItemService.UpdateVersionNumberAsync(userId);
         }
 
-        public async Task InsertCategoryDetailAsync(int categoryId, string image, int userId)
+        public async Task InsertCategoryDetailAsync(int categoryId, Image image, int userId)
         {
             var categoryDetails = await _categoryDetailsRepository.GetListAsync(c => !c.IsDeleted);
 
@@ -125,7 +126,7 @@ namespace LetsDoIt.Moody.Application.Category
             await _categoryDetailsRepository.AddAsync(new CategoryDetail
             {
                 CategoryId = categoryId,
-                Image = Convert.FromBase64String(image),
+                Image = Convert.FromBase64String(image.ToString()),
                 Order = order,
                 CreatedBy = userId
             });
@@ -134,7 +135,7 @@ namespace LetsDoIt.Moody.Application.Category
 
         }
 
-        public async Task UpdateAsync(int id, string name, byte[] image, int userId, string description= null)
+        public async Task UpdateAsync(int id, string name, Image image, int userId, string description= null)
         {
             var entity = await _categoryRepository.GetAsync(c => c.Id == id && !c.IsDeleted);
             if (entity == null)
@@ -143,17 +144,16 @@ namespace LetsDoIt.Moody.Application.Category
             }
 
             entity.Name = name;
-            entity.Image = image;
+            entity.Image = Convert.FromBase64String(image.ToString());
             entity.ModifiedBy = userId;
             entity.Description = description;
 
             await _categoryRepository.UpdateAsync(entity);
 
             await _parameterItemService.UpdateVersionNumberAsync(userId);
-
         }
 
-        public async Task UpdateCategoryDetailsAsync(int id, byte[] image, int userId)
+        public async Task UpdateCategoryDetailsAsync(int id, Image image, int userId)
         {
             var entity = await _categoryDetailsRepository.GetAsync(detail => detail.Id == id && !detail.IsDeleted);
             if (entity == null)
@@ -161,13 +161,12 @@ namespace LetsDoIt.Moody.Application.Category
                 throw new ObjectNotFoundException("Category Detail", id);
             }
 
-            entity.Image = image;
+            entity.Image = Convert.FromBase64String(image.ToString());
             entity.ModifiedBy = userId;
 
             await _categoryDetailsRepository.UpdateAsync(entity);
 
             await _parameterItemService.UpdateVersionNumberAsync(userId);
-
         }
 
         public async Task UpdateOrderAsync(int id, int userId, int? previousId = null, int? nextId = null)

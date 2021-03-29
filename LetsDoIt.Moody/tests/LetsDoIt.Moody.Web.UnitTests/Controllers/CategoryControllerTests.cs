@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using LetsDoIt.Moody.Application.Security;
 using LetsDoIt.Moody.Infrastructure.Utils;
 using LetsDoIt.Moody.Web.Entities;
+using LetsDoIt.Moody.Web.Entities.Requests.Category;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -48,11 +49,11 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
 
             _updateRequestWithoutId = new CategoryDetailsUpdateRequest
             {
-                Image = image
+                Image = Convert.ToBase64String(image)
             };
             _updateRequest = new CategoryDetailsUpdateRequest
             {
-                Image = image
+                Image = Convert.ToBase64String(image)
             };
             _insertRequest = new CategoryDetailsInsertRequest
             {
@@ -63,7 +64,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
                 Name = "adsfasdf",
                 Image = "USrCELxGejBZI4W/Llsvmw==\r\n"
             };
-            _byteImage = Convert.FromBase64String(_request.Image);
+            _byteImage = Convert.FromBase64String(_request.Image.ToString());
 
         }
 
@@ -81,7 +82,7 @@ namespace LetsDoIt.Moody.Web.UnitTests.Controllers
             return new CategoryUpdateRequest
             {
                 Name = name,
-                Image = image
+                Image = Convert.ToBase64String(image)
             };
         }
 

@@ -6,10 +6,11 @@ using System;
 using System.Linq.Expressions;
 using Xunit;
 using LazyCache.Mocks;
+using LetsDoIt.CustomValueTypes.Image;
 
 namespace LetsDoIt.Moody.Application.UnitTests.Category
 {
-    using Application.VersionHistory;
+    using VersionHistory;
     using Persistence.Repositories.Category;
     using Application.Category;
     using CustomExceptions;
@@ -374,7 +375,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         public async Task UpdateCategoryDetailsAsync_WhenIdExists_ShouldUpdateCategoryDetailAndUpdateTheVersion()
         {
             var userId = 1;
-            byte[] byteImage = { 80, 65, 78, 75, 65, 74 };
+
+            var image = new Image("YTM0NZomIzI2OTsmIzM0NTueYQ==");
 
             var categoryDetail = new CategoryDetail
             {
@@ -385,7 +387,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                 .Setup(repository => repository.GetAsync(It.IsNotNull<Expression<Func<CategoryDetail, bool>>>()))
                 .ReturnsAsync(categoryDetail);
 
-            await _testing.UpdateCategoryDetailsAsync(categoryDetail.Id, byteImage, userId);
+            await _testing.UpdateCategoryDetailsAsync(categoryDetail.Id, image, userId);
 
             _mockCategoryDetailsRepository.Verify(c =>
                 c.UpdateAsync(It.Is<CategoryDetail>(cd => cd.Id == categoryDetail.Id && cd.ModifiedBy == userId)), Times.Once);
@@ -398,7 +400,9 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         public async Task UpdateCategoryDetailsAsync_WhenCategoryDetailDoesNotExists_ShouldThrowObjectNotFoundException()
         {
             var userId = 1;
-            byte[] byteImage = { 80, 65, 78, 75, 65, 74 };
+
+            var image = new Image("YTM0NZomIzI2OTsmIzM0NTueYQ==");
+
             var categoryDetail = new CategoryDetail
             {
                 Id = 3
@@ -407,7 +411,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             _mockCategoryDetailsRepository.Setup(repo => repo.GetAsync(c => c.Id == It.IsAny<int>()))
                 .ReturnsAsync((CategoryDetail)null);
 
-            async Task Test() => await _testing.UpdateCategoryDetailsAsync(categoryDetail.Id, byteImage,userId);
+            async Task Test() => await _testing.UpdateCategoryDetailsAsync(categoryDetail.Id, image, userId);
 
             await Assert.ThrowsAsync<ObjectNotFoundException>(Test);
         }
@@ -421,7 +425,8 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         {
             var userId = 1;
             var name = "Test";
-            byte[] byteImage = { 80, 65, 78, 75, 65, 74 };
+
+            var image = new Image("YTM0NZomIzI2OTsmIzM0NTueYQ==");
 
             var category = new Category
             {
@@ -432,7 +437,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
                 .Setup(repository => repository.GetAsync(It.IsNotNull<Expression<Func<Category, bool>>>()))
                 .ReturnsAsync(category);
 
-            await _testing.UpdateAsync(category.Id, name, byteImage, userId);
+            await _testing.UpdateAsync(category.Id, name, image, userId);
 
             _mockCategoryRepository.Verify(c => c.UpdateAsync(It.Is<Category>(c => c.Id == category.Id && c.ModifiedBy == userId)), Times.Once);
 
@@ -445,7 +450,9 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
         {
             var userId = 1;
             var name = "Test";
-            byte[] byteImage = { 80, 65, 78, 75, 65, 74 };
+
+            var image = new Image("YTM0NZomIzI2OTsmIzM0NTueYQ==");
+
             var category = new Category
             {
                 Id = 3
@@ -454,7 +461,7 @@ namespace LetsDoIt.Moody.Application.UnitTests.Category
             _mockCategoryRepository.Setup(repo => repo.GetAsync(It.IsNotNull<Expression<Func<Category, bool>>>()))
                 .ReturnsAsync((Category)null);
 
-            async Task Test() => await _testing.UpdateAsync(category.Id, name, byteImage, userId);
+            async Task Test() => await _testing.UpdateAsync(category.Id, name, image, userId);
 
             await Assert.ThrowsAsync<ObjectNotFoundException>(Test);
         }

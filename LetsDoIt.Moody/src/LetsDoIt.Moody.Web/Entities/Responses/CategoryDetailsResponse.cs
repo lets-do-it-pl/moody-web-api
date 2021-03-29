@@ -1,4 +1,6 @@
-﻿namespace LetsDoIt.Moody.Web.Entities.Responses
+﻿using LetsDoIt.CustomValueTypes.Image;
+
+namespace LetsDoIt.Moody.Web.Entities.Responses
 {
     public class CategoryDetailsResponse
     {
@@ -6,6 +8,6 @@
 
         public decimal Order { get; set; }
 
-        public byte[] Image { get; set; }
+        public Image Image { get; set; }
     }
 }

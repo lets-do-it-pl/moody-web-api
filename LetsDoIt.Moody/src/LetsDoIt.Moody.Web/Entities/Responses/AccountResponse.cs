@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LetsDoIt.CustomValueTypes.Email;
 
 namespace LetsDoIt.Moody.Web.Entities.Responses
 {
@@ -11,7 +8,6 @@ namespace LetsDoIt.Moody.Web.Entities.Responses
 
         public string FullName { get; set; }
 
-        public string Email { get; set; }
-
+        public Email Email { get; set; }
     }
 }

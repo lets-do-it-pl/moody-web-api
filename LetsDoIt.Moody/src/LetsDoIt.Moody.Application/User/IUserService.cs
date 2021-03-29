@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using LetsDoIt.Moody.Application.Constants;
+using LetsDoIt.CustomValueTypes;
+using LetsDoIt.CustomValueTypes.Email;
+using LetsDoIt.CustomValueTypes.Image;
 
 namespace LetsDoIt.Moody.Application.User
 {
@@ -17,18 +19,18 @@ namespace LetsDoIt.Moody.Application.User
 
         Task DeleteUserAsync(int modifiedById, int id);
 
-        Task SaveUserAsync(string email, string password, string fullName);
+        Task SaveUserAsync(Email email, string password, string fullName);
 
         Task SendActivationEmailAsync(string email);
 
         Task ActivateUserAsync(int id);
         
-        Task<(int id, string token, string fullName)> AuthenticateAsync(string email, string password);
+        Task<(int id, string token, string fullName)> AuthenticateAsync(Email email, string password);
 
-        Task ForgetPasswordAsync(string email);
+        Task ForgetPasswordAsync(Email email);
 
         Task ResetPasswordAsync(int userId, string password);
 
-        Task UpdateAccountDetails(int userId, string fullname, string email, string image = null);
+        Task UpdateAccountDetails(int userId, string fullname, Email email, Image image = default);
     }
 }

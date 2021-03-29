@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Security.Claims;
 using System.Collections.Generic;
+using LetsDoIt.Moody.Web.Entities.Requests.Category;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 
@@ -108,7 +109,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 return BadRequest();
             }
 
-            var byteImage = Convert.FromBase64String(insertRequest.Image);
+            var byteImage = Convert.FromBase64String(insertRequest.Image.ToString());
 
             await _categoryService.InsertAsync(
                 insertRequest.Name,
@@ -268,7 +269,7 @@ namespace LetsDoIt.Moody.Web.Controllers
                 Name = c.Name,
                 Description = c.Description,
                 Order = c.Order,
-                Image = c.Image
+                Image = Convert.ToBase64String(c.Image)
             };
             return result;
         }
@@ -276,7 +277,7 @@ namespace LetsDoIt.Moody.Web.Controllers
         private static CategoryDetailsResponse ToCategoryDetailsResponse(CategoryDetail c) => new CategoryDetailsResponse
         {
             Id = c.Id,
-            Image = c.Image,
+            Image = Convert.ToBase64String(c.Image),
             Order = c.Order
         };
 

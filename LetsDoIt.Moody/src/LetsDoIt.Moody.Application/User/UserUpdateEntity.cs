@@ -1,4 +1,6 @@
-﻿namespace LetsDoIt.Moody.Application.User
+﻿using LetsDoIt.CustomValueTypes.Email;
+
+namespace LetsDoIt.Moody.Application.User
 {
     public class UserUpdateEntity
     {
@@ -12,7 +14,7 @@
 
         public string FullName { get; set; }
 
-        public string Email { get; set; }
+        public Email Email { get; set; }
 
         public int Id { get; set; }
 
