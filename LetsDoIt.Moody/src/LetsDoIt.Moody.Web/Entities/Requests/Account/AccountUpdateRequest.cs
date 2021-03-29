@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using LetsDoIt.CustomValueTypes.Email;
+using LetsDoIt.CustomValueTypes.Image;
 
 namespace LetsDoIt.Moody.Web.Entities.Requests.Account
 {
@@ -12,10 +10,8 @@ namespace LetsDoIt.Moody.Web.Entities.Requests.Account
         public string FullName { get; set; }
 
         [Required]
-        public string Email { get; set; }
+        public Email Email { get; set; }
 
-
-        public string Image { get; set; }
-
+        public Image Image { get; set; }
     }
 }

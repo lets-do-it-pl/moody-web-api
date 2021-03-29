@@ -1,4 +1,4 @@
-﻿using System;
+﻿using LetsDoIt.CustomValueTypes.Email;
 
 namespace LetsDoIt.Moody.Web.Entities.Responses
 {
@@ -10,7 +10,7 @@ namespace LetsDoIt.Moody.Web.Entities.Responses
 
         public string Description { get; set; }
 
-        public string Email { get; set; }
+        public Email Email { get; set; }
 
         public bool IsActive { get; set; }
 

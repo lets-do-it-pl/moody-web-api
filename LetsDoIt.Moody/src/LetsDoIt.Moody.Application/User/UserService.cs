@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using LetsDoIt.CustomValueTypes.Email;
+using LetsDoIt.CustomValueTypes.Image;
 using Microsoft.Extensions.Options;
 using NGuard;
 using LetsDoIt.MailSender;
@@ -75,7 +77,7 @@ namespace LetsDoIt.Moody.Application.User
                 throw new UserNotFoundException();
             }
 
-            dbUser.Email = userUpdateEntity.Email;
+            dbUser.Email = userUpdateEntity.Email.ToString();
             dbUser.FullName = userUpdateEntity.FullName;
             dbUser.ModifiedBy = userUpdateEntity.ModifiedById;
             dbUser.IsActive = userUpdateEntity.IsActive;
@@ -87,7 +89,7 @@ namespace LetsDoIt.Moody.Application.User
 
             if (userUpdateEntity.Password != null)
             {
-                dbUser.Password = GetEncryptedPassword(userUpdateEntity.Email, userUpdateEntity.Password);
+                dbUser.Password = GetEncryptedPassword(userUpdateEntity.Email.ToString(), userUpdateEntity.Password);
             }
 
             await _userRepository.UpdateAsync(dbUser);
@@ -108,20 +110,20 @@ namespace LetsDoIt.Moody.Application.User
         }
 
         public async Task SaveUserAsync(
-            string email,
+            Email email,
             string password,
             string fullName)
         {
-            var isUserExisted = await _userRepository.AnyAsync(u => u.Email == email && !u.IsDeleted);
+            var isUserExisted = await _userRepository.AnyAsync(u => u.Email == email.ToString() && !u.IsDeleted);
 
             if (isUserExisted)
             {
                 throw new DuplicateNameException($"The email already exists in the system.");
             }
 
-            await _userRepository.AddAsync(ToUser(email, password, fullName));
+            await _userRepository.AddAsync(ToUser(email.ToString(), password, fullName));
 
-            await SendActivationEmailAsync(email);
+            await SendActivationEmailAsync(email.ToString());
         }
 
         #endregion
@@ -167,14 +169,13 @@ namespace LetsDoIt.Moody.Application.User
             await _userRepository.UpdateAsync(dbUser);
         }
 
-        public async Task<(int id, string token, string fullName)> AuthenticateAsync(string email, string password)
+        public async Task<(int id, string token, string fullName)> AuthenticateAsync(Email email, string password)
         {
-            Guard.Requires(email, nameof(email)).IsNotNullOrEmptyOrWhiteSpace();
             Guard.Requires(password, nameof(password)).IsNotNullOrEmptyOrWhiteSpace();
 
-            var encryptedPassword = GetEncryptedPassword(email, password);
+            var encryptedPassword = GetEncryptedPassword(email.ToString(), password);
 
-            var user = await _userRepository.GetAsync(u => u.Email == email && u.Password == encryptedPassword);
+            var user = await _userRepository.GetAsync(u => u.Email == email.ToString() && u.Password == encryptedPassword);
 
             ValidateUser(user);
 
@@ -191,11 +192,9 @@ namespace LetsDoIt.Moody.Application.User
             return (user.Id, tokenInfo.Token, user.FullName);
         }
 
-        public async Task ForgetPasswordAsync(string email)
+        public async Task ForgetPasswordAsync(Email email)
         {
-            Guard.Requires(email, nameof(email)).IsNotNullOrEmptyOrWhiteSpace();
-
-            var user = await _userRepository.GetAsync(u => u.Email == email && !u.IsDeleted);
+            var user = await _userRepository.GetAsync(u => u.Email == email.ToString() && !u.IsDeleted);
 
             ValidateUser(user);
 
@@ -221,7 +220,7 @@ namespace LetsDoIt.Moody.Application.User
             await _userRepository.UpdateAsync(user);
         }
 
-        public async Task UpdateAccountDetails(int userId, string fullname, string email, string image = null)
+        public async Task UpdateAccountDetails(int userId, string fullname, Email email, Image image = default)
         {
             var dbUser = await _userRepository.GetAsync(u => u.Id == userId && !u.IsDeleted);
             if (dbUser == null)
@@ -230,8 +229,8 @@ namespace LetsDoIt.Moody.Application.User
             }
 
             dbUser.FullName = fullname;
-            dbUser.Image = image == null ? dbUser.Image : Convert.FromBase64String(image);
-            dbUser.Email = email;
+            dbUser.Image = image.Equals(default(Image)) ? dbUser.Image : Convert.FromBase64String(image.ToString());
+            dbUser.Email = email.ToString();
             dbUser.ModifiedBy = userId;
 
             await _userRepository.UpdateAsync(dbUser);

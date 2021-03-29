@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using LetsDoIt.CustomValueTypes.Image;
 
 namespace LetsDoIt.Moody.Web.Entities.Responses
 {
@@ -12,7 +13,7 @@ namespace LetsDoIt.Moody.Web.Entities.Responses
 
         public decimal Order { get; set; }
 
-        public byte[] Image { get; set; }
+        public Image Image { get; set; }
 
         public ICollection<CategoryDetailsResponse> CategoryDetails { get; set; }
     }

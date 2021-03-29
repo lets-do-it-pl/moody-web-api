@@ -1,7 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using LetsDoIt.CustomValueTypes.Image;
 
-namespace LetsDoIt.Moody.Web.Entities.Requests
+namespace LetsDoIt.Moody.Web.Entities.Requests.Category
 {
     public class CategoryInsertRequest
     {
@@ -9,9 +9,8 @@ namespace LetsDoIt.Moody.Web.Entities.Requests
         public string Name { get; set; }
 
         [Required]
-        public string Image { get; set; }
+        public Image Image { get; set; }
 
         public string Description { get; set; }
-
     }
 }
